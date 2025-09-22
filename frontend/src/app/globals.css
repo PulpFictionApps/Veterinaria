@@ -76,7 +76,7 @@ body {
 
 .dashboard-center {
   width: 100%;
-  max-width: 1200px; /* tuned for dashboard content */
+  max-width: 1400px; /* tuned for dashboard content */
   margin-left: auto;
   margin-right: auto;
   padding-left: 1rem;
@@ -85,6 +85,16 @@ body {
 
 /* Override common max-w utilities for elements inside the dashboard so they
    stretch to the dashboard center container. Use :where to list common sizes. */
+
+/* Make pages full-width: inside the main content area, expand common max-width
+   utility containers so routes fill the available horizontal space. This
+   intentionally targets elements inside `main` to preserve header/footer sizing. */
+main :where(.max-w-6xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl, .max-w-lg, .max-w-md, .max-w-full) {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Keep the dashboard-specific center rules (can be smaller than full-width if desired) */
 .dashboard-content :where(.max-w-6xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl, .max-w-lg, .max-w-md) {
   max-width: 100% !important;
   width: 100% !important;
