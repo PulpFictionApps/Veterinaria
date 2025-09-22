@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --brand-50: #f3fbf6;
+  --brand-100: #e6f7ed;
+  --brand-200: #c0efd5;
+  --brand-300: #9be6bc;
+  --brand-400: #55d694;
+  --brand-500: #2cc67a;
+  --brand-600: #22a763;
+  --brand-700: #1a7f4c;
+  --brand-800: #135b37;
+  --brand-900: #0b3b24;
+}
+
+/* Replace @theme (unsupported by many CSS linters) with a utility class.
+   Use the class on the root element when you want the "inline" theme variables. */
+.theme-inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* App background */
+body {
+  background: linear-gradient(135deg, var(--brand-100), var(--brand-300));
+}
+
+
+/* globals.css o un CSS específico para el calendario */
+.fc .fc-timegrid-slot {
+  height: 60px; /* aumenta el tamaño de cada hora */
+}
+
+.fc .fc-timegrid-event {
+  font-size: 0.9rem; /* opcional, ajustar texto dentro del slot */
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+}
