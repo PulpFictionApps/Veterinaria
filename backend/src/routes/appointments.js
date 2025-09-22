@@ -5,13 +5,35 @@ import { verifyToken } from "../middleware/auth.js";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// Crear cita
+// Crear cita (protegida) - crea appointment y elimina el slot de disponibilidad correspondiente de forma atómica
 router.post("/", verifyToken, async (req, res) => {
   const { petId, tutorId, date, reason } = req.body;
-  const appointment = await prisma.appointment.create({
-    data: { petId, tutorId, date: new Date(date), reason, userId: req.user.id },
-  });
-  res.json(appointment);
+  try {
+    const selectedDate = new Date(date);
+    if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
+
+    const result = await prisma.$transaction(async (tx) => {
+      const matching = await tx.availability.findFirst({
+        where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } },
+      });
+      if (!matching) throw new Error('No availability for that time');
+
+      const exists = await tx.appointment.findFirst({ where: { userId: req.user.id, date: selectedDate } });
+      if (exists) throw new Error('Ya existe una cita en ese horario');
+
+      const appointment = await tx.appointment.create({ data: { petId, tutorId, date: selectedDate, reason: reason || '', userId: req.user.id } });
+      await tx.availability.delete({ where: { id: matching.id } });
+      const full = await tx.appointment.findUnique({ where: { id: appointment.id }, include: { pet: true, tutor: true } });
+      return full;
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error('Error creating appointment:', err);
+    const message = err.message || 'Internal server error';
+    if (message.includes('No availability') || message.includes('Ya existe')) return res.status(400).json({ error: message });
+    res.status(500).json({ error: message });
+  }
 });
 
 // Listar citas del profesional
@@ -77,41 +99,37 @@ router.post('/public', async (req, res) => {
       // try find existing pet by name for this tutor (case-sensitive match)
       pet = await prisma.pet.findFirst({ where: { tutorId: tutor.id, name: petName } });
       if (!pet) {
-    const now = new Date();
-    pet = await prisma.pet.create({ data: { name: petName, type: petType || 'unknown', tutorId: tutor.id, createdAt: now, updatedAt: now } });
+        const now = new Date();
+        pet = await prisma.pet.create({ data: { name: petName, type: petType || 'unknown', tutorId: tutor.id, createdAt: now, updatedAt: now } });
       }
     } else {
       return res.status(400).json({ error: 'petName or petId is required' });
     }
 
-    // verificar disponibilidad del profesional
-    const matching = await prisma.availability.findFirst({
-      where: {
-        userId: profIdNum,
-        start: { lte: selectedDate },
-        end: { gt: selectedDate },
-      },
-    });
+    // perform create + delete availability in a transaction to avoid races
+    try {
+      const result = await prisma.$transaction(async (tx) => {
+        const matching = await tx.availability.findFirst({
+          where: { userId: profIdNum, start: { lte: selectedDate }, end: { gt: selectedDate } },
+        });
+        if (!matching) throw new Error('El horario solicitado no está dentro de las disponibilidades del profesional');
 
-    if (!matching) {
-      return res.status(400).json({ error: 'El horario solicitado no está dentro de las disponibilidades del profesional' });
+        const exists = await tx.appointment.findFirst({ where: { userId: profIdNum, date: selectedDate } });
+        if (exists) throw new Error('Ya existe una cita en ese horario');
+
+        const appt = await tx.appointment.create({ data: { petId: pet.id, tutorId: tutor.id, userId: profIdNum, date: selectedDate, reason: reason || '' } });
+        await tx.availability.delete({ where: { id: matching.id } });
+        const full = await tx.appointment.findUnique({ where: { id: appt.id }, include: { pet: true, tutor: true } });
+        return full;
+      });
+
+      res.json(result);
+    } catch (txErr) {
+      console.error('Transaction error creating public appointment:', txErr);
+      const msg = txErr.message || 'Internal server error';
+      if (msg.includes('No disponibilidad') || msg.includes('Ya existe')) return res.status(400).json({ error: msg });
+      res.status(500).json({ error: msg });
     }
-
-    // evitar doble reserva exactamente a la misma fecha
-    const exists = await prisma.appointment.findFirst({ where: { userId: profIdNum, date: selectedDate } });
-    if (exists) return res.status(400).json({ error: 'Ya existe una cita en ese horario' });
-
-    const appointment = await prisma.appointment.create({
-      data: {
-        petId: pet.id,
-        tutorId: tutor.id,
-        userId: profIdNum,
-        date: selectedDate,
-        reason: reason || '',
-      },
-    });
-
-    res.json(appointment);
   } catch (err) {
     console.error('Error creating public appointment:', err);
     res.status(500).json({ error: err.message || 'Internal server error' });

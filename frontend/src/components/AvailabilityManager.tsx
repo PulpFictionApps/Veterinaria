@@ -43,7 +43,9 @@ export default function AvailabilityManager() {
       const res = await authFetch(`/availability/${userId}`);
       if (res.ok) {
         const data: AvailabilitySlot[] = await res.json();
-        setSlots(data || []);
+        // ensure slots are sorted
+        const sorted = (data || []).sort((a,b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+        setSlots(sorted);
       }
     } catch (err) {
       console.error('Error loading availability:', err);
@@ -97,7 +99,7 @@ export default function AvailabilityManager() {
         // Create single slot
         const start = formatDateTime(startDate, startTime);
         const end = formatDateTime(endDate, endTime);
-        
+
         const res = await authFetch('/availability', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -111,7 +113,7 @@ export default function AvailabilityManager() {
         }
       }
       
-      // Reset form and reload
+  // Reset form and reload slots
       setStartDate('');
       setStartTime('');
       setEndDate('');
@@ -119,7 +121,7 @@ export default function AvailabilityManager() {
       setRecurring(false);
       setRecurringDays([]);
       setShowForm(false);
-      load();
+  await load();
     } catch (err) {
       setError('Error de conexión');
     } finally {
@@ -133,7 +135,7 @@ export default function AvailabilityManager() {
     try {
       const res = await authFetch(`/availability/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        load();
+        await load();
       }
     } catch (err) {
       console.error('Error deleting slot:', err);

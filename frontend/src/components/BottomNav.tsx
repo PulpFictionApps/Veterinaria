@@ -10,7 +10,7 @@ export default function BottomNav() {
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
-  ];
+  ]; 
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 lg:hidden z-50">

@@ -45,6 +45,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         throw new Error(errData.error || errData.message || 'Error creando la reserva');
       }
       setMessage('Reserva creada correctamente');
+      // reload available slots
+      const slotsRes = await fetch(`${API_BASE}/availability/public/${professionalId}`);
+      if (slotsRes.ok) {
+        const data = await slotsRes.json();
+        setSlots(data || []);
+      }
     } catch (err: any) {
       setMessage(err.message || 'Error');
     }
@@ -81,7 +87,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           <select className="w-full p-2 border" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
             <option value="">-- elige un horario --</option>
             {slots.map(s => (
-              <option key={s.id} value={s.start}>{new Date(s.start).toLocaleString()}</option>
+              <option key={s.id} value={s.start}>{new Date(s.start).toLocaleString()} - {new Date(s.end).toLocaleTimeString()}</option>
             ))}
           </select>
         </div>

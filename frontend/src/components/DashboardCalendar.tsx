@@ -47,19 +47,20 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             backgroundColor: "#E0F2FE",
             borderColor: "#60A5FA",
           }));
-          setEvents(prev => [...prev, ...availEvents]);
+          setEvents(prev => [...(prev.filter(e => e.title !== 'Disponible')), ...availEvents]);
         }
 
         if (appointmentsRes.ok) {
           const appointments = await appointmentsRes.json();
-          const appointmentEvents: CalendarEvent[] = appointments.map((appt: Appointment) => ({
-            title: `${appt.petName} - ${appt.reason}`,
+          // appointments response may include pet and tutor objects
+          const appointmentEvents: CalendarEvent[] = appointments.map((appt: any) => ({
+            title: appt.pet?.name ? `${appt.pet.name} - ${appt.reason}` : `${appt.tutor?.name || 'Reservado'}`,
             start: appt.date,
             backgroundColor: "#3B82F6",
             borderColor: "#1E40AF",
             textColor: "white",
           }));
-          setEvents(prev => [...prev, ...appointmentEvents]);
+          setEvents(prev => [...(prev.filter(e => e.backgroundColor !== '#3B82F6')), ...appointmentEvents]);
         }
       } catch (error) {
         console.error('Error loading calendar events:', error);

@@ -10,7 +10,7 @@ export default function Sidebar() {
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
     { href: '/dashboard/availability', label: 'Disponibilidad', icon: '⏰' },
   ];
-
+ 
   return (
     <aside className="w-64 bg-white shadow-lg border-r border-gray-200 hidden lg:block">
       <div className="p-6">
