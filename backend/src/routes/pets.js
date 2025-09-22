@@ -7,17 +7,34 @@ const router = express.Router();
 
 // Crear mascota
 router.post("/", verifyToken, async (req, res) => {
-  const { name, type, breed, age, tutorId } = req.body;
-  const pet = await prisma.pet.create({
-    data: { 
-      name, 
-      type, 
-      breed: breed || null,
-      age: age ? Number(age) : null,
-      tutorId 
-    },
-  });
-  res.json(pet);
+  try {
+    const { name, type, breed, age, tutorId } = req.body;
+
+    if (!name || !type) return res.status(400).json({ error: 'name and type are required' });
+    if (!tutorId) return res.status(400).json({ error: 'tutorId is required' });
+
+    const tutorIdNum = Number(tutorId);
+    if (Number.isNaN(tutorIdNum)) return res.status(400).json({ error: 'tutorId must be a number' });
+
+    // Verify tutor exists
+    const tutor = await prisma.tutor.findUnique({ where: { id: tutorIdNum } });
+    if (!tutor) return res.status(400).json({ error: 'Tutor not found' });
+
+    const pet = await prisma.pet.create({
+      data: {
+        name,
+        type,
+        breed: breed || null,
+        age: age ? Number(age) : null,
+        tutorId: tutorIdNum,
+      },
+    });
+
+    res.json(pet);
+  } catch (err) {
+    console.error('Error creating pet:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
 });
 
 // Obtener mascotas (soporta query tutorId para compatibilidad con frontend)

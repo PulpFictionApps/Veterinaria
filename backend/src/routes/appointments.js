@@ -28,32 +28,41 @@ router.get("/:userId", verifyToken, async (req, res) => {
 router.post('/public', async (req, res) => {
   const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId } = req.body;
   try {
-    let tutor = null;
+    if (!professionalId) return res.status(400).json({ error: 'professionalId is required' });
 
+    const profIdNum = Number(professionalId);
+    if (Number.isNaN(profIdNum)) return res.status(400).json({ error: 'professionalId must be a number' });
+
+    // Parse date defensively
+    const selectedDate = date ? new Date(date) : null;
+    if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
+      return res.status(400).json({ error: 'Invalid date format. Use ISO date string.' });
+    }
+
+    let tutor = null;
     if (tutorId) {
       tutor = await prisma.tutor.findUnique({ where: { id: Number(tutorId) } });
+      if (!tutor) return res.status(400).json({ error: 'Tutor not found' });
     } else if (tutorName) {
-      // crear tutor asociado al profesional
       tutor = await prisma.tutor.create({
-        data: { name: tutorName, email: tutorEmail || null, phone: tutorPhone || null, userId: Number(professionalId) },
+        data: { name: tutorName, email: tutorEmail || null, phone: tutorPhone || null, userId: profIdNum },
       });
     }
 
-    // crear mascota si no existe
+    // crear mascota si no existe y si tenemos tutor
     let pet = null;
     if (petId) {
-      // opcional: podríamos validar que pet pertenece al tutor
       pet = await prisma.pet.findUnique({ where: { id: Number(petId) } });
-    } else if (petName && tutor) {
+      if (!pet) return res.status(400).json({ error: 'Pet not found' });
+    } else if (petName) {
+      if (!tutor) return res.status(400).json({ error: 'Cannot create pet without tutor information' });
       pet = await prisma.pet.create({ data: { name: petName, type: petType || 'unknown', tutorId: tutor.id } });
     }
 
-    const selectedDate = new Date(date);
-
-    // verificar que la fecha solicitada cae dentro de alguna disponibilidad del profesional
+    // verificar disponibilidad del profesional
     const matching = await prisma.availability.findFirst({
       where: {
-        userId: Number(professionalId),
+        userId: profIdNum,
         start: { lte: selectedDate },
         end: { gt: selectedDate },
       },
@@ -63,15 +72,17 @@ router.post('/public', async (req, res) => {
       return res.status(400).json({ error: 'El horario solicitado no está dentro de las disponibilidades del profesional' });
     }
 
-    // opcional: evitar doble reserva exactamente a la misma fecha
-    const exists = await prisma.appointment.findFirst({ where: { userId: Number(professionalId), date: selectedDate } });
+    // evitar doble reserva exactamente a la misma fecha
+    const exists = await prisma.appointment.findFirst({ where: { userId: profIdNum, date: selectedDate } });
     if (exists) return res.status(400).json({ error: 'Ya existe una cita en ese horario' });
+
+    if (!pet || !tutor) return res.status(400).json({ error: 'Tutor and pet are required to create an appointment' });
 
     const appointment = await prisma.appointment.create({
       data: {
         petId: pet.id,
         tutorId: tutor.id,
-        userId: Number(professionalId),
+        userId: profIdNum,
         date: selectedDate,
         reason: reason || '',
       },
@@ -79,8 +90,8 @@ router.post('/public', async (req, res) => {
 
     res.json(appointment);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    console.error('Error creating public appointment:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
   }
 });
 
