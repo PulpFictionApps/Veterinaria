@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 
 interface Pet {
@@ -11,8 +12,9 @@ interface Pet {
   [key: string]: any; // por si hay otras propiedades
 }
 
-export default function PetsPage({ params }: { params: { id: string } }) {
-  const clientId = Number(params.id);
+export default function PetsPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const clientId = Number(resolvedParams.id);
   const [pets, setPets] = useState<Pet[]>([]);
 
   useEffect(() => {

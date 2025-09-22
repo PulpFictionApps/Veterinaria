@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 
-export default function NewPrescription({ params }: { params: { id: string; petId: string } }) {
+export default function NewPrescription({ params }: { params: Promise<{ id: string; petId: string }> }) {
   const router = useRouter();
-  const petId = Number(params.petId);
+  const resolvedParams = use(params);
+  const petId = Number(resolvedParams.petId);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [sendWhatsApp, setSendWhatsApp] = useState(false);
@@ -14,7 +16,7 @@ export default function NewPrescription({ params }: { params: { id: string; petI
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const res = await authFetch('/prescriptions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ petId, title, content, sendWhatsApp }) });
-    if (res.ok) router.push(`/dashboard/clients/${params.id}/pets/${petId}`);
+    if (res.ok) router.push(`/dashboard/clients/${resolvedParams.id}/pets/${petId}`);
   }
 
   return (

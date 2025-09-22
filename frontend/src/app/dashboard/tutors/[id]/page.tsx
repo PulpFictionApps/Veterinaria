@@ -1,4 +1,5 @@
 import PetCard from '../../../../components/PetCard';
+import { use } from 'react';
 
 interface Pet {
   id: number;
@@ -7,7 +8,7 @@ interface Pet {
 }
 
 interface TutorDetailParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const pets: Pet[] = [

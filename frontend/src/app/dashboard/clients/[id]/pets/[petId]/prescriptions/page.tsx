@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 import PrescriptionCard from '@/components/PrescriptionCard';
 
@@ -10,8 +11,9 @@ interface Prescription {
   [key: string]: any; // para otras propiedades que PrescriptionCard pueda necesitar
 }
 
-export default function PrescriptionsPage({ params }: { params: { id: string; petId: string } }) {
-  const petId = Number(params.petId);
+export default function PrescriptionsPage({ params }: { params: Promise<{ id: string; petId: string }> }) {
+  const resolvedParams = use(params);
+  const petId = Number(resolvedParams.petId);
   const [items, setItems] = useState<Prescription[]>([]);
 
   useEffect(() => {

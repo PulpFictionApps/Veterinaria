@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 
 interface MedicalRecord {
@@ -11,8 +12,9 @@ interface MedicalRecord {
   [key: string]: any; // por si hay otras propiedades que se necesiten
 }
 
-export default function RecordsPage({ params }: { params: { id: string; petId: string } }) {
-  const petId = Number(params.petId);
+export default function RecordsPage({ params }: { params: Promise<{ id: string; petId: string }> }) {
+  const resolvedParams = use(params);
+  const petId = Number(resolvedParams.petId);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
 
   useEffect(() => {

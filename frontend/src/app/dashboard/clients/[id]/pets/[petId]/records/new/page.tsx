@@ -2,18 +2,20 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 
-export default function NewRecord({ params }: { params: { id: string; petId: string } }) {
+export default function NewRecord({ params }: { params: Promise<{ id: string; petId: string }> }) {
   const router = useRouter();
-  const petId = Number(params.petId);
+  const resolvedParams = use(params);
+  const petId = Number(resolvedParams.petId);
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
   const res = await authFetch('/medical-records', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ petId, title, content: notes }) });
-    if (res.ok) router.push(`/dashboard/clients/${params.id}/pets/${petId}/records`);
+    if (res.ok) router.push(`/dashboard/clients/${resolvedParams.id}/pets/${petId}/records`);
   }
 
   return (

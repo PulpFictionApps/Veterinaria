@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 
 interface Pet {
@@ -11,12 +12,13 @@ interface Pet {
 }
 
 interface PageProps {
-  params: { id: string; petId: string };
+  params: Promise<{ id: string; petId: string }>;
 }
 
 export default function PetDetail({ params }: PageProps) {
   const router = useRouter();
-  const petId = Number(params.petId);
+  const resolvedParams = use(params);
+  const petId = Number(resolvedParams.petId);
 
   const [pet, setPet] = useState<Pet | null>(null);
   const [name, setName] = useState('');
