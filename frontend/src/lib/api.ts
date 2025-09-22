@@ -33,7 +33,7 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
     }
     
     return res;
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ API Error:', {
       url: fullUrl,
       error: error.message,
