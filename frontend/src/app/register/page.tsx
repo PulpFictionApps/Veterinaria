@@ -36,8 +36,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-stretch justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-0">
-      <div className="w-full h-screen">
+    <div className="fixed inset-0 flex items-stretch justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-0 overflow-auto">
+      <div className="w-full h-full">
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mb-4">

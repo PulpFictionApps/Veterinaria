@@ -51,8 +51,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-stretch justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-0">
-      <div className="w-full h-screen">
+    <div className="fixed inset-0 flex items-stretch justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-0 overflow-auto">
+      <div className="w-full h-full">
         {/* Compact header for auth pages - avoid duplicating global header */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Inicia sesión</h1>
