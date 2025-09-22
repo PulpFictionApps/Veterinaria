@@ -1,0 +1,89 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  tutors       Tutor[]
+  availability Availability[]
+  appointments Appointment[]
+  prescriptions Prescription[]
+}
+
+model Tutor {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String?
+  phone        String?
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  pets         Pet[]
+  appointments Appointment[]
+  prescriptions Prescription[]
+}
+
+model Pet {
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         String
+  tutorId      Int
+  tutor        Tutor         @relation(fields: [tutorId], references: [id])
+  appointments Appointment[]
+  medicalRecords MedicalRecord[]
+  prescriptions Prescription[]
+}
+
+model Appointment {
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  tutorId   Int
+  userId    Int
+  date      DateTime
+  reason    String
+  createdAt DateTime @default(now())
+
+  pet    Pet   @relation(fields: [petId], references: [id])
+  tutor  Tutor @relation(fields: [tutorId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
+}
+
+model Availability {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  start     DateTime
+  end       DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model MedicalRecord {
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+
+  pet Pet @relation(fields: [petId], references: [id])
+}
+
+model Prescription {
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  tutorId   Int
+  userId    Int
+  pdfUrl    String
+  createdAt DateTime @default(now())
+
+  pet Pet @relation(fields: [petId], references: [id])
+  tutor Tutor @relation(fields: [tutorId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
