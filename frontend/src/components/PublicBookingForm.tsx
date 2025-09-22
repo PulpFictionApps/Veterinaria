@@ -102,18 +102,18 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-full sm:max-w-md mx-auto bg-white p-4 sm:p-6 rounded shadow">
+    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-md mx-auto bg-white p-4 sm:p-6 rounded shadow">
       <h3 className="text-base sm:text-lg font-bold mb-3">Reservar hora</h3>
-      <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre" className="w-full p-2 border mb-2" required />
-  <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border mb-2" required />
-  <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border mb-2" required />
+    <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre" className="w-full p-2 border mb-2 rounded" required />
+  <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border mb-2 rounded" required />
+  <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border mb-2 rounded" required />
       <input value={petName} onChange={e => setPetName(e.target.value)} placeholder="Nombre mascota" className="w-full p-2 border mb-2" required />
       <input value={petType} onChange={e => setPetType(e.target.value)} placeholder="Tipo mascota" className="w-full p-2 border mb-2" />
 
       {slots.length > 0 ? (
         <div className="mb-2">
           <label className="block text-sm mb-1">Selecciona un horario disponible</label>
-          <select className="w-full p-2 border" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
+          <select className="w-full p-2 border rounded" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
             <option value="">-- elige un horario --</option>
             {groupSlotsByDay(slots).map(([day, daySlots]) => (
               <optgroup key={day} label={new Date(day).toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' })}>
@@ -127,8 +127,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       ) : (
         <input value={date} onChange={e => setDate(e.target.value)} placeholder="Fecha y hora (ISO)" className="w-full p-2 border mb-2" required />
       )}
-      <textarea value={reason} onChange={e => setReason(e.target.value)} placeholder="Motivo" className="w-full p-2 border mb-2" />
-  <button className="bg-blue-600 text-white px-3 py-2 rounded text-sm">Reservar</button>
+    <textarea value={reason} onChange={e => setReason(e.target.value)} placeholder="Motivo" className="w-full p-2 border mb-2 rounded" />
+  <button className="bg-blue-600 text-white w-full sm:w-auto px-3 py-2 rounded text-sm">Reservar</button>
       {message && <p className="mt-3 text-sm">{message}</p>}
     </form>
   );

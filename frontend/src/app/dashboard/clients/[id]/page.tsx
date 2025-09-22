@@ -55,10 +55,10 @@ export default function ClientDetail({ params }: PageProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {pets.map(p => (
-          <div key={p.id} className="p-3 bg-white rounded shadow">
+          <div key={p.id} className="p-3 bg-white rounded shadow flex flex-col">
             <div className="font-bold">{p.name}</div>
             <div className="text-sm">{p.type}</div>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:gap-2">
               <Link
                 href={`/dashboard/clients/${id}/pet/${p.id}`}
                 className="text-blue-600"
@@ -67,7 +67,7 @@ export default function ClientDetail({ params }: PageProps) {
               </Link>
               <Link
                 href={`/dashboard/prescriptions/new?petId=${p.id}`}
-                className="text-green-600"
+                className="text-green-600 mt-2 sm:mt-0"
               >
                 Crear receta
               </Link>

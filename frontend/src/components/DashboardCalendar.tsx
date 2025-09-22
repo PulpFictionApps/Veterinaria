@@ -126,6 +126,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
       {/* Calendar */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="w-full overflow-auto">
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -151,6 +152,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             hour12: false
           }}
         />
+        </div>
       </div>
     </div>
   );
