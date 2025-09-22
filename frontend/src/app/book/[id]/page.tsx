@@ -16,3 +16,4 @@ export default function PublicBookingPage({ params }: { params: { id: string } }
     </div>
   );
 }
+ 
