@@ -1,9 +1,10 @@
 interface PetCardProps {
   name: string;
   type: string;
+  id?: number;
 }
 
-export default function PetCard({ name, type }: PetCardProps) {
+export default function PetCard({ name, type, id }: PetCardProps) {
   return (
     <article role="article" className="bg-white p-4 rounded shadow hover:shadow-lg transition-shadow w-full">
       <div className="flex items-center gap-3">
@@ -11,6 +12,17 @@ export default function PetCard({ name, type }: PetCardProps) {
         <div className="min-w-0">
           <h3 className="font-bold truncate">{name}</h3>
           <p className="text-sm truncate text-gray-600">{type}</p>
+        </div>
+        <div className="ml-auto">
+          {/** If an id is provided, show edit link to pet edit page under tutors/**/}
+          {typeof id !== 'undefined' && (
+            <a
+              href={`/dashboard/pets/${id}/edit`}
+              className="text-sm text-blue-600 hover:underline ml-4"
+            >
+              Editar
+            </a>
+          )}
         </div>
       </div>
     </article>
