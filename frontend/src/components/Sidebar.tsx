@@ -1,8 +1,31 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useAuthContext } from '../lib/auth-context';
+import { authFetch } from '../lib/api';
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { userId } = useAuthContext();
+  const [availabilityCount, setAvailabilityCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      if (!userId) return;
+      try {
+        const res = await authFetch(`/availability/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (mounted) setAvailabilityCount(Array.isArray(data) ? data.length : 0);
+        }
+      } catch (e) {
+        console.error('Error fetching availability count', e);
+      }
+    }
+    load();
+    return () => { mounted = false };
+  }, [userId]);
 
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
@@ -42,6 +65,12 @@ export default function Sidebar() {
                 >
                   <span className="text-lg mr-3">{item.icon}</span>
                   <span className="font-medium">{item.label}</span>
+                  {/* Mobile badge: show when availability count is 0 and this is the availability item */}
+                  {item.href.endsWith('/availability') && availabilityCount !== null && (
+                    <span className={`ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${availabilityCount === 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                      {availabilityCount === 0 ? 'Sin horarios' : `${availabilityCount}`}
+                    </span>
+                  )}
                 </Link>
               </li>
             ))}
@@ -65,3 +94,4 @@ export default function Sidebar() {
     </aside>
   );
 }
+
