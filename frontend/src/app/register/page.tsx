@@ -36,8 +36,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
-      <div className="w-full max-w-3xl">
+    <div className="min-h-screen flex items-stretch justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-0">
+      <div className="w-full h-screen">
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mb-4">
@@ -48,8 +48,8 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          <div className="hidden md:block p-6">
+        <div className="bg-white rounded-none md:rounded-2xl shadow-none md:shadow-xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch h-full overflow-hidden">
+          <div className="hidden md:block p-6 h-full">
             <div className="h-full flex items-center justify-center text-center text-gray-600">
               <div>
                 <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="4" stroke="#bbf7d0" strokeWidth="2"/><path d="M7 12h10" stroke="#10b981" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
@@ -59,8 +59,9 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="p-2">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="p-4 md:p-2 flex items-center justify-center overflow-auto">
+            <div className="w-full max-w-md">
+              <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -71,9 +72,11 @@ export default function RegisterPage() {
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus:border-transparent transition-colors"
+                aria-describedby="email-help"
                 required
               />
+              <p id="email-help" className="sr-only">Usa el email con el que te registraste.</p>
             </div>
             
             <div>
@@ -86,28 +89,32 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus:border-transparent transition-colors"
+                aria-describedby="password-help"
                 required
               />
+              <p id="password-help" className="sr-only">Tu contraseña debe tener al menos 8 caracteres.</p>
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                {error}
+              <div role="alert" aria-live="assertive" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <strong className="font-medium">Error: </strong>
+                <span className="ml-1">{error}</span>
               </div>
             )}
 
-            <button 
-              type="submit" 
-              className={`w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors ${loading ? 'opacity-70 cursor-wait' : ''}`}
+            <button
+              type="submit"
+              aria-label="Crear cuenta"
+              className={`w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 transition-colors ${loading ? 'opacity-70 cursor-wait' : ''}`}
               disabled={loading}
               aria-busy={loading}
             >
               {loading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
-            </form>
+              </form>
 
-            <div className="mt-6 text-center">
+              <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               ¿Ya tienes cuenta?{' '}
               <a href="/login" className="text-green-600 hover:text-green-700 font-medium">
@@ -115,6 +122,7 @@ export default function RegisterPage() {
               </a>
             </p>
           </div>
+            </div>
           </div>
         </div>
       </div>
