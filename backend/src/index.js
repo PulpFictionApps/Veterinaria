@@ -16,7 +16,11 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://veterinaria-p918.vercel.app', // Frontend URL
+    'https://veterinaria-gamma-virid.vercel.app' // Backend URL (for self-calls)
+  ],
   credentials: true,
   optionsSuccessStatus: 200
 };
