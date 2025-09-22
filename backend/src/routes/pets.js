@@ -20,6 +20,7 @@ router.post("/", verifyToken, async (req, res) => {
     const tutor = await prisma.tutor.findUnique({ where: { id: tutorIdNum } });
     if (!tutor) return res.status(400).json({ error: 'Tutor not found' });
 
+    const now = new Date();
     const pet = await prisma.pet.create({
       data: {
         name,
@@ -27,6 +28,8 @@ router.post("/", verifyToken, async (req, res) => {
         breed: breed || null,
         age: age ? Number(age) : null,
         tutorId: tutorIdNum,
+        createdAt: now,
+        updatedAt: now,
       },
     });
 

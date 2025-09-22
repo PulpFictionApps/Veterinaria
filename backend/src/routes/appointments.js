@@ -77,7 +77,8 @@ router.post('/public', async (req, res) => {
       // try find existing pet by name for this tutor (case-sensitive match)
       pet = await prisma.pet.findFirst({ where: { tutorId: tutor.id, name: petName } });
       if (!pet) {
-        pet = await prisma.pet.create({ data: { name: petName, type: petType || 'unknown', tutorId: tutor.id } });
+    const now = new Date();
+    pet = await prisma.pet.create({ data: { name: petName, type: petType || 'unknown', tutorId: tutor.id, createdAt: now, updatedAt: now } });
       }
     } else {
       return res.status(400).json({ error: 'petName or petId is required' });
