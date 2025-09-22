@@ -8,14 +8,14 @@ const prisma = new PrismaClient();
 
 // Registro
 router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, fullName, phone, clinicName, accountType } = req.body;
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) return res.status(400).json({ error: "Usuario ya existe" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: { email, password: hashedPassword, fullName, phone, clinicName, accountType },
     });
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });

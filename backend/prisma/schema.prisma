@@ -11,6 +11,10 @@ model User {
   id           Int           @id @default(autoincrement())
   email        String        @unique
   password     String
+  fullName     String?
+  phone        String?
+  clinicName   String?
+  accountType  String        @default("client")
   createdAt    DateTime      @default(now())
   tutors       Tutor[]
   availability Availability[]
