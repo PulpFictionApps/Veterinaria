@@ -28,6 +28,9 @@ export default function AppointmentsPage() {
   const { userId } = useAuthContext();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<null | Appointment>(null);
+  const [editDate, setEditDate] = useState('');
+  const [editReason, setEditReason] = useState('');
   const [filter, setFilter] = useState<'all' | 'today' | 'upcoming' | 'past'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -50,6 +53,50 @@ export default function AppointmentsPage() {
     }
     loadAppointments();
   }, [userId]);
+
+    async function deleteAppointment(id: number) {
+      if (!confirm('¿Eliminar esta cita?')) return;
+      try {
+        const res = await authFetch(`/appointments/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          setAppointments(prev => prev.filter(a => a.id !== id));
+        } else {
+          const err = await res.json().catch(() => ({ error: 'Error' }));
+          alert(err.error || 'Error eliminando cita');
+        }
+      } catch (err) {
+        console.error('Error deleting appointment:', err);
+        alert('Error eliminando cita');
+      }
+    }
+
+    function openEdit(appointment: Appointment) {
+      setEditing(appointment);
+      setEditDate(appointment.date);
+      setEditReason(appointment.reason || '');
+    }
+
+    async function submitEdit() {
+      if (!editing) return;
+      try {
+        const res = await authFetch(`/appointments/${editing.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date: editDate, reason: editReason }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: 'Error' }));
+          alert(err.error || 'Error actualizando cita');
+          return;
+        }
+        const updated = await res.json();
+        setAppointments(prev => prev.map(a => a.id === updated.id ? updated : a));
+        setEditing(null);
+      } catch (err) {
+        console.error('Error updating appointment:', err);
+        alert('Error actualizando cita');
+      }
+    }
 
   function filterAppointments(appointments: Appointment[]) {
     const now = new Date();
@@ -219,9 +266,8 @@ export default function AppointmentsPage() {
                       {status.status === 'today' ? 'Hoy' : 
                        status.status === 'upcoming' ? 'Próxima' : 'Pasada'}
                     </span>
-                    <button className="text-gray-400 hover:text-gray-600">
-                      ⋮
-                    </button>
+                    <button onClick={() => openEdit(appointment)} className="text-gray-600 hover:text-gray-800 ml-2 text-sm font-medium">Editar</button>
+                    <button onClick={() => deleteAppointment(appointment.id)} className="text-red-600 hover:text-red-800 ml-2 text-sm font-medium">Eliminar</button>
                   </div>
                 </div>
 
@@ -258,13 +304,29 @@ export default function AppointmentsPage() {
                   >
                     Ver Cliente
                   </Link>
-                  <button className="text-red-600 hover:text-red-700 text-sm font-medium">
+                  <button onClick={() => deleteAppointment(appointment.id)} className="text-red-600 hover:text-red-700 text-sm font-medium">
                     Cancelar Cita
                   </button>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+      {/* Edit Modal */}
+      {editing && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">Editar Cita</h3>
+            <label className="block text-sm mb-1">Fecha y hora (ISO)</label>
+            <input value={editDate} onChange={e => setEditDate(e.target.value)} className="w-full p-2 border mb-3" />
+            <label className="block text-sm mb-1">Motivo</label>
+            <input value={editReason} onChange={e => setEditReason(e.target.value)} className="w-full p-2 border mb-4" />
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setEditing(null)} className="px-4 py-2 border rounded">Cancelar</button>
+              <button onClick={submitEdit} className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

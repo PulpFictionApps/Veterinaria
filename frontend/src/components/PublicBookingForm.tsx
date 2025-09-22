@@ -76,7 +76,11 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     const map = new Map<string, Array<{ id: number; start: string; end: string }>>();
     for (const s of slots) {
       const d = new Date(s.start);
-      const dayKey = d.toISOString().split('T')[0]; // YYYY-MM-DD
+      // use local date parts to avoid timezone shifts
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dayKey = `${y}-${m}-${dd}`;
       if (!map.has(dayKey)) map.set(dayKey, []);
       map.get(dayKey)!.push(s);
     }

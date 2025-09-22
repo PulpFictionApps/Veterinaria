@@ -46,6 +46,64 @@ router.get("/:userId", verifyToken, async (req, res) => {
   res.json(appointments);
 });
 
+// Eliminar cita
+router.delete('/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const appointment = await prisma.appointment.findUnique({ where: { id: Number(id) } });
+    if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
+    if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
+
+    await prisma.appointment.delete({ where: { id: Number(id) } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Error deleting appointment:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
+// Actualizar cita (date and/or reason)
+router.patch('/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { date, reason } = req.body;
+  try {
+    const appointment = await prisma.appointment.findUnique({ where: { id: Number(id) } });
+    if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
+    if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
+
+    if (date) {
+      const selectedDate = new Date(date);
+      if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
+
+      // transaction: check availability, update appointment date, delete matched availability
+      const result = await prisma.$transaction(async (tx) => {
+        const matching = await tx.availability.findFirst({ where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } } });
+        if (!matching) throw new Error('No availability for that time');
+
+        // ensure no appointment exists at that date (except this one)
+        const exists = await tx.appointment.findFirst({ where: { userId: req.user.id, date: selectedDate } });
+        if (exists && exists.id !== Number(id)) throw new Error('Ya existe una cita en ese horario');
+
+        const updated = await tx.appointment.update({ where: { id: Number(id) }, data: { date: selectedDate, reason: reason || appointment.reason } });
+        await tx.availability.delete({ where: { id: matching.id } });
+        const full = await tx.appointment.findUnique({ where: { id: updated.id }, include: { pet: true, tutor: true } });
+        return full;
+      });
+
+      res.json(result);
+    } else {
+      // only update reason
+      const updated = await prisma.appointment.update({ where: { id: Number(id) }, data: { reason: reason || appointment.reason }, include: { pet: true, tutor: true } });
+      res.json(updated);
+    }
+  } catch (err) {
+    console.error('Error updating appointment:', err);
+    const msg = err.message || 'Internal server error';
+    if (msg.includes('No availability') || msg.includes('Ya existe')) return res.status(400).json({ error: msg });
+    res.status(500).json({ error: msg });
+  }
+});
+
 // Reserva pública (sin token) desde link público
 router.post('/public', async (req, res) => {
   const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId } = req.body;
