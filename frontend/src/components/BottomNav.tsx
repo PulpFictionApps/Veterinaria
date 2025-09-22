@@ -13,20 +13,20 @@ export default function BottomNav() {
   ]; 
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 lg:hidden z-50">
-      <div className="flex justify-around py-2">
+    <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 lg:hidden">
+      <div className="bg-white/95 backdrop-blur-sm shadow-xl rounded-full px-3 py-2 flex items-center gap-2 border border-gray-100">
         {menuItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
+            className={`flex flex-col items-center py-1 px-3 rounded-md transition-colors text-xs ${
               pathname === item.href
-                ? 'text-blue-600 bg-blue-50'
+                ? 'text-blue-600 bg-blue-50/60'
                 : 'text-gray-600 hover:text-blue-600'
             }`}
           >
-            <span className="text-xl mb-1">{item.icon}</span>
-            <span className="text-xs font-medium">{item.label}</span>
+            <span className="text-lg mb-0">{item.icon}</span>
+            <span className="text-[10px] font-medium">{item.label}</span>
           </Link>
         ))}
       </div>

@@ -10,6 +10,12 @@ export default function Sidebar() {
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
     { href: '/dashboard/availability', label: 'Disponibilidad', icon: '⏰' },
   ];
+  const secondary = [
+    { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
+    { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
+    { href: '/dashboard/integrations', label: 'Integraciones', icon: '🔌' },
+    { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
+  ];
  
   return (
     <aside className="w-64 bg-white shadow-lg border-r border-gray-200 hidden lg:block">
@@ -41,6 +47,20 @@ export default function Sidebar() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-6 border-t pt-4">
+            <h4 className="text-xs text-gray-400 uppercase mb-2 px-4">Cuenta</h4>
+            <ul className="space-y-2">
+              {secondary.map(item => (
+                <li key={item.href}>
+                  <Link href={item.href} className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname === item.href ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}>
+                    <span className="text-lg mr-3">{item.icon}</span>
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </nav>
       </div>
     </aside>

@@ -7,15 +7,27 @@ const router = express.Router();
 
 // Crear cita (protegida) - crea appointment y elimina el slot de disponibilidad correspondiente de forma atómica
 router.post("/", verifyToken, async (req, res) => {
-  const { petId, tutorId, date, reason } = req.body;
+  const { petId, tutorId, date, reason, slotId } = req.body;
   try {
-    const selectedDate = new Date(date);
-    if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
+    let selectedDate = null;
+    let matching = null;
+
+    if (slotId) {
+      // prefer slotId when provided
+      matching = await prisma.availability.findUnique({ where: { id: Number(slotId) } });
+      if (!matching) return res.status(400).json({ error: 'Availability slot not found' });
+      if (matching.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed to book this slot' });
+      selectedDate = new Date(matching.start);
+    } else {
+      selectedDate = new Date(date);
+      if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
+    }
 
     const result = await prisma.$transaction(async (tx) => {
-      const matching = await tx.availability.findFirst({
-        where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } },
-      });
+      // if slotId was not used, try to find a matching availability range
+      if (!matching) {
+        matching = await tx.availability.findFirst({ where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } } });
+      }
       if (!matching) throw new Error('No availability for that time');
 
       const exists = await tx.appointment.findFirst({ where: { userId: req.user.id, date: selectedDate } });
@@ -71,13 +83,26 @@ router.patch('/:id', verifyToken, async (req, res) => {
     if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
     if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
 
-    if (date) {
-      const selectedDate = new Date(date);
-      if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
+      if (date || req.body.slotId) {
+      const slotId = req.body.slotId;
+      let selectedDate = null;
+      let matching = null;
+
+      if (slotId) {
+        matching = await prisma.availability.findUnique({ where: { id: Number(slotId) } });
+        if (!matching) return res.status(400).json({ error: 'Availability slot not found' });
+        if (matching.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed to use this slot' });
+        selectedDate = new Date(matching.start);
+      } else {
+        selectedDate = new Date(date);
+        if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
+      }
 
       // transaction: check availability, update appointment date, delete matched availability
       const result = await prisma.$transaction(async (tx) => {
-        const matching = await tx.availability.findFirst({ where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } } });
+        if (!matching) {
+          matching = await tx.availability.findFirst({ where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } } });
+        }
         if (!matching) throw new Error('No availability for that time');
 
         // ensure no appointment exists at that date (except this one)
@@ -106,22 +131,31 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
 // Reserva pública (sin token) desde link público
 router.post('/public', async (req, res) => {
-  const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId } = req.body;
+  const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId, slotId } = req.body;
   try {
     if (!professionalId) return res.status(400).json({ error: 'professionalId is required' });
 
     const profIdNum = Number(professionalId);
     if (Number.isNaN(profIdNum)) return res.status(400).json({ error: 'professionalId must be a number' });
 
-    // Parse date defensively
-    const selectedDate = date ? new Date(date) : null;
-    if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
-      return res.status(400).json({ error: 'Invalid date format. Use ISO date string.' });
-    }
-
     // Require contact info (email and phone) for public bookings
     if (!tutorEmail || !tutorPhone) {
       return res.status(400).json({ error: 'tutorEmail and tutorPhone are required for public bookings' });
+    }
+
+    // Resolve selected date & matching availability. Prefer slotId when provided.
+    let selectedDate = null;
+    let matching = null;
+    if (slotId) {
+      matching = await prisma.availability.findUnique({ where: { id: Number(slotId) } });
+      if (!matching) return res.status(400).json({ error: 'Availability slot not found' });
+      if (matching.userId !== profIdNum) return res.status(400).json({ error: 'Slot does not belong to the professional' });
+      selectedDate = new Date(matching.start);
+    } else {
+      selectedDate = date ? new Date(date) : null;
+      if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
+        return res.status(400).json({ error: 'Invalid date format. Use ISO date string or provide slotId.' });
+      }
     }
 
     let tutor = null;

@@ -49,13 +49,10 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
       <div className="w-full max-w-md">
-        {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-            <span className="text-white text-2xl font-bold">V</span>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">Veterinaria</h1>
-          <p className="text-gray-600 mt-2">Inicia sesión en tu cuenta</p>
+        {/* Compact header for auth pages - avoid duplicating global header */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Inicia sesión</h1>
+          <p className="text-gray-600 mt-1">Accede a tu cuenta</p>
         </div>
 
         {/* Login Form */}

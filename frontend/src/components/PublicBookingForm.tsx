@@ -26,19 +26,23 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     }
 
     try {
+      const body: any = {
+        tutorName: name,
+        tutorEmail: email,
+        tutorPhone: phone,
+        petName,
+        petType,
+        reason,
+        professionalId,
+      };
+
+      if (selectedSlot) body.slotId = Number(selectedSlot);
+      else body.date = date;
+
       const res = await fetch(`${API_BASE}/appointments/public`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tutorName: name,
-          tutorEmail: email,
-          tutorPhone: phone,
-          petName,
-          petType,
-          date: selectedSlot || date,
-          reason,
-          professionalId,
-        }),
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({ message: 'Error creando la reserva' }));
@@ -118,7 +122,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             {groupSlotsByDay(slots).map(([day, daySlots]) => (
               <optgroup key={day} label={new Date(day).toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' })}>
                 {daySlots.map(s => (
-                  <option key={s.id} value={s.start}>{formatOptionLabel(s)}</option>
+                  <option key={s.id} value={String(s.id)}>{formatOptionLabel(s)}</option>
                 ))}
               </optgroup>
             ))}

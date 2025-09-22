@@ -8,6 +8,8 @@
     "dev": "nodemon src/index.js",
   "clean-db:dry": "node scripts/clean-db.js",
   "clean-db:apply": "node scripts/clean-db.js --apply",
+  "backfill-pet-updatedAt:dry": "node scripts/backfill-pet-updatedAt.js",
+  "backfill-pet-updatedAt:apply": "node scripts/backfill-pet-updatedAt.js --apply",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "vercel-build": "echo 'no build'",
