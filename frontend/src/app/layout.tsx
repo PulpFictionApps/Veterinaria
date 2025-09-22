@@ -6,9 +6,9 @@ import Footer from '@/components/Footer';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className="min-h-screen bg-gray-50">
+      <body className="app-shell bg-gray-50">
         <AuthProvider>
-          <div className="min-h-screen flex flex-col">
+          <div className="flex-1 flex flex-col min-h-0">
             {/* header kept minimal; content should be full-bleed */}
             <Header />
             <main className="flex-1 w-full mx-auto px-0 py-0 min-h-0 overflow-hidden">

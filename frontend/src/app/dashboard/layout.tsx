@@ -25,18 +25,19 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Desktop Layout */}
-      <div className="hidden lg:flex h-screen">
+      <div className="hidden lg:flex lg:min-h-screen">
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-0">
           <Navbar />
-          <main className="flex-1 overflow-auto p-6">{children}</main>
+          <main className="flex-1 overflow-auto p-6 min-h-0">{children}</main>
         </div>
       </div>
 
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col min-h-screen">
         <Navbar />
-        <main className="flex-1 overflow-auto p-4 pb-20">{children}</main>
+        {/* add bottom padding so content isn't hidden behind BottomNav */}
+        <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
         <BottomNav />
       </div>
     </div>

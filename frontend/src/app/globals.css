@@ -31,10 +31,17 @@
   }
 }
 
-html, body {
+/* Make root take full viewport and provide safe defaults for mobile */
+:root, html, body, #__next {
   height: 100%;
+}
+
+html, body {
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* App background */
@@ -43,7 +50,21 @@ body {
   background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
   background-repeat: no-repeat;
   /* Allow body to scroll; inner containers may also handle overflow */
-  overflow: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
+}
+
+/* Utility: make a container stretch to viewport height but allow children to scroll inside */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.fill-viewport {
+  min-height: 100vh;
+  height: 100vh;
 }
 
 

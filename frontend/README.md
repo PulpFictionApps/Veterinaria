@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Mobile / App packaging notes
+
+This project is web-first but prepared to be packaged as a mobile app (hybrid) or run in a WebView. A few notes:
+
+- Layouts and global CSS now use full-viewport utilities (see `globals.css` and `app/layout.tsx`) so pages stretch to the full screen on desktop and mobile.
+- We added safe bottom padding for pages that use a fixed bottom navigation (`BottomNav`) so content isn't hidden behind it on small screens.
+- To package as a mobile app consider:
+	- Capacitor: wrap the Next.js build as a web asset and use Capacitor to produce iOS/Android apps. See https://capacitorjs.com/docs/web
+	- Alternatively, create a small React Native/Expo shell and embed the web app inside a WebView.
+
+Quick test on device: open the site in a mobile browser and inspect using device toolbar (Chrome DevTools) to ensure no vertical scroll clipping and that header/footer behave as expected.
