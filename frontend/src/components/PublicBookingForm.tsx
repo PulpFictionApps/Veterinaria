@@ -72,6 +72,31 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     return () => { mounted = false };
   }, [professionalId]);
 
+  function groupSlotsByDay(slots: Array<{ id: number; start: string; end: string }>) {
+    const map = new Map<string, Array<{ id: number; start: string; end: string }>>();
+    for (const s of slots) {
+      const d = new Date(s.start);
+      const dayKey = d.toISOString().split('T')[0]; // YYYY-MM-DD
+      if (!map.has(dayKey)) map.set(dayKey, []);
+      map.get(dayKey)!.push(s);
+    }
+    // sort days and slots
+    const ordered: Array<[string, Array<{ id: number; start: string; end: string }>]> = Array.from(map.entries())
+      .sort((a,b) => a[0].localeCompare(b[0]))
+      .map(([k, arr]) => [k, arr.sort((x,y) => new Date(x.start).getTime() - new Date(y.start).getTime())]);
+    return ordered;
+  }
+
+  function formatOptionLabel(s: { start: string; end: string }) {
+    const start = new Date(s.start);
+    const end = new Date(s.end);
+    const weekday = start.toLocaleDateString('es-ES', { weekday: 'long' });
+    const day = start.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+    const startTime = start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    const endTime = end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    return `${weekday} ${day} - ${startTime} - ${endTime}`;
+  }
+
   return (
     <form onSubmit={handleSubmit} className="max-w-full sm:max-w-md mx-auto bg-white p-4 sm:p-6 rounded shadow">
       <h3 className="text-base sm:text-lg font-bold mb-3">Reservar hora</h3>
@@ -86,8 +111,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           <label className="block text-sm mb-1">Selecciona un horario disponible</label>
           <select className="w-full p-2 border" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
             <option value="">-- elige un horario --</option>
-            {slots.map(s => (
-              <option key={s.id} value={s.start}>{new Date(s.start).toLocaleString()} - {new Date(s.end).toLocaleTimeString()}</option>
+            {groupSlotsByDay(slots).map(([day, daySlots]) => (
+              <optgroup key={day} label={new Date(day).toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' })}>
+                {daySlots.map(s => (
+                  <option key={s.id} value={s.start}>{formatOptionLabel(s)}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </div>
