@@ -1,9 +1,11 @@
 "use client";
 
 import PublicBookingForm from '../../../components/PublicBookingForm';
+import { use } from 'react';
 
-export default function PublicBookingPage({ params }: { params: { id: string } }) {
-  const id = Number(params.id);
+export default function PublicBookingPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const id = Number(resolvedParams.id);
 
   return (
     <div className="bg-gray-100 p-6 min-h-0">
