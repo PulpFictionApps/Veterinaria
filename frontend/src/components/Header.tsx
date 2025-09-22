@@ -4,11 +4,11 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="w-full bg-gradient-to-r from-greenbrand-400 to-greenbrand-200 shadow-sm py-4">
+    // minimal topbar with subtle brand border
+    <header className="w-full bg-transparent py-2 border-b border-brand-100">
       <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
-        <Link href="/" className="text-white font-bold text-lg">VetScheduler</Link>
-        <nav className="flex gap-3">
-        </nav>
+        <div />
+        <nav className="flex gap-3" />
       </div>
     </header>
   );

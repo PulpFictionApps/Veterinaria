@@ -18,27 +18,26 @@ export default function Sidebar() {
   ];
  
   return (
-    <aside className="w-64 bg-white shadow-lg border-r border-gray-200 hidden lg:block">
-      <div className="p-6 sticky top-4 max-h-[calc(100vh-4rem)] overflow-auto">
+    <aside className="w-64 bg-white border-r border-gray-200 hidden lg:block h-screen sticky top-0">
+      <div className="p-4 sticky top-0 h-full overflow-auto">
         {/* Logo */}
-        <div className="flex items-center mb-8">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+        <div className="flex items-center mb-6">
+          <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center mr-3">
             <span className="text-white text-sm font-bold">V</span>
           </div>
-          <h2 className="text-xl font-bold text-gray-900">Veterinaria</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Veterinaria</h2>
         </div>
 
         {/* Navigation */}
         <nav>
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {menuItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                    pathname === item.href
-                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-gray-700 hover:bg-gray-50'
+                  className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname && pathname.startsWith(item.href)
+                    ? 'bg-brand-50 text-brand-700 border-r-2 border-brand-700'
+                    : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   <span className="text-lg mr-3">{item.icon}</span>
@@ -48,12 +47,12 @@ export default function Sidebar() {
             ))}
           </ul>
 
-          <div className="mt-6 border-t pt-4">
+          <div className="mt-4 border-t pt-3">
             <h4 className="text-xs text-gray-400 uppercase mb-2 px-4">Cuenta</h4>
             <ul className="space-y-2">
               {secondary.map(item => (
                 <li key={item.href}>
-                  <Link href={item.href} className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname === item.href ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}>
+                  <Link href={item.href} className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname && pathname.startsWith(item.href) ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}>
                     <span className="text-lg mr-3">{item.icon}</span>
                     <span className="font-medium">{item.label}</span>
                   </Link>

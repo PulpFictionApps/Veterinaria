@@ -6,13 +6,13 @@ import Footer from '@/components/Footer';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className="h-screen bg-gray-50">
+      <body className="min-h-screen bg-gray-50">
         <AuthProvider>
-          <div className="h-full flex flex-col">
+          <div className="min-h-screen flex flex-col">
+            {/* header kept minimal; content should be full-bleed */}
             <Header />
-            {/* main should fill remaining space; on small screens be full-bleed and inner card scrolls */}
-            <main className="flex-1 w-full max-w-full sm:max-w-7xl mx-auto px-0 sm:px-3 py-0 sm:py-4 flex min-h-0 pb-28 sm:pb-12">
-              <div className="flex-1 min-h-0 bg-white sm:bg-white rounded-none sm:rounded-lg shadow-none sm:shadow-sm p-4 sm:p-6 overflow-auto">
+            <main className="flex-1 w-full mx-auto px-0 py-0 min-h-0 overflow-hidden">
+              <div className="w-full h-full flex min-h-0">
                 {children}
               </div>
             </main>

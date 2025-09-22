@@ -30,6 +30,7 @@ export default function AppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<null | Appointment>(null);
   const [editDate, setEditDate] = useState('');
+  const [editSlotId, setEditSlotId] = useState<number | ''>('');
   const [editReason, setEditReason] = useState('');
   const [filter, setFilter] = useState<'all' | 'today' | 'upcoming' | 'past'>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -73,16 +74,22 @@ export default function AppointmentsPage() {
     function openEdit(appointment: Appointment) {
       setEditing(appointment);
       setEditDate(appointment.date);
+      setEditSlotId('');
       setEditReason(appointment.reason || '');
     }
 
     async function submitEdit() {
       if (!editing) return;
       try {
+        const payload: any = { reason: editReason };
+        // prefer slotId when provided to avoid timezone/precision issues
+        if (editSlotId) payload.slotId = Number(editSlotId);
+        else payload.date = editDate;
+
         const res = await authFetch(`/appointments/${editing.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date: editDate, reason: editReason }),
+          body: JSON.stringify(payload),
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({ error: 'Error' }));
@@ -318,6 +325,9 @@ export default function AppointmentsPage() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">Editar Cita</h3>
+            <label className="block text-sm mb-1">Slot ID (opcional)</label>
+            <input value={editSlotId} onChange={e => setEditSlotId(e.target.value ? Number(e.target.value) : '')} placeholder="ej. 123" className="w-full p-2 border mb-2" />
+            <p className="text-xs text-gray-500 mb-2">Si completas Slot ID se usará ese slot para reprogramar. Si lo dejas vacío, ingresa Fecha y hora (ISO).</p>
             <label className="block text-sm mb-1">Fecha y hora (ISO)</label>
             <input value={editDate} onChange={e => setEditDate(e.target.value)} className="w-full p-2 border mb-3" />
             <label className="block text-sm mb-1">Motivo</label>
