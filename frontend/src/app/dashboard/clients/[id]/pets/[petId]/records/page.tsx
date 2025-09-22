@@ -4,14 +4,22 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { authFetch } from '@/lib/api';
 
+interface MedicalRecord {
+  id: number;
+  createdAt: string;
+  content: string;
+  [key: string]: any; // por si hay otras propiedades que se necesiten
+}
+
 export default function RecordsPage({ params }: { params: { id: string; petId: string } }) {
   const petId = Number(params.petId);
-  const [records, setRecords] = useState<any[]>([]);
+  const [records, setRecords] = useState<MedicalRecord[]>([]);
 
   useEffect(() => {
     (async () => {
       const res = await authFetch(`/medical-records/pet/${petId}`);
-      const data = await res.json();
+      if (!res.ok) return;
+      const data: MedicalRecord[] = await res.json();
       setRecords(data || []);
     })();
   }, [petId]);

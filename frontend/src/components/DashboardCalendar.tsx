@@ -3,21 +3,41 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { DateSelectArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
+interface AvailabilitySlot {
+  start: string;
+  end: string;
+}
+
+interface Appointment {
+  petName: string;
+  reason: string;
+  date: string;
+}
+
+interface CalendarEvent {
+  title: string;
+  start: string;
+  end?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  textColor?: string;
+}
+
 export default function DashboardCalendar({ userId }: { userId: number }) {
   const calendarRef = useRef<FullCalendar | null>(null);
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
 
-  // Cargar disponibilidad y citas desde backend
   useEffect(() => {
     async function loadEvents() {
-      const { data: availability } = await axios.get(`/api/availability/${userId}`);
-      const { data: appointments } = await axios.get(`/api/appointments/${userId}`);
+      const { data: availability } = await axios.get<AvailabilitySlot[]>(`/api/availability/${userId}`);
+      const { data: appointments } = await axios.get<Appointment[]>(`/api/appointments/${userId}`);
 
-      const availEvents = availability.map((slot: any) => ({
+      const availEvents: CalendarEvent[] = availability.map((slot) => ({
         title: "Disponible",
         start: slot.start,
         end: slot.end,
@@ -25,7 +45,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         borderColor: "#60A5FA",
       }));
 
-      const appointmentEvents = appointments.map((appt: any) => ({
+      const appointmentEvents: CalendarEvent[] = appointments.map((appt) => ({
         title: `${appt.petName} - ${appt.reason}`,
         start: appt.date,
         backgroundColor: "#3B82F6",
@@ -43,16 +63,15 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     calendarApi?.changeView(view);
   };
 
-  const handleSelect = async (info: any) => {
+  const handleSelect = async (info: DateSelectArg) => {
     if (window.confirm(`Habilitar hora: ${info.startStr} - ${info.endStr}?`)) {
       await axios.post("/api/availability", {
         userId,
         start: info.startStr,
         end: info.endStr,
       });
-      // Recargar eventos
       const calendarApi = calendarRef.current?.getApi();
-      calendarApi?.refetchEvents?.(); // solo funciona con eventos cargados por función de fetch
+      calendarApi?.refetchEvents?.();
     }
   };
 

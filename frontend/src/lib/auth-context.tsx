@@ -17,13 +17,14 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
-function decodeUserId(token: string | null) {
+function decodeUserId(token: string | null): number | null {
   if (!token) return null;
   try {
     const parts = token.split('.');
     if (parts.length < 2) return null;
     const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-    return payload.id ?? payload.userId ?? payload.sub ?? null;
+    const id = payload.id ?? payload.userId ?? payload.sub ?? null;
+    return typeof id === 'number' ? id : Number(id) || null;
   } catch (err) {
     return null;
   }

@@ -4,14 +4,21 @@ import { useEffect, useState } from 'react';
 import { authFetch } from '@/lib/api';
 import PrescriptionCard from '@/components/PrescriptionCard';
 
+interface Prescription {
+  id: number;
+  pdfUrl?: string;
+  [key: string]: any; // para otras propiedades que PrescriptionCard pueda necesitar
+}
+
 export default function PrescriptionsPage({ params }: { params: { id: string; petId: string } }) {
   const petId = Number(params.petId);
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Prescription[]>([]);
 
   useEffect(() => {
     (async () => {
       const res = await authFetch(`/prescriptions/pet/${petId}`);
-      const data = await res.json();
+      if (!res.ok) return;
+      const data: Prescription[] = await res.json();
       setItems(data || []);
     })();
   }, [petId]);
@@ -25,7 +32,16 @@ export default function PrescriptionsPage({ params }: { params: { id: string; pe
         {items.map(i => (
           <div key={i.id} className="mb-2">
             <PrescriptionCard p={i} />
-            {i.pdfUrl && <a href={i.pdfUrl} target="_blank" rel="noreferrer" className="text-sm text-greenbrand-700">Abrir PDF</a>}
+            {i.pdfUrl && (
+              <a
+                href={i.pdfUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-greenbrand-700"
+              >
+                Abrir PDF
+              </a>
+            )}
           </div>
         ))}
       </div>
