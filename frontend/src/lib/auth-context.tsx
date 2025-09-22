@@ -37,14 +37,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const t = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    console.log('🔄 AuthProvider: Token inicial:', t ? 'Encontrado' : 'No encontrado');
     setToken(t);
     setUserId(decodeUserId(t));
   }, []);
 
   const login = (newToken: string) => {
+    console.log('🔑 AuthProvider: Guardando token:', newToken ? 'Sí' : 'No');
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setUserId(decodeUserId(newToken));
+    console.log('✅ AuthProvider: Token guardado y estado actualizado');
   };
 
   const logout = () => {

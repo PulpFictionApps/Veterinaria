@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAuth } from "../../lib/useAuth";
+import { useAuthContext } from "../../lib/auth-context";
 import { API_BASE } from "../../lib/api";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const { login } = useAuth();
+  const { login } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,7 +27,10 @@ export default function LoginPage() {
       
       if (res.ok) {
         const data = await res.json();
+        console.log('🔑 Token recibido:', data.token ? 'Sí' : 'No');
+        console.log('🔑 Token completo:', data.token);
         login(data.token);
+        console.log('✅ Token guardado en localStorage');
         router.push("/dashboard");
       } else {
         const errorData = await res.json().catch(() => ({ error: 'Error desconocido' }));

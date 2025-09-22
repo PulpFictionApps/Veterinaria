@@ -1,28 +1,24 @@
 "use client";
 
-
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import BottomNav from '../../components/BottomNav';
-import { useEffect, useState } from 'react';
+import { useAuthContext } from '../../lib/auth-context';
+import { useEffect } from 'react';
 
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-  }, []);
+  const { token, logout } = useAuthContext();
 
   // If there's no token, redirect to login on the client
   useEffect(() => {
     if (token === null) {
       // small timeout to avoid next/navigation issues in strict mode
       const t = setTimeout(() => {
-        window.location.href = '/login';
+        logout();
       }, 50);
       return () => clearTimeout(t);
     }
-  }, [token]);
+  }, [token, logout]);
 
   if (!token) return null;
 
