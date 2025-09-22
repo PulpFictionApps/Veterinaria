@@ -7,6 +7,10 @@ import { API_BASE } from "../../lib/api";
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [clinicName, setClinicName] = useState("");
+  const [accountType, setAccountType] = useState("client");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -17,10 +21,11 @@ export default function RegisterPage() {
     setError("");
     setLoading(true);
     try {
-  const res = await fetch(`${API_BASE}/auth/register`, {
+      const payload = { email, password, fullName, phone, clinicName, accountType };
+      const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
@@ -62,6 +67,18 @@ export default function RegisterPage() {
           <div className="p-4 md:p-2 flex items-center justify-center overflow-auto">
             <div className="w-full max-w-md">
               <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>
+                <input
+                  id="fullName"
+                  type="text"
+                  placeholder="Tu nombre completo"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
+                />
+              </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -77,6 +94,42 @@ export default function RegisterPage() {
                 required
               />
               <p id="email-help" className="sr-only">Usa el email con el que te registraste.</p>
+            </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+              <input
+                id="phone"
+                type="tel"
+                placeholder="+56 9 1234 5678"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="clinicName" className="block text-sm font-medium text-gray-700 mb-2">Nombre de la clínica (opcional)</label>
+              <input
+                id="clinicName"
+                type="text"
+                placeholder="Nombre de la clínica"
+                value={clinicName}
+                onChange={(e) => setClinicName(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="accountType" className="block text-sm font-medium text-gray-700 mb-2">Tipo de cuenta</label>
+              <select
+                id="accountType"
+                value={accountType}
+                onChange={(e) => setAccountType(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
+              >
+                <option value="client">Cliente / Tutor</option>
+                <option value="professional">Profesional / Clínica</option>
+              </select>
             </div>
             
             <div>
