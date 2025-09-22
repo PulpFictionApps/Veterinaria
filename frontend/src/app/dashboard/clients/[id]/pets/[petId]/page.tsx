@@ -10,7 +10,11 @@ interface Pet {
   type: string;
 }
 
-export default function PetDetail({ params }: { params: { id: string; petId: string } }) {
+interface PageProps {
+  params: { id: string; petId: string };
+}
+
+export default function PetDetail({ params }: PageProps) {
   const router = useRouter();
   const petId = Number(params.petId);
 

@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { authFetch } from '../../../../lib/api';
-import { useAuthContext } from '../../../../lib/auth-context';
 
 interface Client {
   id: string;
@@ -16,9 +15,12 @@ interface Pet {
   type: string;
 }
 
-export default function ClientDetail({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+export default function ClientDetail({ params }: PageProps) {
   const { id } = params;
-  // const { userId } = useAuthContext(); // comentado para evitar warning
   const [client, setClient] = useState<Client | null>(null);
   const [pets, setPets] = useState<Pet[]>([]);
 
