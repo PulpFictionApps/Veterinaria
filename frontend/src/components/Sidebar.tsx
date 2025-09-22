@@ -13,7 +13,7 @@ export default function Sidebar() {
  
   return (
     <aside className="w-64 bg-white shadow-lg border-r border-gray-200 hidden lg:block">
-      <div className="p-6">
+      <div className="p-6 sticky top-4 max-h-[calc(100vh-4rem)] overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-8">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
