@@ -7,7 +7,6 @@ export default function Sidebar() {
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
-    { href: '/dashboard/tutors', label: 'Tutores', icon: '👨‍⚕️' },
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
     { href: '/dashboard/availability', label: 'Disponibilidad', icon: '⏰' },
   ];
