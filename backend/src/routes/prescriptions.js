@@ -12,26 +12,57 @@ const router = express.Router();
 const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;
 
 router.post('/', verifyToken, async (req, res) => {
-  const { petId, tutorId, content } = req.body;
-  // accept either sendWhatsapp or sendWhatsApp from frontend
-  const sendWhatsapp = req.body.sendWhatsapp || req.body.sendWhatsApp;
+  const { petId, tutorId, title, content } = req.body;
+  const sendWhatsApp = req.body.sendWhatsApp || false;
+  
   try {
-    const pet = await prisma.pet.findUnique({ where: { id: Number(petId) }, include: { tutor: true } });
-    if (!pet) return res.status(404).json({ error: 'Pet not found' });
+    const pet = await prisma.pet.findUnique({ 
+      where: { id: Number(petId) }, 
+      include: { tutor: true } 
+    });
+    if (!pet) return res.status(404).json({ error: 'Mascota no encontrada' });
 
-    // generate PDF
-    const doc = new PDFDocument();
-    const fileName = `prescription_${Date.now()}.pdf`;
+    // Generate PDF
+    const doc = new PDFDocument({ margin: 50 });
+    const fileName = `receta_${pet.name}_${Date.now()}.pdf`;
     const outPath = path.join(process.cwd(), 'tmp', fileName);
     await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
     const stream = fs.createWriteStream(outPath);
     doc.pipe(stream);
-    doc.fontSize(18).text('Receta Médica', { align: 'center' });
+
+    // PDF Header
+    doc.fontSize(20).text('RECETA VETERINARIA', { align: 'center' });
+    doc.moveDown(2);
+
+    // Patient Info
+    doc.fontSize(14).text('INFORMACIÓN DEL PACIENTE', { underline: true });
     doc.moveDown();
-    doc.fontSize(12).text(`Paciente: ${pet.name}`);
-    doc.text(`Tutor: ${pet.tutor.name || ''}`);
+    doc.fontSize(12).text(`Nombre: ${pet.name}`);
+    doc.text(`Tipo: ${pet.type}`);
+    if (pet.breed) doc.text(`Raza: ${pet.breed}`);
+    if (pet.age) doc.text(`Edad: ${pet.age} años`);
     doc.moveDown();
-    doc.text(content || 'Sin contenido');
+
+    // Owner Info
+    doc.fontSize(14).text('INFORMACIÓN DEL TUTOR', { underline: true });
+    doc.moveDown();
+    doc.fontSize(12).text(`Nombre: ${pet.tutor.name}`);
+    if (pet.tutor.phone) doc.text(`Teléfono: ${pet.tutor.phone}`);
+    if (pet.tutor.email) doc.text(`Email: ${pet.tutor.email}`);
+    doc.moveDown(2);
+
+    // Prescription Content
+    doc.fontSize(14).text('RECETA MÉDICA', { underline: true });
+    doc.moveDown();
+    doc.fontSize(12).text(title || 'Receta Veterinaria', { bold: true });
+    doc.moveDown();
+    doc.text(content || 'Sin contenido específico');
+    doc.moveDown(2);
+
+    // Footer
+    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, { align: 'right' });
+    doc.text('Firma del Veterinario: _________________', { align: 'right' });
+
     doc.end();
 
     await new Promise((resolve) => stream.on('finish', resolve));
@@ -42,26 +73,44 @@ router.post('/', verifyToken, async (req, res) => {
         petId: Number(petId),
         tutorId: Number(tutorId),
         userId: req.user.id,
+        title: title || 'Receta Veterinaria',
+        content,
         pdfUrl: `/tmp/${fileName}`,
+        sendWhatsApp,
+        whatsappSent: false
       },
     });
 
-    // send via WhatsApp if requested
-    if (sendWhatsapp && twilioClient && pet.tutor.phone) {
-      const to = `whatsapp:${pet.tutor.phone}`;
-      const from = process.env.TWILIO_WHATSAPP_FROM; // e.g. whatsapp:+1415xxx
-      await twilioClient.messages.create({
-        from,
-        to,
-        body: `Tienes una nueva receta para ${pet.name}.`,
-        // mediaUrl requires a hosted accessible URL; here we skip actual mediaUrl in local env
-      });
+    // Send via WhatsApp if requested
+    let whatsappSent = false;
+    if (sendWhatsApp && twilioClient && pet.tutor.phone) {
+      try {
+        const to = `whatsapp:${pet.tutor.phone}`;
+        const from = process.env.TWILIO_WHATSAPP_FROM;
+        await twilioClient.messages.create({
+          from,
+          to,
+          body: `🏥 Nueva receta veterinaria para ${pet.name}\n\nHola ${pet.tutor.name}, tienes una nueva receta médica para ${pet.name}. Por favor revisa los detalles en el PDF adjunto.`,
+        });
+        whatsappSent = true;
+        
+        // Update prescription record
+        await prisma.prescription.update({
+          where: { id: prescription.id },
+          data: { whatsappSent: true }
+        });
+      } catch (whatsappError) {
+        console.error('Error sending WhatsApp:', whatsappError);
+      }
     }
 
-  // If BACKEND_BASE_URL is provided, return a full URL for convenience
-  const base = process.env.BACKEND_BASE_URL;
-  const pdfUrl = base ? `${base}${prescription.pdfUrl}` : prescription.pdfUrl;
-  res.json({ prescription, file: pdfUrl });
+    // Return response
+    const base = process.env.BACKEND_BASE_URL;
+    const pdfUrl = base ? `${base}${prescription.pdfUrl}` : prescription.pdfUrl;
+    res.json({ 
+      prescription: { ...prescription, whatsappSent }, 
+      file: pdfUrl 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

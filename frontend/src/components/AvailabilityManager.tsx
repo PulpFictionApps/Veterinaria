@@ -8,76 +8,329 @@ interface AvailabilitySlot {
   id: number;
   start: string;
   end: string;
-  [key: string]: any; // por si hay propiedades adicionales
+  createdAt: string;
 }
 
 export default function AvailabilityManager() {
   const { userId } = useAuthContext();
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  
+  // Form states
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [recurring, setRecurring] = useState(false);
+  const [recurringDays, setRecurringDays] = useState<string[]>([]);
+
+  const daysOfWeek = [
+    { id: 'monday', label: 'Lunes' },
+    { id: 'tuesday', label: 'Martes' },
+    { id: 'wednesday', label: 'Miércoles' },
+    { id: 'thursday', label: 'Jueves' },
+    { id: 'friday', label: 'Viernes' },
+    { id: 'saturday', label: 'Sábado' },
+    { id: 'sunday', label: 'Domingo' }
+  ];
 
   async function load() {
     if (!userId) return;
-    const res = await authFetch(`/availability/${userId}`);
-    if (!res.ok) return;
-    const data: AvailabilitySlot[] = await res.json();
-    setSlots(data || []);
+    setLoading(true);
+    try {
+      const res = await authFetch(`/availability/${userId}`);
+      if (res.ok) {
+        const data: AvailabilitySlot[] = await res.json();
+        setSlots(data || []);
+      }
+    } catch (err) {
+      console.error('Error loading availability:', err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { load(); }, [userId]);
 
+  function formatDateTime(date: string, time: string) {
+    return new Date(`${date}T${time}`).toISOString();
+  }
+
   async function createSlot(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
+    
+    setLoading(true);
+    setError('');
+    
     try {
-      const res = await authFetch('/availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ start, end }),
-      });
-      if (res.ok) {
-        setStart('');
-        setEnd('');
-        load();
+      if (recurring && recurringDays.length === 0) {
+        setError('Selecciona al menos un día para la disponibilidad recurrente');
+        return;
       }
+
+      if (recurring) {
+        // Create recurring slots for each selected day
+        const promises = recurringDays.map(day => {
+          const dayNumber = daysOfWeek.findIndex(d => d.id === day);
+          const startDateTime = new Date(startDate);
+          const endDateTime = new Date(endDate);
+          
+          // Set the day of week
+          startDateTime.setDate(startDateTime.getDate() + (dayNumber - startDateTime.getDay()));
+          endDateTime.setDate(endDateTime.getDate() + (dayNumber - endDateTime.getDay()));
+          
+          const start = formatDateTime(startDateTime.toISOString().split('T')[0], startTime);
+          const end = formatDateTime(endDateTime.toISOString().split('T')[0], endTime);
+          
+          return authFetch('/availability', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, start, end }),
+          });
+        });
+        
+        await Promise.all(promises);
+      } else {
+        // Create single slot
+        const start = formatDateTime(startDate, startTime);
+        const end = formatDateTime(endDate, endTime);
+        
+        const res = await authFetch('/availability', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, start, end }),
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({ error: 'Error al crear disponibilidad' }));
+          setError(errorData.error || 'Error al crear disponibilidad');
+          return;
+        }
+      }
+      
+      // Reset form and reload
+      setStartDate('');
+      setStartTime('');
+      setEndDate('');
+      setEndTime('');
+      setRecurring(false);
+      setRecurringDays([]);
+      setShowForm(false);
+      load();
     } catch (err) {
-      console.error(err);
+      setError('Error de conexión');
+    } finally {
+      setLoading(false);
     }
   }
 
   async function deleteSlot(id: number) {
-    await authFetch(`/availability/${id}`, { method: 'DELETE' });
-    load();
+    if (!confirm('¿Estás seguro de que quieres eliminar esta disponibilidad?')) return;
+    
+    try {
+      const res = await authFetch(`/availability/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        load();
+      }
+    } catch (err) {
+      console.error('Error deleting slot:', err);
+    }
   }
 
+  function toggleRecurringDay(day: string) {
+    setRecurringDays(prev => 
+      prev.includes(day) 
+        ? prev.filter(d => d !== day)
+        : [...prev, day]
+    );
+  }
+
+  // Set default times
+  useEffect(() => {
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    setStartDate(today);
+    setEndDate(today);
+    setStartTime('09:00');
+    setEndTime('17:00');
+  }, []);
+
   return (
-    <div className="bg-white p-4 rounded shadow">
-      <h3 className="font-bold mb-2">Mis disponibilidades</h3>
-      <form onSubmit={createSlot} className="flex gap-2 mb-3">
-        <input
-          value={start}
-          onChange={e => setStart(e.target.value)}
-          placeholder="Start (ISO)"
-          className="p-2 border"
-          required
-        />
-        <input
-          value={end}
-          onChange={e => setEnd(e.target.value)}
-          placeholder="End (ISO)"
-          className="p-2 border"
-          required
-        />
-        <button className="bg-green-600 text-white px-3 rounded">Agregar</button>
-      </form>
-      <ul className="space-y-2">
-        {slots.map(s => (
-          <li key={s.id} className="flex justify-between items-center p-2 border rounded">
-            <div>{new Date(s.start).toLocaleString()} — {new Date(s.end).toLocaleString()}</div>
-            <button onClick={() => deleteSlot(s.id)} className="text-red-600">Eliminar</button>
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900">Disponibilidad</h3>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          {showForm ? 'Cancelar' : '+ Agregar Horario'}
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Nueva Disponibilidad</h4>
+          
+          <form onSubmit={createSlot} className="space-y-4">
+            {/* Recurring Toggle */}
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="recurring"
+                checked={recurring}
+                onChange={e => setRecurring(e.target.checked)}
+                className="rounded"
+              />
+              <label htmlFor="recurring" className="text-sm font-medium text-gray-700">
+                Disponibilidad recurrente (misma hora todos los días seleccionados)
+              </label>
+            </div>
+
+            {/* Date and Time Inputs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha de Inicio
+                </label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={e => setStartDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Hora de Inicio
+                </label>
+                <input
+                  type="time"
+                  value={startTime}
+                  onChange={e => setStartTime(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha de Fin
+                </label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={e => setEndDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Hora de Fin
+                </label>
+                <input
+                  type="time"
+                  value={endTime}
+                  onChange={e => setEndTime(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Recurring Days */}
+            {recurring && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Días de la Semana
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {daysOfWeek.map(day => (
+                    <label key={day.id} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={recurringDays.includes(day.id)}
+                        onChange={() => toggleRecurringDay(day.id)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">{day.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? 'Creando...' : 'Crear Disponibilidad'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Slots List */}
+      <div className="space-y-2">
+        {slots.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <div className="text-4xl mb-2">⏰</div>
+            <p>No hay horarios de disponibilidad</p>
+            <p className="text-sm">Agrega tu primer horario para comenzar a recibir citas</p>
+          </div>
+        ) : (
+          slots.map(slot => (
+            <div key={slot.id} className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium text-gray-900">
+                    {new Date(slot.start).toLocaleDateString('es-ES', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {new Date(slot.start).toLocaleTimeString('es-ES', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })} - {new Date(slot.end).toLocaleTimeString('es-ES', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </div>
+                </div>
+                <button
+                  onClick={() => deleteSlot(slot.id)}
+                  className="text-red-600 hover:text-red-700 text-sm font-medium"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

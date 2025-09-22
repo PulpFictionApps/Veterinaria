@@ -5,11 +5,17 @@ import { verifyToken } from "../middleware/auth.js";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// Crear mascota (acepta name y type)
+// Crear mascota
 router.post("/", verifyToken, async (req, res) => {
-  const { name, type, tutorId } = req.body;
+  const { name, type, breed, age, tutorId } = req.body;
   const pet = await prisma.pet.create({
-    data: { name, type, tutorId },
+    data: { 
+      name, 
+      type, 
+      breed: breed || null,
+      age: age ? Number(age) : null,
+      tutorId 
+    },
   });
   res.json(pet);
 });
@@ -42,8 +48,17 @@ router.get('/:id', verifyToken, async (req, res) => {
 // Actualizar mascota
 router.patch('/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
-  const { name, type, tutorId } = req.body;
-  const pet = await prisma.pet.update({ where: { id: Number(id) }, data: { name, type, tutorId } });
+  const { name, type, breed, age, tutorId } = req.body;
+  const pet = await prisma.pet.update({ 
+    where: { id: Number(id) }, 
+    data: { 
+      name, 
+      type, 
+      breed: breed || null,
+      age: age ? Number(age) : null,
+      tutorId 
+    } 
+  });
   res.json(pet);
 });
 

@@ -34,11 +34,15 @@ model Pet {
   id           Int           @id @default(autoincrement())
   name         String
   type         String
+  breed        String?
+  age          Int?
   tutorId      Int
   tutor        Tutor         @relation(fields: [tutorId], references: [id])
   appointments Appointment[]
   medicalRecords MedicalRecord[]
   prescriptions Prescription[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
 }
 
 model Appointment {
@@ -66,22 +70,32 @@ model Availability {
 }
 
 model MedicalRecord {
-  id        Int      @id @default(autoincrement())
-  petId     Int
-  title     String
-  content   String
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  petId       Int
+  title       String
+  content     String
+  diagnosis   String?
+  treatment   String?
+  weight      Float?
+  temperature Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
   pet Pet @relation(fields: [petId], references: [id])
 }
 
 model Prescription {
-  id        Int      @id @default(autoincrement())
-  petId     Int
-  tutorId   Int
-  userId    Int
-  pdfUrl    String
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  petId       Int
+  tutorId     Int
+  userId      Int
+  title       String
+  content     String
+  pdfUrl      String?
+  sendWhatsApp Boolean @default(false)
+  whatsappSent Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
   pet Pet @relation(fields: [petId], references: [id])
   tutor Tutor @relation(fields: [tutorId], references: [id])
