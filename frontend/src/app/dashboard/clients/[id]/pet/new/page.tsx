@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { use } from 'react';
 import { authFetch } from '@/lib/api';
 
-export default function NewPetPage({ params }: { params: { id: string } }) {
+export default function NewPetPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const clientId = Number(params.id);
+  const resolvedParams = use(params);
+  const clientId = Number(resolvedParams.id);
   const [name, setName] = useState('');
   const [type, setType] = useState('');
 
