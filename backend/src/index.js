@@ -11,6 +11,7 @@ import availabilityRoutes from "./routes/availability.js";
 import appointmentRoutes from "./routes/appointments.js";
 import prescriptionRoutes from "./routes/prescriptions.js";
 import medicalRecordsRoutes from "./routes/medicalRecords.js";
+import accountRoutes from "./routes/account.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/availability", availabilityRoutes);
 app.use("/appointments", appointmentRoutes);
 app.use("/prescriptions", prescriptionRoutes);
 app.use("/medical-records", medicalRecordsRoutes);
+app.use("/account", accountRoutes);
 
 app.get("/", (req, res) => res.send("Backend funcionando"));
 

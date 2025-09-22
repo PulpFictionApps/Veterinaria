@@ -16,6 +16,12 @@ model User {
   availability Availability[]
   appointments Appointment[]
   prescriptions Prescription[]
+  // Nuevo campo para suscripción simple (MVP)
+  isPremium    Boolean       @default(false)
+  // Relación con profesionales añadidos a la cuenta
+  professionals Professional[]
+  // Relación con suscripciones (nuevo modelo)
+  subscriptions Subscription[]
 }
 
 model Tutor {
@@ -45,6 +51,17 @@ model Pet {
   updatedAt    DateTime      @default(now()) @updatedAt
 }
 
+// Profesionales que pueden ser añadidos a una cuenta
+model Professional {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?
+  role      String?
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
 model Appointment {
   id        Int      @id @default(autoincrement())
   petId     Int
@@ -68,36 +85,47 @@ model Availability {
 
   user User @relation(fields: [userId], references: [id])
 }
+  model MedicalRecord {
+    id          Int      @id @default(autoincrement())
+    petId       Int
+    title       String
+    content     String
+    diagnosis   String?
+    treatment   String?
+    weight      Float?
+    temperature Float?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now()) @updatedAt
 
-model MedicalRecord {
-  id          Int      @id @default(autoincrement())
-  petId       Int
-  title       String
-  content     String
-  diagnosis   String?
-  treatment   String?
-  weight      Float?
-  temperature Float?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+    pet Pet @relation(fields: [petId], references: [id])
+  }
 
-  pet Pet @relation(fields: [petId], references: [id])
-}
+  model Prescription {
+    id          Int      @id @default(autoincrement())
+    petId       Int
+    tutorId     Int
+    userId      Int
+    title       String
+    content     String
+    pdfUrl      String?
+    sendWhatsApp Boolean @default(false)
+    whatsappSent Boolean @default(false)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now()) @updatedAt
 
-model Prescription {
-  id          Int      @id @default(autoincrement())
-  petId       Int
-  tutorId     Int
-  userId      Int
-  title       String
-  content     String
-  pdfUrl      String?
-  sendWhatsApp Boolean @default(false)
-  whatsappSent Boolean @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+    pet Pet @relation(fields: [petId], references: [id])
+    tutor Tutor @relation(fields: [tutorId], references: [id])
+    user User @relation(fields: [userId], references: [id])
+  }
 
-  pet Pet @relation(fields: [petId], references: [id])
-  tutor Tutor @relation(fields: [tutorId], references: [id])
-  user User @relation(fields: [userId], references: [id])
-}
+  model Subscription {
+    id         Int      @id @default(autoincrement())
+    userId     Int
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    plan       String   @default("basic")
+    status     String   @default("active") // active | canceled | past_due
+    providerId String?  // id from payment provider
+    startedAt  DateTime @default(now())
+    expiresAt  DateTime?
+    createdAt  DateTime @default(now())
+  }

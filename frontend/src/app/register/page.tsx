@@ -8,12 +8,14 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
   const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
@@ -25,11 +27,12 @@ export default function RegisterPage() {
         login(data.token);
         router.push("/dashboard");
       } else {
-        setError(data.error);
+        setError(data.error || 'Error al crear cuenta');
       }
     } catch (err) {
       setError("Error de conexión");
     }
+    finally { setLoading(false); }
   };
 
   return (
@@ -85,9 +88,11 @@ export default function RegisterPage() {
 
             <button 
               type="submit" 
-              className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+              className={`w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors ${loading ? 'opacity-70 cursor-wait' : ''}`}
+              disabled={loading}
+              aria-busy={loading}
             >
-              Crear cuenta
+              {loading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
           </form>
 
