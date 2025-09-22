@@ -67,6 +67,29 @@ body {
   height: 100vh;
 }
 
+/* Dashboard-specific container: center content and allow inner max-w-* elements to expand
+   This lets pages that used e.g. `max-w-4xl` inside the dashboard take the full
+   available admin width while keeping inner card styling. */
+.dashboard-content {
+  width: 100%;
+}
+
+.dashboard-center {
+  width: 100%;
+  max-width: 1200px; /* tuned for dashboard content */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Override common max-w utilities for elements inside the dashboard so they
+   stretch to the dashboard center container. Use :where to list common sizes. */
+.dashboard-content :where(.max-w-6xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl, .max-w-lg, .max-w-md) {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
 
 /* globals.css o un CSS específico para el calendario */
 .fc .fc-timegrid-slot {

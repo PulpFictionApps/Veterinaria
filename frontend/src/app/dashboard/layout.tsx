@@ -29,7 +29,11 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-0">
           <Navbar />
-          <main className="flex-1 overflow-auto p-6 min-h-0">{children}</main>
+          <main className="flex-1 overflow-auto p-6 min-h-0 dashboard-content">
+            <div className="dashboard-center">
+              {children}
+            </div>
+          </main>
         </div>
       </div>
 
