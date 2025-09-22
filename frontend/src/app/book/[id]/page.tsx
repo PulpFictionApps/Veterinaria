@@ -6,7 +6,7 @@ interface PageProps {
   params: { id: string };
 }
 
-export default function PublicBookingPage({ params }: PageProps) {
+export default async function PublicBookingPage({ params }: PageProps) {
   const id = Number(params.id);
 
   return (
