@@ -25,7 +25,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Desktop Layout */}
-      <div className="hidden lg:flex lg:min-h-screen">
+  <div className="hidden lg:flex lg:h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-0">
           <Navbar />

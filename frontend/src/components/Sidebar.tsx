@@ -41,7 +41,7 @@ export default function Sidebar() {
   ];
  
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 hidden lg:block h-screen sticky top-0">
+    <aside className="w-64 bg-white border-r border-gray-200 hidden lg:block h-full sticky top-0">
       <div className="p-4 top-0 h-full overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-6">
