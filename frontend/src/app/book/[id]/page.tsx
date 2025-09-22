@@ -1,12 +1,11 @@
-"use client";
-
+// src/app/book/[id]/page.tsx
 import PublicBookingForm from '../../../components/PublicBookingForm';
 
-interface PageProps {
+interface Props {
   params: { id: string };
 }
 
-export default async function PublicBookingPage({ params }: PageProps) {
+export default async function Page({ params }: Props) {
   const id = Number(params.id);
 
   return (
