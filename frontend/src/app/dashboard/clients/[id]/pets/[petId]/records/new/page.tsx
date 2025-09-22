@@ -9,6 +9,8 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
   const router = useRouter();
   const resolvedParams = use(params);
   const petId = Number(resolvedParams.petId);
+  const ownerId = resolvedParams.id;
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [diagnosis, setDiagnosis] = useState('');
@@ -21,27 +23,26 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (loading) return;
-    
     setLoading(true);
     setError('');
-    
+
     try {
-      const res = await authFetch('/medical-records', { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ 
-          petId, 
+      const res = await authFetch('/medical-records', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          petId,
           title: title || 'Consulta médica',
           content,
           diagnosis: diagnosis || null,
           treatment: treatment || null,
           weight: weight ? Number(weight) : null,
           temperature: temperature ? Number(temperature) : null
-        }) 
+        })
       });
-      
+
       if (res.ok) {
-        router.push(`/dashboard/clients/${resolvedParams.id}/pets/${petId}/records`);
+        router.push(`/dashboard/clients/${ownerId}/pets/${petId}/records`);
       } else {
         const errorData = await res.json().catch(() => ({ error: 'Error al crear ficha clínica' }));
         setError(errorData.error || 'Error al crear ficha clínica');
@@ -57,7 +58,7 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
     <div className="max-w-4xl mx-auto">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Nueva Ficha Clínica</h1>
-        
+
         <form onSubmit={submit} className="space-y-6">
           {/* Título */}
           <div>
@@ -182,3 +183,5 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
     </div>
   );
 }
+
+

@@ -66,8 +66,30 @@ router.delete('/:id', verifyToken, async (req, res) => {
     if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
     if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
 
-    await prisma.appointment.delete({ where: { id: Number(id) } });
-    res.json({ ok: true });
+    // Delete appointment and restore the 1-hour availability slot for that time if possible
+    const slotDurationMs = 1000 * 60 * 60;
+    const apptDate = new Date(appointment.date);
+    const slotStart = apptDate;
+    const slotEnd = new Date(apptDate.getTime() + slotDurationMs);
+
+    try {
+      await prisma.$transaction(async (tx) => {
+        await tx.appointment.delete({ where: { id: Number(id) } });
+
+        // Only create availability if there isn't already a slot with the same start
+        const exists = await tx.availability.findFirst({ where: { userId: appointment.userId, start: slotStart } });
+        if (!exists) {
+          await tx.availability.create({ data: { userId: appointment.userId, start: slotStart, end: slotEnd } });
+        }
+      });
+
+      res.json({ ok: true });
+    } catch (txErr) {
+      console.error('Error deleting appointment and restoring slot:', txErr);
+      // fallback: attempt simple delete (shouldn't normally reach here)
+      await prisma.appointment.delete({ where: { id: Number(id) } });
+      res.json({ ok: true, warning: 'Could not restore slot atomically' });
+    }
   } catch (err) {
     console.error('Error deleting appointment:', err);
     res.status(500).json({ error: err.message || 'Internal server error' });
@@ -99,6 +121,11 @@ router.patch('/:id', verifyToken, async (req, res) => {
       }
 
       // transaction: check availability, update appointment date, delete matched availability
+      const slotDurationMs = 1000 * 60 * 60;
+      const oldDate = new Date(appointment.date);
+      const oldStart = oldDate;
+      const oldEnd = new Date(oldDate.getTime() + slotDurationMs);
+
       const result = await prisma.$transaction(async (tx) => {
         if (!matching) {
           matching = await tx.availability.findFirst({ where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } } });
@@ -109,8 +136,22 @@ router.patch('/:id', verifyToken, async (req, res) => {
         const exists = await tx.appointment.findFirst({ where: { userId: req.user.id, date: selectedDate } });
         if (exists && exists.id !== Number(id)) throw new Error('Ya existe una cita en ese horario');
 
+        // Update appointment date
         const updated = await tx.appointment.update({ where: { id: Number(id) }, data: { date: selectedDate, reason: reason || appointment.reason } });
+
+        // Delete the matched availability for the new date
         await tx.availability.delete({ where: { id: matching.id } });
+
+        // Try to recreate availability for the old appointment time (unless a slot already exists)
+        const oldExists = await tx.availability.findFirst({ where: { userId: req.user.id, start: oldStart } });
+        if (!oldExists) {
+          // Only recreate if the old slot doesn't collide with another appointment
+          const collision = await tx.appointment.findFirst({ where: { userId: req.user.id, date: oldStart } });
+          if (!collision) {
+            await tx.availability.create({ data: { userId: req.user.id, start: oldStart, end: oldEnd } });
+          }
+        }
+
         const full = await tx.appointment.findUnique({ where: { id: updated.id }, include: { pet: true, tutor: true } });
         return full;
       });
