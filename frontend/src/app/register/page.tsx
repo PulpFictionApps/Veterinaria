@@ -37,7 +37,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-3xl">
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mb-4">
@@ -48,8 +48,19 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white rounded-2xl shadow-xl p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div className="hidden md:block p-6">
+            <div className="h-full flex items-center justify-center text-center text-gray-600">
+              <div>
+                <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="4" stroke="#bbf7d0" strokeWidth="2"/><path d="M7 12h10" stroke="#10b981" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+                <h3 className="font-semibold text-lg">Únete a VetScheduler</h3>
+                <p className="text-sm mt-2">Crea tu cuenta para empezar a agendar y gestionar pacientes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-2">
+            <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -94,15 +105,16 @@ export default function RegisterPage() {
             >
               {loading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
-          </form>
+            </form>
 
-          <div className="mt-6 text-center">
+            <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               ¿Ya tienes cuenta?{' '}
               <a href="/login" className="text-green-600 hover:text-green-700 font-medium">
                 Inicia sesión aquí
               </a>
             </p>
+          </div>
           </div>
         </div>
       </div>

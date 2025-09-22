@@ -52,7 +52,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-3xl">
         {/* Compact header for auth pages - avoid duplicating global header */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Inicia sesión</h1>
@@ -60,8 +60,19 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white rounded-2xl shadow-xl p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div className="hidden md:block p-6">
+            <div className="h-full flex items-center justify-center text-center text-gray-600">
+              <div>
+                <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#c7d2fe" strokeWidth="2"/><path d="M8 14s1.5-2 4-2 4 2 4 2" stroke="#6366f1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+                <h3 className="font-semibold text-lg">Bienvenido de nuevo</h3>
+                <p className="text-sm mt-2">Accede para gestionar tu clínica y reservas.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-2">
+            <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -106,15 +117,16 @@ export default function LoginPage() {
             >
               {loading ? 'Iniciando...' : 'Iniciar sesión'}
             </button>
-          </form>
+            </form>
 
-          <div className="mt-6 text-center">
+            <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               ¿No tienes cuenta?{' '}
               <a href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
                 Regístrate aquí
               </a>
             </p>
+          </div>
           </div>
         </div>
 
