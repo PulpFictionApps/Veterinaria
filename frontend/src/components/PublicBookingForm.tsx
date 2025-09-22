@@ -18,6 +18,13 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage('');
+
+    // Require contact info
+    if (!email || !phone) {
+      setMessage('Email y teléfono son requeridos');
+      return;
+    }
+
     try {
       const res = await fetch(`${API_BASE}/appointments/public`, {
         method: 'POST',
@@ -33,7 +40,10 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           professionalId,
         }),
       });
-      if (!res.ok) throw new Error('Error creando la reserva');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ message: 'Error creando la reserva' }));
+        throw new Error(errData.error || errData.message || 'Error creando la reserva');
+      }
       setMessage('Reserva creada correctamente');
     } catch (err: any) {
       setMessage(err.message || 'Error');
@@ -60,8 +70,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     <form onSubmit={handleSubmit} className="max-w-full sm:max-w-md mx-auto bg-white p-4 sm:p-6 rounded shadow">
       <h3 className="text-base sm:text-lg font-bold mb-3">Reservar hora</h3>
       <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre" className="w-full p-2 border mb-2" required />
-      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email (opcional)" className="w-full p-2 border mb-2" />
-      <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono (opcional)" className="w-full p-2 border mb-2" />
+  <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border mb-2" required />
+  <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border mb-2" required />
       <input value={petName} onChange={e => setPetName(e.target.value)} placeholder="Nombre mascota" className="w-full p-2 border mb-2" required />
       <input value={petType} onChange={e => setPetType(e.target.value)} placeholder="Tipo mascota" className="w-full p-2 border mb-2" />
 
