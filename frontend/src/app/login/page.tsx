@@ -51,27 +51,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-stretch justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-0 overflow-auto">
-      <div className="w-full h-full">
-        {/* Compact header for auth pages - avoid duplicating global header */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12">
+      <div className="w-full max-w-4xl">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Inicia sesión</h1>
           <p className="text-gray-600 mt-1">Accede a tu cuenta</p>
         </div>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-none md:rounded-2xl shadow-none md:shadow-xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch h-full overflow-hidden">
-          <div className="hidden md:block p-6 h-full">
-            <div className="h-full flex items-center justify-center text-center text-gray-600">
-              <div>
-                <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#c7d2fe" strokeWidth="2"/><path d="M8 14s1.5-2 4-2 4 2 4 2" stroke="#6366f1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
-                <h3 className="font-semibold text-lg">Bienvenido de nuevo</h3>
-                <p className="text-sm mt-2">Accede para gestionar tu clínica y reservas.</p>
-              </div>
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <div className="hidden md:flex p-6 items-center justify-center text-center text-gray-600">
+            <div>
+              <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#c7d2fe" strokeWidth="2"/><path d="M8 14s1.5-2 4-2 4 2 4 2" stroke="#6366f1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+              <h3 className="font-semibold text-lg">Bienvenido de nuevo</h3>
+              <p className="text-sm mt-2">Accede para gestionar tu clínica y reservas.</p>
             </div>
           </div>
 
-          <div className="p-4 md:p-2 flex items-center justify-center overflow-auto">
+          <div className="p-4 flex items-center justify-center">
             <div className="w-full max-w-md">
               <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -81,6 +77,7 @@ export default function LoginPage() {
               <input
                 id="email"
                 type="email"
+                autoFocus
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
