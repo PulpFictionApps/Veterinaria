@@ -7,7 +7,7 @@ export default function DebugPage() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const addResult = (test: string, status: 'success' | 'error', message: string, details?: any) => {
+  const addResult = (test: string, status: 'success' | 'error' | 'info', message: string, details?: any) => {
     setResults(prev => [...prev, { test, status, message, details, timestamp: new Date().toISOString() }]);
   };
 
