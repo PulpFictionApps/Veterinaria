@@ -86,7 +86,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="bg-white/0 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-gray-100">
+  <nav className="bg-white/0 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-gray-100">
         <div className="flex items-center gap-3">
           <button
             aria-label="Abrir menú"
@@ -113,15 +113,8 @@ export default function Navbar() {
       </nav>
 
       {/* Overlay + Drawer with slide animation */}
-      <div
-        id="mobile-drawer"
-        aria-hidden={!open}
-        className={`fixed inset-0 z-50 pointer-events-${open ? 'auto' : 'none'}`}
-      >
-        <div
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
-          onClick={() => setOpen(false)}
-        />
+      <div id="mobile-drawer" aria-hidden={!open} className={`fixed inset-0 z-50 ${open ? 'block' : 'hidden'}`}>
+        <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`} onClick={() => setOpen(false)} />
 
         <aside
           ref={containerRef}

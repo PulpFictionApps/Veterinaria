@@ -70,30 +70,36 @@ export default function AvailabilityManager() {
     try {
       if (recurring && recurringDays.length === 0) {
         setError('Selecciona al menos un día para la disponibilidad recurrente');
+        setLoading(false);
         return;
       }
 
       if (recurring) {
         // Create recurring slots for each selected day
-        const promises = recurringDays.map(day => {
-          const dayNumber = daysOfWeek.findIndex(d => d.id === day);
-          const startDateTime = new Date(startDate);
-          const endDateTime = new Date(endDate);
-          
-          // Set the day of week
-          startDateTime.setDate(startDateTime.getDate() + (dayNumber - startDateTime.getDay()));
-          endDateTime.setDate(endDateTime.getDate() + (dayNumber - endDateTime.getDay()));
-          
-          const start = formatDateTime(startDateTime.toISOString().split('T')[0], startTime);
-          const end = formatDateTime(endDateTime.toISOString().split('T')[0], endTime);
-          
+        const promises = recurringDays.map(dayId => {
+          const dayIndex = daysOfWeek.findIndex(d => d.id === dayId);
+          if (dayIndex === -1) return Promise.resolve(null);
+
+          // daysOfWeek starts with monday (index 0). JS getDay: 0=Sunday..6=Saturday
+          const targetWeekday = (dayIndex + 1) % 7; // monday->1, sunday->0
+
+          const startBase = new Date(startDate);
+          const endBase = new Date(endDate);
+
+          const daysToAdd = (targetWeekday - startBase.getDay() + 7) % 7;
+          startBase.setDate(startBase.getDate() + daysToAdd);
+          endBase.setDate(endBase.getDate() + daysToAdd);
+
+          const start = formatDateTime(startBase.toISOString().split('T')[0], startTime);
+          const end = formatDateTime(endBase.toISOString().split('T')[0], endTime);
+
           return authFetch('/availability', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, start, end }),
-          });
+          }).catch(err => { console.error('Error creating recurring slot', err); return null; });
         });
-        
+
         await Promise.all(promises);
       } else {
         // Create single slot

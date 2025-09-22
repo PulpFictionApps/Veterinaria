@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuthContext } from "../../lib/auth-context";
 import { API_BASE } from "../../lib/api";
 import { useRouter } from "next/navigation";
+import AuthShell from '@/components/AuthShell';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -51,25 +52,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12">
-      <div className="w-full max-w-4xl">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Inicia sesión</h1>
-          <p className="text-gray-600 mt-1">Accede a tu cuenta</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          <div className="hidden md:flex p-6 items-center justify-center text-center text-gray-600">
-            <div>
-              <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#c7d2fe" strokeWidth="2"/><path d="M8 14s1.5-2 4-2 4 2 4 2" stroke="#6366f1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
-              <h3 className="font-semibold text-lg">Bienvenido de nuevo</h3>
-              <p className="text-sm mt-2">Accede para gestionar tu clínica y reservas.</p>
-            </div>
-          </div>
-
-          <div className="p-4 flex items-center justify-center">
-            <div className="w-full max-w-md">
-              <form onSubmit={handleSubmit} className="space-y-6">
+    <>
+      {/* Use AuthShell to centralize the auth page layout */}
+      <AuthShell title="Inicia sesión" subtitle="Accede a tu cuenta">
+        <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -121,9 +107,9 @@ export default function LoginPage() {
             >
               {loading ? 'Iniciando...' : 'Iniciar sesión'}
             </button>
-              </form>
+          </form>
 
-              <div className="mt-6 text-center">
+          <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               ¿No tienes cuenta?{' '}
               <a href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
@@ -131,22 +117,19 @@ export default function LoginPage() {
               </a>
             </p>
           </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Debug info - Solo en desarrollo */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-            <p><strong>API Base:</strong> {API_BASE}</p>
-            <p><strong>Environment:</strong> {process.env.NODE_ENV}</p>
-            <div className="mt-2 space-x-2">
-              <a href="/debug" className="text-blue-600 underline">🔧 Debug Conexión</a>
-              <a href="/auth-debug" className="text-blue-600 underline">🔐 Debug Auth</a>
+          {/* Debug info - Solo en desarrollo */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+              <p><strong>API Base:</strong> {API_BASE}</p>
+              <p><strong>Environment:</strong> {process.env.NODE_ENV}</p>
+              <div className="mt-2 space-x-2">
+                <a href="/debug" className="text-blue-600 underline">🔧 Debug Conexión</a>
+                <a href="/auth-debug" className="text-blue-600 underline">🔐 Debug Auth</a>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          )}
+        </AuthShell>
+    </>
   );
 }

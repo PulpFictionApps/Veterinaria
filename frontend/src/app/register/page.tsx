@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "../../lib/auth-context";
 import { API_BASE } from "../../lib/api";
+import AuthShell from '@/components/AuthShell';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -41,32 +42,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-stretch justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-0 overflow-auto">
-      <div className="w-full h-full">
-        {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mb-4">
-            <span className="text-white text-2xl font-bold">V</span>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">Veterinaria</h1>
-          <p className="text-gray-600 mt-2">Crea tu cuenta</p>
-        </div>
-
-        {/* Register Form */}
-        <div className="bg-white rounded-none md:rounded-2xl shadow-none md:shadow-xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch h-full overflow-hidden">
-          <div className="hidden md:block p-6 h-full">
-            <div className="h-full flex items-center justify-center text-center text-gray-600">
-              <div>
-                <div className="mb-4"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="4" stroke="#bbf7d0" strokeWidth="2"/><path d="M7 12h10" stroke="#10b981" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
-                <h3 className="font-semibold text-lg">Únete a VetScheduler</h3>
-                <p className="text-sm mt-2">Crea tu cuenta para empezar a agendar y gestionar pacientes.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-4 md:p-2 flex items-center justify-center overflow-auto">
-            <div className="w-full max-w-md">
-              <form onSubmit={handleSubmit} className="space-y-6">
+    <AuthShell title="Crear cuenta" subtitle="Crea tu cuenta para empezar a agendar y gestionar pacientes.">
+      <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>
                 <input
@@ -165,20 +142,17 @@ export default function RegisterPage() {
             >
               {loading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
-              </form>
+      </form>
 
-              <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              ¿Ya tienes cuenta?{' '}
-              <a href="/login" className="text-green-600 hover:text-green-700 font-medium">
-                Inicia sesión aquí
-              </a>
-            </p>
-          </div>
-            </div>
-          </div>
-        </div>
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600">
+          ¿Ya tienes cuenta?{' '}
+          <a href="/login" className="text-green-600 hover:text-green-700 font-medium">
+            Inicia sesión aquí
+          </a>
+        </p>
       </div>
-    </div>
+
+    </AuthShell>
   );
 }
