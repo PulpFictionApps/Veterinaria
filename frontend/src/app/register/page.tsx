@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { authFetch } from '../../lib/api';
 import { useAuthContext } from "../../lib/auth-context";
 import { API_BASE } from "../../lib/api";
 import AuthShell from '@/components/AuthShell';
@@ -17,7 +18,6 @@ export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuthContext();
   const search = useSearchParams();
-  const requestedPlan = search?.get('plan') || null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,22 +33,26 @@ export default function RegisterPage() {
       const data = await res.json();
       if (res.ok) {
         login(data.token);
-        // If the user arrived with a plan query param, create subscription and redirect to checkout
-        if (requestedPlan) {
-          try {
-            const createRes = await fetch(`${API_BASE}/billing/create-subscription`, {
+        // Re-read plan param at submit time (more robust) and use authFetch so token from localStorage is used
+        try {
+          const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+          const planParam = params?.get('plan');
+          if (planParam) {
+            const createRes = await authFetch('/billing/create-subscription', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${data.token}` },
-              body: JSON.stringify({ preapproval_plan_id: requestedPlan })
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ preapproval_plan_id: planParam })
             });
             const createData = await createRes.json();
             if (createRes.ok && createData.checkoutUrl) {
               window.location.href = createData.checkoutUrl;
               return;
+            } else {
+              console.warn('create-subscription failed after register', createData);
             }
-          } catch (e) {
-            console.error('Error creating subscription after register', e);
           }
+        } catch (e) {
+          console.error('Error creating subscription after register', e);
         }
         router.push("/dashboard");
       } else {
