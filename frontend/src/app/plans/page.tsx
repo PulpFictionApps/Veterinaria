@@ -146,7 +146,7 @@ export default function PlansPage() {
                   <div className="mt-4 text-center">
                     <a
                       id="mp-subscribe-basic"
-                      href={`https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=${tier.preapproval_plan_id}`}
+                      href={`https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=${tier.preapproval_plan_id}&external_reference=1:manual_test`}
                       className="blue-button"
                       data-preapproval-id={tier.preapproval_plan_id}
                     >
