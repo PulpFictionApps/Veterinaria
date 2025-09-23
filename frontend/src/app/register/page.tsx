@@ -42,7 +42,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <AuthShell title="Crear cuenta" subtitle="Crea tu cuenta para empezar a agendar y gestionar pacientes.">
+  <AuthShell title="Crear cuenta" subtitle="Crea tu cuenta para empezar a agendar y gestionar pacientes." variant="register">
       <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>

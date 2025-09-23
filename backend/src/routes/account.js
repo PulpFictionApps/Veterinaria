@@ -17,6 +17,19 @@ router.get('/status', verifyToken, async (req, res) => {
   }
 });
 
+// GET /account/subscription -> { subscription }
+router.get('/subscription', verifyToken, async (req, res) => {
+  try {
+    const uid = Number(req.user.id);
+    const sub = await prisma.subscription.findFirst({ where: { userId: uid }, orderBy: { createdAt: 'desc' } });
+    if (!sub) return res.json({ subscription: null });
+    res.json({ subscription: sub });
+  } catch (err) {
+    console.error('account/subscription error', err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
 // POST /account/activate-premium -> set isPremium true for the user
 router.post('/activate-premium', verifyToken, async (req, res) => {
   try {

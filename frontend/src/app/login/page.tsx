@@ -54,7 +54,7 @@ export default function LoginPage() {
   return (
     <>
       {/* Use AuthShell to centralize the auth page layout */}
-      <AuthShell title="Inicia sesión" subtitle="Accede a tu cuenta">
+  <AuthShell title="Inicia sesión" subtitle="Accede a tu cuenta" variant="login">
         <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">

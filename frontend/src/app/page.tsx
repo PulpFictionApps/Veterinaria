@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-6xl mx-auto px-6 py-12">
+    <div className="flex-1 min-h-0 bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="max-w-6xl mx-auto px-6 py-12 min-h-0 flex flex-col">
         <div className="bg-white rounded-2xl shadow-lg p-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <h1 className="text-4xl font-extrabold mb-3">Agenda tus citas veterinarias en minutos</h1>

@@ -28,6 +28,7 @@ export default function DashboardPage() {
   const [copied, setCopied] = useState(false);
   const [upcoming, setUpcoming] = useState<AppointmentSummary[]>([]);
   const [clients, setClients] = useState<ClientSummary[]>([]);
+  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -51,6 +52,13 @@ export default function DashboardPage() {
           const data: ClientSummary[] = await clientsRes.json();
           if (mounted) setClients(data.slice(0,8));
         }
+
+        // fetch subscription info to show trial remaining
+        const subRes = await authFetch('/account/subscription');
+        if (subRes.ok) {
+          const d = await subRes.json();
+          if (mounted) setSubscription(d.subscription || null);
+        }
       } catch (err) {
         console.error('Error loading dashboard data', err);
       }
@@ -73,6 +81,17 @@ export default function DashboardPage() {
   return (
     <div className="w-full h-full">
       <div className="max-w-full mx-auto px-4 py-4">
+        {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded flex items-center justify-between">
+            <div>
+              <strong className="font-semibold">Prueba activa</strong>
+              <span className="ml-2 text-sm text-gray-700"> — te quedan { Math.ceil((new Date(subscription.expiresAt).getTime() - Date.now()) / (1000*60*60*24)) } días</span>
+            </div>
+            <div>
+              <a href="/dashboard/billing" className="px-3 py-2 bg-green-600 text-white rounded">Pagar ahora</a>
+            </div>
+          </div>
+        )}
         <div className="flex items-center justify-between mb-4">
           <div />
           <div className="text-right">

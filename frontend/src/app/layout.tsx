@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             <main className="flex-1 w-full mx-auto px-0 py-0 min-h-0 overflow-auto">
               <div className="w-full h-full flex min-h-0">
-                <div className="site-center w-full min-h-screen flex flex-col">
+                <div className="w-full flex-1 flex flex-col min-h-0">
                   {children}
                 </div>
               </div>

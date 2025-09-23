@@ -6,29 +6,30 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-  "clean-db:dry": "node scripts/clean-db.js",
-  "clean-db:apply": "node scripts/clean-db.js --apply",
-  "backfill-pet-updatedAt:dry": "node scripts/backfill-pet-updatedAt.js",
-  "backfill-pet-updatedAt:apply": "node scripts/backfill-pet-updatedAt.js --apply",
+    "clean-db:dry": "node scripts/clean-db.js",
+    "clean-db:apply": "node scripts/clean-db.js --apply",
+    "backfill-pet-updatedAt:dry": "node scripts/backfill-pet-updatedAt.js",
+    "backfill-pet-updatedAt:apply": "node scripts/backfill-pet-updatedAt.js --apply",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "vercel-build": "echo 'no build'",
-    "postinstall": "npx prisma generate"
+  "postinstall": "npx prisma generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.16.2",
-    "pdfkit": "^0.13.0",
-    "twilio": "^4.8.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.16.2"
+    "mercadopago": "^2.9.0",
+    "pdfkit": "^0.13.0",
+    "prisma": "^6.16.2",
+    "twilio": "^4.8.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

@@ -18,8 +18,27 @@ router.post("/register", async (req, res) => {
       data: { email, password: hashedPassword, fullName, phone, clinicName, accountType },
     });
 
+    // If registering a professional (clinic), create a 30-day trial subscription
+    let subscription = null;
+    if (accountType === 'professional') {
+      const now = new Date();
+      const expires = new Date(now);
+      expires.setDate(expires.getDate() + 30);
+      subscription = await prisma.subscription.create({
+        data: {
+          userId: user.id,
+          plan: 'basic',
+          status: 'active',
+          startedAt: now,
+          expiresAt: expires,
+        },
+      });
+      // keep isPremium for compatibility
+      await prisma.user.update({ where: { id: user.id }, data: { isPremium: true } });
+    }
+
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    res.json({ token });
+    res.json({ token, subscription });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
