@@ -1,18 +1,34 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
 
 export default function PlansPage() {
   const { token } = useAuthContext();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Load Mercado Pago render script for subscription buttons (client-only)
+    if (typeof window === 'undefined') return;
+    if ((window as any).$MPC_loaded) return;
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = (document.location.protocol === 'https:' ? 'https:' : 'http:') + '//secure.mlstatic.com/mptools/render.js';
+    s.onload = () => { (window as any).$MPC_loaded = true; };
+    const x = document.getElementsByTagName('script')[0];
+    x.parentNode?.insertBefore(s, x);
+  }, []);
   const tiers = [
     {
       id: 'basic',
+      // Mercado Pago preapproval plan id (sandbox / production as configured in env)
+      preapproval_plan_id: '9642d780aa0849d9b2c52d4a158443df',
       name: 'Básico',
-      price: '15',
+      price: '15.000',
+      currency: 'CLP',
       frequency: '/mes',
       description: 'Plan por defecto después de la prueba de 30 días',
       features: [
@@ -32,7 +48,8 @@ export default function PlansPage() {
     {
       id: 'pro',
       name: 'Pro',
-      price: '29',
+  price: '29.000',
+  currency: 'CLP',
       frequency: '/mes',
       description: 'Funciones avanzadas para clínicas con más demanda',
       features: ['Disponibilidad avanzada', 'Citas recurrentes', 'Historiales médicos avanzados', 'Soporte prioritario'],
@@ -43,7 +60,8 @@ export default function PlansPage() {
     {
       id: 'premium',
       name: 'Premium',
-      price: '49',
+  price: '49.000',
+  currency: 'CLP',
       frequency: '/mes',
       description: 'Todo lo necesario para clínicas medianas y grandes',
       features: ['Multisede', 'Exportaciones', 'Integraciones', 'Asignación de equipo'],
@@ -76,7 +94,7 @@ export default function PlansPage() {
 
               <div className="mt-6">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold">${tier.price}</span>
+                  <span className="text-3xl font-extrabold">{tier.currency ? `${tier.price} ${tier.currency}` : `$${tier.price}`}</span>
                   <span className="text-sm text-gray-600">{tier.frequency}</span>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">Pago mensual. Facturación anual disponible por contrato.</p>
@@ -101,7 +119,7 @@ export default function PlansPage() {
                         const res = await authFetch('/billing/create-subscription', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ preapproval_plan_id: tier.id })
+                          body: JSON.stringify({ preapproval_plan_id: tier.preapproval_plan_id || tier.id })
                         });
                         const data = await res.json();
                         if (!res.ok) return alert(data.error || 'Error creando suscripción');
@@ -117,9 +135,25 @@ export default function PlansPage() {
                     {loadingPlan === tier.id ? 'Redirigiendo...' : 'Contratar'}
                   </button>
                 ) : (
-                  <Link href={`${tier.cta.href}?plan=${tier.id}`} className={`block w-full text-center py-3 rounded-lg font-medium ${tier.popular ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-50 border border-gray-200 text-gray-800 hover:bg-gray-100'}`}>
+                  // If not logged, send them to register with the plan query param
+                  <Link href={`${tier.cta.href}?plan=${tier.preapproval_plan_id || tier.id}`} className={`block w-full text-center py-3 rounded-lg font-medium ${tier.popular ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-50 border border-gray-200 text-gray-800 hover:bg-gray-100'}`}>
                     {tier.cta.label}
                   </Link>
+                )}
+
+                {/* Mercado Pago subscribe button for the basic plan (client-side only) */}
+                {tier.id === 'basic' && (
+                  <div className="mt-4 text-center">
+                    <a
+                      id="mp-subscribe-basic"
+                      href={`https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=${tier.preapproval_plan_id}`}
+                      className="blue-button"
+                      data-preapproval-id={tier.preapproval_plan_id}
+                    >
+                      Suscribirme
+                    </a>
+                    <style>{`.blue-button{background-color:#3483FA;color:white;padding:10px 24px;text-decoration:none;border-radius:5px;display:inline-block;font-size:16px;transition:background-color .3s;font-family:Arial,sans-serif}.blue-button:hover{background-color:#2a68c8}`}</style>
+                  </div>
                 )}
               </div>
             </div>
