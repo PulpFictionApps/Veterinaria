@@ -1,8 +1,13 @@
 "use client";
 
 import Link from 'next/link';
+import { useState } from 'react';
+import { useAuthContext } from '../../lib/auth-context';
+import { authFetch } from '../../lib/api';
 
 export default function PlansPage() {
+  const { token } = useAuthContext();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const tiers = [
     {
       id: 'basic',
@@ -87,9 +92,35 @@ export default function PlansPage() {
               </ul>
 
               <div className="mt-6">
-                <Link href={tier.cta.href} className={`block w-full text-center py-3 rounded-lg font-medium ${tier.popular ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-50 border border-gray-200 text-gray-800 hover:bg-gray-100'}`}>
-                  {tier.cta.label}
-                </Link>
+                {token ? (
+                  <button
+                    onClick={async () => {
+                      if (loadingPlan) return;
+                      try {
+                        setLoadingPlan(tier.id);
+                        const res = await authFetch('/billing/create-subscription', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ preapproval_plan_id: tier.id })
+                        });
+                        const data = await res.json();
+                        if (!res.ok) return alert(data.error || 'Error creando suscripción');
+                        if (data.checkoutUrl) window.location.href = data.checkoutUrl;
+                        else alert('No se recibió checkoutUrl');
+                      } catch (err: any) {
+                        alert('Error de conexión');
+                      } finally { setLoadingPlan(null); }
+                    }}
+                    className={`block w-full text-center py-3 rounded-lg font-medium ${tier.popular ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-50 border border-gray-200 text-gray-800 hover:bg-gray-100'}`}
+                    disabled={Boolean(loadingPlan)}
+                  >
+                    {loadingPlan === tier.id ? 'Redirigiendo...' : 'Contratar'}
+                  </button>
+                ) : (
+                  <Link href={`${tier.cta.href}?plan=${tier.id}`} className={`block w-full text-center py-3 rounded-lg font-medium ${tier.popular ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-50 border border-gray-200 text-gray-800 hover:bg-gray-100'}`}>
+                    {tier.cta.label}
+                  </Link>
+                )}
               </div>
             </div>
           ))}
