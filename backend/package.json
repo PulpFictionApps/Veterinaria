@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "vercel-build": "echo 'no build'",
-  "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mercadopago": "^2.9.0",
+    "node-fetch": "^2.7.0",
     "pdfkit": "^0.13.0",
     "prisma": "^6.16.2",
     "twilio": "^4.8.0"
