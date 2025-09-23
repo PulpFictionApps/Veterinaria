@@ -24,8 +24,8 @@ export default function PlansPage() {
   const tiers = [
     {
       id: 'basic',
-      // Mercado Pago preapproval plan id (sandbox / production as configured in env)
-      preapproval_plan_id: '9642d780aa0849d9b2c52d4a158443df',
+  // Mercado Pago preapproval plan id (sandbox / production as configured in env)
+  preapproval_plan_id: 'd23c4f6cbdc34d9c93a69e3ba91baeb8',
       name: 'Básico',
       price: '15.000',
       currency: 'CLP',
