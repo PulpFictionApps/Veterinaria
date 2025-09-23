@@ -72,11 +72,18 @@ body {
    available admin width while keeping inner card styling. */
 .site-center {
   width: 100%;
-  max-width: 1400px; /* uniform max width for all routes */
+  /* match home container (approx Tailwind max-w-6xl = 72rem / 1152px) */
+  max-width: 72rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem; /* px-6 */
+  padding-right: 1.5rem;
+}
+
+/* Ensure any inner max-w-* inside site center expands to use the full site width */
+.site-center :where(.max-w-6xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl, .max-w-lg, .max-w-md, .max-w-full) {
+  max-width: 100% !important;
+  width: 100% !important;
 }
 
 /* Helper for pages that should remain narrow */

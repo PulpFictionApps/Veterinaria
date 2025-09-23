@@ -4,8 +4,8 @@ import React from 'react';
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-6xl">
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="site-center w-full">
         {children}
       </div>
     </div>

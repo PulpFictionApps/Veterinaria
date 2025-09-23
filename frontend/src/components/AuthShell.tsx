@@ -4,8 +4,8 @@ import React from 'react';
 
 export default function AuthShell({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-6">
-      <div className="w-full max-w-4xl">
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="site-center w-full">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
           {subtitle && <p className="text-gray-600 mt-1">{subtitle}</p>}
@@ -23,7 +23,7 @@ export default function AuthShell({ title, subtitle, children }: { title: string
           </div>
 
           <div className="p-4 flex items-center justify-center">
-            <div className="w-full max-w-md">{children}</div>
+            <div className="w-full narrow">{children}</div>
           </div>
         </div>
       </div>
