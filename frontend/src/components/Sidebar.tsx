@@ -32,6 +32,7 @@ export default function Sidebar() {
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
     { href: '/dashboard/availability', label: 'Disponibilidad', icon: '⏰' },
+    { href: '/plans', label: 'Planes', icon: '📦' },
   ];
   const secondary = [
     { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
