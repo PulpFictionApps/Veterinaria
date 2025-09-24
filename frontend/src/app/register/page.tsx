@@ -12,7 +12,8 @@ export default function RegisterPage() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [clinicName, setClinicName] = useState("");
-  const [accountType, setAccountType] = useState("client");
+  // Server enforces only 'professional' registrations; default here to professional
+  const [accountType, setAccountType] = useState("professional");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -126,7 +127,6 @@ export default function RegisterPage() {
                 onChange={(e) => setAccountType(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
               >
-                <option value="client">Cliente / Tutor</option>
                 <option value="professional">Profesional / Clínica</option>
               </select>
             </div>
