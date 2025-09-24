@@ -22,6 +22,7 @@ interface Appointment {
     email?: string;
   };
   createdAt: string;
+  status?: string;
 }
 
 export default function AppointmentsPage() {
@@ -289,6 +290,30 @@ export default function AppointmentsPage() {
                     </span>
                     <Link href={`/dashboard/appointments/${appointment.id}/edit`} className="text-gray-600 hover:text-gray-800 ml-2 text-sm font-medium">Editar</Link>
                     <button onClick={() => deleteAppointment(appointment.id)} className="text-red-600 hover:text-red-800 ml-2 text-sm font-medium">Eliminar</button>
+                    {appointment.status === 'pending' && (
+                      <button
+                        onClick={async () => {
+                          if (!confirm('Aprobar esta cita y reservar el horario?')) return;
+                          try {
+                            const res = await authFetch(`/appointments/${appointment.id}/approve`, { method: 'POST' });
+                            if (!res.ok) {
+                              const err = await res.json().catch(() => ({ error: 'Error' }));
+                              alert(err.error || 'Error aprobando cita');
+                              return;
+                            }
+                            const updated = await res.json();
+                            setAppointments(prev => prev.map(a => a.id === updated.id ? updated : a));
+                            alert('Cita aprobada correctamente');
+                          } catch (err) {
+                            console.error('Error approving appointment', err);
+                            alert('Error aprobando cita');
+                          }
+                        }}
+                        className="bg-green-600 text-white px-3 py-1 rounded ml-2 text-sm font-medium hover:bg-green-700"
+                      >
+                        Aprobar
+                      </button>
+                    )}
                   </div>
                 </div>
 
