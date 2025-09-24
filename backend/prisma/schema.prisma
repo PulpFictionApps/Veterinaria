@@ -72,6 +72,8 @@ model Appointment {
   tutorId   Int
   userId    Int
   date      DateTime
+  // status: pending | confirmed | cancelled. Default kept as confirmed for existing flows.
+  status    String   @default("confirmed")
   reason    String
   createdAt DateTime @default(now())
 
