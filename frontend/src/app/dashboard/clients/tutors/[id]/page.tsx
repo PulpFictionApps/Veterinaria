@@ -44,7 +44,7 @@ export default function TutorDetail() {
           {tutor.phone && <p>Teléfono: {tutor.phone}</p>}
         </div>
         <div>
-          <Link href={`/dashboard/tutors/${id}/edit`} className="bg-blue-600 text-white px-3 py-2 rounded">Editar tutor</Link>
+          <Link href={`/dashboard/tutors/${id}/edit`} className="bg-theme-primary text-white px-3 py-2 rounded hover:bg-theme-primary/90 transition-colors">Editar tutor</Link>
         </div>
       </div>
 

@@ -27,11 +27,21 @@ module.exports = {
           700: '#d43d2b',
           800: '#a82b20',
           900: '#691713'
-        }
+        },
+        // Theme colors that can be customized dynamically
+        'theme-primary': 'var(--color-primary)',
+        'theme-secondary': 'var(--color-secondary)', 
+        'theme-accent': 'var(--color-accent)',
       },
       backgroundImage: {
         'brand-gradient': 'linear-gradient(135deg, #eaf7f7 0%, #a7e6e4 50%, #59d7cc 100%)',
-        'soft-gradient': 'linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2))'
+        'soft-gradient': 'linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2))',
+        'gradient-theme-primary': 'var(--gradient-primary)',
+        'gradient-theme-secondary': 'var(--gradient-secondary)'
+      },
+      boxShadow: {
+        'theme-primary': 'var(--shadow-primary)',
+        'theme-secondary': 'var(--shadow-secondary)'
       }
     }
   },

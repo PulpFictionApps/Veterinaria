@@ -40,7 +40,7 @@ export default function AvailabilityManager() {
     if (!userId) return;
     setLoading(true);
     try {
-      const res = await authFetch(`/availability/${userId}`);
+      const res = await authFetch(`/appointments/availability/${userId}`);
       if (res.ok) {
         const data: AvailabilitySlot[] = await res.json();
         // ensure slots are sorted
@@ -93,7 +93,7 @@ export default function AvailabilityManager() {
           const start = formatDateTime(startBase.toISOString().split('T')[0], startTime);
           const end = formatDateTime(endBase.toISOString().split('T')[0], endTime);
 
-          return authFetch('/availability', {
+          return authFetch('/appointments/availability', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, start, end }),
@@ -106,7 +106,7 @@ export default function AvailabilityManager() {
         const start = formatDateTime(startDate, startTime);
         const end = formatDateTime(endDate, endTime);
 
-        const res = await authFetch('/availability', {
+        const res = await authFetch('/appointments/availability', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId, start, end }),
@@ -139,7 +139,7 @@ export default function AvailabilityManager() {
     if (!confirm('¿Estás seguro de que quieres eliminar esta disponibilidad?')) return;
     
     try {
-      const res = await authFetch(`/availability/${id}`, { method: 'DELETE' });
+      const res = await authFetch(`/appointments/availability/${id}`, { method: 'DELETE' });
       if (res.ok) {
         await load();
       }

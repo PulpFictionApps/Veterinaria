@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { authFetch } from '../../../lib/api';
-import { useAuthContext } from '../../../lib/auth-context';
+import { authFetch } from '../../../../lib/api';
+import { useAuthContext } from '../../../../lib/auth-context';
 
 interface Client {
   id: number;

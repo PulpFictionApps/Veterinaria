@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authFetch } from '../../../../lib/api';
+import { authFetch } from '../../../../../lib/api';
 
 export default function NewClientPage() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function NewClientPage() {
     setError('');
     
     try {
-      const res = await authFetch('/tutors', { 
+      const res = await authFetch('/clients', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify({ name, email, phone, rut, address }) 

@@ -47,14 +47,14 @@ export default function DashboardPage() {
         }
 
         // try to fetch tutors/clients
-        const clientsRes = await authFetch(`/tutors`);
+        const clientsRes = await authFetch(`/clients`);
         if (clientsRes.ok) {
           const data: ClientSummary[] = await clientsRes.json();
           if (mounted) setClients(data.slice(0,8));
         }
 
         // fetch subscription info to show trial remaining
-        const subRes = await authFetch('/account/subscription');
+        const subRes = await authFetch('/profile/subscription');
         if (subRes.ok) {
           const d = await subRes.json();
           if (mounted) setSubscription(d.subscription || null);
@@ -108,8 +108,8 @@ export default function DashboardPage() {
                   onClick={copyLink} 
                   className={`px-3 py-1 rounded text-xs transition-colors ${
                     copied 
-                      ? 'bg-pink-600 text-white' 
-                      : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg shadow-pink-200/50'
+                      ? 'bg-theme-primary text-white' 
+                      : 'bg-gradient-theme-primary text-white hover:bg-theme-primary/90 shadow-theme-primary'
                   }`}
                 >
                   {copied ? '✅' : '📋'}

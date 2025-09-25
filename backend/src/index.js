@@ -3,19 +3,16 @@ import express from "express";
 import cors from "cors";
 import path from 'path';
 
-// Routes
+// Routes - Using consolidated structure
 import authRoutes from "./routes/auth.js";
-import tutorRoutes from "./routes/tutors.js";
-import petRoutes from "./routes/pets.js";
-import availabilityRoutes from "./routes/availability.js";
-import appointmentRoutes from "./routes/appointments.js";
-import prescriptionRoutes from "./routes/prescriptions.js";
-import medicalRecordsRoutes from "./routes/medicalRecords.js";
-import accountRoutes from "./routes/account.js";
 import billingRoutes from "./routes/billing.js";
-import consultationTypesRoutes from "./routes/consultationTypes.js";
-import userRoutes from "./routes/users.js";
 import { healthCheck } from "./routes/health.js";
+
+// Consolidated routes
+import profileRoutes from "./routes/profile.js";
+import clientRoutes from "./routes/clients.js";
+import appointmentRoutes from "./routes/appointments-consolidated.js";
+import medicalRoutes from "./routes/medical.js";
 
 const app = express();
 
@@ -38,17 +35,30 @@ app.use(express.json());
 const tmpPath = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
 app.use('/tmp', express.static(tmpPath));
 
+// Route registration - Consolidated structure
 app.use("/auth", authRoutes);
-app.use("/tutors", tutorRoutes);
-app.use("/pets", petRoutes);
-app.use("/availability", availabilityRoutes);
-app.use("/appointments", appointmentRoutes);
-app.use("/prescriptions", prescriptionRoutes);
-app.use("/medical-records", medicalRecordsRoutes);
-app.use("/account", accountRoutes);
 app.use("/billing", billingRoutes);
-app.use("/consultation-types", consultationTypesRoutes);
-app.use("/users", userRoutes);
+
+// Consolidated routes
+app.use("/profile", profileRoutes);
+app.use("/clients", clientRoutes);
+app.use("/appointments", appointmentRoutes);
+app.use("/medical", medicalRoutes);
+
+// Backward compatibility routes (deprecated - use consolidated ones)
+// These maintain API compatibility but point to consolidated handlers
+app.use("/tutors", clientRoutes); // Redirect to clients (tutors management)
+app.use("/pets", (req, res, next) => {
+  // Redirect /pets requests to /clients/:clientId/pets
+  req.url = req.url.replace('/pets', '/clients/pets');
+  clientRoutes(req, res, next);
+});
+app.use("/users", profileRoutes); // Redirect to profile
+app.use("/account", profileRoutes); // Redirect to profile
+app.use("/availability", appointmentRoutes); // Redirect to appointments/availability
+app.use("/prescriptions", medicalRoutes); // Redirect to medical/prescriptions
+app.use("/medical-records", medicalRoutes); // Redirect to medical/records
+app.use("/consultation-types", appointmentRoutes); // Redirect to appointments/types
 
 app.get("/health", healthCheck);
 app.get("/", (req, res) => res.send("Backend funcionando"));

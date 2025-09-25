@@ -147,7 +147,7 @@ export default function ConsultationPage() {
   const fetchMedicalRecordsForPet = async (petId: number) => {
     try {
       setLoading(true);
-      const response = await authFetch(`/medical-records/pet/${petId}`);
+      const response = await authFetch(`/medical/records/${petId}`);
       if (response.ok) {
         const records = await response.json();
         setMedicalRecords(records);
@@ -161,7 +161,7 @@ export default function ConsultationPage() {
 
   const fetchPrescriptionsForPet = async (petId: number) => {
     try {
-      const response = await authFetch(`/prescriptions/pet/${petId}`);
+      const response = await authFetch(`/medical/prescriptions/${petId}`);
       if (response.ok) {
         const prescriptions = await response.json();
         setPrescriptions(prescriptions);
@@ -183,7 +183,7 @@ export default function ConsultationPage() {
         sex: petForm.sex || null,
       };
 
-      const response = await authFetch(`/pets/${appointment.pet.id}`, {
+      const response = await authFetch(`/clients/pets/${appointment.pet.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData),
@@ -217,7 +217,7 @@ export default function ConsultationPage() {
         temperature: recordForm.temperature ? Number(recordForm.temperature) : null,
       };
 
-      const response = await authFetch('/medical-records', {
+      const response = await authFetch('/medical/records', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(recordData),
@@ -262,7 +262,7 @@ export default function ConsultationPage() {
         instructions: prescriptionForm.instructions || null,
       };
 
-      const response = await authFetch('/prescriptions', {
+      const response = await authFetch('/medical/prescriptions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(prescriptionData),
@@ -302,7 +302,7 @@ export default function ConsultationPage() {
 
   const downloadPDF = async (prescriptionId: number, fileName: string) => {
     try {
-      const response = await authFetch(`/prescriptions/download/${prescriptionId}`, {
+      const response = await authFetch(`/medical/prescriptions/${prescriptionId}/pdf`, {
         method: 'GET'
       });
 

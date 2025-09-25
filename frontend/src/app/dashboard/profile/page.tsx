@@ -72,7 +72,7 @@ export default function ProfessionalProfilePage() {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await authFetch(`/users/${userId}`);
+      const response = await authFetch(`/profile/${userId}`);
       if (!response.ok) throw new Error('Error al cargar perfil');
       
       const data = await response.json();
@@ -115,7 +115,7 @@ export default function ProfessionalProfilePage() {
       setError(null);
       setSuccess(false);
       
-      const response = await authFetch(`/users/${userId}`, {
+      const response = await authFetch(`/profile/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -408,7 +408,7 @@ export default function ProfessionalProfilePage() {
                   type="checkbox"
                   checked={formData.enableWhatsappReminders}
                   onChange={(e) => handleInputChange('enableWhatsappReminders', e.target.checked)}
-                  className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-theme-primary focus:ring-theme-primary border-gray-300 rounded"
                 />
                 <label htmlFor="enableWhatsappReminders" className="ml-2 block text-sm text-gray-700">
                   <span className="font-medium">Habilitar recordatorios por WhatsApp</span>
@@ -422,7 +422,7 @@ export default function ProfessionalProfilePage() {
                   type="checkbox"
                   checked={formData.enableEmailReminders}
                   onChange={(e) => handleInputChange('enableEmailReminders', e.target.checked)}
-                  className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-theme-primary focus:ring-theme-primary border-gray-300 rounded"
                 />
                 <label htmlFor="enableEmailReminders" className="ml-2 block text-sm text-gray-700">
                   <span className="font-medium">Habilitar recordatorios por Email</span>

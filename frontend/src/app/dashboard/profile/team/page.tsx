@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { authFetch } from '../../../lib/api';
-import { Notification, useNotification } from '../../../components/Notification';
+import { authFetch } from '../../../../lib/api';
+import { Notification, useNotification } from '../../../../components/Notification';
 
 interface Tutor { id: number; name: string; email?: string; phone?: string; pets?: any[] }
 

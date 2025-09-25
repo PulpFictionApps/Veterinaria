@@ -25,11 +25,11 @@ function NavbarWithSuspense() {
   return (
     <div className="lg:hidden">
       <Suspense fallback={
-        <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-pink-100 backdrop-blur-sm">
+        <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-theme-primary/20 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <button
               aria-label="Abrir menú"
-              className="p-2 rounded-md hover:bg-pink-50 transition-colors"
+              className="p-2 rounded-md hover:bg-theme-secondary/20 transition-colors"
               disabled
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,7 +37,7 @@ function NavbarWithSuspense() {
               </svg>
             </button>
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-lg shadow-pink-200/50">
+              <div className="w-8 h-8 bg-gradient-theme-primary rounded-lg flex items-center justify-center shadow-theme-primary">
                 <span className="text-white text-sm font-bold">{brand.shortName}</span>
               </div>
               <span className="hidden sm:inline font-semibold text-gray-800">{brand.name}</span>

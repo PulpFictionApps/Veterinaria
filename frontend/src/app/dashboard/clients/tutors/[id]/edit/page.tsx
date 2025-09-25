@@ -61,7 +61,7 @@ export default function EditTutorPage() {
         </div>
         <div className="flex items-center justify-end gap-2">
           <button type="button" className="px-4 py-2" onClick={() => router.push('/dashboard/tutors')}>Cancelar</button>
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+          <button type="submit" className="bg-theme-primary text-white px-4 py-2 rounded hover:bg-theme-primary/90 transition-colors">Guardar</button>
         </div>
       </form>
     </div>

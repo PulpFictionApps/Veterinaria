@@ -185,7 +185,7 @@ export default function AppointmentsPage() {
     if (appointmentDate < today) {
       return { status: 'past', color: 'text-gray-500', bg: 'bg-gray-100' };
     } else if (appointmentDate.toDateString() === today.toDateString()) {
-      return { status: 'today', color: 'text-pink-600', bg: 'bg-pink-50' };
+      return { status: 'today', color: 'text-theme-primary', bg: 'bg-theme-secondary/20' };
     } else {
       return { status: 'upcoming', color: 'text-green-600', bg: 'bg-green-50' };
     }
@@ -240,7 +240,7 @@ export default function AppointmentsPage() {
                 onClick={() => setFilter(filterOption.key as any)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   filter === filterOption.key
-                    ? 'bg-pink-600 text-white'
+                    ? 'bg-theme-primary text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -337,7 +337,7 @@ export default function AppointmentsPage() {
                     <h4 className="text-sm font-medium text-gray-700 mb-1">💊 Tipo de Consulta</h4>
                     <div className="flex justify-between items-center">
                       <p className="text-sm text-gray-900">{appointment.consultationType.name}</p>
-                      <p className="text-sm font-semibold text-pink-600">
+                      <p className="text-sm font-semibold text-theme-primary">
                         {formatPrice(appointment.consultationType.price)}
                       </p>
                     </div>
@@ -350,7 +350,7 @@ export default function AppointmentsPage() {
                 <div className="flex gap-2">
                   <Link
                     href={`/dashboard/clients/${appointment.tutor.id}/pets/${appointment.pet.id}`}
-                    className="text-pink-600 hover:text-pink-700 text-sm font-medium transition-colors"
+                    className="text-theme-primary hover:text-theme-accent text-sm font-medium transition-colors"
                   >
                     Ver Ficha de la Mascota
                   </Link>

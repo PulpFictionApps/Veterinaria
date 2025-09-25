@@ -48,7 +48,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
         <h2 className="text-xl font-bold">Mascotas</h2>
         <Link
           href={`/dashboard/clients/${clientId}/pet/new`}
-          className="bg-blue-600 text-white px-3 py-1 rounded"
+          className="bg-theme-primary text-white px-3 py-1 rounded hover:bg-theme-primary/90 transition-colors"
         >
           Nueva mascota
         </Link>
@@ -60,7 +60,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
       ) : pets.length === 0 ? (
         <div className="text-center p-8 bg-white rounded shadow">
           <p className="text-gray-600 mb-4">No se encontraron mascotas para este cliente.</p>
-          <Link href={`/dashboard/clients/${clientId}/pet/new`} className="bg-blue-600 text-white px-4 py-2 rounded">Agregar mascota</Link>
+          <Link href={`/dashboard/clients/${clientId}/pet/new`} className="bg-theme-primary text-white px-4 py-2 rounded hover:bg-theme-primary/90 transition-colors">Agregar mascota</Link>
         </div>
       ) : (
         <ul>
