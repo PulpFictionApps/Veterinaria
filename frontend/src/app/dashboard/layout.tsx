@@ -1,6 +1,6 @@
 "use client";
 
-import NavbarWrapper from '../../components/NavbarWrapper';
+import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import BottomNav from '../../components/BottomNav';
 import { useAuthContext } from '../../lib/auth-context';
@@ -17,6 +17,35 @@ function SidebarStateTracker({ onSidebarStateChange }: { onSidebarStateChange: (
   }, [search, onSidebarStateChange]);
   
   return null;
+}
+
+// Navbar wrapper with Suspense
+function NavbarWithSuspense() {
+  return (
+    <Suspense fallback={
+      <nav className="bg-white/0 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <button
+            aria-label="Abrir menú"
+            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            disabled
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">V</span>
+            </div>
+            <span className="hidden sm:inline font-semibold">Veterinaria</span>
+          </div>
+        </div>
+      </nav>
+    }>
+      <Navbar />
+    </Suspense>
+  );
 }
 
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {
@@ -51,7 +80,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
   <div className="hidden lg:flex lg:h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-0">
-          <NavbarWrapper />
+          <NavbarWithSuspense />
           <main className="flex-1 overflow-auto p-6 min-h-0 dashboard-content">
             <div className="dashboard-center">
               {children}
@@ -62,7 +91,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
 
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col min-h-screen">
-        <NavbarWrapper />
+        <NavbarWithSuspense />
         {/* add bottom padding so content isn't hidden behind BottomNav */}
         <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
         {/* Only show BottomNav when sidebar is closed */}
