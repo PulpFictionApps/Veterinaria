@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { authFetch } from '@/lib/api';
+import { useNotification } from '@/components/Notification';
 
 interface Pet {
   id: number;

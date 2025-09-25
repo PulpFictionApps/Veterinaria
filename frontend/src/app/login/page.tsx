@@ -18,29 +18,21 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      console.log('🔐 Attempting login to:', `${API_BASE}/auth/login`);
-      
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       
-      console.log('📡 Login response status:', res.status);
-      
       if (res.ok) {
         const data = await res.json();
-        console.log('🔑 Token recibido:', data.token ? 'Sí' : 'No');
-        console.log('🔑 Token completo:', data.token);
         login(data.token);
-        console.log('✅ Token guardado en localStorage');
         router.push("/dashboard");
       } else {
         const errorData = await res.json().catch(() => ({ error: 'Error desconocido' }));
         setError(errorData.error || `Error del servidor: ${res.status}`);
       }
     } catch (err: any) {
-      console.error('❌ Login error:', err);
       if (err.name === 'TypeError' && err.message.includes('fetch')) {
         setError(`No se puede conectar al servidor. Verifica que la URL del backend sea correcta: ${API_BASE}`);
       } else {
@@ -117,18 +109,6 @@ export default function LoginPage() {
               </a>
             </p>
           </div>
-
-          {/* Debug info - Solo en desarrollo */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-              <p><strong>API Base:</strong> {API_BASE}</p>
-              <p><strong>Environment:</strong> {process.env.NODE_ENV}</p>
-              <div className="mt-2 space-x-2">
-                <a href="/debug" className="text-blue-600 underline">🔧 Debug Conexión</a>
-                <a href="/auth-debug" className="text-blue-600 underline">🔐 Debug Auth</a>
-              </div>
-            </div>
-          )}
         </AuthShell>
     </>
   );
