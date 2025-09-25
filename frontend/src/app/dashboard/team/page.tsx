@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { authFetch } from '../../../lib/api';
+import { Notification, useNotification } from '../../../components/Notification';
 
 interface Tutor { id: number; name: string; email?: string; phone?: string; pets?: any[] }
 
 export default function TeamPage() {
+  const { notification, showNotification, hideNotification, NotificationComponent } = useNotification();
+  
   const [isPremium, setIsPremium] = useState<boolean | null>(null);
   const [proList, setProList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,9 +55,12 @@ export default function TeamPage() {
         const p = await authFetch('/account/professionals');
         if (p.ok) setProList(await p.json());
       } else {
-        alert('No se pudo activar premium');
+        showNotification('No se pudo activar premium', 'error');
       }
-    } catch (err) { console.error(err); alert('Error'); }
+    } catch (err) { 
+      console.error(err); 
+      showNotification('Error', 'error'); 
+    }
   }
 
   const [newName, setNewName] = useState('');
@@ -63,26 +69,41 @@ export default function TeamPage() {
 
   async function createPro(e?: any) {
     if (e && e.preventDefault) e.preventDefault();
-    if (!newName) return alert('Nombre requerido');
+    if (!newName) {
+      showNotification('Nombre requerido', 'error');
+      return;
+    }
     try {
       const r = await authFetch('/account/professionals', { method: 'POST', body: JSON.stringify({ name: newName, email: newEmail, role: newRole }), headers: { 'Content-Type': 'application/json' } });
       if (r.ok) {
         const created = await r.json();
         setProList(prev => [created, ...prev]);
         setNewName(''); setNewEmail(''); setNewRole('');
+        showNotification('Profesional agregado correctamente', 'success');
       } else {
-        const txt = await r.text(); alert('Error: ' + txt);
+        const txt = await r.text(); 
+        showNotification('Error: ' + txt, 'error');
       }
-    } catch (err) { console.error(err); alert('Error al crear profesional'); }
+    } catch (err) { 
+      console.error(err); 
+      showNotification('Error al crear profesional', 'error'); 
+    }
   }
 
   async function deletePro(id: number) {
     if (!confirm('Eliminar profesional?')) return;
     try {
       const r = await authFetch('/account/professionals/' + id, { method: 'DELETE' });
-      if (r.ok) setProList(prev => prev.filter(p => p.id !== id));
-      else alert('No se pudo eliminar');
-    } catch (err) { console.error(err); alert('Error'); }
+      if (r.ok) {
+        setProList(prev => prev.filter(p => p.id !== id));
+        showNotification('Profesional eliminado correctamente', 'success');
+      } else {
+        showNotification('No se pudo eliminar', 'error');
+      }
+    } catch (err) { 
+      console.error(err); 
+      showNotification('Error', 'error'); 
+    }
   }
 
   return (
@@ -121,7 +142,7 @@ export default function TeamPage() {
               </div>
               <div className="flex gap-2">
                 <input value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="Email (opcional)" className="flex-1 p-2 border rounded" />
-                <button type="submit" className="px-4 py-2 bg-brand-500 text-white rounded">Agregar</button>
+                <button type="submit" className="px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50">Agregar</button>
               </div>
             </form>
           </div>
@@ -138,12 +159,15 @@ export default function TeamPage() {
               ))}
             </div>
             <div className="mt-6 flex items-center gap-3">
-              <button onClick={activatePremium} className="px-4 py-2 bg-brand-500 text-white rounded">Activar premium (dev)</button>
+              <button onClick={activatePremium} className="px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50">Activar premium (dev)</button>
               <a href="/dashboard/billing" className="text-sm text-gray-600">Ver planes y precios</a>
             </div>
           </div>
         )}
       </div>
+      
+      {/* Notification Component */}
+      {NotificationComponent}
     </div>
   );
 }

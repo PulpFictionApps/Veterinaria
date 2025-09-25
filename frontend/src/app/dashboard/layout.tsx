@@ -6,6 +6,7 @@ import BottomNav from '../../components/BottomNav';
 import { useAuthContext } from '../../lib/auth-context';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { brand } from '../../lib/theme';
 
 // Component that uses useSearchParams wrapped in Suspense
 function SidebarStateTracker({ onSidebarStateChange }: { onSidebarStateChange: (isOpen: boolean) => void }) {
@@ -23,11 +24,11 @@ function SidebarStateTracker({ onSidebarStateChange }: { onSidebarStateChange: (
 function NavbarWithSuspense() {
   return (
     <Suspense fallback={
-      <nav className="bg-white/0 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-gray-100">
+      <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-pink-100 backdrop-blur-sm">
         <div className="flex items-center gap-3">
           <button
             aria-label="Abrir menú"
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            className="lg:hidden p-2 rounded-md hover:bg-pink-50 transition-colors"
             disabled
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -35,10 +36,10 @@ function NavbarWithSuspense() {
             </svg>
           </button>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">V</span>
+            <div className="w-8 h-8 bg-gradient-to-r from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-lg shadow-pink-200/50">
+              <span className="text-white text-sm font-bold">{brand.shortName}</span>
             </div>
-            <span className="hidden sm:inline font-semibold">Veterinaria</span>
+            <span className="hidden sm:inline font-semibold text-gray-800">{brand.name}</span>
           </div>
         </div>
       </nav>
@@ -70,7 +71,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
   if (!token) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-pink-50">
       {/* Suspense wrapper for useSearchParams */}
       <Suspense fallback={null}>
         <SidebarStateTracker onSidebarStateChange={handleSidebarStateChange} />

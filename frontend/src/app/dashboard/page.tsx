@@ -98,7 +98,7 @@ export default function DashboardPage() {
             <p className="text-sm text-gray-500">Enlace público</p>
             <div className="mt-2 flex items-center gap-2 justify-end">
               <input readOnly value={bookingUrl} className="px-3 py-2 border rounded bg-gray-50 text-sm font-mono" />
-              <button onClick={copyLink} className={`px-4 py-2 rounded ${copied ? 'bg-brand-600 text-white' : 'bg-brand-500 text-white hover:bg-brand-600'}`}>
+              <button onClick={copyLink} className={`px-4 py-2 rounded transition-colors ${copied ? 'bg-pink-600 text-white' : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg shadow-pink-200/50'}`}>
                 {copied ? '✅ Copiado' : '📋 Copiar'}
               </button>
             </div>

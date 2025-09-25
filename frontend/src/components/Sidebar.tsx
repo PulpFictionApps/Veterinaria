@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../lib/auth-context';
 import { authFetch } from '../lib/api';
+import { brand } from '../lib/theme';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -44,14 +45,14 @@ export default function Sidebar() {
   ];
  
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 hidden lg:block h-full sticky top-0">
+    <aside className="w-64 bg-white border-r border-pink-100 hidden lg:block h-full sticky top-0 shadow-sm shadow-pink-100/50">
       <div className="p-4 top-0 h-full overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-6">
-          <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center mr-3">
-            <span className="text-white text-sm font-bold">V</span>
+          <div className="w-8 h-8 bg-gradient-to-r from-pink-400 to-pink-500 rounded-lg flex items-center justify-center mr-3 shadow-lg shadow-pink-200/50">
+            <span className="text-white text-sm font-bold">{brand.shortName}</span>
           </div>
-          <h2 className="text-lg font-semibold text-gray-900">Veterinaria</h2>
+          <h2 className="text-lg font-semibold text-gray-800">{brand.name}</h2>
         </div>
 
         {/* Navigation */}
@@ -62,8 +63,8 @@ export default function Sidebar() {
                 <Link
                   href={item.href}
                   className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname && pathname.startsWith(item.href)
-                    ? 'bg-brand-50 text-brand-700 border-r-2 border-brand-700'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? 'bg-pink-50 text-pink-700 border-r-2 border-pink-400 shadow-sm shadow-pink-100/50'
+                    : 'text-gray-700 hover:bg-pink-25 hover:text-pink-600'
                   }`}
                 >
                   <span className="text-lg mr-3">{item.icon}</span>
@@ -84,7 +85,7 @@ export default function Sidebar() {
             <ul className="space-y-2">
               {secondary.map(item => (
                 <li key={item.href}>
-                  <Link href={item.href} className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname && pathname.startsWith(item.href) ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}>
+                  <Link href={item.href} className={`flex items-center px-4 py-3 rounded-lg transition-colors ${pathname && pathname.startsWith(item.href) ? 'bg-pink-50 text-pink-700 border-r-2 border-pink-400' : 'text-gray-700 hover:bg-pink-25 hover:text-pink-600'}`}>
                     <span className="text-lg mr-3">{item.icon}</span>
                     <span className="font-medium">{item.label}</span>
                   </Link>
