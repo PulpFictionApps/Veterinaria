@@ -64,6 +64,7 @@ router.post('/', verifyToken, async (req, res) => {
       select: {
         fullName: true,
         email: true,
+        clinicName: true,
         professionalRut: true,
         professionalTitle: true,
         clinicAddress: true,
@@ -105,12 +106,20 @@ router.post('/', verifyToken, async (req, res) => {
     doc.pipe(stream);
 
     console.log('PDF stream created, generating content...');
+    console.log('Professional data:', JSON.stringify(professional, null, 2));
 
     // PDF Header - Professional letterhead
-    doc.fontSize(16).text(professional?.fullName || 'Veterinario', { align: 'center' });
-    if (professional?.professionalTitle) {
-      doc.fontSize(12).text(professional.professionalTitle, { align: 'center' });
-    }
+    const clinicName = professional?.clinicName || 'CLÍNICA VETERINARIA';
+    const professionalName = professional?.fullName || 'Veterinario';
+    const professionalTitle = professional?.professionalTitle || 'Médico Veterinario';
+    
+    doc.fontSize(16).text(clinicName, { align: 'center' });
+    doc.fontSize(12).text('Receta Médica Veterinaria', { align: 'center' });
+    doc.moveDown();
+    
+    doc.fontSize(14).text(`Dr. ${professionalName}`, { align: 'center' });
+    doc.fontSize(12).text(professionalTitle, { align: 'center' });
+    
     if (professional?.professionalRut) {
       doc.fontSize(10).text(`RUT: ${professional.professionalRut}`, { align: 'center' });
     }
@@ -128,10 +137,10 @@ router.post('/', verifyToken, async (req, res) => {
     }
     
     doc.moveDown();
+    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, { align: 'center' });
+    doc.moveDown();
     doc.fontSize(1).text('_'.repeat(100), { align: 'center' });
     doc.moveDown();
-    doc.fontSize(18).text('RECETA VETERINARIA', { align: 'center', underline: true });
-    doc.moveDown(2);
 
     // Patient Info Section
     doc.fontSize(14).text('DATOS DEL PACIENTE', { underline: true });
@@ -227,20 +236,29 @@ router.post('/', verifyToken, async (req, res) => {
 
     // Footer with signature
     doc.moveDown(2);
-    const footerY = doc.page.height - 150;
+    const footerY = doc.page.height - 180;
     doc.y = Math.max(doc.y, footerY);
     
-    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 50);
-    doc.moveDown();
-    
+    // Signature section
     doc.text('_'.repeat(40), 350);
-    doc.text(`${professional?.fullName || 'Veterinario'}`, 350, doc.y + 5);
+    doc.text(`Dr. ${professional?.fullName || 'Veterinario'}`, 350, doc.y + 5);
     if (professional?.professionalTitle) {
       doc.text(professional.professionalTitle, 350);
+    } else {
+      doc.text('Médico Veterinario', 350);
     }
     if (professional?.licenseNumber) {
       doc.text(`Reg. Prof.: ${professional.licenseNumber}`, 350);
     }
+    doc.text('Firma y Timbre', 350);
+    
+    doc.moveDown(2);
+    
+    // Validity note
+    doc.fontSize(8).text('Esta receta médica es válida por 30 días desde su emisión', { 
+      align: 'center',
+      width: doc.page.width - 100
+    });
 
     doc.end();
 
@@ -381,5 +399,77 @@ router.get('/pdf/:filename', async (req, res) => {
     res.status(500).json({ error: 'Error al servir el archivo PDF' });
   }
 });
+
+// Función de limpieza automática de prescripciones vencidas
+const cleanupExpiredPrescriptions = async () => {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    // Buscar prescripciones vencidas
+    const expiredPrescriptions = await prisma.prescription.findMany({
+      where: {
+        createdAt: {
+          lt: thirtyDaysAgo
+        }
+      }
+    });
+    
+    console.log(`Found ${expiredPrescriptions.length} expired prescriptions to delete`);
+    
+    // Eliminar archivos PDF y registros
+    for (const prescription of expiredPrescriptions) {
+      try {
+        // Eliminar archivo PDF si existe
+        if (prescription.pdfPath && fs.existsSync(prescription.pdfPath)) {
+          fs.unlinkSync(prescription.pdfPath);
+          console.log(`Deleted PDF file: ${prescription.pdfPath}`);
+        }
+      } catch (fileError) {
+        console.error(`Error deleting PDF file ${prescription.pdfPath}:`, fileError.message);
+      }
+    }
+    
+    // Eliminar registros de la base de datos
+    const deleteResult = await prisma.prescription.deleteMany({
+      where: {
+        createdAt: {
+          lt: thirtyDaysAgo
+        }
+      }
+    });
+    
+    console.log(`Deleted ${deleteResult.count} expired prescription records`);
+    return { deleted: deleteResult.count, processed: expiredPrescriptions.length };
+    
+  } catch (error) {
+    console.error('Error during prescription cleanup:', error);
+    throw error;
+  }
+};
+
+// Endpoint para ejecutar limpieza manual (útil para testing y cron jobs)
+router.post('/cleanup', verifyToken, async (req, res) => {
+  try {
+    const result = await cleanupExpiredPrescriptions();
+    res.json({
+      message: 'Limpieza completada exitosamente',
+      ...result
+    });
+  } catch (error) {
+    console.error('Cleanup failed:', error);
+    res.status(500).json({
+      error: 'Error durante la limpieza de prescripciones',
+      details: error.message
+    });
+  }
+});
+
+// Ejecutar limpieza automática al inicializar (para testing)
+// En producción, esto debería ser un cron job separado
+if (process.env.NODE_ENV !== 'development') {
+  // Ejecutar limpieza cada 24 horas
+  setInterval(cleanupExpiredPrescriptions, 24 * 60 * 60 * 1000);
+}
 
 export default router;
