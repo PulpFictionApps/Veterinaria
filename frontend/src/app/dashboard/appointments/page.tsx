@@ -296,11 +296,17 @@ export default function AppointmentsPage() {
                       {appointment.pet.type} {appointment.pet.breed && `• ${appointment.pet.breed}`}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${status.bg} ${status.color}`}>
                       {status.status === 'today' ? 'Hoy' : 
                        status.status === 'upcoming' ? 'Próxima' : 'Pasada'}
                     </span>
+                    <Link 
+                      href={`/dashboard/appointments/${appointment.id}/consult`} 
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium"
+                    >
+                      Iniciar Consulta
+                    </Link>
                     <Link href={`/dashboard/appointments/${appointment.id}/edit`} className="text-gray-600 hover:text-gray-800 ml-2 text-sm font-medium">Editar</Link>
                     <button onClick={() => deleteAppointment(appointment.id)} className="text-red-600 hover:text-red-800 ml-2 text-sm font-medium">Eliminar</button>
                   </div>

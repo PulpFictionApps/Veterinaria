@@ -13,6 +13,9 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
   const [type, setType] = useState('');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
+  const [weight, setWeight] = useState('');
+  const [sex, setSex] = useState('');
+  const [birthDate, setBirthDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -37,6 +40,9 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
           type, 
           breed: breed || null,
           age: age ? Number(age) : null,
+          weight: weight ? Number(weight) : null,
+          sex: sex || null,
+          birthDate: birthDate || null,
           tutorId: clientId 
         }) 
       });
@@ -119,6 +125,54 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               value={age}
               onChange={e => setAge(e.target.value)}
               placeholder="Ej: 2"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
+              Peso (kg)
+            </label>
+            <input
+              id="weight"
+              type="number"
+              min="0"
+              max="200"
+              step="0.1"
+              value={weight}
+              onChange={e => setWeight(e.target.value)}
+              placeholder="Ej: 25.5"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="sex" className="block text-sm font-medium text-gray-700 mb-2">
+              Sexo
+            </label>
+            <select
+              id="sex"
+              value={sex}
+              onChange={e => setSex(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Seleccionar sexo</option>
+              <option value="macho">Macho</option>
+              <option value="hembra">Hembra</option>
+              <option value="castrado">Castrado</option>
+              <option value="castrada">Castrada</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 mb-2">
+              Fecha de Nacimiento (aproximada)
+            </label>
+            <input
+              id="birthDate"
+              type="date"
+              value={birthDate}
+              onChange={e => setBirthDate(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>

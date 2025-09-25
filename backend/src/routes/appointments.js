@@ -62,6 +62,35 @@ router.get("/:userId", verifyToken, async (req, res) => {
   res.json(appointments);
 });
 
+// Obtener una cita específica por ID
+router.get("/appointment/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: Number(id) },
+      include: {
+        pet: true,
+        tutor: true,
+        consultationType: true
+      }
+    });
+
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+
+    // Verify ownership
+    if (appointment.userId !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized to access this appointment' });
+    }
+
+    res.json(appointment);
+  } catch (err) {
+    console.error('Error fetching appointment:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Eliminar cita
 router.delete('/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
@@ -176,7 +205,11 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
 // Reserva pública (sin token) desde link público
 router.post('/public', async (req, res) => {
-  const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId, slotId, consultationTypeId } = req.body;
+  const { 
+    tutorId, tutorName, tutorEmail, tutorPhone, tutorRut, tutorAddress,
+    petId, petName, petType, petBreed, petAge, petWeight, petSex, petBirthDate,
+    date, reason, professionalId, slotId, consultationTypeId 
+  } = req.body;
   try {
     if (!professionalId) return res.status(400).json({ error: 'professionalId is required' });
 
@@ -223,7 +256,14 @@ router.post('/public', async (req, res) => {
       if (!tutor) {
           // create new tutor (use provided name if available)
           tutor = await prisma.tutor.create({
-            data: { name: tutorName || 'Cliente público', email: tutorEmail, phone: tutorPhone, userId: profIdNum },
+            data: { 
+              name: tutorName || 'Cliente público', 
+              email: tutorEmail, 
+              phone: tutorPhone,
+              rut: tutorRut || null,
+              address: tutorAddress || null,
+              userId: profIdNum 
+            },
           });
           tutorCreatedNow = true;
         }
@@ -239,7 +279,20 @@ router.post('/public', async (req, res) => {
       pet = await prisma.pet.findFirst({ where: { tutorId: tutor.id, name: petName } });
       if (!pet) {
         const now = new Date();
-        pet = await prisma.pet.create({ data: { name: petName, type: petType || 'unknown', tutorId: tutor.id, createdAt: now, updatedAt: now } });
+        pet = await prisma.pet.create({ 
+          data: { 
+            name: petName, 
+            type: petType || 'unknown',
+            breed: petBreed || null,
+            age: petAge ? Number(petAge) : null,
+            weight: petWeight ? Number(petWeight) : null,
+            sex: petSex || null,
+            birthDate: petBirthDate ? new Date(petBirthDate) : null,
+            tutorId: tutor.id, 
+            createdAt: now, 
+            updatedAt: now 
+          } 
+        });
       }
     } else {
       return res.status(400).json({ error: 'petName or petId is required' });

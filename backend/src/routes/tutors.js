@@ -7,11 +7,23 @@ const router = express.Router();
 
 // Crear tutor
 router.post("/", verifyToken, async (req, res) => {
-  const { name, email, phone } = req.body;
-  const tutor = await prisma.tutor.create({
-    data: { name, email, phone, userId: req.user.id },
-  });
-  res.json(tutor);
+  try {
+    const { name, email, phone, rut, address } = req.body;
+    const tutor = await prisma.tutor.create({
+      data: { 
+        name, 
+        email: email || null, 
+        phone: phone || null, 
+        rut: rut || null, 
+        address: address || null, 
+        userId: req.user.id 
+      },
+    });
+    res.json(tutor);
+  } catch (err) {
+    console.error('Error creating tutor:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
 });
 
 // Listar tutores con sus mascotas
@@ -32,10 +44,26 @@ router.get('/:id', verifyToken, async (req, res) => {
 
 // Actualizar tutor
 router.patch('/:id', verifyToken, async (req, res) => {
-  const { id } = req.params;
-  const { name, email, phone } = req.body;
-  const tutor = await prisma.tutor.update({ where: { id: Number(id) }, data: { name, email, phone } });
-  res.json(tutor);
+  try {
+    const { id } = req.params;
+    const { name, email, phone, rut, address } = req.body;
+    
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email || null;
+    if (phone !== undefined) updateData.phone = phone || null;
+    if (rut !== undefined) updateData.rut = rut || null;
+    if (address !== undefined) updateData.address = address || null;
+    
+    const tutor = await prisma.tutor.update({ 
+      where: { id: Number(id) }, 
+      data: updateData 
+    });
+    res.json(tutor);
+  } catch (err) {
+    console.error('Error updating tutor:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
 });
 
 // Eliminar tutor

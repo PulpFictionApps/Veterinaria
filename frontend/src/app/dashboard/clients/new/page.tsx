@@ -9,6 +9,8 @@ export default function NewClientPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [rut, setRut] = useState('');
+  const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,7 +25,7 @@ export default function NewClientPage() {
       const res = await authFetch('/tutors', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ name, email, phone }) 
+        body: JSON.stringify({ name, email, phone, rut, address }) 
       });
       
       if (res.ok) {
@@ -84,6 +86,34 @@ export default function NewClientPage() {
               value={phone}
               onChange={e => setPhone(e.target.value)}
               placeholder="+56 9 1234 5678"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="rut" className="block text-sm font-medium text-gray-700 mb-2">
+              RUT
+            </label>
+            <input
+              id="rut"
+              type="text"
+              value={rut}
+              onChange={e => setRut(e.target.value)}
+              placeholder="12.345.678-9"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+              Dirección
+            </label>
+            <textarea
+              id="address"
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+              placeholder="Ej: Av. Providencia 1234, Providencia"
+              rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>

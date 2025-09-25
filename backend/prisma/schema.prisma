@@ -34,6 +34,8 @@ model Tutor {
   name         String
   email        String?
   phone        String?
+  rut          String?       // RUT del tutor
+  address      String?       // Dirección del tutor
   userId       Int
   user         User          @relation(fields: [userId], references: [id])
   pets         Pet[]
@@ -44,9 +46,12 @@ model Tutor {
 model Pet {
   id           Int           @id @default(autoincrement())
   name         String
-  type         String
-  breed        String?
-  age          Int?
+  type         String        // Especie (perro, gato, etc.)
+  breed        String?       // Raza
+  age          Int?          // Edad en años
+  weight       Float?        // Peso actual en kg
+  sex          String?       // Sexo (macho, hembra, castrado, castrada)
+  birthDate    DateTime?     // Fecha de nacimiento aproximada
   tutorId      Int
   tutor        Tutor         @relation(fields: [tutorId], references: [id])
   appointments Appointment[]

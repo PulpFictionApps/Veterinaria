@@ -8,7 +8,7 @@ const router = express.Router();
 // Crear mascota
 router.post("/", verifyToken, async (req, res) => {
   try {
-    const { name, type, breed, age, tutorId } = req.body;
+    const { name, type, breed, age, weight, sex, birthDate, tutorId } = req.body;
 
     if (!name || !type) return res.status(400).json({ error: 'name and type are required' });
     if (!tutorId) return res.status(400).json({ error: 'tutorId is required' });
@@ -27,6 +27,9 @@ router.post("/", verifyToken, async (req, res) => {
         type,
         breed: breed || null,
         age: age ? Number(age) : null,
+        weight: weight ? Number(weight) : null,
+        sex: sex || null,
+        birthDate: birthDate ? new Date(birthDate) : null,
         tutorId: tutorIdNum,
         createdAt: now,
         updatedAt: now,
@@ -67,19 +70,31 @@ router.get('/:id', verifyToken, async (req, res) => {
 
 // Actualizar mascota
 router.patch('/:id', verifyToken, async (req, res) => {
-  const { id } = req.params;
-  const { name, type, breed, age, tutorId } = req.body;
-  const pet = await prisma.pet.update({ 
-    where: { id: Number(id) }, 
-    data: { 
-      name, 
-      type, 
-      breed: breed || null,
-      age: age ? Number(age) : null,
-      tutorId 
-    } 
-  });
-  res.json(pet);
+  try {
+    const { id } = req.params;
+    const { name, type, breed, age, weight, sex, birthDate, tutorId } = req.body;
+    
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (type !== undefined) updateData.type = type;
+    if (breed !== undefined) updateData.breed = breed || null;
+    if (age !== undefined) updateData.age = age ? Number(age) : null;
+    if (weight !== undefined) updateData.weight = weight ? Number(weight) : null;
+    if (sex !== undefined) updateData.sex = sex || null;
+    if (birthDate !== undefined) updateData.birthDate = birthDate ? new Date(birthDate) : null;
+    if (tutorId !== undefined) updateData.tutorId = Number(tutorId);
+    
+    updateData.updatedAt = new Date();
+    
+    const pet = await prisma.pet.update({ 
+      where: { id: Number(id) }, 
+      data: updateData
+    });
+    res.json(pet);
+  } catch (err) {
+    console.error('Error updating pet:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
 });
 
 // Eliminar mascota

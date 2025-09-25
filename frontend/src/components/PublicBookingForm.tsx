@@ -14,8 +14,15 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [rut, setRut] = useState('');
+  const [address, setAddress] = useState('');
   const [petName, setPetName] = useState('');
   const [petType, setPetType] = useState('');
+  const [petBreed, setPetBreed] = useState('');
+  const [petAge, setPetAge] = useState('');
+  const [petWeight, setPetWeight] = useState('');
+  const [petSex, setPetSex] = useState('');
+  const [petBirthDate, setPetBirthDate] = useState('');
   const [date, setDate] = useState('');
   const [slots, setSlots] = useState<Array<{ id: number; start: string; end: string }>>([]);
   const [selectedSlot, setSelectedSlot] = useState<string>('');
@@ -44,8 +51,15 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         tutorName: name,
         tutorEmail: email,
         tutorPhone: phone,
+        tutorRut: rut || null,
+        tutorAddress: address || null,
         petName,
         petType,
+        petBreed: petBreed || null,
+        petAge: petAge ? Number(petAge) : null,
+        petWeight: petWeight ? Number(petWeight) : null,
+        petSex: petSex || null,
+        petBirthDate: petBirthDate || null,
         reason,
         professionalId,
         consultationTypeId: Number(selectedConsultationType)
@@ -141,14 +155,52 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const selectedType = consultationTypes.find(t => t.id === Number(selectedConsultationType));
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-md mx-auto bg-white p-4 sm:p-6 rounded shadow">
-      <h3 className="text-base sm:text-lg font-bold mb-3">Reservar hora</h3>
+    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded shadow">
+      <h3 className="text-base sm:text-lg font-bold mb-4">Reservar hora</h3>
       
-      <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre" className="w-full p-2 border mb-2 rounded" required />
-      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border mb-2 rounded" required />
-      <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border mb-2 rounded" required />
-      <input value={petName} onChange={e => setPetName(e.target.value)} placeholder="Nombre mascota" className="w-full p-2 border mb-2 rounded" required />
-      <input value={petType} onChange={e => setPetType(e.target.value)} placeholder="Tipo mascota" className="w-full p-2 border mb-2 rounded" />
+      {/* Datos del Cliente */}
+      <div className="mb-4">
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">Datos del Cliente</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre completo" className="w-full p-2 border rounded" required />
+          <input value={rut} onChange={e => setRut(e.target.value)} placeholder="RUT (opcional)" className="w-full p-2 border rounded" />
+          <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" type="email" className="w-full p-2 border rounded" required />
+          <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border rounded" required />
+        </div>
+        <textarea value={address} onChange={e => setAddress(e.target.value)} placeholder="Dirección (opcional)" className="w-full p-2 border rounded mt-2" rows={2} />
+      </div>
+
+      {/* Datos de la Mascota */}
+      <div className="mb-4">
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">Datos de la Mascota</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input value={petName} onChange={e => setPetName(e.target.value)} placeholder="Nombre de la mascota" className="w-full p-2 border rounded" required />
+          <select value={petType} onChange={e => setPetType(e.target.value)} className="w-full p-2 border rounded" required>
+            <option value="">Seleccionar especie</option>
+            <option value="Perro">Perro</option>
+            <option value="Gato">Gato</option>
+            <option value="Conejo">Conejo</option>
+            <option value="Hamster">Hamster</option>
+            <option value="Cobaya">Cobaya</option>
+            <option value="Pájaro">Pájaro</option>
+            <option value="Pez">Pez</option>
+            <option value="Tortuga">Tortuga</option>
+            <option value="Iguana">Iguana</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <input value={petBreed} onChange={e => setPetBreed(e.target.value)} placeholder="Raza (opcional)" className="w-full p-2 border rounded" />
+          <input value={petAge} onChange={e => setPetAge(e.target.value)} placeholder="Edad en años (opcional)" type="number" min="0" max="30" className="w-full p-2 border rounded" />
+          <input value={petWeight} onChange={e => setPetWeight(e.target.value)} placeholder="Peso en kg (opcional)" type="number" min="0" max="200" step="0.1" className="w-full p-2 border rounded" />
+          <select value={petSex} onChange={e => setPetSex(e.target.value)} className="w-full p-2 border rounded">
+            <option value="">Seleccionar sexo (opcional)</option>
+            <option value="macho">Macho</option>
+            <option value="hembra">Hembra</option>
+            <option value="castrado">Castrado</option>
+            <option value="castrada">Castrada</option>
+          </select>
+        </div>
+        <input value={petBirthDate} onChange={e => setPetBirthDate(e.target.value)} placeholder="Fecha de nacimiento (opcional)" type="date" className="w-full p-2 border rounded mt-2" />
+      </div>
 
       {/* Consultation Type Selection */}
       {consultationTypes.length > 0 && (
