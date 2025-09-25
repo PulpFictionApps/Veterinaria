@@ -25,14 +25,40 @@ router.post('/', verifyToken, async (req, res) => {
   } = req.body;
   const sendWhatsApp = req.body.sendWhatsApp || false;
   
+  console.log('Creating prescription - Request body:', {
+    petId, tutorId, title, medication, dosage, frequency, duration
+  });
+  
   try {
+    // Validate required fields
+    if (!petId || !tutorId || !title || !medication || !dosage || !frequency || !duration) {
+      const missingFields = [];
+      if (!petId) missingFields.push('petId');
+      if (!tutorId) missingFields.push('tutorId');
+      if (!title) missingFields.push('title');
+      if (!medication) missingFields.push('medication');
+      if (!dosage) missingFields.push('dosage');
+      if (!frequency) missingFields.push('frequency');
+      if (!duration) missingFields.push('duration');
+      
+      console.log('Missing required fields:', missingFields);
+      return res.status(400).json({ 
+        error: 'Campos requeridos faltantes', 
+        missingFields 
+      });
+    }
+
     const pet = await prisma.pet.findUnique({ 
       where: { id: Number(petId) }, 
       include: { tutor: true } 
     });
-    if (!pet) return res.status(404).json({ error: 'Mascota no encontrada' });
+    if (!pet) {
+      console.log('Pet not found for ID:', petId);
+      return res.status(404).json({ error: 'Mascota no encontrada' });
+    }
 
     // Obtener datos del profesional
+    console.log('Fetching professional data for user ID:', req.user.id);
     const professional = await prisma.user.findUnique({
       where: { id: req.user.id },
       select: {
@@ -48,13 +74,37 @@ router.post('/', verifyToken, async (req, res) => {
       }
     });
 
+    console.log('Professional data found:', professional?.fullName || 'None');
+
     // Generate PDF
+    console.log('Starting PDF generation...');
     const doc = new PDFDocument({ margin: 50 });
-    const fileName = `receta_${pet.name}_${Date.now()}.pdf`;
-    const outPath = path.join(process.cwd(), 'tmp', fileName);
-    await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
+    const fileName = `receta_${pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.pdf`;
+    
+    // Use /tmp for Vercel (exists by default), or local tmp for development  
+    const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
+    const outPath = path.join(tmpDir, fileName);
+    
+    console.log('PDF output path:', outPath);
+    console.log('Running on Vercel:', !!process.env.VERCEL);
+    
+    try {
+      // Only create directory in local development (not on Vercel)
+      if (!process.env.VERCEL) {
+        await fs.promises.mkdir(tmpDir, { recursive: true });
+        console.log('Created local tmp directory successfully');
+      } else {
+        console.log('Using Vercel /tmp directory');
+      }
+    } catch (dirError) {
+      console.error('Error with tmp directory:', dirError);
+      throw new Error('No se pudo acceder al directorio temporal para el PDF');
+    }
+    
     const stream = fs.createWriteStream(outPath);
     doc.pipe(stream);
+
+    console.log('PDF stream created, generating content...');
 
     // PDF Header - Professional letterhead
     doc.fontSize(16).text(professional?.fullName || 'Veterinario', { align: 'center' });
@@ -194,9 +244,22 @@ router.post('/', verifyToken, async (req, res) => {
 
     doc.end();
 
-    await new Promise((resolve) => stream.on('finish', resolve));
+    try {
+      await new Promise((resolve, reject) => {
+        stream.on('finish', resolve);
+        stream.on('error', reject);
+        setTimeout(() => reject(new Error('PDF generation timeout')), 30000); // 30s timeout
+      });
+      console.log('PDF generation completed successfully');
+    } catch (pdfError) {
+      console.error('PDF generation failed:', pdfError);
+      throw new Error('Error al generar el PDF: ' + pdfError.message);
+    }
 
     // Save prescription record
+    console.log('Saving prescription to database...');
+    const pdfUrl = process.env.VERCEL ? `/prescriptions/pdf/${fileName}` : `/tmp/${fileName}`;
+    
     const prescription = await prisma.prescription.create({
       data: {
         petId: Number(petId),
@@ -209,12 +272,14 @@ router.post('/', verifyToken, async (req, res) => {
         frequency: frequency || '',
         duration: duration || '',
         instructions: instructions || null,
-        pdfUrl: `/tmp/${fileName}`,
+        pdfUrl,
         pdfPath: outPath,
         sendWhatsApp,
         whatsappSent: false
       },
     });
+
+    console.log('Prescription saved successfully with ID:', prescription.id);
 
     // Send via WhatsApp if requested
     let whatsappSent = false;
@@ -241,14 +306,31 @@ router.post('/', verifyToken, async (req, res) => {
 
     // Return response
     const base = process.env.BACKEND_BASE_URL;
-    const pdfUrl = base ? `${base}${prescription.pdfUrl}` : prescription.pdfUrl;
+    const fullPdfUrl = base ? `${base}${prescription.pdfUrl}` : prescription.pdfUrl;
+    
+    console.log('Prescription created successfully, returning response');
     res.json({ 
       prescription: { ...prescription, whatsappSent }, 
-      file: pdfUrl 
+      file: fullPdfUrl 
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    console.error('Error creating prescription:', {
+      message: err.message,
+      stack: err.stack,
+      name: err.name
+    });
+    
+    // Return appropriate error message
+    const errorMessage = err.message.includes('PDF') 
+      ? 'Error al generar el PDF de la receta'
+      : err.message.includes('Prisma') || err.message.includes('database')
+      ? 'Error en la base de datos'
+      : err.message || 'Error interno del servidor';
+      
+    res.status(500).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 
@@ -264,6 +346,40 @@ router.get('/user/:userId', verifyToken, async (req, res) => {
   const { userId } = req.params;
   const items = await prisma.prescription.findMany({ where: { userId: Number(userId) } });
   res.json(items);
+});
+
+// Servir archivos PDF
+router.get('/pdf/:filename', async (req, res) => {
+  try {
+    const { filename } = req.params;
+    
+    // Use /tmp for Vercel compatibility, or local tmp for development
+    const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
+    const filePath = path.join(tmpDir, filename);
+    
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      console.log('PDF file not found:', filePath);
+      return res.status(404).json({ error: 'Archivo PDF no encontrado' });
+    }
+    
+    // Set appropriate headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+    
+    // Stream the file
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.on('error', (error) => {
+      console.error('Error streaming PDF:', error);
+      res.status(500).json({ error: 'Error al leer el archivo PDF' });
+    });
+    
+    fileStream.pipe(res);
+    
+  } catch (error) {
+    console.error('Error serving PDF:', error);
+    res.status(500).json({ error: 'Error al servir el archivo PDF' });
+  }
 });
 
 export default router;

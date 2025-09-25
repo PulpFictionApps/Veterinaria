@@ -15,6 +15,7 @@ import accountRoutes from "./routes/account.js";
 import billingRoutes from "./routes/billing.js";
 import consultationTypesRoutes from "./routes/consultationTypes.js";
 import userRoutes from "./routes/users.js";
+import { healthCheck } from "./routes/health.js";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/billing", billingRoutes);
 app.use("/consultation-types", consultationTypesRoutes);
 app.use("/users", userRoutes);
 
+app.get("/health", healthCheck);
 app.get("/", (req, res) => res.send("Backend funcionando"));
 
 app.listen(4000, () => console.log("Backend corriendo en http://localhost:4000"));
