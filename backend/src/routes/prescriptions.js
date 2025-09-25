@@ -2,14 +2,47 @@ import express from 'express';
 import PDFDocument from 'pdfkit';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
+import fsPromises from 'fs/promises';
 import path from 'path';
 import Twilio from 'twilio';
+import fetch from 'node-fetch';
 import { verifyToken } from '../middleware/auth.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;
+
+// Helper function to download and cache image
+const downloadImage = async (imageUrl, fileName) => {
+  if (!imageUrl) return null;
+  
+  try {
+    console.log('Downloading image from:', imageUrl);
+    const response = await fetch(imageUrl);
+    
+    if (!response.ok) {
+      console.log('Failed to download image:', response.status, response.statusText);
+      return null;
+    }
+    
+    const buffer = await response.buffer();
+    const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
+    const imagePath = path.join(tmpDir, fileName);
+    
+    // Ensure tmp directory exists
+    if (!process.env.VERCEL) {
+      await fs.promises.mkdir(tmpDir, { recursive: true });
+    }
+    
+    await fs.promises.writeFile(imagePath, buffer);
+    console.log('Image saved to:', imagePath);
+    return imagePath;
+  } catch (error) {
+    console.error('Error downloading image:', error);
+    return null;
+  }
+};
 
 router.post('/', verifyToken, async (req, res) => {
   const { 
@@ -108,7 +141,32 @@ router.post('/', verifyToken, async (req, res) => {
     console.log('PDF stream created, generating content...');
     console.log('Professional data received:', JSON.stringify(professional, null, 2));
 
-    // PDF Header - Professional letterhead
+    // Download logo and signature images if available
+    let logoPath = null;
+    let signaturePath = null;
+    
+    if (professional?.logoUrl) {
+      logoPath = await downloadImage(professional.logoUrl, `logo_${req.user.id}_${Date.now()}.png`);
+    }
+    
+    if (professional?.signatureUrl) {
+      signaturePath = await downloadImage(professional.signatureUrl, `signature_${req.user.id}_${Date.now()}.png`);
+    }
+
+    // PDF Header - Professional letterhead with logo
+    let currentY = 50;
+    
+    // Add logo if available (top-left)
+    if (logoPath) {
+      try {
+        doc.image(logoPath, 50, currentY, { width: 100, height: 80 });
+        console.log('Logo added successfully');
+      } catch (logoError) {
+        console.error('Error adding logo:', logoError);
+      }
+    }
+    
+    // Clinic info (centered or right if logo exists)
     const clinicName = professional?.clinicName || 'CLÍNICA VETERINARIA';
     const professionalName = professional?.fullName || 'Veterinario';
     const professionalTitle = professional?.professionalTitle || 'Médico Veterinario';
@@ -117,34 +175,49 @@ router.post('/', verifyToken, async (req, res) => {
     console.log('Using professional name:', professionalName);
     console.log('Using professional title:', professionalTitle);
     
-    doc.fontSize(16).text(clinicName, { align: 'center' });
-    doc.fontSize(12).text('Receta Médica Veterinaria', { align: 'center' });
-    doc.moveDown();
+    // Position text based on logo presence
+    const headerX = logoPath ? 200 : 50;
+    const headerAlign = logoPath ? 'left' : 'center';
     
-    doc.fontSize(14).text(`Dr. ${professionalName}`, { align: 'center' });
-    doc.fontSize(12).text(professionalTitle, { align: 'center' });
+    doc.fontSize(16).text(clinicName, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+    currentY += 20;
+    doc.fontSize(12).text('Receta Médica Veterinaria', headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+    currentY += 25;
+    
+    doc.fontSize(14).text(`Dr. ${professionalName}`, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+    currentY += 15;
+    doc.fontSize(12).text(professionalTitle, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+    currentY += 12;
     
     if (professional?.professionalRut) {
-      doc.fontSize(10).text(`RUT: ${professional.professionalRut}`, { align: 'center' });
+      doc.fontSize(10).text(`RUT: ${professional.professionalRut}`, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+      currentY += 12;
     }
     if (professional?.licenseNumber) {
-      doc.text(`Registro Profesional: ${professional.licenseNumber}`, { align: 'center' });
+      doc.text(`Registro Profesional: ${professional.licenseNumber}`, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+      currentY += 12;
     }
     if (professional?.clinicAddress) {
-      doc.text(professional.clinicAddress, { align: 'center' });
+      doc.text(professional.clinicAddress, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+      currentY += 12;
     }
     if (professional?.professionalPhone) {
-      doc.text(`Tel: ${professional.professionalPhone}`, { align: 'center' });
+      doc.text(`Tel: ${professional.professionalPhone}`, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+      currentY += 12;
     }
     if (professional?.email) {
-      doc.text(`Email: ${professional.email}`, { align: 'center' });
+      doc.text(`Email: ${professional.email}`, headerX, currentY, { align: headerAlign, width: logoPath ? 350 : 500 });
+      currentY += 12;
     }
     
-    doc.moveDown();
-    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(1).text('_'.repeat(100), { align: 'center' });
-    doc.moveDown();
+    currentY += 15;
+    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 50, currentY, { align: 'center', width: 500 });
+    currentY += 15;
+    doc.fontSize(1).text('_'.repeat(100), 50, currentY, { align: 'center', width: 500 });
+    currentY += 20;
+
+    // Set doc.y to our tracked position
+    doc.y = currentY;
 
     // Patient Info Section
     doc.fontSize(14).text('DATOS DEL PACIENTE', { underline: true });
@@ -152,47 +225,47 @@ router.post('/', verifyToken, async (req, res) => {
     
     const leftColumn = 50;
     const rightColumn = 300;
-    let currentY = doc.y;
+    let patientY = doc.y;
     
     doc.fontSize(11);
-    doc.text(`Nombre: ${pet.name}`, leftColumn, currentY);
-    doc.text(`Especie: ${pet.type}`, rightColumn, currentY);
+    doc.text(`Nombre: ${pet.name}`, leftColumn, patientY);
+    doc.text(`Especie: ${pet.type}`, rightColumn, patientY);
     
-    currentY += 15;
+    patientY += 15;
     if (pet.breed) {
-      doc.text(`Raza: ${pet.breed}`, leftColumn, currentY);
+      doc.text(`Raza: ${pet.breed}`, leftColumn, patientY);
     }
     if (pet.age) {
-      doc.text(`Edad: ${pet.age} años`, rightColumn, currentY);
+      doc.text(`Edad: ${pet.age} años`, rightColumn, patientY);
     }
     
-    currentY += 15;
+    patientY += 15;
     if (pet.weight) {
-      doc.text(`Peso: ${pet.weight} kg`, leftColumn, currentY);
+      doc.text(`Peso: ${pet.weight} kg`, leftColumn, patientY);
     }
     
-    doc.y = currentY + 20;
+    doc.y = patientY + 20;
 
     // Owner Info Section
     doc.fontSize(14).text('DATOS DEL PROPIETARIO', { underline: true });
     doc.moveDown(0.5);
     
-    currentY = doc.y;
+    patientY = doc.y;
     doc.fontSize(11);
-    doc.text(`Nombre: ${pet.tutor.name}`, leftColumn, currentY);
+    doc.text(`Nombre: ${pet.tutor.name}`, leftColumn, patientY);
     if (pet.tutor.rut) {
-      doc.text(`RUT: ${pet.tutor.rut}`, rightColumn, currentY);
+      doc.text(`RUT: ${pet.tutor.rut}`, rightColumn, patientY);
     }
     
-    currentY += 15;
+    patientY += 15;
     if (pet.tutor.phone) {
-      doc.text(`Teléfono: ${pet.tutor.phone}`, leftColumn, currentY);
+      doc.text(`Teléfono: ${pet.tutor.phone}`, leftColumn, patientY);
     }
     if (pet.tutor.email) {
-      doc.text(`Email: ${pet.tutor.email}`, rightColumn, currentY);
+      doc.text(`Email: ${pet.tutor.email}`, rightColumn, patientY);
     }
     
-    doc.y = currentY + 30;
+    doc.y = patientY + 30;
 
     // Prescription Content - Rx Section
     doc.fontSize(16).text('℞', 50, doc.y, { width: 30 });
@@ -243,9 +316,25 @@ router.post('/', verifyToken, async (req, res) => {
     const footerY = doc.page.height - 180;
     doc.y = Math.max(doc.y, footerY);
     
-    // Signature section
-    doc.text('_'.repeat(40), 350);
-    doc.text(`Dr. ${professional?.fullName || 'Veterinario'}`, 350, doc.y + 5);
+    // Add signature if available
+    if (signaturePath) {
+      try {
+        doc.image(signaturePath, 300, doc.y, { width: 200, height: 60 });
+        console.log('Signature added successfully');
+        doc.y += 70; // Move Y position below signature
+      } catch (sigError) {
+        console.error('Error adding signature:', sigError);
+        // Fallback to signature line
+        doc.text('_'.repeat(40), 350);
+        doc.moveDown(0.5);
+      }
+    } else {
+      // Signature line if no signature image
+      doc.text('_'.repeat(40), 350);
+      doc.moveDown(0.5);
+    }
+    
+    doc.text(`Dr. ${professional?.fullName || 'Veterinario'}`, 350);
     if (professional?.professionalTitle) {
       doc.text(professional.professionalTitle, 350);
     } else {
@@ -263,6 +352,25 @@ router.post('/', verifyToken, async (req, res) => {
       align: 'center',
       width: doc.page.width - 100
     });
+
+    // Clean up downloaded images
+    if (logoPath) {
+      try {
+        await fsPromises.unlink(logoPath);
+        console.log('Logo temp file cleaned up');
+      } catch (cleanupError) {
+        console.error('Error cleaning up logo file:', cleanupError);
+      }
+    }
+    
+    if (signaturePath) {
+      try {
+        await fsPromises.unlink(signaturePath);
+        console.log('Signature temp file cleaned up');
+      } catch (cleanupError) {
+        console.error('Error cleaning up signature file:', cleanupError);
+      }
+    }
 
     doc.end();
 

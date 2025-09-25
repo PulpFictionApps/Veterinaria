@@ -83,7 +83,7 @@ export default function Navbar() {
   // close when route changes
   useEffect(() => {
     setOpen(false);
-  }, [pathname, router]);
+  }, [pathname]);
 
   return (
     <>
@@ -143,7 +143,10 @@ export default function Navbar() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      // Allow default navigation behavior
+                      setOpen(false);
+                    }}
                     className={`flex items-center px-3 py-2 rounded-md transition-colors ${pathname && pathname.startsWith(item.href) ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50'}`}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>

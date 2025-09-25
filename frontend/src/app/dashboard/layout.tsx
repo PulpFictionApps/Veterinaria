@@ -4,10 +4,19 @@ import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import BottomNav from '../../components/BottomNav';
 import { useAuthContext } from '../../lib/auth-context';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {
   const { token, logout } = useAuthContext();
+  const search = useSearchParams();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Track sidebar state based on URL params
+  useEffect(() => {
+    const menuOpen = search?.get('menu') === 'open';
+    setIsSidebarOpen(menuOpen);
+  }, [search]);
 
   // If there's no token, redirect to login on the client
   useEffect(() => {
@@ -42,7 +51,8 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
         <Navbar />
         {/* add bottom padding so content isn't hidden behind BottomNav */}
         <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
-        <BottomNav />
+        {/* Only show BottomNav when sidebar is closed */}
+        {!isSidebarOpen && <BottomNav />}
       </div>
     </div>
   );
