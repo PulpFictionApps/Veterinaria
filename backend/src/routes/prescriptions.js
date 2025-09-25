@@ -106,12 +106,16 @@ router.post('/', verifyToken, async (req, res) => {
     doc.pipe(stream);
 
     console.log('PDF stream created, generating content...');
-    console.log('Professional data:', JSON.stringify(professional, null, 2));
+    console.log('Professional data received:', JSON.stringify(professional, null, 2));
 
     // PDF Header - Professional letterhead
     const clinicName = professional?.clinicName || 'CLÍNICA VETERINARIA';
     const professionalName = professional?.fullName || 'Veterinario';
     const professionalTitle = professional?.professionalTitle || 'Médico Veterinario';
+    
+    console.log('Using clinic name:', clinicName);
+    console.log('Using professional name:', professionalName);
+    console.log('Using professional title:', professionalTitle);
     
     doc.fontSize(16).text(clinicName, { align: 'center' });
     doc.fontSize(12).text('Receta Médica Veterinaria', { align: 'center' });

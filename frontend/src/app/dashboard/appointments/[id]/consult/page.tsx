@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { authFetch } from '@/lib/api';
-import jsPDF from 'jspdf';
 
 interface Pet {
   id: number;
@@ -290,154 +289,14 @@ export default function ConsultationPage() {
     }
   };
 
-  const generatePrescriptionPDF = async (prescription: Prescription) => {
-    if (!appointment) return;
-
-    try {
-      const pdf = new jsPDF();
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      let yPosition = 20;
-
-      // Header - Clinic Info
-      pdf.setFontSize(18);
-      pdf.setFont("helvetica", "bold");
-      pdf.text("CLÍNICA VETERINARIA", pageWidth / 2, yPosition, { align: 'center' });
-      yPosition += 10;
-      
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "normal");
-      pdf.text("Receta Médica Veterinaria", pageWidth / 2, yPosition, { align: 'center' });
-      yPosition += 15;
-
-      // Professional Info
-      pdf.setFontSize(10);
-      pdf.text(`Dr. ${appointment.user?.fullName || 'Veterinario'}`, 20, yPosition);
-      yPosition += 5;
-      pdf.text("Médico Veterinario", 20, yPosition);
-      yPosition += 5;
-      pdf.text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 20, yPosition);
-      yPosition += 15;
-
-      // Patient Info
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "bold");
-      pdf.text("DATOS DEL PACIENTE", 20, yPosition);
-      yPosition += 8;
-      
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(10);
-      pdf.text(`Paciente: ${appointment.pet.name}`, 20, yPosition);
-      yPosition += 5;
-      pdf.text(`Especie: ${appointment.pet.type}`, 20, yPosition);
-      if (appointment.pet.breed) {
-        yPosition += 5;
-        pdf.text(`Raza: ${appointment.pet.breed}`, 20, yPosition);
-      }
-      if (appointment.pet.age) {
-        yPosition += 5;
-        pdf.text(`Edad: ${appointment.pet.age} años`, 20, yPosition);
-      }
-      if (appointment.pet.weight) {
-        yPosition += 5;
-        pdf.text(`Peso: ${appointment.pet.weight} kg`, 20, yPosition);
-      }
-      yPosition += 10;
-
-      // Owner Info
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "bold");
-      pdf.text("DATOS DEL PROPIETARIO", 20, yPosition);
-      yPosition += 8;
-      
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(10);
-      pdf.text(`Propietario: ${appointment.tutor.name}`, 20, yPosition);
-      if (appointment.tutor.phone) {
-        yPosition += 5;
-        pdf.text(`Teléfono: ${appointment.tutor.phone}`, 20, yPosition);
-      }
-      if (appointment.tutor.rut) {
-        yPosition += 5;
-        pdf.text(`RUT: ${appointment.tutor.rut}`, 20, yPosition);
-      }
-      yPosition += 15;
-
-      // Prescription Info
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "bold");
-      pdf.text("PRESCRIPCIÓN", 20, yPosition);
-      yPosition += 8;
-      
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(10);
-      pdf.text(`Título: ${prescription.title}`, 20, yPosition);
-      yPosition += 10;
-
-      // Medication box
-      const boxY = yPosition;
-      const boxHeight = 40;
-      pdf.rect(20, boxY, pageWidth - 40, boxHeight);
-      yPosition += 8;
-      
-      pdf.setFont("helvetica", "bold");
-      pdf.text(`Rp/ ${prescription.medication}`, 25, yPosition);
-      yPosition += 8;
-      
-      pdf.setFont("helvetica", "normal");
-      pdf.text(`Dosis: ${prescription.dosage}`, 25, yPosition);
-      yPosition += 6;
-      pdf.text(`Frecuencia: ${prescription.frequency}`, 25, yPosition);
-      yPosition += 6;
-      pdf.text(`Duración: ${prescription.duration}`, 25, yPosition);
-      yPosition += 15;
-
-      if (prescription.instructions) {
-        pdf.setFont("helvetica", "bold");
-        pdf.text("INSTRUCCIONES ESPECIALES:", 20, yPosition);
-        yPosition += 6;
-        pdf.setFont("helvetica", "normal");
-        
-        // Split long instructions into multiple lines
-        const instructions = pdf.splitTextToSize(prescription.instructions, pageWidth - 40);
-        pdf.text(instructions, 20, yPosition);
-        yPosition += instructions.length * 5 + 10;
-      }
-
-      if (prescription.content) {
-        pdf.setFont("helvetica", "bold");
-        pdf.text("NOTAS ADICIONALES:", 20, yPosition);
-        yPosition += 6;
-        pdf.setFont("helvetica", "normal");
-        
-        const content = pdf.splitTextToSize(prescription.content, pageWidth - 40);
-        pdf.text(content, 20, yPosition);
-        yPosition += content.length * 5 + 10;
-      }
-
-      // Signature area
-      yPosition = Math.max(yPosition, pageHeight - 50);
-      pdf.line(pageWidth - 120, yPosition, pageWidth - 20, yPosition);
-      yPosition += 5;
-      pdf.setFontSize(8);
-      pdf.text(`Dr. ${appointment.user?.fullName || 'Veterinario'}`, pageWidth - 120, yPosition);
-      yPosition += 3;
-      pdf.text("Médico Veterinario", pageWidth - 120, yPosition);
-      yPosition += 3;
-      pdf.text("Firma y Timbre", pageWidth - 120, yPosition);
-
-      // Footer
-      pdf.setFontSize(6);
-      pdf.text("Esta receta médica es válida por 30 días desde su emisión", pageWidth / 2, pageHeight - 10, { align: 'center' });
-
-      // Save PDF
-      const fileName = `Receta_${appointment.pet.name}_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdf.save(fileName);
-      
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Error al generar el PDF');
-    }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-CL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   if (loading) {
@@ -463,90 +322,56 @@ export default function ConsultationPage() {
   }
 
   if (!appointment) {
-    return (
-      <div className="text-center">
-        <p>Cita no encontrada</p>
-        <button
-          onClick={() => router.back()}
-          className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          Volver
-        </button>
-      </div>
-    );
+    return <div>Cita no encontrada</div>;
   }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('es-CL');
-  };
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Consulta Médica</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Consulta Veterinaria</h1>
         <button
           onClick={() => router.back()}
           className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
         >
-          Volver
+          ← Volver
         </button>
       </div>
 
-      {/* Appointment info */}
-      <div className="bg-blue-50 p-4 rounded-lg">
-        <h2 className="font-semibold text-lg mb-2">Información de la Cita</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <p><span className="font-medium">Fecha:</span> {formatDate(appointment.date)}</p>
-          <p><span className="font-medium">Motivo:</span> {appointment.reason}</p>
+      {/* Appointment Details */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-4">Información de la Cita</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Información de la Mascota</h3>
+            <p><strong>Nombre:</strong> {appointment.pet.name}</p>
+            <p><strong>Tipo:</strong> {appointment.pet.type}</p>
+            {appointment.pet.breed && <p><strong>Raza:</strong> {appointment.pet.breed}</p>}
+            {appointment.pet.age && <p><strong>Edad:</strong> {appointment.pet.age} años</p>}
+            {appointment.pet.weight && <p><strong>Peso:</strong> {appointment.pet.weight} kg</p>}
+            {appointment.pet.sex && <p><strong>Sexo:</strong> {appointment.pet.sex}</p>}
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Información del Tutor</h3>
+            <p><strong>Nombre:</strong> {appointment.tutor.name}</p>
+            {appointment.tutor.email && <p><strong>Email:</strong> {appointment.tutor.email}</p>}
+            {appointment.tutor.phone && <p><strong>Teléfono:</strong> {appointment.tutor.phone}</p>}
+            {appointment.tutor.rut && <p><strong>RUT:</strong> {appointment.tutor.rut}</p>}
+          </div>
+        </div>
+        <div className="mt-4">
+          <p><strong>Fecha de la Cita:</strong> {formatDate(appointment.date)}</p>
+          <p><strong>Motivo:</strong> {appointment.reason}</p>
           {appointment.consultationType && (
-            <>
-              <p><span className="font-medium">Tipo de Consulta:</span> {appointment.consultationType.name}</p>
-              <p><span className="font-medium">Precio:</span> ${(appointment.consultationType.price / 100).toLocaleString('es-CL')}</p>
-            </>
+            <p><strong>Tipo de Consulta:</strong> {appointment.consultationType.name} - ${appointment.consultationType.price}</p>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Client Info */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Información del Cliente</h2>
-          <div className="space-y-2">
-            <p><span className="font-medium">Nombre:</span> {appointment.tutor.name}</p>
-            {appointment.tutor.rut && (
-              <p><span className="font-medium">RUT:</span> {appointment.tutor.rut}</p>
-            )}
-            {appointment.tutor.phone && (
-              <p><span className="font-medium">Teléfono:</span> {appointment.tutor.phone}</p>
-            )}
-            {appointment.tutor.email && (
-              <p><span className="font-medium">Email:</span> {appointment.tutor.email}</p>
-            )}
-            {appointment.tutor.address && (
-              <p><span className="font-medium">Dirección:</span> {appointment.tutor.address}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Pet Info & Update Form */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Ficha Técnica de la Mascota</h2>
-          
-          {/* Static pet info */}
-          <div className="space-y-2 mb-4">
-            <p><span className="font-medium">Nombre:</span> {appointment.pet.name}</p>
-            <p><span className="font-medium">Especie:</span> {appointment.pet.type}</p>
-            {appointment.pet.breed && (
-              <p><span className="font-medium">Raza:</span> {appointment.pet.breed}</p>
-            )}
-            {appointment.pet.birthDate && (
-              <p><span className="font-medium">Fecha de Nacimiento:</span> {new Date(appointment.pet.birthDate).toLocaleDateString('es-CL')}</p>
-            )}
-          </div>
-
-          {/* Editable form */}
-          <form onSubmit={handleUpdatePet} className="space-y-4">
+      {/* Update Pet Information */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-4">Actualizar Información de la Mascota</h2>
+        <form onSubmit={handleUpdatePet} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Peso (kg)</label>
               <input
@@ -555,6 +380,7 @@ export default function ConsultationPage() {
                 value={petForm.weight}
                 onChange={(e) => setPetForm({ ...petForm, weight: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Ej: 5.2"
               />
             </div>
 
@@ -565,6 +391,7 @@ export default function ConsultationPage() {
                 value={petForm.age}
                 onChange={(e) => setPetForm({ ...petForm, age: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Ej: 3"
               />
             </div>
 
@@ -576,97 +403,98 @@ export default function ConsultationPage() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               >
                 <option value="">Seleccionar</option>
-                <option value="macho">Macho</option>
-                <option value="hembra">Hembra</option>
-                <option value="castrado">Castrado</option>
-                <option value="castrada">Castrada</option>
+                <option value="Macho">Macho</option>
+                <option value="Hembra">Hembra</option>
               </select>
             </div>
-
-            <button
-              type="submit"
-              disabled={savingPet}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-            >
-              {savingPet ? 'Guardando...' : 'Actualizar Datos'}
-            </button>
-          </form>
-
-          <div className="mt-4 pt-4 border-t text-sm text-gray-500">
-            <p>Última actualización: {formatDate(appointment.pet.updatedAt)}</p>
           </div>
-        </div>
+
+          <button
+            type="submit"
+            disabled={savingPet}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          >
+            {savingPet ? 'Guardando...' : 'Actualizar Información'}
+          </button>
+        </form>
       </div>
 
-      {/* Medical Record Form */}
+      {/* Create Medical Record */}
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">Crear Registro Médico</h2>
-        
         <form onSubmit={handleCreateRecord} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Título *</label>
-              <input
-                type="text"
-                required
-                value={recordForm.title}
-                onChange={(e) => setRecordForm({ ...recordForm, title: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Peso durante consulta (kg)</label>
-              <input
-                type="number"
-                step="0.1"
-                value={recordForm.weight}
-                onChange={(e) => setRecordForm({ ...recordForm, weight: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
-          </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700">Temperatura (°C)</label>
+            <label className="block text-sm font-medium text-gray-700">Título *</label>
             <input
-              type="number"
-              step="0.1"
-              value={recordForm.temperature}
-              onChange={(e) => setRecordForm({ ...recordForm, temperature: e.target.value })}
+              type="text"
+              required
+              value={recordForm.title}
+              onChange={(e) => setRecordForm({ ...recordForm, title: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              placeholder="Ej: Consulta de rutina, Vacunación"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Observaciones/Contenido *</label>
+            <label className="block text-sm font-medium text-gray-700">Descripción *</label>
             <textarea
               required
               rows={4}
               value={recordForm.content}
               onChange={(e) => setRecordForm({ ...recordForm, content: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              placeholder="Describe los hallazgos, observaciones y procedimientos realizados"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Diagnóstico</label>
-            <textarea
-              rows={3}
-              value={recordForm.diagnosis}
-              onChange={(e) => setRecordForm({ ...recordForm, diagnosis: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Diagnóstico</label>
+              <input
+                type="text"
+                value={recordForm.diagnosis}
+                onChange={(e) => setRecordForm({ ...recordForm, diagnosis: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Diagnóstico principal"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Tratamiento</label>
+              <input
+                type="text"
+                value={recordForm.treatment}
+                onChange={(e) => setRecordForm({ ...recordForm, treatment: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Tratamiento aplicado o recomendado"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Tratamiento</label>
-            <textarea
-              rows={3}
-              value={recordForm.treatment}
-              onChange={(e) => setRecordForm({ ...recordForm, treatment: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Peso actual (kg)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={recordForm.weight}
+                onChange={(e) => setRecordForm({ ...recordForm, weight: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Peso registrado en esta consulta"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Temperatura (°C)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={recordForm.temperature}
+                onChange={(e) => setRecordForm({ ...recordForm, temperature: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Ej: 38.5"
+              />
+            </div>
           </div>
 
           <button
@@ -679,14 +507,13 @@ export default function ConsultationPage() {
         </form>
       </div>
 
-      {/* Prescription Form */}
+      {/* Create Prescription */}
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">Crear Receta Médica</h2>
-        
         <form onSubmit={handleCreatePrescription} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Título de la Receta *</label>
+              <label className="block text-sm font-medium text-gray-700">Título *</label>
               <input
                 type="text"
                 required
@@ -844,10 +671,17 @@ export default function ConsultationPage() {
                   <div className="flex gap-2 items-center">
                     <span className="text-sm text-gray-500">{formatDate(prescription.createdAt)}</span>
                     <button
-                      onClick={() => generatePrescriptionPDF(prescription)}
+                      onClick={() => {
+                        if (prescription.pdfUrl) {
+                          // Open the PDF generated by the backend
+                          window.open(prescription.pdfUrl, '_blank');
+                        } else {
+                          alert('PDF no disponible. Intente crear una nueva prescripción.');
+                        }
+                      }}
                       className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium"
                     >
-                      📄 Generar PDF
+                      📄 Ver PDF
                     </button>
                   </div>
                 </div>
