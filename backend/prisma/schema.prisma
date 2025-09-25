@@ -23,6 +23,15 @@ model User {
   licenseNumber      String?  // Número de colegiatura
   signatureUrl       String?  // URL de la imagen de firma
   logoUrl           String?   // URL del logo de la clínica
+  // Campos para automatización y comunicaciones
+  whatsappNumber        String?   // Número de WhatsApp para automatización
+  autoEmail            String?   // Email para envío automático
+  enableWhatsappReminders Boolean @default(false) // Activar recordatorios por WhatsApp
+  enableEmailReminders    Boolean @default(false) // Activar recordatorios por Email
+  // Campos para personalización de colores
+  primaryColor         String?   @default("#EC4899")   // Color primario (rosa por defecto)
+  secondaryColor       String?   @default("#F9A8D4")   // Color secundario (rosa claro por defecto)
+  accentColor          String?   @default("#BE185D")   // Color de acento (rosa oscuro por defecto)
   createdAt    DateTime      @default(now())
   tutors       Tutor[]
   availability Availability[]

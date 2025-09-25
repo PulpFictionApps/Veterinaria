@@ -31,6 +31,13 @@ router.get('/:id', verifyToken, async (req, res) => {
         licenseNumber: true,
         signatureUrl: true,
         logoUrl: true,
+        whatsappNumber: true,
+        autoEmail: true,
+        enableWhatsappReminders: true,
+        enableEmailReminders: true,
+        primaryColor: true,
+        secondaryColor: true,
+        accentColor: true,
         accountType: true,
         isPremium: true,
         createdAt: true
@@ -69,7 +76,14 @@ router.patch('/:id', verifyToken, async (req, res) => {
       professionalPhone,
       licenseNumber,
       signatureUrl,
-      logoUrl
+      logoUrl,
+      whatsappNumber,
+      autoEmail,
+      enableWhatsappReminders,
+      enableEmailReminders,
+      primaryColor,
+      secondaryColor,
+      accentColor
     } = req.body;
     
     // Construir objeto de actualización solo con campos definidos
@@ -84,6 +98,13 @@ router.patch('/:id', verifyToken, async (req, res) => {
     if (licenseNumber !== undefined) updateData.licenseNumber = licenseNumber;
     if (signatureUrl !== undefined) updateData.signatureUrl = signatureUrl;
     if (logoUrl !== undefined) updateData.logoUrl = logoUrl;
+    if (whatsappNumber !== undefined) updateData.whatsappNumber = whatsappNumber;
+    if (autoEmail !== undefined) updateData.autoEmail = autoEmail;
+    if (enableWhatsappReminders !== undefined) updateData.enableWhatsappReminders = enableWhatsappReminders;
+    if (enableEmailReminders !== undefined) updateData.enableEmailReminders = enableEmailReminders;
+    if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
+    if (secondaryColor !== undefined) updateData.secondaryColor = secondaryColor;
+    if (accentColor !== undefined) updateData.accentColor = accentColor;
     
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -101,6 +122,13 @@ router.patch('/:id', verifyToken, async (req, res) => {
         licenseNumber: true,
         signatureUrl: true,
         logoUrl: true,
+        whatsappNumber: true,
+        autoEmail: true,
+        enableWhatsappReminders: true,
+        enableEmailReminders: true,
+        primaryColor: true,
+        secondaryColor: true,
+        accentColor: true,
         accountType: true,
         isPremium: true,
         createdAt: true
