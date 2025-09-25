@@ -35,7 +35,7 @@ router.post("/", verifyToken, async (req, res) => {
 
       const appointment = await tx.appointment.create({ data: { petId, tutorId, date: selectedDate, reason: reason || '', userId: req.user.id } });
       await tx.availability.delete({ where: { id: matching.id } });
-      const full = await tx.appointment.findUnique({ where: { id: appointment.id }, include: { pet: true, tutor: true } });
+      const full = await tx.appointment.findUnique({ where: { id: appointment.id }, include: { pet: true, tutor: true, consultationType: true } });
       return full;
     });
 
@@ -53,7 +53,11 @@ router.get("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
   const appointments = await prisma.appointment.findMany({
     where: { userId: Number(userId) },
-    include: { pet: true, tutor: true },
+    include: { 
+      pet: true, 
+      tutor: true,
+      consultationType: true
+    },
   });
   res.json(appointments);
 });
@@ -152,7 +156,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
           }
         }
 
-        const full = await tx.appointment.findUnique({ where: { id: updated.id }, include: { pet: true, tutor: true } });
+        const full = await tx.appointment.findUnique({ where: { id: updated.id }, include: { pet: true, tutor: true, consultationType: true } });
         return full;
       });
 
@@ -172,7 +176,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
 // Reserva pública (sin token) desde link público
 router.post('/public', async (req, res) => {
-  const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId, slotId } = req.body;
+  const { tutorId, tutorName, tutorEmail, tutorPhone, petId, petName, petType, date, reason, professionalId, slotId, consultationTypeId } = req.body;
   try {
     if (!professionalId) return res.status(400).json({ error: 'professionalId is required' });
 
@@ -215,12 +219,14 @@ router.post('/public', async (req, res) => {
         }
       });
 
+      let tutorCreatedNow = false;
       if (!tutor) {
-        // create new tutor (use provided name if available)
-        tutor = await prisma.tutor.create({
-          data: { name: tutorName || 'Cliente público', email: tutorEmail, phone: tutorPhone, userId: profIdNum },
-        });
-      }
+          // create new tutor (use provided name if available)
+          tutor = await prisma.tutor.create({
+            data: { name: tutorName || 'Cliente público', email: tutorEmail, phone: tutorPhone, userId: profIdNum },
+          });
+          tutorCreatedNow = true;
+        }
     }
 
     // Handle pet: reuse existing pet by name for that tutor if possible
@@ -239,7 +245,7 @@ router.post('/public', async (req, res) => {
       return res.status(400).json({ error: 'petName or petId is required' });
     }
 
-    // perform create + delete availability in a transaction to avoid races
+    // Always create confirmed appointments and delete availability atomically
     try {
       const result = await prisma.$transaction(async (tx) => {
         const matching = await tx.availability.findFirst({
@@ -250,9 +256,22 @@ router.post('/public', async (req, res) => {
         const exists = await tx.appointment.findFirst({ where: { userId: profIdNum, date: selectedDate } });
         if (exists) throw new Error('Ya existe una cita en ese horario');
 
-        const appt = await tx.appointment.create({ data: { petId: pet.id, tutorId: tutor.id, userId: profIdNum, date: selectedDate, reason: reason || '' } });
+        const appointmentData = { 
+          petId: pet.id, 
+          tutorId: tutor.id, 
+          userId: profIdNum, 
+          date: selectedDate, 
+          reason: reason || '' 
+        };
+        
+        // Add consultation type if provided
+        if (consultationTypeId) {
+          appointmentData.consultationTypeId = Number(consultationTypeId);
+        }
+
+        const appt = await tx.appointment.create({ data: appointmentData });
         await tx.availability.delete({ where: { id: matching.id } });
-        const full = await tx.appointment.findUnique({ where: { id: appt.id }, include: { pet: true, tutor: true } });
+        const full = await tx.appointment.findUnique({ where: { id: appt.id }, include: { pet: true, tutor: true, consultationType: true } });
         return full;
       });
 

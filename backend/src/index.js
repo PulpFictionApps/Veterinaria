@@ -13,6 +13,7 @@ import prescriptionRoutes from "./routes/prescriptions.js";
 import medicalRecordsRoutes from "./routes/medicalRecords.js";
 import accountRoutes from "./routes/account.js";
 import billingRoutes from "./routes/billing.js";
+import consultationTypesRoutes from "./routes/consultationTypes.js";
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/prescriptions", prescriptionRoutes);
 app.use("/medical-records", medicalRecordsRoutes);
 app.use("/account", accountRoutes);
 app.use("/billing", billingRoutes);
+app.use("/consultation-types", consultationTypesRoutes);
 
 app.get("/", (req, res) => res.send("Backend funcionando"));
 

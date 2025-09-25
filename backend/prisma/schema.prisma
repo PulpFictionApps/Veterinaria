@@ -20,6 +20,7 @@ model User {
   availability Availability[]
   appointments Appointment[]
   prescriptions Prescription[]
+  consultationTypes ConsultationType[]
   // Nuevo campo para suscripción simple (MVP)
   isPremium    Boolean       @default(false)
   // Relación con profesionales añadidos a la cuenta
@@ -66,20 +67,37 @@ model Professional {
   createdAt DateTime @default(now())
 }
 
-model Appointment {
-  id        Int      @id @default(autoincrement())
-  petId     Int
-  tutorId   Int
-  userId    Int
-  date      DateTime
-  // status: pending | confirmed | cancelled. Default kept as confirmed for existing flows.
-  status    String   @default("confirmed")
-  reason    String
-  createdAt DateTime @default(now())
+model ConsultationType {
+  id           Int           @id @default(autoincrement())
+  name         String        // e.g., "Consulta General", "Vacunación", "Cirugía Menor"
+  price        Int           // price in cents to avoid floating point issues
+  description  String?       // optional description
+  active       Boolean       @default(true)
+  userId       Int           // belongs to professional
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
-  pet    Pet   @relation(fields: [petId], references: [id])
-  tutor  Tutor @relation(fields: [tutorId], references: [id])
-  user   User  @relation(fields: [userId], references: [id])
+  @@map("consultation_types")
+}
+
+model Appointment {
+  id                 Int              @id @default(autoincrement())
+  petId              Int
+  tutorId            Int
+  userId             Int
+  consultationTypeId Int?             // optional reference to consultation type
+  date               DateTime
+  // status: pending | confirmed | cancelled. Default kept as confirmed for existing flows.
+  status             String           @default("confirmed")
+  reason             String
+  createdAt          DateTime         @default(now())
+
+  pet                Pet              @relation(fields: [petId], references: [id])
+  tutor              Tutor            @relation(fields: [tutorId], references: [id])
+  user               User             @relation(fields: [userId], references: [id])
+  consultationType   ConsultationType? @relation(fields: [consultationTypeId], references: [id], onDelete: SetNull)
 }
 
 model Availability {

@@ -10,7 +10,7 @@ export default function BottomNav() {
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
-    { href: '/dashboard/availability', label: 'Disponibilidad', icon: '⏰' },
+    { href: '/dashboard/consultation-types', label: 'Consultas', icon: '💊' },
   ]; 
   
   return (

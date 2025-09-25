@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../lib/api';
 
+interface ConsultationType {
+  id: number;
+  name: string;
+  price: number; // in cents
+  description?: string;
+}
+
 export default function PublicBookingForm({ professionalId }: { professionalId: number }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,6 +19,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const [date, setDate] = useState('');
   const [slots, setSlots] = useState<Array<{ id: number; start: string; end: string }>>([]);
   const [selectedSlot, setSelectedSlot] = useState<string>('');
+  const [consultationTypes, setConsultationTypes] = useState<ConsultationType[]>([]);
+  const [selectedConsultationType, setSelectedConsultationType] = useState<string>('');
   const [reason, setReason] = useState('');
   const [message, setMessage] = useState('');
 
@@ -25,6 +34,11 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       return;
     }
 
+    if (!selectedConsultationType) {
+      setMessage('Selecciona un tipo de consulta');
+      return;
+    }
+
     try {
       const body: any = {
         tutorName: name,
@@ -34,6 +48,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         petType,
         reason,
         professionalId,
+        consultationTypeId: Number(selectedConsultationType)
       };
 
       if (selectedSlot) body.slotId = Number(selectedSlot);
@@ -62,17 +77,28 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
 
   useEffect(() => {
     let mounted = true;
-    async function loadSlots() {
+    async function loadData() {
       try {
-        const res = await fetch(`${API_BASE}/availability/public/${professionalId}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        if (mounted) setSlots(data || []);
+        // Load slots and consultation types in parallel
+        const [slotsRes, typesRes] = await Promise.all([
+          fetch(`${API_BASE}/availability/public/${professionalId}`),
+          fetch(`${API_BASE}/consultation-types/public/${professionalId}`)
+        ]);
+
+        if (slotsRes.ok) {
+          const slotsData = await slotsRes.json();
+          if (mounted) setSlots(slotsData || []);
+        }
+
+        if (typesRes.ok) {
+          const typesData = await typesRes.json();
+          if (mounted) setConsultationTypes(typesData || []);
+        }
       } catch (err) {
         console.error(err);
       }
     }
-    loadSlots();
+    loadData();
     return () => { mounted = false };
   }, [professionalId]);
 
@@ -105,14 +131,52 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     return `${weekday} ${day} - ${startTime} - ${endTime}`;
   }
 
+  function formatPrice(priceInCents: number) {
+    return (priceInCents / 100).toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP'
+    });
+  }
+
+  const selectedType = consultationTypes.find(t => t.id === Number(selectedConsultationType));
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-md mx-auto bg-white p-4 sm:p-6 rounded shadow">
       <h3 className="text-base sm:text-lg font-bold mb-3">Reservar hora</h3>
-    <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre" className="w-full p-2 border mb-2 rounded" required />
-  <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border mb-2 rounded" required />
-  <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border mb-2 rounded" required />
-      <input value={petName} onChange={e => setPetName(e.target.value)} placeholder="Nombre mascota" className="w-full p-2 border mb-2" required />
-      <input value={petType} onChange={e => setPetType(e.target.value)} placeholder="Tipo mascota" className="w-full p-2 border mb-2" />
+      
+      <input value={name} onChange={e => setName(e.target.value)} placeholder="Nombre" className="w-full p-2 border mb-2 rounded" required />
+      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border mb-2 rounded" required />
+      <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Teléfono" className="w-full p-2 border mb-2 rounded" required />
+      <input value={petName} onChange={e => setPetName(e.target.value)} placeholder="Nombre mascota" className="w-full p-2 border mb-2 rounded" required />
+      <input value={petType} onChange={e => setPetType(e.target.value)} placeholder="Tipo mascota" className="w-full p-2 border mb-2 rounded" />
+
+      {/* Consultation Type Selection */}
+      {consultationTypes.length > 0 && (
+        <div className="mb-3">
+          <label className="block text-sm font-medium mb-1">Tipo de consulta *</label>
+          <select 
+            className="w-full p-2 border rounded" 
+            value={selectedConsultationType} 
+            onChange={e => setSelectedConsultationType(e.target.value)} 
+            required
+          >
+            <option value="">-- Selecciona tipo de consulta --</option>
+            {consultationTypes.map(type => (
+              <option key={type.id} value={String(type.id)}>
+                {type.name} - {formatPrice(type.price)}
+              </option>
+            ))}
+          </select>
+          {selectedType && selectedType.description && (
+            <p className="text-sm text-gray-600 mt-1">{selectedType.description}</p>
+          )}
+          {selectedType && (
+            <p className="text-sm font-semibold text-blue-600 mt-1">
+              Precio: {formatPrice(selectedType.price)}
+            </p>
+          )}
+        </div>
+      )}
 
       {slots.length > 0 ? (
         <div className="mb-2">

@@ -13,6 +13,11 @@ router.post("/register", async (req, res) => {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) return res.status(400).json({ error: "Usuario ya existe" });
 
+    // Only professionals are allowed to register accounts in this app.
+    if (accountType !== 'professional') {
+      return res.status(400).json({ error: 'Sólo profesionales pueden crear cuentas en esta plataforma' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: { email, password: hashedPassword, fullName, phone, clinicName, accountType },
