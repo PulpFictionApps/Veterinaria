@@ -1,22 +1,31 @@
 "use client";
 
-import Navbar from '../../components/Navbar';
+import NavbarWrapper from '../../components/NavbarWrapper';
 import Sidebar from '../../components/Sidebar';
 import BottomNav from '../../components/BottomNav';
 import { useAuthContext } from '../../lib/auth-context';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+// Component that uses useSearchParams wrapped in Suspense
+function SidebarStateTracker({ onSidebarStateChange }: { onSidebarStateChange: (isOpen: boolean) => void }) {
+  const search = useSearchParams();
+  
+  useEffect(() => {
+    const menuOpen = search?.get('menu') === 'open';
+    onSidebarStateChange(menuOpen);
+  }, [search, onSidebarStateChange]);
+  
+  return null;
+}
 
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {
   const { token, logout } = useAuthContext();
-  const search = useSearchParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Track sidebar state based on URL params
-  useEffect(() => {
-    const menuOpen = search?.get('menu') === 'open';
-    setIsSidebarOpen(menuOpen);
-  }, [search]);
+  const handleSidebarStateChange = (isOpen: boolean) => {
+    setIsSidebarOpen(isOpen);
+  };
 
   // If there's no token, redirect to login on the client
   useEffect(() => {
@@ -33,11 +42,16 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Suspense wrapper for useSearchParams */}
+      <Suspense fallback={null}>
+        <SidebarStateTracker onSidebarStateChange={handleSidebarStateChange} />
+      </Suspense>
+      
       {/* Desktop Layout */}
   <div className="hidden lg:flex lg:h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-0">
-          <Navbar />
+          <NavbarWrapper />
           <main className="flex-1 overflow-auto p-6 min-h-0 dashboard-content">
             <div className="dashboard-center">
               {children}
@@ -48,7 +62,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
 
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col min-h-screen">
-        <Navbar />
+        <NavbarWrapper />
         {/* add bottom padding so content isn't hidden behind BottomNav */}
         <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
         {/* Only show BottomNav when sidebar is closed */}
