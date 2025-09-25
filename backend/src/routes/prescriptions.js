@@ -12,6 +12,9 @@ const router = express.Router();
 const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;
 
 router.post('/', verifyToken, async (req, res) => {
+  console.log('POST /prescriptions - Body:', req.body);
+  console.log('POST /prescriptions - User:', req.user);
+  
   const { 
     petId, 
     tutorId, 
@@ -36,7 +39,7 @@ router.post('/', verifyToken, async (req, res) => {
     const professional = await prisma.user.findUnique({
       where: { id: req.user.id },
       select: {
-        name: true,
+        fullName: true,
         email: true,
         professionalRut: true,
         professionalTitle: true,
@@ -57,7 +60,7 @@ router.post('/', verifyToken, async (req, res) => {
     doc.pipe(stream);
 
     // PDF Header - Professional letterhead
-    doc.fontSize(16).text(professional?.name || 'Veterinario', { align: 'center' });
+    doc.fontSize(16).text(professional?.fullName || 'Veterinario', { align: 'center' });
     if (professional?.professionalTitle) {
       doc.fontSize(12).text(professional.professionalTitle, { align: 'center' });
     }
@@ -138,40 +141,40 @@ router.post('/', verifyToken, async (req, res) => {
     
     if (medication) {
       doc.fontSize(12);
-      doc.text(`Medicamento: `, { continued: true, bold: true });
-      doc.font('Helvetica').text(medication);
+      doc.text(`Medicamento: `, { continued: true });
+      doc.text(medication);
       doc.moveDown(0.3);
       
       if (dosage) {
-        doc.font('Helvetica-Bold').text(`Dosis: `, { continued: true });
-        doc.font('Helvetica').text(dosage);
+        doc.text(`Dosis: `, { continued: true });
+        doc.text(dosage);
         doc.moveDown(0.3);
       }
       
       if (frequency) {
-        doc.font('Helvetica-Bold').text(`Frecuencia: `, { continued: true });
-        doc.font('Helvetica').text(frequency);
+        doc.text(`Frecuencia: `, { continued: true });
+        doc.text(frequency);
         doc.moveDown(0.3);
       }
       
       if (duration) {
-        doc.font('Helvetica-Bold').text(`Duración del tratamiento: `, { continued: true });
-        doc.font('Helvetica').text(duration);
+        doc.text(`Duración del tratamiento: `, { continued: true });
+        doc.text(duration);
         doc.moveDown(0.5);
       }
     }
     
     if (instructions) {
       doc.fontSize(11);
-      doc.font('Helvetica-Bold').text('INSTRUCCIONES ESPECIALES:');
-      doc.font('Helvetica').text(instructions, { width: 500 });
+      doc.text('INSTRUCCIONES ESPECIALES:');
+      doc.text(instructions, { width: 500 });
       doc.moveDown(0.5);
     }
     
     if (content) {
       doc.fontSize(11);
-      doc.font('Helvetica-Bold').text('OBSERVACIONES:');
-      doc.font('Helvetica').text(content, { width: 500 });
+      doc.text('OBSERVACIONES:');
+      doc.text(content, { width: 500 });
       doc.moveDown();
     }
 
@@ -184,7 +187,7 @@ router.post('/', verifyToken, async (req, res) => {
     doc.moveDown();
     
     doc.text('_'.repeat(40), 350);
-    doc.text(`${professional?.name || 'Veterinario'}`, 350, doc.y + 5);
+    doc.text(`${professional?.fullName || 'Veterinario'}`, 350, doc.y + 5);
     if (professional?.professionalTitle) {
       doc.text(professional.professionalTitle, 350);
     }
