@@ -36,6 +36,7 @@ export default function Sidebar() {
     { href: '/plans', label: 'Planes', icon: '📦' },
   ];
   const secondary = [
+    { href: '/dashboard/profile', label: 'Perfil Profesional', icon: '👨‍⚕️' },
     { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
     { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
     { href: '/dashboard/integrations', label: 'Integraciones', icon: '🔌' },

@@ -12,7 +12,17 @@ const router = express.Router();
 const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;
 
 router.post('/', verifyToken, async (req, res) => {
-  const { petId, tutorId, title, content } = req.body;
+  const { 
+    petId, 
+    tutorId, 
+    title, 
+    content, 
+    medication, 
+    dosage, 
+    frequency, 
+    duration, 
+    instructions 
+  } = req.body;
   const sendWhatsApp = req.body.sendWhatsApp || false;
   
   try {
@@ -22,6 +32,22 @@ router.post('/', verifyToken, async (req, res) => {
     });
     if (!pet) return res.status(404).json({ error: 'Mascota no encontrada' });
 
+    // Obtener datos del profesional
+    const professional = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        name: true,
+        email: true,
+        professionalRut: true,
+        professionalTitle: true,
+        clinicAddress: true,
+        professionalPhone: true,
+        licenseNumber: true,
+        signatureUrl: true,
+        logoUrl: true
+      }
+    });
+
     // Generate PDF
     const doc = new PDFDocument({ margin: 50 });
     const fileName = `receta_${pet.name}_${Date.now()}.pdf`;
@@ -30,38 +56,141 @@ router.post('/', verifyToken, async (req, res) => {
     const stream = fs.createWriteStream(outPath);
     doc.pipe(stream);
 
-    // PDF Header
-    doc.fontSize(20).text('RECETA VETERINARIA', { align: 'center' });
+    // PDF Header - Professional letterhead
+    doc.fontSize(16).text(professional?.name || 'Veterinario', { align: 'center' });
+    if (professional?.professionalTitle) {
+      doc.fontSize(12).text(professional.professionalTitle, { align: 'center' });
+    }
+    if (professional?.professionalRut) {
+      doc.fontSize(10).text(`RUT: ${professional.professionalRut}`, { align: 'center' });
+    }
+    if (professional?.licenseNumber) {
+      doc.text(`Registro Profesional: ${professional.licenseNumber}`, { align: 'center' });
+    }
+    if (professional?.clinicAddress) {
+      doc.text(professional.clinicAddress, { align: 'center' });
+    }
+    if (professional?.professionalPhone) {
+      doc.text(`Tel: ${professional.professionalPhone}`, { align: 'center' });
+    }
+    if (professional?.email) {
+      doc.text(`Email: ${professional.email}`, { align: 'center' });
+    }
+    
+    doc.moveDown();
+    doc.fontSize(1).text('_'.repeat(100), { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(18).text('RECETA VETERINARIA', { align: 'center', underline: true });
     doc.moveDown(2);
 
-    // Patient Info
-    doc.fontSize(14).text('INFORMACIÓN DEL PACIENTE', { underline: true });
-    doc.moveDown();
-    doc.fontSize(12).text(`Nombre: ${pet.name}`);
-    doc.text(`Tipo: ${pet.type}`);
-    if (pet.breed) doc.text(`Raza: ${pet.breed}`);
-    if (pet.age) doc.text(`Edad: ${pet.age} años`);
-    doc.moveDown();
+    // Patient Info Section
+    doc.fontSize(14).text('DATOS DEL PACIENTE', { underline: true });
+    doc.moveDown(0.5);
+    
+    const leftColumn = 50;
+    const rightColumn = 300;
+    let currentY = doc.y;
+    
+    doc.fontSize(11);
+    doc.text(`Nombre: ${pet.name}`, leftColumn, currentY);
+    doc.text(`Especie: ${pet.type}`, rightColumn, currentY);
+    
+    currentY += 15;
+    if (pet.breed) {
+      doc.text(`Raza: ${pet.breed}`, leftColumn, currentY);
+    }
+    if (pet.age) {
+      doc.text(`Edad: ${pet.age} años`, rightColumn, currentY);
+    }
+    
+    currentY += 15;
+    if (pet.weight) {
+      doc.text(`Peso: ${pet.weight} kg`, leftColumn, currentY);
+    }
+    
+    doc.y = currentY + 20;
 
-    // Owner Info
-    doc.fontSize(14).text('INFORMACIÓN DEL TUTOR', { underline: true });
-    doc.moveDown();
-    doc.fontSize(12).text(`Nombre: ${pet.tutor.name}`);
-    if (pet.tutor.phone) doc.text(`Teléfono: ${pet.tutor.phone}`);
-    if (pet.tutor.email) doc.text(`Email: ${pet.tutor.email}`);
+    // Owner Info Section
+    doc.fontSize(14).text('DATOS DEL PROPIETARIO', { underline: true });
+    doc.moveDown(0.5);
+    
+    currentY = doc.y;
+    doc.fontSize(11);
+    doc.text(`Nombre: ${pet.tutor.name}`, leftColumn, currentY);
+    if (pet.tutor.rut) {
+      doc.text(`RUT: ${pet.tutor.rut}`, rightColumn, currentY);
+    }
+    
+    currentY += 15;
+    if (pet.tutor.phone) {
+      doc.text(`Teléfono: ${pet.tutor.phone}`, leftColumn, currentY);
+    }
+    if (pet.tutor.email) {
+      doc.text(`Email: ${pet.tutor.email}`, rightColumn, currentY);
+    }
+    
+    doc.y = currentY + 30;
+
+    // Prescription Content - Rx Section
+    doc.fontSize(16).text('℞', 50, doc.y, { width: 30 });
+    doc.fontSize(14).text('PRESCRIPCIÓN MÉDICA', 80, doc.y - 15, { underline: true });
+    doc.moveDown(1.5);
+    
+    if (medication) {
+      doc.fontSize(12);
+      doc.text(`Medicamento: `, { continued: true, bold: true });
+      doc.font('Helvetica').text(medication);
+      doc.moveDown(0.3);
+      
+      if (dosage) {
+        doc.font('Helvetica-Bold').text(`Dosis: `, { continued: true });
+        doc.font('Helvetica').text(dosage);
+        doc.moveDown(0.3);
+      }
+      
+      if (frequency) {
+        doc.font('Helvetica-Bold').text(`Frecuencia: `, { continued: true });
+        doc.font('Helvetica').text(frequency);
+        doc.moveDown(0.3);
+      }
+      
+      if (duration) {
+        doc.font('Helvetica-Bold').text(`Duración del tratamiento: `, { continued: true });
+        doc.font('Helvetica').text(duration);
+        doc.moveDown(0.5);
+      }
+    }
+    
+    if (instructions) {
+      doc.fontSize(11);
+      doc.font('Helvetica-Bold').text('INSTRUCCIONES ESPECIALES:');
+      doc.font('Helvetica').text(instructions, { width: 500 });
+      doc.moveDown(0.5);
+    }
+    
+    if (content) {
+      doc.fontSize(11);
+      doc.font('Helvetica-Bold').text('OBSERVACIONES:');
+      doc.font('Helvetica').text(content, { width: 500 });
+      doc.moveDown();
+    }
+
+    // Footer with signature
     doc.moveDown(2);
-
-    // Prescription Content
-    doc.fontSize(14).text('RECETA MÉDICA', { underline: true });
+    const footerY = doc.page.height - 150;
+    doc.y = Math.max(doc.y, footerY);
+    
+    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 50);
     doc.moveDown();
-    doc.fontSize(12).text(title || 'Receta Veterinaria', { bold: true });
-    doc.moveDown();
-    doc.text(content || 'Sin contenido específico');
-    doc.moveDown(2);
-
-    // Footer
-    doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, { align: 'right' });
-    doc.text('Firma del Veterinario: _________________', { align: 'right' });
+    
+    doc.text('_'.repeat(40), 350);
+    doc.text(`${professional?.name || 'Veterinario'}`, 350, doc.y + 5);
+    if (professional?.professionalTitle) {
+      doc.text(professional.professionalTitle, 350);
+    }
+    if (professional?.licenseNumber) {
+      doc.text(`Reg. Prof.: ${professional.licenseNumber}`, 350);
+    }
 
     doc.end();
 
@@ -74,8 +203,14 @@ router.post('/', verifyToken, async (req, res) => {
         tutorId: Number(tutorId),
         userId: req.user.id,
         title: title || 'Receta Veterinaria',
-        content,
+        content: content || '',
+        medication: medication || '',
+        dosage: dosage || '',
+        frequency: frequency || '',
+        duration: duration || '',
+        instructions: instructions || null,
         pdfUrl: `/tmp/${fileName}`,
+        pdfPath: outPath,
         sendWhatsApp,
         whatsappSent: false
       },

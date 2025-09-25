@@ -15,6 +15,14 @@ model User {
   phone        String?
   clinicName   String?
   accountType  String        @default("client")
+  // Campos profesionales para recetas médicas
+  professionalRut     String?  // RUT del veterinario
+  professionalTitle   String?  // Título profesional (ej: "MÉDICO VETERINARIO")
+  clinicAddress      String?  // Dirección de la clínica
+  professionalPhone  String?  // Teléfono profesional
+  licenseNumber      String?  // Número de colegiatura
+  signatureUrl       String?  // URL de la imagen de firma
+  logoUrl           String?   // URL del logo de la clínica
   createdAt    DateTime      @default(now())
   tutors       Tutor[]
   availability Availability[]
@@ -134,9 +142,16 @@ model Availability {
     petId       Int
     tutorId     Int
     userId      Int
-    title       String
-    content     String
-    pdfUrl      String?
+    title       String   // Título de la receta
+    content     String   // Contenido/notas generales
+    // Campos específicos para medicamentos
+    medication  String   // Nombre del medicamento
+    dosage      String   // Dosis (ej: "10mg", "1 comprimido")
+    frequency   String   // Frecuencia (ej: "cada 8 horas", "2 veces al día")
+    duration    String   // Duración (ej: "7 días", "2 semanas")
+    instructions String? // Instrucciones adicionales
+    pdfUrl      String?  // URL del PDF generado
+    pdfPath     String?  // Ruta local del PDF
     sendWhatsApp Boolean @default(false)
     whatsappSent Boolean @default(false)
     createdAt   DateTime @default(now())
