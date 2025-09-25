@@ -12,9 +12,6 @@ const router = express.Router();
 const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;
 
 router.post('/', verifyToken, async (req, res) => {
-  console.log('POST /prescriptions - Body:', req.body);
-  console.log('POST /prescriptions - User:', req.user);
-  
   const { 
     petId, 
     tutorId, 
