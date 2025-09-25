@@ -92,20 +92,32 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between mb-4">
-          <div />
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Enlace público</p>
-            <div className="mt-2 flex items-center gap-2 justify-end">
-              <input readOnly value={bookingUrl} className="px-3 py-2 border rounded bg-gray-50 text-sm font-mono" />
-              <button onClick={copyLink} className={`px-4 py-2 rounded transition-colors ${copied ? 'bg-pink-600 text-white' : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg shadow-pink-200/50'}`}>
-                {copied ? '✅ Copiado' : '📋 Copiar'}
-              </button>
-            </div>
-          </div>
-        </div>
 
         <div className="w-full bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Calendario de Citas</h2>
+            <div className="text-right">
+              <p className="text-xs text-gray-500">Enlace público de reservas</p>
+              <div className="mt-1 flex items-center gap-2">
+                <input 
+                  readOnly 
+                  value={bookingUrl} 
+                  className="px-2 py-1 border rounded bg-gray-50 text-xs font-mono w-48" 
+                />
+                <button 
+                  onClick={copyLink} 
+                  className={`px-3 py-1 rounded text-xs transition-colors ${
+                    copied 
+                      ? 'bg-pink-600 text-white' 
+                      : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg shadow-pink-200/50'
+                  }`}
+                >
+                  {copied ? '✅' : '📋'}
+                </button>
+              </div>
+            </div>
+          </div>
+          
           <DashboardCalendar userId={uid} />
         </div>
       </div>
