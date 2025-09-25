@@ -185,7 +185,7 @@ export default function AppointmentsPage() {
     if (appointmentDate < today) {
       return { status: 'past', color: 'text-gray-500', bg: 'bg-gray-100' };
     } else if (appointmentDate.toDateString() === today.toDateString()) {
-      return { status: 'today', color: 'text-blue-600', bg: 'bg-blue-50' };
+      return { status: 'today', color: 'text-pink-600', bg: 'bg-pink-50' };
     } else {
       return { status: 'upcoming', color: 'text-green-600', bg: 'bg-green-50' };
     }
@@ -207,7 +207,7 @@ export default function AppointmentsPage() {
         <h1 className="text-2xl font-bold text-gray-900">Gestión de Citas</h1>
         <Link
           href="/dashboard/appointments/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
         >
           + Nueva Cita
         </Link>
@@ -240,7 +240,7 @@ export default function AppointmentsPage() {
                 onClick={() => setFilter(filterOption.key as any)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   filter === filterOption.key
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-pink-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -268,7 +268,7 @@ export default function AppointmentsPage() {
             <div className="flex gap-4 justify-center">
               <Link
                 href="/dashboard/appointments/new"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
               >
                 Crear Cita
               </Link>
@@ -337,7 +337,7 @@ export default function AppointmentsPage() {
                     <h4 className="text-sm font-medium text-gray-700 mb-1">💊 Tipo de Consulta</h4>
                     <div className="flex justify-between items-center">
                       <p className="text-sm text-gray-900">{appointment.consultationType.name}</p>
-                      <p className="text-sm font-semibold text-blue-600">
+                      <p className="text-sm font-semibold text-pink-600">
                         {formatPrice(appointment.consultationType.price)}
                       </p>
                     </div>
@@ -350,7 +350,7 @@ export default function AppointmentsPage() {
                 <div className="flex gap-2">
                   <Link
                     href={`/dashboard/clients/${appointment.tutor.id}/pets/${appointment.pet.id}`}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    className="text-pink-600 hover:text-pink-700 text-sm font-medium transition-colors"
                   >
                     Ver Ficha de la Mascota
                   </Link>

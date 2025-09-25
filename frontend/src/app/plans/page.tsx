@@ -67,7 +67,7 @@ export default function PlansPage() {
       features: ['Multisede', 'Exportaciones', 'Integraciones', 'Asignación de equipo'],
       cta: { label: 'Contactar ventas', href: '/contact' },
       popular: false,
-      accent: 'border-blue-500',
+      accent: 'border-pink-500',
     },
   ];
 
@@ -161,7 +161,7 @@ export default function PlansPage() {
         </div>
 
         <div className="mt-12 text-center text-sm text-gray-600">
-          <p>¿No encuentras lo que necesitas? <Link href="/contact" className="text-blue-600 underline">Contáctanos</Link> para un plan a medida.</p>
+          <p>¿No encuentras lo que necesitas? <Link href="/contact" className="text-pink-600 underline hover:text-pink-700 transition-colors">Contáctanos</Link> para un plan a medida.</p>
         </div>
       </div>
     </div>

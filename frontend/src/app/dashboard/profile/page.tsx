@@ -131,9 +131,9 @@ export default function ProfessionalProfilePage() {
           </button>
         </div>
 
-        <div className="bg-blue-50 p-4 rounded-lg mb-6">
-          <h2 className="font-semibold text-blue-800 mb-2">📋 Configuración para Recetas Médicas</h2>
-          <p className="text-sm text-blue-700">
+        <div className="bg-pink-50 p-4 rounded-lg mb-6">
+          <h2 className="font-semibold text-pink-800 mb-2">📋 Configuración para Recetas Médicas</h2>
+          <p className="text-sm text-pink-700">
             Complete sus datos profesionales para que aparezcan automáticamente en las recetas médicas que genere.
             Estos datos se utilizarán como plantilla predeterminada en todos sus PDFs de prescripciones.
           </p>
@@ -328,7 +328,7 @@ export default function ProfessionalProfilePage() {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-pink-200/50"
             >
               {saving ? 'Guardando...' : 'Guardar Perfil'}
             </button>

@@ -172,7 +172,7 @@ export default function AvailabilityManager() {
         <h3 className="text-lg font-semibold text-gray-900">Disponibilidad</h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
         >
           {showForm ? 'Cancelar' : '+ Agregar Horario'}
         </button>

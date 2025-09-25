@@ -29,7 +29,7 @@ export default function PublicPage() {
             placeholder="ID profesional (ej. 1)"
             className="px-3 py-2 border rounded w-40"
           />
-          <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Buscar / Reservar</button>
+          <button type="submit" className="px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50">Buscar / Reservar</button>
         </form>
 
         <div className="mt-6 text-sm text-gray-500">

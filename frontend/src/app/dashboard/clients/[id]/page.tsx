@@ -47,7 +47,7 @@ export default function ClientDetail({ params }: PageProps) {
         <h2 className="text-2xl font-bold">{client?.name || 'Cliente'}</h2>
         <Link
           href={`/dashboard/clients/${id}/pet/new`}
-          className="bg-blue-600 text-white px-3 py-2 rounded"
+          className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-3 py-2 rounded hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
         >
           Agregar mascota
         </Link>
@@ -61,7 +61,7 @@ export default function ClientDetail({ params }: PageProps) {
             <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:gap-2">
               <Link
                 href={`/dashboard/clients/${id}/pet/${p.id}`}
-                className="text-blue-600"
+                className="text-pink-600 hover:text-pink-700 transition-colors"
               >
                 Ver ficha
               </Link>

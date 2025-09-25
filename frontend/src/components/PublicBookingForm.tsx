@@ -223,7 +223,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             <p className="text-sm text-gray-600 mt-1">{selectedType.description}</p>
           )}
           {selectedType && (
-            <p className="text-sm font-semibold text-blue-600 mt-1">
+            <p className="text-sm font-semibold text-pink-600 mt-1">
               Precio: {formatPrice(selectedType.price)}
             </p>
           )}
@@ -248,7 +248,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         <input value={date} onChange={e => setDate(e.target.value)} placeholder="Fecha y hora (ISO)" className="w-full p-2 border mb-2" required />
       )}
     <textarea value={reason} onChange={e => setReason(e.target.value)} placeholder="Motivo" className="w-full p-2 border mb-2 rounded" />
-  <button className="bg-blue-600 text-white w-full sm:w-auto px-3 py-2 rounded text-sm">Reservar</button>
+  <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white w-full sm:w-auto px-3 py-2 rounded text-sm hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50">Reservar</button>
       {message && <p className="mt-3 text-sm">{message}</p>}
     </form>
   );

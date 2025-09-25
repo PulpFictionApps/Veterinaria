@@ -19,7 +19,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             <p className="text-gray-600 mb-4">Hubo un problema al cargar esta página. Intenta recargar o vuelve al dashboard.</p>
 
             <div className="flex gap-3">
-              <button onClick={() => reset()} className="px-4 py-2 bg-blue-600 text-white rounded">Reintentar</button>
+              <button onClick={() => reset()} className="px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50">Reintentar</button>
               <Link href="/dashboard" className="px-4 py-2 border rounded">Ir al dashboard</Link>
             </div>
 

@@ -201,7 +201,7 @@ export default function ConsultationTypesPage() {
               type="checkbox"
               checked={formData.active}
               onChange={(e) => setFormData(prev => ({ ...prev, active: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
             />
             <label htmlFor="active" className="ml-2 block text-sm text-gray-900">
               Activo (visible para reservas públicas)
@@ -211,7 +211,7 @@ export default function ConsultationTypesPage() {
           <div className="flex gap-3">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
             >
               {editing ? 'Actualizar' : 'Crear'}
             </button>
@@ -256,7 +256,7 @@ export default function ConsultationTypesPage() {
                       </span>
                     </div>
                     
-                    <p className="text-xl font-semibold text-blue-600 mb-2">
+                    <p className="text-xl font-semibold text-pink-600 mb-2">
                       {formatPrice(type.price)}
                     </p>
                     
@@ -268,7 +268,7 @@ export default function ConsultationTypesPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => startEdit(type)}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      className="text-pink-600 hover:text-pink-700 text-sm font-medium transition-colors"
                     >
                       Editar
                     </button>

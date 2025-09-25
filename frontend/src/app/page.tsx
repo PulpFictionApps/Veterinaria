@@ -46,7 +46,7 @@ export default function HomePage() {
         </section>
 
         <section className="mt-8 text-center text-sm text-gray-600">
-          <p>¿Necesitas ayuda? Revisa <a href="/test-connection" className="text-blue-600 underline">la página de diagnóstico</a> o contáctanos.</p>
+          <p>¿Necesitas ayuda? Revisa <a href="/test-connection" className="text-pink-600 underline hover:text-pink-700 transition-colors">la página de diagnóstico</a> o contáctanos.</p>
         </section>
       </div>
     </div>

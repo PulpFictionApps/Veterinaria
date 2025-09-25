@@ -21,7 +21,7 @@ export default function BottomNav() {
             key={item.href}
             href={item.href}
               aria-label={item.label}
-              className={`flex flex-col items-center py-1 px-3 rounded-md transition-colors text-xs ${pathname === item.href ? 'text-blue-600 bg-blue-50/60' : 'text-gray-600 hover:text-blue-600'}`}
+              className={`flex flex-col items-center py-1 px-3 rounded-md transition-colors text-xs ${pathname === item.href ? 'text-pink-600 bg-pink-50/60' : 'text-gray-600 hover:text-pink-600'}`}
           >
             <span className="text-lg mb-0">{item.icon}</span>
             <span className="text-[10px] font-medium">{item.label}</span>

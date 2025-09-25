@@ -18,7 +18,7 @@ export default function PetCard({ name, type, id }: PetCardProps) {
           {typeof id !== 'undefined' && (
             <a
               href={`/dashboard/pets/${id}/edit`}
-              className="text-sm text-blue-600 hover:underline ml-4"
+              className="text-sm text-pink-600 hover:underline ml-4 transition-colors"
             >
               Editar
             </a>
