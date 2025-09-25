@@ -33,7 +33,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve generated PDFs and other temp assets
-app.use('/tmp', express.static(path.join(process.cwd(), 'tmp')));
+// In production (Vercel), files are saved in /tmp which is ephemeral
+// In development, files are saved in ./tmp directory
+const tmpPath = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
+app.use('/tmp', express.static(tmpPath));
 
 app.use("/auth", authRoutes);
 app.use("/tutors", tutorRoutes);

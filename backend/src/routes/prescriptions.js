@@ -280,7 +280,7 @@ router.post('/', verifyToken, async (req, res) => {
 
     // Save prescription record
     console.log('Saving prescription to database...');
-    const pdfUrl = process.env.VERCEL ? `/prescriptions/pdf/${fileName}` : `/tmp/${fileName}`;
+    const pdfUrl = `/tmp/${fileName}`;
     
     const prescription = await prisma.prescription.create({
       data: {
@@ -368,40 +368,6 @@ router.get('/user/:userId', verifyToken, async (req, res) => {
   const { userId } = req.params;
   const items = await prisma.prescription.findMany({ where: { userId: Number(userId) } });
   res.json(items);
-});
-
-// Servir archivos PDF
-router.get('/pdf/:filename', async (req, res) => {
-  try {
-    const { filename } = req.params;
-    
-    // Use /tmp for Vercel compatibility, or local tmp for development
-    const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
-    const filePath = path.join(tmpDir, filename);
-    
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-      console.log('PDF file not found:', filePath);
-      return res.status(404).json({ error: 'Archivo PDF no encontrado' });
-    }
-    
-    // Set appropriate headers
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-    
-    // Stream the file
-    const fileStream = fs.createReadStream(filePath);
-    fileStream.on('error', (error) => {
-      console.error('Error streaming PDF:', error);
-      res.status(500).json({ error: 'Error al leer el archivo PDF' });
-    });
-    
-    fileStream.pipe(res);
-    
-  } catch (error) {
-    console.error('Error serving PDF:', error);
-    res.status(500).json({ error: 'Error al servir el archivo PDF' });
-  }
 });
 
 // Función de limpieza automática de prescripciones vencidas
