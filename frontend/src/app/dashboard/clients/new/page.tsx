@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authFetch } from '../../../../../lib/api';
+import { authFetch } from '../../../../lib/api';
 
 export default function NewClientPage() {
   const router = useRouter();

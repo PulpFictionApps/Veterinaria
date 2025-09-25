@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useAuthContext } from '../../../../lib/auth-context';
-import { authFetch } from '../../../../lib/api';
+import { useAuthContext } from '../../../lib/auth-context';
+import { authFetch } from '../../../lib/api';
 import Link from 'next/link';
-import { useTheme } from '../../../../lib/theme-context';
+import { useTheme } from '../../../lib/theme-context';
 
 interface MedicalRecord {
   id: number;

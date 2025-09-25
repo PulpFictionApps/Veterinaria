@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { authFetch } from "../../../../../lib/api";
+import { authFetch } from "../../../../../../lib/api";
 
 export default function EditPetPage() {
   const params = useParams();

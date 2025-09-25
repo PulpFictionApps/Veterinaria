@@ -1,9 +1,9 @@
 "use client";
 
-import PetCard from '../../../../components/PetCard';
+import PetCard from '../../../../../components/PetCard';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { authFetch } from '../../../../lib/api';
+import { authFetch } from '../../../../../lib/api';
 import Link from 'next/link';
 
 type Pet = { id: number; name: string; type: string };
