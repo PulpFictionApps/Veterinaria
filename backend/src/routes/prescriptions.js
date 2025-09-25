@@ -370,6 +370,75 @@ router.get('/user/:userId', verifyToken, async (req, res) => {
   res.json(items);
 });
 
+// Descargar PDF de receta específica
+router.get('/download/:id', verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Buscar la prescripción en la base de datos
+    const prescription = await prisma.prescription.findUnique({
+      where: { id: Number(id) },
+      include: {
+        pet: {
+          include: { tutor: true }
+        }
+      }
+    });
+    
+    if (!prescription) {
+      return res.status(404).json({ error: 'Prescripción no encontrada' });
+    }
+    
+    // Verificar que el usuario tenga acceso a esta prescripción
+    if (prescription.userId !== req.user.id) {
+      return res.status(403).json({ error: 'No tienes acceso a esta prescripción' });
+    }
+    
+    // Buscar el archivo PDF
+    const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
+    let pdfPath = prescription.pdfPath;
+    
+    // Si no hay pdfPath o el archivo no existe, extraer el nombre del archivo de pdfUrl
+    if (!pdfPath || !fs.existsSync(pdfPath)) {
+      const fileName = prescription.pdfUrl?.split('/').pop();
+      if (fileName) {
+        pdfPath = path.join(tmpDir, fileName);
+      }
+    }
+    
+    // Verificar que el archivo existe
+    if (!pdfPath || !fs.existsSync(pdfPath)) {
+      console.log('PDF file not found:', pdfPath);
+      return res.status(404).json({ error: 'Archivo PDF no encontrado. El archivo puede haber sido eliminado.' });
+    }
+    
+    // Generar nombre de archivo para descarga
+    const downloadName = `receta_${prescription.pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${prescription.id}.pdf`;
+    
+    // Configurar headers para descarga
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
+    res.setHeader('Content-Length', fs.statSync(pdfPath).size);
+    
+    // Stream el archivo
+    const fileStream = fs.createReadStream(pdfPath);
+    fileStream.on('error', (error) => {
+      console.error('Error streaming PDF:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Error al leer el archivo PDF' });
+      }
+    });
+    
+    fileStream.pipe(res);
+    
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Error al descargar el archivo PDF' });
+    }
+  }
+});
+
 // Función de limpieza automática de prescripciones vencidas
 const cleanupExpiredPrescriptions = async () => {
   try {
