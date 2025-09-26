@@ -40,7 +40,7 @@ export default function AvailabilityManager() {
     if (!userId) return;
     setLoading(true);
     try {
-      const res = await authFetch(`/appointments/availability/${userId}`);
+      const res = await authFetch(`/appointments/availability`);
       if (res.ok) {
         const data: AvailabilitySlot[] = await res.json();
         // ensure slots are sorted
