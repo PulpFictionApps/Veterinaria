@@ -1,4 +1,14 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+// Detectar automáticamente el entorno y usar la URL correcta
+const getApiBase = () => {
+  // En Vercel (producción)
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return process.env.NEXT_PUBLIC_API_BASE_PROD || 'https://veterinaria-gamma-virid.vercel.app';
+  }
+  // En desarrollo local
+  return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+};
+
+export const API_BASE = getApiBase();
 
 export async function authFetch(path: string, opts: RequestInit = {}) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;

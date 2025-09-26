@@ -21,15 +21,57 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:3000',
-    'https://veterinaria-p918.vercel.app', // Frontend URL
-    'https://veterinaria-gamma-virid.vercel.app' // Backend URL (for self-calls)
-  ],
+  origin: function (origin, callback) {
+    // Lista de orígenes permitidos
+    const allowedOrigins = [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'https://veterinaria-p918.vercel.app', // Frontend URL
+      'https://veterinaria-gamma-virid.vercel.app', // Backend URL (for self-calls)
+      'http://localhost:3000', // Local development
+      'http://localhost:3001', // Alternative local port
+      // Permitir cualquier subdominio de vercel.app para flexibilidad
+      /^https:\/\/.*\.vercel\.app$/
+    ];
+    
+    // Permitir requests sin origin (ej: Postman, mobile apps)
+    if (!origin) return callback(null, true);
+    
+    // Verificar si el origin está permitido
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return allowedOrigin === origin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn('CORS: Origin not allowed:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
+// Middleware adicional para headers CORS
+app.use((req, res, next) => {
+  // Permitir headers adicionales
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  
+  // Manejar preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
 
 // Serve generated PDFs and other temp assets
