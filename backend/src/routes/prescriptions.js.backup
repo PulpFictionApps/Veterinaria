@@ -7,7 +7,6 @@ import path from 'path';
 import Twilio from 'twilio';
 import fetch from 'node-fetch';
 import { verifyToken } from '../middleware/auth.js';
-import { supabase } from '../lib/supabase.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -387,52 +386,9 @@ router.post('/', verifyToken, async (req, res) => {
       throw new Error('Error al generar el PDF: ' + pdfError.message);
     }
 
-    // Upload PDF to Supabase Storage
-    console.log('Uploading PDF to Supabase Storage...');
-    let supabasePdfUrl = null;
-    let supabaseFileName = null;
-    
-    try {
-      const pdfBuffer = fs.readFileSync(outPath);
-      const supabaseFileName_temp = `receta-${Date.now()}-${pet.name.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
-      
-      const { data, error } = await supabase.storage
-        .from('Prescriptions')
-        .upload(supabaseFileName_temp, pdfBuffer, {
-          contentType: 'application/pdf',
-          cacheControl: '3600',
-          upsert: true
-        });
-
-      if (error) {
-        console.error('Error uploading to Supabase:', error);
-        // Continue with local file if Supabase upload fails
-      } else {
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('Prescriptions')
-          .getPublicUrl(supabaseFileName_temp);
-        
-        supabasePdfUrl = publicUrl;
-        supabaseFileName = supabaseFileName_temp;
-        console.log('PDF uploaded to Supabase successfully:', publicUrl);
-        
-        // Clean up local file after successful upload
-        try {
-          fs.unlinkSync(outPath);
-          console.log('Local PDF file cleaned up');
-        } catch (cleanupError) {
-          console.log('Error cleaning up local file:', cleanupError);
-        }
-      }
-    } catch (supabaseError) {
-      console.error('Supabase upload error:', supabaseError);
-      // Continue with local file storage as fallback
-    }
-
     // Save prescription record
     console.log('Saving prescription to database...');
-    const pdfUrl = supabasePdfUrl || `/tmp/${fileName}`;
+    const pdfUrl = `/tmp/${fileName}`;
     
     const prescription = await prisma.prescription.create({
       data: {
@@ -447,8 +403,7 @@ router.post('/', verifyToken, async (req, res) => {
         duration: duration || '',
         instructions: instructions || null,
         pdfUrl,
-        pdfPath: supabasePdfUrl ? null : outPath, // Solo guardar path local si no está en Supabase
-        pdfFileName: supabaseFileName, // Nombre del archivo en Supabase
+        pdfPath: outPath,
         sendWhatsApp,
         whatsappSent: false
       },
@@ -547,36 +502,7 @@ router.get('/download/:id', verifyToken, async (req, res) => {
       return res.status(403).json({ error: 'No tienes acceso a esta prescripción' });
     }
     
-    // Generar nombre de archivo para descarga
-    const downloadName = `receta_${prescription.pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${prescription.id}.pdf`;
-    
-    // Intentar descargar desde Supabase Storage primero
-    if (prescription.pdfFileName) {
-      try {
-        console.log('Downloading from Supabase Storage:', prescription.pdfFileName);
-        
-        const { data, error } = await supabase.storage
-          .from('Prescriptions')
-          .download(prescription.pdfFileName);
-        
-        if (!error && data) {
-          // Configurar headers para descarga
-          res.setHeader('Content-Type', 'application/pdf');
-          res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
-          
-          // Enviar el archivo desde Supabase
-          const arrayBuffer = await data.arrayBuffer();
-          res.send(Buffer.from(arrayBuffer));
-          return;
-        } else {
-          console.log('Error downloading from Supabase or file not found:', error);
-        }
-      } catch (supabaseError) {
-        console.log('Supabase download error:', supabaseError);
-      }
-    }
-    
-    // Fallback: intentar archivo local
+    // Buscar el archivo PDF
     const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
     let pdfPath = prescription.pdfPath;
     
@@ -588,21 +514,21 @@ router.get('/download/:id', verifyToken, async (req, res) => {
       }
     }
     
-    // Verificar que el archivo existe localmente
+    // Verificar que el archivo existe
     if (!pdfPath || !fs.existsSync(pdfPath)) {
-      console.log('PDF file not found locally:', pdfPath);
-      return res.status(404).json({ 
-        error: 'Archivo PDF no encontrado. El archivo puede haber sido eliminado.',
-        details: 'No se pudo encontrar el archivo ni en Supabase Storage ni localmente'
-      });
+      console.log('PDF file not found:', pdfPath);
+      return res.status(404).json({ error: 'Archivo PDF no encontrado. El archivo puede haber sido eliminado.' });
     }
     
-    // Configurar headers para descarga local
+    // Generar nombre de archivo para descarga
+    const downloadName = `receta_${prescription.pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${prescription.id}.pdf`;
+    
+    // Configurar headers para descarga
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
     res.setHeader('Content-Length', fs.statSync(pdfPath).size);
     
-    // Stream el archivo local
+    // Stream el archivo
     const fileStream = fs.createReadStream(pdfPath);
     fileStream.on('error', (error) => {
       console.error('Error streaming PDF:', error);
