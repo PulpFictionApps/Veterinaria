@@ -1,8 +1,8 @@
 "use client";
 
-import Navbar from '../../components/Navbar';
-import Sidebar from '../../components/Sidebar';
-import BottomNav from '../../components/BottomNav';
+import OptimizedNavbar from '../../components/OptimizedNavbar';
+import OptimizedSidebar from '../../components/OptimizedSidebar';
+import OptimizedBottomNav from '../../components/OptimizedBottomNav';
 import { useAuthContext } from '../../lib/auth-context';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { useEffect, useState, Suspense } from 'react';
@@ -51,7 +51,7 @@ function NavbarWithSuspense() {
           </div>
         </nav>
       }>
-        <Navbar />
+        <OptimizedNavbar />
       </Suspense>
     </div>
   );
@@ -91,7 +91,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
       
       {/* Desktop Layout */}
       <div className="hidden lg:flex lg:h-full">
-        <Sidebar />
+        <OptimizedSidebar />
         <div className="flex-1 flex flex-col min-h-0">
           {/* No navbar needed on desktop - sidebar has branding */}
           <main className="flex-1 overflow-auto p-6 min-h-0 dashboard-content">
@@ -108,7 +108,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
         {/* add bottom padding so content isn't hidden behind BottomNav */}
         <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
         {/* Only show BottomNav when sidebar is closed */}
-        {!isSidebarOpen && <BottomNav />}
+        {!isSidebarOpen && <OptimizedBottomNav />}
       </div>
     </div>
   );
