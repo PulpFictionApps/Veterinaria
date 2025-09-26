@@ -23,8 +23,9 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
   } catch (error: any) {
     console.error('❌ API Error:', {
       url: fullUrl,
-      error: error.message,
-      type: error.name
+      error: error.message || 'Network error',
+      type: error.name || 'Unknown error',
+      status: error.status || 'No status'
     });
     throw error;
   }

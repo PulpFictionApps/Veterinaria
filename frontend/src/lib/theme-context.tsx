@@ -86,12 +86,31 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadUserColors = async () => {
       const userId = getUserId();
-      if (!userId || !token) return;
+      
+      // Si no hay usuario autenticado, usar colores por defecto
+      if (!userId || !token) {
+        setColors(generateColorVariations(
+          defaultColors.primary, 
+          defaultColors.secondary, 
+          defaultColors.accent
+        ));
+        return;
+      }
 
       try {
         setIsLoading(true);
         const response = await authFetch(`/users/${userId}`);
-        if (!response.ok) throw new Error('Error al cargar colores');
+        
+        if (!response.ok) {
+          // Si la respuesta no es ok, usar colores por defecto
+          console.warn('Could not load user colors, using defaults');
+          setColors(generateColorVariations(
+            defaultColors.primary, 
+            defaultColors.secondary, 
+            defaultColors.accent
+          ));
+          return;
+        }
         
         const userData = await response.json();
         
@@ -103,8 +122,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         
         setColors(userColors);
       } catch (error) {
-        console.error('Error loading user colors:', error);
+        console.warn('Error loading user colors, using defaults:', error);
         // Mantener colores por defecto si hay error
+        setColors(generateColorVariations(
+          defaultColors.primary, 
+          defaultColors.secondary, 
+          defaultColors.accent
+        ));
       } finally {
         setIsLoading(false);
       }
