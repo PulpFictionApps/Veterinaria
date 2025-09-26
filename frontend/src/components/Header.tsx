@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { brand } from '../lib/theme';
+import { brand } from '../lib/constants';
 
 export default function Header() {
   return (

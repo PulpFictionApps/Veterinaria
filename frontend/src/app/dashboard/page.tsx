@@ -2,8 +2,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import DashboardCalendar from "../../components/DashboardCalendar";
-import AvailabilityManager from '../../components/AvailabilityManager';
+import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
+import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
 import ThemedButton from '../../components/ThemedButton';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
@@ -117,7 +117,7 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          <DashboardCalendar userId={uid} />
+          <LazyDashboardCalendar userId={uid} />
         </div>
       </div>
     </div>

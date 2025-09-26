@@ -7,7 +7,7 @@ import { useAuthContext } from '../../lib/auth-context';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { brand } from '../../lib/theme';
+import { brand } from '../../lib/constants';
 
 // Component that uses useSearchParams wrapped in Suspense
 function SidebarStateTracker({ onSidebarStateChange }: { onSidebarStateChange: (isOpen: boolean) => void }) {

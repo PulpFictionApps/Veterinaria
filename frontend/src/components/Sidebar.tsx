@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '../lib/auth-context';
 import { useThemeColors } from '../hooks/useThemeColors';
 import { authFetch } from '../lib/api';
-import { brand } from '../lib/theme';
+import { brand } from '../lib/constants';
 
 export default function Sidebar() {
   const pathname = usePathname();

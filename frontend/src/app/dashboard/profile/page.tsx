@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authFetch } from '@/lib/api';
 import { useAuthContext } from '@/lib/auth-context';
 import { useTheme } from '@/lib/theme-context';
-import { colorSchemes } from '@/lib/theme';
+import { colorSchemes } from '@/lib/constants';
 
 interface ProfessionalProfile {
   id: number;

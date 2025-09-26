@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { brand } from '../lib/theme';
+import { brand } from '../lib/constants';
 
 // Simple focus trap for small drawer
 function useFocusTrap(active: boolean, containerRef: React.RefObject<HTMLElement>) {

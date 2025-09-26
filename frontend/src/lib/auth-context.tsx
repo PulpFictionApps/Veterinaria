@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 type AuthContextType = {
@@ -41,21 +41,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUserId(decodeUserId(t));
   }, []);
 
-  const login = (newToken: string) => {
+  const login = useCallback((newToken: string) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setUserId(decodeUserId(newToken));
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('token');
     setToken(null);
     setUserId(null);
     router.push('/login');
-  };
+  }, [router]);
+
+  const value = useMemo(() => ({
+    token,
+    userId,
+    login,
+    logout
+  }), [token, userId, login, logout]);
 
   return (
-    <AuthContext.Provider value={{ token, userId, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

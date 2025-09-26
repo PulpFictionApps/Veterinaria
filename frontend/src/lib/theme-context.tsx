@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useAuth } from './useAuth';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback } from 'react';
+import { useAuthContext } from './auth-context';
 import { authFetch } from './api';
 
 export interface ThemeColors {
@@ -76,69 +76,78 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { token, getUserId } = useAuth();
-  const [colors, setColors] = useState<ThemeColors>(
-    generateColorVariations(defaultColors.primary, defaultColors.secondary, defaultColors.accent)
+  const { token, userId } = useAuthContext(); // Usar useAuthContext en lugar de useAuth
+  
+  // Colores por defecto memoizados
+  const defaultThemeColors = useMemo(
+    () => generateColorVariations(defaultColors.primary, defaultColors.secondary, defaultColors.accent),
+    []
   );
+  
+  const [colors, setColors] = useState<ThemeColors>(defaultThemeColors);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasLoadedUserColors, setHasLoadedUserColors] = useState(false);
 
-  // Cargar colores del usuario cuando esté autenticado
-  useEffect(() => {
-    const loadUserColors = async () => {
-      const userId = getUserId();
+  // Función memoizada para cargar colores del usuario
+  const loadUserColors = useCallback(async () => {
+    // Si ya se cargaron y no hay cambios en userId/token, no recargar
+    if (hasLoadedUserColors && !isLoading) {
+      return;
+    }
+
+    // Si no hay usuario autenticado, usar colores por defecto
+    if (!userId || !token) {
+      setColors(defaultThemeColors);
+      setHasLoadedUserColors(true);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await authFetch(`/users/${userId}`);
       
-      // Si no hay usuario autenticado, usar colores por defecto
-      if (!userId || !token) {
-        setColors(generateColorVariations(
-          defaultColors.primary, 
-          defaultColors.secondary, 
-          defaultColors.accent
-        ));
+      if (!response.ok) {
+        console.warn('Could not load user colors, using defaults');
+        setColors(defaultThemeColors);
+        setHasLoadedUserColors(true);
         return;
       }
+      
+      const userData = await response.json();
+      
+      const userColors = generateColorVariations(
+        userData.primaryColor || defaultColors.primary,
+        userData.secondaryColor || defaultColors.secondary,
+        userData.accentColor || defaultColors.accent
+      );
+      
+      setColors(userColors);
+      setHasLoadedUserColors(true);
+    } catch (error) {
+      console.warn('Error loading user colors, using defaults:', error);
+      setColors(defaultThemeColors);
+      setHasLoadedUserColors(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token, userId, defaultThemeColors, hasLoadedUserColors, isLoading]);
 
-      try {
-        setIsLoading(true);
-        const response = await authFetch(`/users/${userId}`);
-        
-        if (!response.ok) {
-          // Si la respuesta no es ok, usar colores por defecto
-          console.warn('Could not load user colors, using defaults');
-          setColors(generateColorVariations(
-            defaultColors.primary, 
-            defaultColors.secondary, 
-            defaultColors.accent
-          ));
-          return;
-        }
-        
-        const userData = await response.json();
-        
-        const userColors = generateColorVariations(
-          userData.primaryColor || defaultColors.primary,
-          userData.secondaryColor || defaultColors.secondary,
-          userData.accentColor || defaultColors.accent
-        );
-        
-        setColors(userColors);
-      } catch (error) {
-        console.warn('Error loading user colors, using defaults:', error);
-        // Mantener colores por defecto si hay error
-        setColors(generateColorVariations(
-          defaultColors.primary, 
-          defaultColors.secondary, 
-          defaultColors.accent
-        ));
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // Resetear el flag cuando cambie el usuario
+  useEffect(() => {
+    setHasLoadedUserColors(false);
+  }, [userId, token]);
 
-    loadUserColors();
-  }, [token, getUserId]);
+  // Cargar colores del usuario cuando esté autenticado (con debounce para evitar llamadas repetitivas)
+  useEffect(() => {
+    // Debounce de 100ms para evitar llamadas múltiples
+    const timer = setTimeout(() => {
+      loadUserColors();
+    }, 100);
 
-  const updateColors = async (primary: string, secondary: string, accent: string) => {
-    const userId = getUserId();
+    return () => clearTimeout(timer);
+  }, [loadUserColors]);
+
+  const updateColors = useCallback(async (primary: string, secondary: string, accent: string) => {
     if (!userId) return;
 
     try {
@@ -170,11 +179,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [userId]);
 
-  const resetToDefault = async () => {
+  const resetToDefault = useCallback(async () => {
     await updateColors(defaultColors.primary, defaultColors.secondary, defaultColors.accent);
-  };
+  }, [updateColors]);
 
   // Función para actualizar CSS variables en tiempo real
   const updateCSSVariables = (themeColors: ThemeColors) => {
@@ -196,12 +205,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     updateCSSVariables(colors);
   }, [colors]);
 
-  const value = {
+  // Memoizar el value del context para evitar re-renders
+  const value = useMemo(() => ({
     colors,
     updateColors,
     resetToDefault,
     isLoading
-  };
+  }), [colors, updateColors, resetToDefault, isLoading]);
 
   return (
     <ThemeContext.Provider value={value}>
