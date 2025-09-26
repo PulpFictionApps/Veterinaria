@@ -90,7 +90,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
       try {
         setIsLoading(true);
-        const response = await authFetch(`/profile/${userId}`);
+        const response = await authFetch(`/profile`);
         if (!response.ok) throw new Error('Error al cargar colores');
         
         const userData = await response.json();
@@ -120,7 +120,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      const response = await authFetch(`/profile/${userId}`, {
+      const response = await authFetch(`/profile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
