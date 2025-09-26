@@ -9,8 +9,16 @@ const prisma = new PrismaClient();
 // Registro
 router.post("/register", async (req, res) => {
   const { email, password, fullName, phone, clinicName, accountType } = req.body;
+  
+  // Log para debug
+  console.log("=== REGISTER REQUEST ===");
+  console.log("Body received:", req.body);
+  console.log("Fields:", { email, password: password ? "***" : undefined, fullName, phone, clinicName, accountType });
+  
   try {
+    console.log("Checking existing user for email:", email);
     const existingUser = await prisma.user.findUnique({ where: { email } });
+    console.log("Existing user check result:", existingUser ? "User exists" : "User not found");
     if (existingUser) return res.status(400).json({ error: "Usuario ya existe" });
 
     // Only professionals are allowed to register accounts in this app.
@@ -43,8 +51,13 @@ router.post("/register", async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    console.log("Registration successful for user:", user.id);
     res.json({ token, subscription });
   } catch (err) {
+    console.error("=== REGISTER ERROR ===");
+    console.error("Error message:", err.message);
+    console.error("Error stack:", err.stack);
+    console.error("Error details:", err);
     res.status(500).json({ error: err.message });
   }
 });
