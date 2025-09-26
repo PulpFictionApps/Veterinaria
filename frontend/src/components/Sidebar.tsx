@@ -15,7 +15,7 @@ export default function Sidebar() {
     async function load() {
       if (!userId) return;
       try {
-        const res = await authFetch(`/appointments/availability/${userId}`);
+        const res = await authFetch(`/appointments/availability`);
         if (res.ok) {
           const data = await res.json();
           if (mounted) setAvailabilityCount(Array.isArray(data) ? data.length : 0);
