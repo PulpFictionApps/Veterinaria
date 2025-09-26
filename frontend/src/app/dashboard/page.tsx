@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
 import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
 import PublicLinkManager from '../../components/PublicLinkManager';
+import ConsultationsPanel from '../../components/ConsultationsPanel';
 import ThemedButton from '../../components/ThemedButton';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
@@ -66,10 +67,16 @@ export default function Dashboard() {
         {/* Public Link Manager */}
         <PublicLinkManager />
 
-        {/* Calendar */}
-        <div className="w-full bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Calendario de Citas</h2>
-          {uid && <LazyDashboardCalendar userId={uid} />}
+        {/* Two-column layout for Consultations and Calendar */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Consultations Panel */}
+          <ConsultationsPanel />
+
+          {/* Calendar */}
+          <div className="w-full bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Calendario de Citas</h2>
+            {uid && <LazyDashboardCalendar userId={uid} />}
+          </div>
         </div>
       </div>
     </div>
