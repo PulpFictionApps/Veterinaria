@@ -1,7 +1,8 @@
 import express from "express";
-import prisma from "../../lib/prisma.js";
+import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "../middleware/auth.js";
 
+const prisma = new PrismaClient();
 const router = express.Router();
 
 // Crear disponibilidad

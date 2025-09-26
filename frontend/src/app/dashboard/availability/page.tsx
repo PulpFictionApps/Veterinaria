@@ -1,6 +1,6 @@
 "use client";
 
-import AvailabilityManager from '../../../../components/AvailabilityManager';
+import AvailabilityManager from '../../../components/AvailabilityManager';
 
 export default function AvailabilityPage(){
   return (

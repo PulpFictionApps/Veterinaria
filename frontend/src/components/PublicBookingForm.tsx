@@ -223,7 +223,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             <p className="text-sm text-gray-600 mt-1">{selectedType.description}</p>
           )}
           {selectedType && (
-            <p className="text-sm font-semibold text-theme-primary mt-1">
+            <p className="text-sm font-semibold text-pink-600 mt-1">
               Precio: {formatPrice(selectedType.price)}
             </p>
           )}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { authFetch } from '../../../../lib/api';
+import { authFetch } from '../../../lib/api';
 
 type Tutor = { id: number; name: string; email?: string; phone?: string };
 

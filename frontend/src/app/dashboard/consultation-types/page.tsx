@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { authFetch } from '../../../../lib/api';
+import { authFetch } from '../../../lib/api';
 
 interface ConsultationType {
   id: number;
@@ -201,7 +201,7 @@ export default function ConsultationTypesPage() {
               type="checkbox"
               checked={formData.active}
               onChange={(e) => setFormData(prev => ({ ...prev, active: e.target.checked }))}
-              className="h-4 w-4 text-theme-primary focus:ring-theme-primary border-gray-300 rounded"
+              className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
             />
             <label htmlFor="active" className="ml-2 block text-sm text-gray-900">
               Activo (visible para reservas públicas)
@@ -256,7 +256,7 @@ export default function ConsultationTypesPage() {
                       </span>
                     </div>
                     
-                    <p className="text-xl font-semibold text-theme-primary mb-2">
+                    <p className="text-xl font-semibold text-pink-600 mb-2">
                       {formatPrice(type.price)}
                     </p>
                     
@@ -268,7 +268,7 @@ export default function ConsultationTypesPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => startEdit(type)}
-                      className="text-theme-primary hover:text-theme-accent text-sm font-medium transition-colors"
+                      className="text-pink-600 hover:text-pink-700 text-sm font-medium transition-colors"
                     >
                       Editar
                     </button>

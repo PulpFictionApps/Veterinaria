@@ -27,12 +27,12 @@ export default function ClientDetail({ params }: PageProps) {
   const [pets, setPets] = useState<Pet[]>([]);
 
   async function load() {
-    const res = await authFetch(`/clients/${id}`);
+    const res = await authFetch(`/tutors/${id}`);
     if (!res.ok) return;
     const data: Client = await res.json();
     setClient(data);
 
-    const petsRes = await authFetch(`/clients/${id}/pets`);
+    const petsRes = await authFetch(`/pets?tutorId=${id}`);
     if (petsRes.ok) {
       const petsData: Pet[] = await petsRes.json();
       setPets(petsData);
@@ -61,7 +61,7 @@ export default function ClientDetail({ params }: PageProps) {
             <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:gap-2">
               <Link
                 href={`/dashboard/clients/${id}/pet/${p.id}`}
-                className="text-theme-primary hover:text-theme-accent transition-colors"
+                className="text-pink-600 hover:text-pink-700 transition-colors"
               >
                 Ver ficha
               </Link>

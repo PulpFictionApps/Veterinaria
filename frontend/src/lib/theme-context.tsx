@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
 import { useAuth } from './useAuth';
 import { authFetch } from './api';
 
@@ -78,27 +77,20 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { token, getUserId } = useAuth();
-  const pathname = usePathname();
   const [colors, setColors] = useState<ThemeColors>(
     generateColorVariations(defaultColors.primary, defaultColors.secondary, defaultColors.accent)
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  // Verificar si estamos en una ruta del dashboard
-  const isDashboardRoute = pathname?.startsWith('/dashboard');
-
-  // Cargar colores del usuario solo en rutas del dashboard y cuando esté autenticado
+  // Cargar colores del usuario cuando esté autenticado
   useEffect(() => {
     const loadUserColors = async () => {
-      // Solo cargar colores personalizados en rutas del dashboard
-      if (!isDashboardRoute) return;
-      
       const userId = getUserId();
       if (!userId || !token) return;
 
       try {
         setIsLoading(true);
-        const response = await authFetch(`/profile`);
+        const response = await authFetch(`/users/${userId}`);
         if (!response.ok) throw new Error('Error al cargar colores');
         
         const userData = await response.json();
@@ -119,7 +111,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
 
     loadUserColors();
-  }, [token, getUserId, isDashboardRoute]);
+  }, [token, getUserId]);
 
   const updateColors = async (primary: string, secondary: string, accent: string) => {
     const userId = getUserId();
@@ -128,7 +120,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      const response = await authFetch(`/profile`, {
+      const response = await authFetch(`/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

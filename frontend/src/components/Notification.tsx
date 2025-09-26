@@ -36,7 +36,7 @@ export function Notification({
     success: "bg-green-50 text-green-800 border border-green-200",
     error: "bg-red-50 text-red-800 border border-red-200",
     warning: "bg-yellow-50 text-yellow-800 border border-yellow-200",
-    info: "bg-theme-secondary/20 text-theme-primary border border-theme-primary/30"
+    info: "bg-pink-50 text-pink-800 border border-pink-200"
   };
 
   return (

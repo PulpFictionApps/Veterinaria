@@ -32,7 +32,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
     setError('');
     
     try {
-      const res = await authFetch('/clients/pets', { 
+      const res = await authFetch('/pets', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify({ 
@@ -194,7 +194,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-theme-primary text-white px-6 py-3 rounded-lg hover:bg-theme-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? 'Creando...' : 'Crear Mascota'}
             </button>
