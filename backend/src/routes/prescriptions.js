@@ -1,6 +1,6 @@
 import express from 'express';
 import PDFDocument from 'pdfkit';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../lib/prisma.js';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
@@ -9,7 +9,6 @@ import fetch from 'node-fetch';
 import { verifyToken } from '../middleware/auth.js';
 import { supabase } from '../lib/supabase.js';
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
 const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;

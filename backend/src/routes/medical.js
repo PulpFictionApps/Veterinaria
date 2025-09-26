@@ -1,11 +1,10 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../lib/prisma.js";
 import { verifyToken } from "../middleware/auth.js";
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
 // ===========================
