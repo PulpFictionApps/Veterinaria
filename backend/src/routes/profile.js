@@ -13,6 +13,8 @@ router.get('/', verifyToken, async (req, res) => {
   const uid = Number(req.user.id);
   let retries = 3;
   
+  console.log(`[${new Date().toISOString()}] [info] Getting profile for user ${uid}`);
+  
   while (retries > 0) {
     try {
       const user = await prisma.user.findUnique({
@@ -46,22 +48,47 @@ router.get('/', verifyToken, async (req, res) => {
       });
       
       if (!user) {
+        console.log(`[${new Date().toISOString()}] [warn] User ${uid} not found`);
         return res.status(404).json({ error: 'Usuario no encontrado' });
       }
       
+      console.log(`[${new Date().toISOString()}] [info] Profile retrieved successfully for user ${uid}`);
       return res.json(user);
     } catch (err) {
       retries--;
-      console.error(`Error fetching user profile (retries left: ${retries}):`, err);
+      console.error(`[${new Date().toISOString()}] [error] Error fetching user profile (retries left: ${retries}):`, err.message);
       
-      // Si es un error de conexión y aún tenemos reintentos
-      if (retries > 0 && (err.code === 'P1001' || err.message.includes("Can't reach database"))) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo
+      // Detectar diferentes tipos de errores
+      const isConnectionError = err.code === 'P1001' || 
+                               err.message.includes("Can't reach database server") ||
+                               err.message.includes("connection");
+                               
+      const isAuthError = err.message.includes("Authentication failed") ||
+                         err.message.includes("database credentials") ||
+                         err.message.includes("not valid");
+      
+      // Si es error de autenticación, no reintentar
+      if (isAuthError) {
+        console.error(`[${new Date().toISOString()}] [error] Database authentication failed. Check credentials.`);
+        return res.status(503).json({ 
+          error: 'Error de configuración de base de datos. Por favor contacta al administrador.',
+          code: 'DB_AUTH_ERROR'
+        });
+      }
+      
+      // Si es error de conexión y aún tenemos reintentos
+      if (retries > 0 && isConnectionError) {
+        console.log(`[${new Date().toISOString()}] [info] Retrying database connection in 1 second...`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
         continue;
       }
       
       // Si no hay más reintentos o es otro tipo de error
-      return res.status(500).json({ error: 'Error interno del servidor' });
+      console.error(`[${new Date().toISOString()}] [error] Final database error:`, err.message);
+      return res.status(500).json({ 
+        error: 'Error interno del servidor. Base de datos no disponible.',
+        code: 'DB_CONNECTION_ERROR'
+      });
     }
   }
 });
