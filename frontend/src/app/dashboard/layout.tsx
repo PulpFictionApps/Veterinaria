@@ -3,6 +3,7 @@
 import OptimizedNavbar from '../../components/OptimizedNavbar';
 import OptimizedSidebar from '../../components/OptimizedSidebar';
 import OptimizedBottomNav from '../../components/OptimizedBottomNav';
+import PWAInstallPrompt from '../../components/PWAInstallPrompt';
 import { useAuthContext } from '../../lib/auth-context';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { useEffect, useState, Suspense } from 'react';
@@ -109,6 +110,8 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
         <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
         {/* Only show BottomNav when sidebar is closed */}
         {!isSidebarOpen && <OptimizedBottomNav />}
+        {/* PWA Install Prompt */}
+        <PWAInstallPrompt />
       </div>
     </div>
   );

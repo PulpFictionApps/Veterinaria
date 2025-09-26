@@ -45,7 +45,7 @@ export default function Navbar() {
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
-    { href: '/dashboard/availability', label: 'Disponibilidad', icon: '⏰' },
+    { href: '/dashboard/calendar', label: 'Calendario', icon: '⏰' },
     { href: '/plans', label: 'Planes', icon: '📦' },
     { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
     { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
