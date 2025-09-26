@@ -7,6 +7,7 @@ import path from 'path';
 import authRoutes from "./routes/auth.js";
 import billingRoutes from "./routes/billing.js";
 import { healthCheck } from "./routes/health.js";
+import diagnosticRoutes from "./routes/diagnostic.js";
 
 // Consolidated routes
 import profileRoutes from "./routes/profile.js";
@@ -38,6 +39,7 @@ app.use('/tmp', express.static(tmpPath));
 // Route registration - Consolidated structure
 app.use("/auth", authRoutes);
 app.use("/billing", billingRoutes);
+app.use("/diagnostic", diagnosticRoutes);
 
 // Consolidated routes
 app.use("/profile", profileRoutes);
