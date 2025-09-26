@@ -33,6 +33,9 @@ model User {
   primaryColor         String?   @default("#EC4899")   // Color primario (rosa por defecto)
   secondaryColor       String?   @default("#F9A8D4")   // Color secundario (rosa claro por defecto)
   accentColor          String?   @default("#BE185D")   // Color de acento (rosa oscuro por defecto)
+  // Campos para configuración de PDFs de recetas
+  prescriptionHeader   String?   // Encabezado personalizado para recetas
+  prescriptionFooter   String?   // Pie de página personalizado para recetas
   createdAt    DateTime      @default(now())
   tutors       Tutor[]
   availability Availability[]

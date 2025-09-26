@@ -37,6 +37,8 @@ router.get('/', verifyToken, async (req, res) => {
           primaryColor: true,
           secondaryColor: true,
           accentColor: true,
+          prescriptionHeader: true,
+          prescriptionFooter: true,
           accountType: true,
           isPremium: true,
           createdAt: true
@@ -86,7 +88,9 @@ router.patch('/', verifyToken, async (req, res) => {
       enableEmailReminders,
       primaryColor,
       secondaryColor,
-      accentColor
+      accentColor,
+      prescriptionHeader,
+      prescriptionFooter
     } = req.body;
     
     // Build update object with only defined fields
@@ -108,6 +112,8 @@ router.patch('/', verifyToken, async (req, res) => {
     if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
     if (secondaryColor !== undefined) updateData.secondaryColor = secondaryColor;
     if (accentColor !== undefined) updateData.accentColor = accentColor;
+    if (prescriptionHeader !== undefined) updateData.prescriptionHeader = prescriptionHeader;
+    if (prescriptionFooter !== undefined) updateData.prescriptionFooter = prescriptionFooter;
     
     const updatedUser = await prisma.user.update({
       where: { id: uid },
