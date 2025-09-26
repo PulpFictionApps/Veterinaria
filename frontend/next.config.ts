@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Configuración de output para workspace root
+  outputFileTracingRoot: '..',
+  
   // Disable ESLint during production builds to avoid CI failures while addressing type/lint warnings
   eslint: {
     ignoreDuringBuilds: true,
@@ -8,7 +11,7 @@ const nextConfig: NextConfig = {
   
   // Optimizaciones de rendimiento
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // Comentado por problemas de build en Vercel con critters
     // Optimizar re-renders
     optimizeServerReact: true,
   },
