@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import DashboardCalendar from "../../components/DashboardCalendar";
 import AvailabilityManager from '../../components/AvailabilityManager';
+import ThemedButton from '../../components/ThemedButton';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
 
@@ -104,16 +105,14 @@ export default function DashboardPage() {
                   value={bookingUrl} 
                   className="px-2 py-1 border rounded bg-gray-50 text-xs font-mono w-48" 
                 />
-                <button 
+                <ThemedButton
                   onClick={copyLink} 
-                  className={`px-3 py-1 rounded text-xs transition-colors ${
-                    copied 
-                      ? 'bg-pink-600 text-white' 
-                      : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg shadow-pink-200/50'
-                  }`}
+                  size="sm"
+                  className="text-xs"
+                  disabled={copied}
                 >
                   {copied ? '✅' : '📋'}
-                </button>
+                </ThemedButton>
               </div>
             </div>
           </div>

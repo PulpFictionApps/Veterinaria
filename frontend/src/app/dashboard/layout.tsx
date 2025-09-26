@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import BottomNav from '../../components/BottomNav';
 import { useAuthContext } from '../../lib/auth-context';
+import { useThemeColors } from '../../hooks/useThemeColors';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { brand } from '../../lib/theme';
@@ -22,6 +23,8 @@ function SidebarStateTracker({ onSidebarStateChange }: { onSidebarStateChange: (
 
 // Navbar wrapper with Suspense - only for mobile
 function NavbarWithSuspense() {
+  const { getNavigationIconStyle } = useThemeColors();
+  
   return (
     <div className="lg:hidden">
       <Suspense fallback={
@@ -37,7 +40,10 @@ function NavbarWithSuspense() {
               </svg>
             </button>
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-lg shadow-pink-200/50">
+              <div 
+                className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg"
+                style={getNavigationIconStyle()}
+              >
                 <span className="text-white text-sm font-bold">{brand.shortName}</span>
               </div>
               <span className="hidden sm:inline font-semibold text-gray-800">{brand.name}</span>
@@ -73,7 +79,8 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
   if (!token) return null;
 
   return (
-    <div className="min-h-screen bg-pink-50">
+    <div className="min-h-screen">
+      {/* El fondo ahora es manejado por ThemeWrapper */}
       {/* Suspense wrapper for useSearchParams */}
       <Suspense fallback={null}>
         <SidebarStateTracker onSidebarStateChange={handleSidebarStateChange} />

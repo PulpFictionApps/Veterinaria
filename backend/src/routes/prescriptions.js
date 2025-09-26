@@ -535,19 +535,64 @@ router.get('/download/:id', verifyToken, async (req, res) => {
     // Generar nombre de archivo para descarga
     const downloadName = `receta_${prescription.pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${prescription.id}.pdf`;
     
-    // Si tenemos pdfUrl de Supabase, redirigir directamente
-    if (prescription.pdfUrl && prescription.pdfUrl.includes('supabase')) {
-      console.log('Redirecting to Supabase URL:', prescription.pdfUrl);
-      res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
-      return res.redirect(prescription.pdfUrl);
+    // Si tenemos pdfPath de Supabase, descargar usando el cliente de Supabase
+    if (prescription.pdfPath && prescription.pdfPath.startsWith('pdfs/')) {
+      console.log('Downloading PDF from Supabase using client:', prescription.pdfPath);
+      try {
+        // Usar el cliente de Supabase para descargar directamente
+        const { supabase, STORAGE_BUCKET } = await import('../lib/supabaseStorage.js');
+        const { data, error } = await supabase.storage
+          .from(STORAGE_BUCKET)
+          .download(prescription.pdfPath);
+        
+        if (error) {
+          console.log('Error downloading from Supabase:', error);
+          throw new Error(error.message);
+        }
+        
+        if (!data) {
+          throw new Error('No data received from Supabase');
+        }
+        
+        // Convertir blob a buffer
+        const arrayBuffer = await data.arrayBuffer();
+        const pdfBuffer = Buffer.from(arrayBuffer);
+        
+        console.log('✅ PDF downloaded successfully from Supabase:', pdfBuffer.length, 'bytes');
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+        
+        return res.send(pdfBuffer);
+      } catch (supabaseError) {
+        console.error('Error downloading PDF from Supabase with client:', supabaseError);
+        // Continue to fallback
+      }
     }
     
-    // Si tenemos pdfPath de Supabase, obtener URL pública
-    if (prescription.pdfPath && prescription.pdfPath.startsWith('pdfs/')) {
-      console.log('Getting public URL for Supabase path:', prescription.pdfPath);
-      const publicUrl = getPublicUrl(prescription.pdfPath);
-      res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
-      return res.redirect(publicUrl);
+    // Si tenemos pdfUrl de Supabase, intentar fetch (método anterior como fallback)
+    if (prescription.pdfUrl && prescription.pdfUrl.includes('supabase')) {
+      console.log('Trying fallback: Fetching PDF from Supabase URL:', prescription.pdfUrl);
+      try {
+        const pdfResponse = await fetch(prescription.pdfUrl);
+        
+        if (!pdfResponse.ok) {
+          console.log('Error fetching from Supabase:', pdfResponse.status, pdfResponse.statusText);
+          throw new Error(`HTTP ${pdfResponse.status}: ${pdfResponse.statusText}`);
+        }
+        
+        const pdfBuffer = await pdfResponse.buffer();
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+        
+        return res.send(pdfBuffer);
+      } catch (fetchError) {
+        console.error('Error fetching PDF from Supabase URL:', fetchError);
+        // Continue to local fallback
+      }
     }
     
     // Fallback: buscar archivo local (para recetas antiguas)
