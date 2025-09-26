@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 import { useAuth } from './useAuth';
 import { authFetch } from './api';
 
@@ -77,14 +78,21 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { token, getUserId } = useAuth();
+  const pathname = usePathname();
   const [colors, setColors] = useState<ThemeColors>(
     generateColorVariations(defaultColors.primary, defaultColors.secondary, defaultColors.accent)
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  // Cargar colores del usuario cuando esté autenticado
+  // Verificar si estamos en una ruta del dashboard
+  const isDashboardRoute = pathname?.startsWith('/dashboard');
+
+  // Cargar colores del usuario solo en rutas del dashboard y cuando esté autenticado
   useEffect(() => {
     const loadUserColors = async () => {
+      // Solo cargar colores personalizados en rutas del dashboard
+      if (!isDashboardRoute) return;
+      
       const userId = getUserId();
       if (!userId || !token) return;
 
@@ -111,7 +119,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
 
     loadUserColors();
-  }, [token, getUserId]);
+  }, [token, getUserId, isDashboardRoute]);
 
   const updateColors = async (primary: string, secondary: string, accent: string) => {
     const userId = getUserId();
