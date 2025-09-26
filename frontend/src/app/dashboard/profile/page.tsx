@@ -72,7 +72,7 @@ export default function ProfessionalProfilePage() {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await authFetch(`/profile`);
+      const response = await authFetch(`/profile/${userId}`);
       if (!response.ok) throw new Error('Error al cargar perfil');
       
       const data = await response.json();
@@ -115,7 +115,7 @@ export default function ProfessionalProfilePage() {
       setError(null);
       setSuccess(false);
       
-      const response = await authFetch(`/profile`, {
+      const response = await authFetch(`/profile/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
