@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
 import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
+import PublicLinkManager from '../../components/PublicLinkManager';
 import ThemedButton from '../../components/ThemedButton';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
@@ -23,12 +24,8 @@ interface ClientSummary {
   email?: string;
 }
 
-export default function DashboardPage() {
-  const { userId } = useAuthContext();
-  const uid = userId ?? 1;
-  const [copied, setCopied] = useState(false);
-  const [upcoming, setUpcoming] = useState<AppointmentSummary[]>([]);
-  const [clients, setClients] = useState<ClientSummary[]>([]);
+export default function Dashboard() {
+  const { userId: uid } = useAuthContext();
   const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
@@ -36,24 +33,7 @@ export default function DashboardPage() {
     async function load() {
       try {
         if (!uid) return;
-        const apptsRes = await authFetch(`/appointments/${uid}`);
-        if (apptsRes.ok) {
-          const appts: AppointmentSummary[] = await apptsRes.json();
-          // keep only next 6 upcoming
-          const next = appts
-            .map(a => ({ ...a }))
-            .sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-            .slice(0,6);
-          if (mounted) setUpcoming(next);
-        }
-
-        // try to fetch tutors/clients
-        const clientsRes = await authFetch(`/tutors`);
-        if (clientsRes.ok) {
-          const data: ClientSummary[] = await clientsRes.json();
-          if (mounted) setClients(data.slice(0,8));
-        }
-
+        
         // fetch subscription info to show trial remaining
         const subRes = await authFetch('/account/subscription');
         if (subRes.ok) {
@@ -68,20 +48,9 @@ export default function DashboardPage() {
     return () => { mounted = false };
   }, [uid]);
 
-  const bookingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/book/${uid}`;
-  async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(bookingUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('No se pudo copiar', err);
-    }
-  }
-
   return (
     <div className="w-full h-full">
-      <div className="max-w-full mx-auto px-4 py-4">
+      <div className="max-w-full mx-auto px-4 py-4 space-y-6">
         {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (
           <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded flex items-center justify-between">
             <div>
@@ -94,30 +63,13 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* Public Link Manager */}
+        <PublicLinkManager />
+
+        {/* Calendar */}
         <div className="w-full bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Calendario de Citas</h2>
-            <div className="text-right">
-              <p className="text-xs text-gray-500">Enlace público de reservas</p>
-              <div className="mt-1 flex items-center gap-2">
-                <input 
-                  readOnly 
-                  value={bookingUrl} 
-                  className="px-2 py-1 border rounded bg-gray-50 text-xs font-mono w-48" 
-                />
-                <ThemedButton
-                  onClick={copyLink} 
-                  size="sm"
-                  className="text-xs"
-                  disabled={copied}
-                >
-                  {copied ? '✅' : '📋'}
-                </ThemedButton>
-              </div>
-            </div>
-          </div>
-          
-          <LazyDashboardCalendar userId={uid} />
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Calendario de Citas</h2>
+          {uid && <LazyDashboardCalendar userId={uid} />}
         </div>
       </div>
     </div>
