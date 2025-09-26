@@ -7,6 +7,7 @@ import path from 'path';
 import Twilio from 'twilio';
 import fetch from 'node-fetch';
 import { verifyToken } from '../middleware/auth.js';
+import { uploadPDF, deletePDF, getPublicUrl } from '../lib/supabaseStorage.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -386,9 +387,38 @@ router.post('/', verifyToken, async (req, res) => {
       throw new Error('Error al generar el PDF: ' + pdfError.message);
     }
 
+    // Upload PDF to Supabase Storage
+    console.log('Uploading PDF to Supabase Storage...');
+    let supabaseUrl = null;
+    let supabasePath = null;
+    
+    try {
+      // Read the generated PDF file
+      const pdfBuffer = await fsPromises.readFile(outPath);
+      
+      // Upload to Supabase Storage
+      const uploadResult = await uploadPDF(pdfBuffer, fileName);
+      supabaseUrl = uploadResult.url;
+      supabasePath = uploadResult.path;
+      
+      console.log('PDF uploaded successfully to Supabase:', supabaseUrl);
+      
+      // Clean up local file after successful upload
+      try {
+        await fsPromises.unlink(outPath);
+        console.log('Local PDF file cleaned up');
+      } catch (cleanupError) {
+        console.error('Error cleaning up PDF file:', cleanupError);
+      }
+    } catch (uploadError) {
+      console.error('Error uploading PDF to Supabase:', uploadError);
+      // Fallback to local path if Supabase upload fails
+      console.log('Falling back to local storage');
+    }
+
     // Save prescription record
     console.log('Saving prescription to database...');
-    const pdfUrl = `/tmp/${fileName}`;
+    const pdfUrl = supabaseUrl || `/tmp/${fileName}`; // Use Supabase URL or fallback to local
     
     const prescription = await prisma.prescription.create({
       data: {
@@ -403,7 +433,7 @@ router.post('/', verifyToken, async (req, res) => {
         duration: duration || '',
         instructions: instructions || null,
         pdfUrl,
-        pdfPath: outPath,
+        pdfPath: supabasePath || outPath, // Store Supabase path or fallback to local path
         sendWhatsApp,
         whatsappSent: false
       },
@@ -502,7 +532,25 @@ router.get('/download/:id', verifyToken, async (req, res) => {
       return res.status(403).json({ error: 'No tienes acceso a esta prescripción' });
     }
     
-    // Buscar el archivo PDF
+    // Generar nombre de archivo para descarga
+    const downloadName = `receta_${prescription.pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${prescription.id}.pdf`;
+    
+    // Si tenemos pdfUrl de Supabase, redirigir directamente
+    if (prescription.pdfUrl && prescription.pdfUrl.includes('supabase')) {
+      console.log('Redirecting to Supabase URL:', prescription.pdfUrl);
+      res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
+      return res.redirect(prescription.pdfUrl);
+    }
+    
+    // Si tenemos pdfPath de Supabase, obtener URL pública
+    if (prescription.pdfPath && prescription.pdfPath.startsWith('pdfs/')) {
+      console.log('Getting public URL for Supabase path:', prescription.pdfPath);
+      const publicUrl = getPublicUrl(prescription.pdfPath);
+      res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
+      return res.redirect(publicUrl);
+    }
+    
+    // Fallback: buscar archivo local (para recetas antiguas)
     const tmpDir = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'tmp');
     let pdfPath = prescription.pdfPath;
     
@@ -514,21 +562,20 @@ router.get('/download/:id', verifyToken, async (req, res) => {
       }
     }
     
-    // Verificar que el archivo existe
+    // Verificar que el archivo local existe
     if (!pdfPath || !fs.existsSync(pdfPath)) {
-      console.log('PDF file not found:', pdfPath);
-      return res.status(404).json({ error: 'Archivo PDF no encontrado. El archivo puede haber sido eliminado.' });
+      console.log('PDF file not found locally:', pdfPath);
+      return res.status(404).json({ 
+        error: 'Archivo PDF no encontrado. El archivo puede haber sido migrado al almacenamiento en la nube.' 
+      });
     }
     
-    // Generar nombre de archivo para descarga
-    const downloadName = `receta_${prescription.pet.name.replace(/[^a-zA-Z0-9]/g, '_')}_${prescription.id}.pdf`;
-    
-    // Configurar headers para descarga
+    // Stream el archivo local
+    console.log('Streaming local file:', pdfPath);
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
     res.setHeader('Content-Length', fs.statSync(pdfPath).size);
     
-    // Stream el archivo
     const fileStream = fs.createReadStream(pdfPath);
     fileStream.on('error', (error) => {
       console.error('Error streaming PDF:', error);
@@ -567,10 +614,20 @@ const cleanupExpiredPrescriptions = async () => {
     // Eliminar archivos PDF y registros
     for (const prescription of expiredPrescriptions) {
       try {
-        // Eliminar archivo PDF si existe
-        if (prescription.pdfPath && fs.existsSync(prescription.pdfPath)) {
+        // Si es un archivo en Supabase Storage
+        if (prescription.pdfPath && prescription.pdfPath.startsWith('pdfs/')) {
+          console.log(`Deleting Supabase file: ${prescription.pdfPath}`);
+          const deleted = await deletePDF(prescription.pdfPath);
+          if (deleted) {
+            console.log(`Successfully deleted Supabase file: ${prescription.pdfPath}`);
+          } else {
+            console.log(`Failed to delete Supabase file: ${prescription.pdfPath}`);
+          }
+        }
+        // Si es un archivo local (prescripciones antiguas)
+        else if (prescription.pdfPath && fs.existsSync(prescription.pdfPath)) {
           fs.unlinkSync(prescription.pdfPath);
-          console.log(`Deleted PDF file: ${prescription.pdfPath}`);
+          console.log(`Deleted local PDF file: ${prescription.pdfPath}`);
         }
       } catch (fileError) {
         console.error(`Error deleting PDF file ${prescription.pdfPath}:`, fileError.message);
