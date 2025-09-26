@@ -10,45 +10,57 @@ const router = express.Router();
 
 // GET /profile - Get user profile (combines /users/:id functionality)
 router.get('/', verifyToken, async (req, res) => {
-  try {
-    const uid = Number(req.user.id);
-    
-    const user = await prisma.user.findUnique({
-      where: { id: uid },
-      select: {
-        id: true,
-        email: true,
-        fullName: true,
-        phone: true,
-        clinicName: true,
-        professionalRut: true,
-        professionalTitle: true,
-        clinicAddress: true,
-        professionalPhone: true,
-        licenseNumber: true,
-        signatureUrl: true,
-        logoUrl: true,
-        whatsappNumber: true,
-        autoEmail: true,
-        enableWhatsappReminders: true,
-        enableEmailReminders: true,
-        primaryColor: true,
-        secondaryColor: true,
-        accentColor: true,
-        accountType: true,
-        isPremium: true,
-        createdAt: true
+  const uid = Number(req.user.id);
+  let retries = 3;
+  
+  while (retries > 0) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: uid },
+        select: {
+          id: true,
+          email: true,
+          fullName: true,
+          phone: true,
+          clinicName: true,
+          professionalRut: true,
+          professionalTitle: true,
+          clinicAddress: true,
+          professionalPhone: true,
+          licenseNumber: true,
+          signatureUrl: true,
+          logoUrl: true,
+          whatsappNumber: true,
+          autoEmail: true,
+          enableWhatsappReminders: true,
+          enableEmailReminders: true,
+          primaryColor: true,
+          secondaryColor: true,
+          accentColor: true,
+          accountType: true,
+          isPremium: true,
+          createdAt: true
+        }
+      });
+      
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
       }
-    });
-    
-    if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+      
+      return res.json(user);
+    } catch (err) {
+      retries--;
+      console.error(`Error fetching user profile (retries left: ${retries}):`, err);
+      
+      // Si es un error de conexión y aún tenemos reintentos
+      if (retries > 0 && (err.code === 'P1001' || err.message.includes("Can't reach database"))) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo
+        continue;
+      }
+      
+      // Si no hay más reintentos o es otro tipo de error
+      return res.status(500).json({ error: 'Error interno del servidor' });
     }
-    
-    res.json(user);
-  } catch (err) {
-    console.error('Error fetching user profile:', err);
-    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
