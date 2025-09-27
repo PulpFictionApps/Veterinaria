@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:e2e": "playwright test --project=chromium"
+    "test:e2e": "playwright test --project=chromium",
+    "build:analyze": "ANALYZE=true next build",
+    "build:prod": "NODE_ENV=production next build && next export",
+    "serve": "npx serve@latest out"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.19",

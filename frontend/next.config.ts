@@ -5,6 +5,11 @@ const withPWA = require('next-pwa')({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
+  // Configuración para actualizaciones automáticas
+  reloadOnOnline: true,
+  fallbacks: {
+    document: '/offline.html', // Página offline personalizada
+  },
   runtimeCaching: [
     {
       urlPattern: /^https?.*/,
@@ -13,6 +18,19 @@ const withPWA = require('next-pwa')({
         cacheName: 'offlineCache',
         expiration: {
           maxEntries: 200,
+          maxAgeSeconds: 24 * 60 * 60, // 24 horas
+        },
+        networkTimeoutSeconds: 10,
+      },
+    },
+    {
+      urlPattern: /\.(?:js|css|woff2?|png|jpg|jpeg|svg)$/,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'static-resources',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
         },
       },
     },

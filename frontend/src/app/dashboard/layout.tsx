@@ -4,6 +4,7 @@ import OptimizedNavbar from '../../components/OptimizedNavbar';
 import OptimizedSidebar from '../../components/OptimizedSidebar';
 import OptimizedBottomNav from '../../components/OptimizedBottomNav';
 import PWAInstallPrompt from '../../components/PWAInstallPrompt';
+import UpdateNotification from '../../components/UpdateNotification';
 import { useAuthContext } from '../../lib/auth-context';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { useEffect, useState, Suspense } from 'react';
@@ -112,6 +113,9 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
         {!isSidebarOpen && <OptimizedBottomNav />}
         {/* PWA Install Prompt */}
         <PWAInstallPrompt />
+        
+        {/* Update Notification */}
+        <UpdateNotification />
       </div>
     </div>
   );
