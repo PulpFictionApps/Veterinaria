@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authFetch } from '@/lib/api';
 import { useAuthContext } from '@/lib/auth-context';
-import { useTheme } from '@/lib/theme-context';
-import { colorSchemes } from '@/lib/constants';
 
 interface ProfessionalProfile {
   id: number;
@@ -20,21 +18,11 @@ interface ProfessionalProfile {
   licenseNumber?: string;
   signatureUrl?: string;
   logoUrl?: string;
-  // New fields for automation
-  whatsappNumber?: string;
-  autoEmail?: string;
-  enableWhatsappReminders?: boolean;
-  enableEmailReminders?: boolean;
-  // New fields for color customization
-  primaryColor?: string;
-  secondaryColor?: string;
-  accentColor?: string;
 }
 
 export default function ProfessionalProfilePage() {
   const router = useRouter();
   const { userId } = useAuthContext();
-  const { colors, updateColors, resetToDefault } = useTheme();
   const [profile, setProfile] = useState<ProfessionalProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -53,15 +41,6 @@ export default function ProfessionalProfilePage() {
     licenseNumber: '',
     signatureUrl: '',
     logoUrl: '',
-    // New automation fields
-    whatsappNumber: '',
-    autoEmail: '',
-    enableWhatsappReminders: false,
-    enableEmailReminders: false,
-    // New color customization fields
-    primaryColor: '#EC4899',
-    secondaryColor: '#F9A8D4',
-    accentColor: '#BE185D',
   });
 
   useEffect(() => {
@@ -90,15 +69,6 @@ export default function ProfessionalProfilePage() {
         licenseNumber: data.licenseNumber || '',
         signatureUrl: data.signatureUrl || '',
         logoUrl: data.logoUrl || '',
-        // New automation fields
-        whatsappNumber: data.whatsappNumber || '',
-        autoEmail: data.autoEmail || '',
-        enableWhatsappReminders: data.enableWhatsappReminders || false,
-        enableEmailReminders: data.enableEmailReminders || false,
-        // New color customization fields
-        primaryColor: data.primaryColor || '#EC4899',
-        secondaryColor: data.secondaryColor || '#F9A8D4',
-        accentColor: data.accentColor || '#BE185D',
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -138,16 +108,6 @@ export default function ProfessionalProfilePage() {
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // If it's a color field, update theme in real time for preview
-    if (field === 'primaryColor' || field === 'secondaryColor' || field === 'accentColor') {
-      const newFormData = { ...formData, [field]: value };
-      updateColors(
-        newFormData.primaryColor,
-        newFormData.secondaryColor,
-        newFormData.accentColor
-      ).catch(console.error);
-    }
   };
 
   if (loading) {
@@ -357,234 +317,18 @@ export default function ProfessionalProfilePage() {
             </div>
           </div>
 
-          {/* Automatización y Comunicaciones */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">🤖 Automatización y Comunicaciones</h3>
-            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-              <h4 className="font-semibold text-blue-800 mb-2">📱 Configuración de Comunicaciones</h4>
-              <p className="text-sm text-blue-700">
-                Configure sus datos de contacto para automatizar el envío de recordatorios de citas y PDFs de recetas médicas a sus clientes.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  WhatsApp Profesional
-                </label>
-                <input
-                  type="tel"
-                  value={formData.whatsappNumber}
-                  onChange={(e) => handleInputChange('whatsappNumber', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                  placeholder="+56912345678"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Número de WhatsApp para envío automático de PDFs y recordatorios
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email para Automatización
-                </label>
-                <input
-                  type="email"
-                  value={formData.autoEmail}
-                  onChange={(e) => handleInputChange('autoEmail', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                  placeholder="comunicaciones@clinica.com"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Email desde el cual se enviarán los recordatorios automáticos
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <input
-                  id="enableWhatsappReminders"
-                  type="checkbox"
-                  checked={formData.enableWhatsappReminders}
-                  onChange={(e) => handleInputChange('enableWhatsappReminders', e.target.checked)}
-                  className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
-                />
-                <label htmlFor="enableWhatsappReminders" className="ml-2 block text-sm text-gray-700">
-                  <span className="font-medium">Habilitar recordatorios por WhatsApp</span>
-                  <p className="text-xs text-gray-500">Enviar recordatorios de citas automáticamente por WhatsApp</p>
-                </label>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  id="enableEmailReminders"
-                  type="checkbox"
-                  checked={formData.enableEmailReminders}
-                  onChange={(e) => handleInputChange('enableEmailReminders', e.target.checked)}
-                  className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
-                />
-                <label htmlFor="enableEmailReminders" className="ml-2 block text-sm text-gray-700">
-                  <span className="font-medium">Habilitar recordatorios por Email</span>
-                  <p className="text-xs text-gray-500">Enviar recordatorios de citas automáticamente por correo electrónico</p>
-                </label>
-              </div>
-            </div>
-
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h5 className="font-semibold text-yellow-800 mb-2">⚡ Funcionalidades Automáticas</h5>
-              <ul className="text-sm text-yellow-700 space-y-1">
-                <li>• Recordatorios de citas 24 horas antes</li>
-                <li>• Envío automático de PDFs de recetas por WhatsApp</li>
-                <li>• Notificaciones de confirmación de citas</li>
-                <li>• Seguimiento post-consulta automático</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Personalización de Colores */}
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">🎨 Personalización de Colores</h3>
-            <p className="text-sm text-gray-600 mb-6">
-              Personaliza los colores de tu aplicación para que coincidan con la identidad de tu clínica
+          {/* Configuración Adicional */}
+          <div className="bg-blue-50 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">⚙️ Configuración Adicional</h3>
+            <p className="text-sm text-gray-600 mb-3">
+              Para configurar automatización de recordatorios, personalización de colores y otras preferencias del sistema, visite la sección de Ajustes.
             </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Color Primario */}
-              <div className="space-y-2">
-                <label htmlFor="primaryColor" className="block text-sm font-medium text-gray-700">
-                  Color Primario
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    id="primaryColor"
-                    type="color"
-                    value={formData.primaryColor}
-                    onChange={(e) => handleInputChange('primaryColor', e.target.value)}
-                    className="w-12 h-12 rounded-lg border-2 border-gray-300 cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    value={formData.primaryColor}
-                    onChange={(e) => handleInputChange('primaryColor', e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="#EC4899"
-                  />
-                </div>
-                <p className="text-xs text-gray-500">Color principal de botones y elementos activos</p>
-              </div>
-
-              {/* Color Secundario */}
-              <div className="space-y-2">
-                <label htmlFor="secondaryColor" className="block text-sm font-medium text-gray-700">
-                  Color Secundario
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    id="secondaryColor"
-                    type="color"
-                    value={formData.secondaryColor}
-                    onChange={(e) => handleInputChange('secondaryColor', e.target.value)}
-                    className="w-12 h-12 rounded-lg border-2 border-gray-300 cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    value={formData.secondaryColor}
-                    onChange={(e) => handleInputChange('secondaryColor', e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="#F9A8D4"
-                  />
-                </div>
-                <p className="text-xs text-gray-500">Color para fondos suaves y elementos secundarios</p>
-              </div>
-
-              {/* Color de Acento */}
-              <div className="space-y-2">
-                <label htmlFor="accentColor" className="block text-sm font-medium text-gray-700">
-                  Color de Acento
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    id="accentColor"
-                    type="color"
-                    value={formData.accentColor}
-                    onChange={(e) => handleInputChange('accentColor', e.target.value)}
-                    className="w-12 h-12 rounded-lg border-2 border-gray-300 cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    value={formData.accentColor}
-                    onChange={(e) => handleInputChange('accentColor', e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="#BE185D"
-                  />
-                </div>
-                <p className="text-xs text-gray-500">Color para highlights y elementos de énfasis</p>
-              </div>
-            </div>
-
-            {/* Vista Previa de Colores */}
-            <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
-              <h5 className="font-semibold text-gray-800 mb-3">Vista Previa</h5>
-              <div className="flex gap-4 items-center">
-                <div 
-                  className="w-16 h-16 rounded-lg shadow-md flex items-center justify-center text-white font-semibold"
-                  style={{ backgroundColor: formData.primaryColor }}
-                >
-                  P
-                </div>
-                <div 
-                  className="w-16 h-16 rounded-lg shadow-md flex items-center justify-center text-gray-700 font-semibold"
-                  style={{ backgroundColor: formData.secondaryColor }}
-                >
-                  S
-                </div>
-                <div 
-                  className="w-16 h-16 rounded-lg shadow-md flex items-center justify-center text-white font-semibold"
-                  style={{ backgroundColor: formData.accentColor }}
-                >
-                  A
-                </div>
-                <div className="flex-1">
-                  <div 
-                    className="h-8 rounded-lg mb-2"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${formData.primaryColor}, ${formData.accentColor})`
-                    }}
-                  ></div>
-                  <div 
-                    className="h-4 rounded"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${formData.secondaryColor}, ${formData.primaryColor})`
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Botones de Acción de Color */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-              {Object.entries(colorSchemes).map(([key, scheme]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => {
-                    setFormData(prev => ({
-                      ...prev,
-                      primaryColor: scheme.primary,
-                      secondaryColor: scheme.secondary,
-                      accentColor: scheme.accent
-                    }));
-                  }}
-                  className="px-4 py-2 rounded-lg hover:scale-105 transition-all text-sm font-medium text-white shadow-md"
-                  style={{ 
-                    background: `linear-gradient(135deg, ${scheme.primary}, ${scheme.accent})`,
-                  }}
-                >
-                  {scheme.name}
-                </button>
-              ))}
-            </div>
+            <a
+              href="/dashboard/settings"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ir a Ajustes →
+            </a>
           </div>
 
           <div className="flex gap-4 pt-6">
