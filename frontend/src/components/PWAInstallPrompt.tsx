@@ -16,6 +16,7 @@ export default function PWAInstallPrompt() {
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
     // Detectar iOS
@@ -26,17 +27,41 @@ export default function PWAInstallPrompt() {
     const standalone = window.matchMedia('(display-mode: standalone)').matches;
     setIsStandalone(standalone);
 
-    // Listener para el evento beforeinstallprompt
+    // Verificar si el usuario ya ha rechazado la instalación
+    const dismissed = localStorage.getItem('pwa-dismissed');
+    const dismissedTime = dismissed ? parseInt(dismissed) : 0;
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+    const isDismissedRecently = Date.now() - dismissedTime < oneDayInMs;
+    setIsDismissed(isDismissedRecently);
+
+    // Para iOS, mostrar el prompt después de varias visitas
+    if (iOS && !standalone && !isDismissedRecently) {
+      const visitCount = parseInt(localStorage.getItem('pwa-visit-count') || '0');
+      localStorage.setItem('pwa-visit-count', (visitCount + 1).toString());
+      
+      // Mostrar después de 3 visitas
+      if (visitCount >= 2) {
+        setShowInstallPrompt(true);
+      }
+    }
+
+    // Listener para el evento beforeinstallprompt (Android/Desktop)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowInstallPrompt(true);
+      
+      // Solo mostrar si no ha sido rechazado recientemente
+      if (!isDismissedRecently && !standalone) {
+        setShowInstallPrompt(true);
+      }
     };
 
     // Ocultar prompt después de la instalación
     const handleAppInstalled = () => {
       setShowInstallPrompt(false);
       setDeferredPrompt(null);
+      localStorage.removeItem('pwa-dismissed'); // Limpiar el rechazo ya que se instaló
+      localStorage.removeItem('pwa-visit-count'); // Limpiar contador de visitas
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -51,11 +76,19 @@ export default function PWAInstallPrompt() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      setShowInstallPrompt(false);
+    try {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        setShowInstallPrompt(false);
+        localStorage.removeItem('pwa-dismissed'); // Limpiar el rechazo ya que se instaló
+      } else {
+        // Usuario rechazó la instalación
+        dismissPrompt();
+      }
+    } catch (error) {
+      console.error('Error during PWA installation:', error);
     }
     
     setDeferredPrompt(null);
@@ -63,14 +96,15 @@ export default function PWAInstallPrompt() {
 
   const dismissPrompt = () => {
     setShowInstallPrompt(false);
+    setIsDismissed(true);
     localStorage.setItem('pwa-dismissed', Date.now().toString());
   };
 
-  // No mostrar si ya está instalado
-  if (isStandalone) return null;
+  // No mostrar si ya está instalado o fue rechazado recientemente
+  if (isStandalone || isDismissed) return null;
 
   // Prompt para iOS
-  if (isIOS && !isStandalone) {
+  if (isIOS && !isStandalone && showInstallPrompt) {
     return (
       <div className="fixed bottom-20 left-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 lg:hidden">
         <div className="flex items-start gap-3">
@@ -80,20 +114,23 @@ export default function PWAInstallPrompt() {
               Instalar VetConnect
             </h3>
             <p className="text-xs text-gray-600 mb-3">
-              Para una mejor experiencia, instala la app: toca el botón "Compartir" y luego "Agregar a pantalla de inicio"
+              Para una mejor experiencia, instala la app: toca el botón "Compartir" 
+              <span className="inline-block mx-1">📤</span> 
+              y luego "Agregar a pantalla de inicio"
             </p>
             <div className="flex gap-2">
               <button
                 onClick={dismissPrompt}
-                className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1"
+                className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 bg-gray-100 rounded-md transition-colors"
               >
-                Ahora no
+                No mostrar más
               </button>
             </div>
           </div>
           <button
             onClick={dismissPrompt}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 text-xl font-bold w-6 h-6 flex items-center justify-center"
+            aria-label="Cerrar"
           >
             ×
           </button>
@@ -124,15 +161,16 @@ export default function PWAInstallPrompt() {
               </button>
               <button
                 onClick={dismissPrompt}
-                className="text-xs text-pink-100 hover:text-white px-3 py-1"
+                className="text-xs text-pink-100 hover:text-white px-3 py-1.5 bg-pink-600/50 rounded-md transition-colors"
               >
-                Ahora no
+                No mostrar más
               </button>
             </div>
           </div>
           <button
             onClick={dismissPrompt}
-            className="text-pink-200 hover:text-white"
+            className="text-pink-200 hover:text-white text-xl font-bold w-6 h-6 flex items-center justify-center"
+            aria-label="Cerrar"
           >
             ×
           </button>
