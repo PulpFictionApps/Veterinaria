@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../lib/auth-context';
 import { useThemeColors } from '../hooks/useThemeColors';
+import { useInstallPWA } from '../hooks/useInstallPWA';
 import { authFetch } from '../lib/api';
 import { brand } from '../lib/constants';
 
@@ -21,13 +22,19 @@ const SECONDARY_MENU_ITEMS = [
   { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: '�' },
   { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
   { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
+  { href: '#install-app', label: 'Descargar App', icon: '📱', action: 'install' },
 ];
 
 export default function OptimizedSidebar() {
   const pathname = usePathname();
   const { userId } = useAuthContext();
   const { getNavigationIconStyle, primaryGradient } = useThemeColors();
+  const { canInstall, isInstalled, installApp } = useInstallPWA();
   const [availabilityCount, setAvailabilityCount] = useState<number | null>(null);
+
+  const handleInstallClick = () => {
+    installApp();
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -109,6 +116,29 @@ export default function OptimizedSidebar() {
             <ul className="space-y-1">
               {SECONDARY_MENU_ITEMS.map(item => {
                 const active = isActive(item.href);
+                
+                // Caso especial para el botón de instalación
+                if (item.action === 'install') {
+                  // No mostrar si ya está instalado
+                  if (isInstalled) return null;
+                  
+                  return (
+                    <li key={item.href}>
+                      <button 
+                        onClick={handleInstallClick}
+                        className={`w-full flex items-center px-4 py-2.5 rounded-lg transition-all text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-700 ${
+                          canInstall ? 'animate-pulse bg-blue-50 text-blue-700 hover:bg-blue-100' : ''
+                        }`}
+                      >
+                        <span className="text-base mr-3">{item.icon}</span>
+                        <span className="font-medium">{item.label}</span>
+                        {canInstall && <span className="ml-auto text-xs bg-blue-200 text-blue-700 px-2 py-1 rounded-full">Disponible</span>}
+                      </button>
+                    </li>
+                  );
+                }
+                
+                // Elementos normales del menú
                 return (
                   <li key={item.href}>
                     <Link 
