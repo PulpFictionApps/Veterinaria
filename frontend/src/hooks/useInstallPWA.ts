@@ -47,12 +47,46 @@ export function useInstallPWA() {
 
   const installApp = async () => {
     if (!deferredPrompt) {
-      // Fallback para iOS o si no hay prompt disponible
-      alert(
-        'Para instalar VetConnect:\n\n' +
-        '📱 En iPhone/iPad: Toca el botón "Compartir" y selecciona "Agregar a pantalla de inicio"\n\n' +
-        '🖥️ En computador: Busca el ícono de instalación en la barra de direcciones'
-      );
+      // Detección mejorada para iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isIOSChrome = isIOS && /CriOS/.test(navigator.userAgent);
+      const isIOSFirefox = isIOS && /FxiOS/.test(navigator.userAgent);
+      const isSafari = isIOS && !isIOSChrome && !isIOSFirefox;
+      
+      let message = 'Para instalar VetConnect:\n\n';
+      
+      if (isIOS) {
+        if (!isSafari) {
+          message += '📱 IMPORTANTE: En iPhone/iPad, las PWA solo se pueden instalar desde Safari\n\n';
+          message += '1️⃣ Abre esta página en Safari\n';
+          message += '2️⃣ Toca el botón "Compartir" (⬆️) en la parte inferior\n';
+          message += '3️⃣ Selecciona "Agregar a pantalla de inicio"\n';
+          message += '4️⃣ Toca "Agregar" para confirmar\n\n';
+          message += '⚠️ Nota: Chrome y Firefox en iOS no pueden instalar PWA debido a restricciones de Apple';
+        } else {
+          // Detectar versión de iOS
+          const match = navigator.userAgent.match(/OS (\d+)_(\d+)/);
+          const iosVersion = match ? parseFloat(`${match[1]}.${match[2]}`) : 0;
+          
+          if (iosVersion < 11.3) {
+            message += '❌ Tu versión de iOS es muy antigua para soportar PWA\n';
+            message += `📱 iOS detectado: ${iosVersion}\n`;
+            message += '✅ Necesitas iOS 11.3 o superior\n\n';
+            message += '💡 Puedes seguir usando la versión web normalmente';
+          } else {
+            message += '📱 Para instalar en iPhone/iPad:\n\n';
+            message += '1️⃣ Toca el botón "Compartir" (⬆️) en la parte inferior de Safari\n';
+            message += '2️⃣ Desplázate y selecciona "Agregar a pantalla de inicio"\n';
+            message += '3️⃣ Toca "Agregar" para confirmar\n\n';
+            message += '✨ La app aparecerá en tu pantalla de inicio como una app nativa';
+          }
+        }
+      } else {
+        message += '🖥️ En computador: Busca el ícono de instalación en la barra de direcciones\n';
+        message += '📱 En Android: El botón de instalar debería aparecer automáticamente';
+      }
+      
+      alert(message);
       return false;
     }
 

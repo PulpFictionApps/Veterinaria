@@ -4,6 +4,9 @@ import { ThemeProvider } from '../lib/theme-context';
 import ConditionalHeader from '../components/ConditionalHeader';
 import ConditionalFooter from '../components/ConditionalFooter';
 import ClientLayoutWrapper from '../components/ClientLayoutWrapper';
+import PWAInstallPrompt from '../components/PWAInstallPrompt';
+import IOSInstallInstructions from '../components/IOSInstallInstructions';
+import UpdateNotification from '../components/UpdateNotification';
 
 export const metadata = {
   title: 'VetConnect - Sistema Veterinario',
@@ -67,6 +70,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </div>
                 </main>
                 <ConditionalFooter />
+                
+                {/* PWA Components */}
+                <PWAInstallPrompt />
+                <IOSInstallInstructions />
+                <UpdateNotification />
               </div>
             </ClientLayoutWrapper>
           </ThemeProvider>

@@ -1,6 +1,6 @@
-"use client";
+﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -11,173 +11,99 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+declare global {
+  interface WindowEventMap {
+    beforeinstallprompt: BeforeInstallPromptEvent;
+  }
+}
+
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
-    // Detectar iOS
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    setIsIOS(iOS);
-
-    // Detectar si ya está instalado
-    const standalone = window.matchMedia('(display-mode: standalone)').matches;
-    setIsStandalone(standalone);
-
-    // Verificar si el usuario ya ha rechazado la instalación
-    const dismissed = localStorage.getItem('pwa-dismissed');
-    const dismissedTime = dismissed ? parseInt(dismissed) : 0;
-    const oneDayInMs = 24 * 60 * 60 * 1000;
-    const isDismissedRecently = Date.now() - dismissedTime < oneDayInMs;
-    setIsDismissed(isDismissedRecently);
-
-    // Para iOS, mostrar el prompt después de varias visitas
-    if (iOS && !standalone && !isDismissedRecently) {
-      const visitCount = parseInt(localStorage.getItem('pwa-visit-count') || '0');
-      localStorage.setItem('pwa-visit-count', (visitCount + 1).toString());
-      
-      // Mostrar después de 3 visitas
-      if (visitCount >= 2) {
-        setShowInstallPrompt(true);
-      }
-    }
-
-    // Listener para el evento beforeinstallprompt (Android/Desktop)
-    const handleBeforeInstallPrompt = (e: Event) => {
+    const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
-      // Solo mostrar si no ha sido rechazado recientemente
-      if (!isDismissedRecently && !standalone) {
-        setShowInstallPrompt(true);
-      }
-    };
+      setDeferredPrompt(e);
 
-    // Ocultar prompt después de la instalación
-    const handleAppInstalled = () => {
-      setShowInstallPrompt(false);
-      setDeferredPrompt(null);
-      localStorage.removeItem('pwa-dismissed'); // Limpiar el rechazo ya que se instaló
-      localStorage.removeItem('pwa-visit-count'); // Limpiar contador de visitas
+      // Verificar si ya fue rechazado
+      const dismissed = localStorage.getItem('pwa-dismissed');
+      const dismissedTime = dismissed ? parseInt(dismissed) : 0;
+      const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+      
+      if (Date.now() - dismissedTime > oneWeekInMs) {
+        // Mostrar después de 3 segundos
+        setTimeout(() => setShowPrompt(true), 3000);
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
-  const handleInstallClick = async () => {
+  const handleInstall = async () => {
     if (!deferredPrompt) return;
 
     try {
-      deferredPrompt.prompt();
+      await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       
       if (outcome === 'accepted') {
-        setShowInstallPrompt(false);
-        localStorage.removeItem('pwa-dismissed'); // Limpiar el rechazo ya que se instaló
-      } else {
-        // Usuario rechazó la instalación
-        dismissPrompt();
+        console.log('PWA instalada exitosamente');
       }
+      
+      setDeferredPrompt(null);
+      setShowPrompt(false);
     } catch (error) {
-      console.error('Error during PWA installation:', error);
+      console.error('Error instalando PWA:', error);
     }
-    
-    setDeferredPrompt(null);
   };
 
-  const dismissPrompt = () => {
-    setShowInstallPrompt(false);
-    setIsDismissed(true);
+  const handleDismiss = () => {
+    setShowPrompt(false);
     localStorage.setItem('pwa-dismissed', Date.now().toString());
   };
 
-  // No mostrar si ya está instalado o fue rechazado recientemente
-  if (isStandalone || isDismissed) return null;
+  if (!showPrompt || !deferredPrompt) return null;
 
-  // Prompt para iOS
-  if (isIOS && !isStandalone && showInstallPrompt) {
-    return (
-      <div className="fixed bottom-20 left-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 lg:hidden">
-        <div className="flex items-start gap-3">
-          <div className="text-2xl">📱</div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 text-sm mb-1">
-              Instalar VetConnect
-            </h3>
-            <p className="text-xs text-gray-600 mb-3">
-              Para una mejor experiencia, instala la app: toca el botón "Compartir" 
-              <span className="inline-block mx-1">📤</span> 
-              y luego "Agregar a pantalla de inicio"
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={dismissPrompt}
-                className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 bg-gray-100 rounded-md transition-colors"
-              >
-                No mostrar más
-              </button>
-            </div>
+  return (
+    <div className="fixed top-4 left-4 right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-2xl p-4 z-50 mx-auto max-w-sm">
+      <div className="flex items-start gap-3">
+        <div className="text-3xl">📱</div>
+        <div className="flex-1">
+          <h3 className="font-bold text-base mb-1">
+            ¡Instala VetConnect!
+          </h3>
+          <p className="text-sm opacity-90 mb-4">
+            Obtén acceso rápido y funciones offline
+          </p>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleInstall}
+              className="flex-1 bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg font-medium text-sm transition-colors"
+            >
+              Instalar
+            </button>
+            <button
+              onClick={handleDismiss}
+              className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+            >
+              Ahora no
+            </button>
           </div>
-          <button
-            onClick={dismissPrompt}
-            className="text-gray-400 hover:text-gray-600 text-xl font-bold w-6 h-6 flex items-center justify-center"
-            aria-label="Cerrar"
-          >
-            ×
-          </button>
         </div>
+        <button
+          onClick={handleDismiss}
+          className="text-white/60 hover:text-white text-xl font-bold"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
       </div>
-    );
-  }
-
-  // Prompt para Android/Desktop
-  if (showInstallPrompt && deferredPrompt) {
-    return (
-      <div className="fixed bottom-20 left-4 right-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-lg shadow-lg p-4 z-50 lg:hidden">
-        <div className="flex items-start gap-3">
-          <div className="text-2xl">📱</div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-white text-sm mb-1">
-              Instalar VetConnect
-            </h3>
-            <p className="text-xs text-pink-100 mb-3">
-              Instala la app para acceso rápido y funciones offline
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={handleInstallClick}
-                className="bg-white text-pink-600 text-xs font-medium px-3 py-1.5 rounded-md hover:bg-pink-50 transition-colors"
-              >
-                Instalar
-              </button>
-              <button
-                onClick={dismissPrompt}
-                className="text-xs text-pink-100 hover:text-white px-3 py-1.5 bg-pink-600/50 rounded-md transition-colors"
-              >
-                No mostrar más
-              </button>
-            </div>
-          </div>
-          <button
-            onClick={dismissPrompt}
-            className="text-pink-200 hover:text-white text-xl font-bold w-6 h-6 flex items-center justify-center"
-            aria-label="Cerrar"
-          >
-            ×
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 }

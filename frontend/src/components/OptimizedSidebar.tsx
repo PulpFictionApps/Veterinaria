@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../lib/auth-context';
 import { useThemeColors } from '../hooks/useThemeColors';
@@ -27,7 +27,8 @@ const SECONDARY_MENU_ITEMS = [
 
 export default function OptimizedSidebar() {
   const pathname = usePathname();
-  const { userId } = useAuthContext();
+  const router = useRouter();
+  const { userId, logout } = useAuthContext();
   const { getNavigationIconStyle, primaryGradient } = useThemeColors();
   const { canInstall, isInstalled, installApp } = useInstallPWA();
   const [availabilityCount, setAvailabilityCount] = useState<number | null>(null);
@@ -175,6 +176,22 @@ export default function OptimizedSidebar() {
               >
                 + Nueva Mascota
               </Link>
+            </div>
+          </div>
+
+          {/* Logout */}
+          <div className="mt-6 border-t pt-4">
+            <div className="px-4">
+              <button
+                onClick={() => {
+                  logout();
+                  router.push('/login');
+                }}
+                className="flex items-center w-full px-3 py-2.5 rounded-lg transition-colors text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+              >
+                <span className="text-base mr-3">🚪</span>
+                <span className="font-medium">Cerrar Sesión</span>
+              </button>
             </div>
           </div>
         </nav>

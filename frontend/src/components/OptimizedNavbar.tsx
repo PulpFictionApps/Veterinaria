@@ -5,6 +5,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { brand } from '../lib/constants';
 import { MAIN_MENU_ITEMS, SECONDARY_MENU_ITEMS } from './OptimizedSidebar';
+import { useAuthContext } from '../lib/auth-context';
 
 // Simple focus trap for mobile drawer
 function useFocusTrap(active: boolean, containerRef: React.RefObject<HTMLElement>) {
@@ -38,6 +39,7 @@ export default function OptimizedNavbar() {
   const pathname = usePathname();
   const search = useSearchParams();
   const router = useRouter();
+  const { logout } = useAuthContext();
   const menuOpen = search?.get('menu') === 'open';
   const [open, setOpen] = useState<boolean>(!!menuOpen);
   const containerRef = useRef<HTMLElement | null>(null);
@@ -223,6 +225,18 @@ export default function OptimizedNavbar() {
                     </li>
                   );
                 })}
+                <li>
+                  <button
+                    onClick={() => {
+                      logout();
+                      router.push('/login');
+                    }}
+                    className="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                  >
+                    <span className="text-base mr-3">🚪</span>
+                    <span className="font-medium">Cerrar Sesión</span>
+                  </button>
+                </li>
               </ul>
             </div>
           </nav>

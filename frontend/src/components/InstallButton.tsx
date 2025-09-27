@@ -2,10 +2,28 @@
 
 import { useInstallPWA } from '../hooks/useInstallPWA';
 
-export default function InstallButton() {
+interface InstallButtonProps {
+  showDesktopButton?: boolean;
+  inline?: boolean;
+}
+
+export default function InstallButton({ showDesktopButton = false, inline = false }: InstallButtonProps) {
   const { canInstall, isInstalled, installApp } = useInstallPWA();
 
   if (!canInstall || isInstalled) return null;
+
+  if (inline || showDesktopButton) {
+    // Botón inline para página principal
+    return (
+      <button
+        onClick={installApp}
+        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all duration-300 text-sm font-medium"
+      >
+        <span className="text-lg mr-2">📱</span>
+        Descargar App
+      </button>
+    );
+  }
 
   return (
     <div className="fixed bottom-20 right-4 z-40 lg:hidden">
