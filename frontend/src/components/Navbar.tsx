@@ -41,16 +41,12 @@ export default function Navbar() {
   const [open, setOpen] = useState<boolean>(!!menuOpen);
   const containerRef = useRef<HTMLElement | null>(null);
 
-  const menuItems = [
+    const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
     { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
-    { href: '/dashboard/calendar', label: 'Calendario', icon: '⏰' },
-    { href: '/plans', label: 'Planes', icon: '📦' },
-    { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
-    { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
-    { href: '/dashboard/integrations', label: 'Integraciones', icon: '🔌' },
-    { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
+    { href: '/dashboard/consultations', label: 'Consultas', icon: '�' },
+    { href: '/dashboard/calendar', label: 'Calendario', icon: '�' },
   ];
 
   // sync state with URL

@@ -13,17 +13,13 @@ const MAIN_MENU_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: '🏠', mobileLabel: 'Inicio' },
   { href: '/dashboard/calendar', label: 'Calendar', icon: '📅', mobileLabel: 'Agenda' },
   { href: '/dashboard/clients', label: 'Clientes', icon: '👥', mobileLabel: 'Clientes' },
-  { href: '/dashboard/pets', label: 'Mascotas', icon: '🐾', mobileLabel: 'Mascotas' },
-  { href: '/dashboard/records', label: 'Historial', icon: '📋', mobileLabel: 'Historial' },
-  { href: '/dashboard/prescriptions', label: 'Recetas', icon: '💊', mobileLabel: 'Recetas', desktopOnly: true },
+  { href: '/dashboard/appointments', label: 'Citas', icon: '�', mobileLabel: 'Citas' },
 ];
 
 const SECONDARY_MENU_ITEMS = [
   { href: '/dashboard/profile', label: 'Perfil Profesional', icon: '👨‍⚕️' },
-  { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: '💡' },
-  { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
+  { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: '�' },
   { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
-  { href: '/dashboard/integrations', label: 'Integraciones', icon: '🔌' },
   { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
 ];
 
@@ -75,7 +71,7 @@ export default function OptimizedSidebar() {
         {/* Main Navigation */}
         <nav>
           <ul className="space-y-1">
-            {MAIN_MENU_ITEMS.filter(item => !item.desktopOnly || true).map((item) => {
+            {MAIN_MENU_ITEMS.map((item) => {
               const active = isActive(item.href);
               return (
                 <li key={item.href}>

@@ -62,6 +62,26 @@ router.get("/:userId", verifyToken, async (req, res) => {
   res.json(appointments);
 });
 
+// Obtener citas por mascota
+router.get("/pet/:petId", verifyToken, async (req, res) => {
+  try {
+    const { petId } = req.params;
+    const appointments = await prisma.appointment.findMany({
+      where: { petId: Number(petId) },
+      include: {
+        pet: true,
+        tutor: true,
+        consultationType: true
+      },
+      orderBy: { date: 'desc' }
+    });
+    res.json(appointments);
+  } catch (err) {
+    console.error('Error fetching appointments by pet:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Obtener una cita específica por ID
 router.get("/appointment/:id", verifyToken, async (req, res) => {
   try {
