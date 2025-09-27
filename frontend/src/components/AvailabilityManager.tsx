@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { authFetch } from '../lib/api';
+import { useState, useEffect } from 'react';
 import { useAuthContext } from '../lib/auth-context';
+import { authFetch } from '../lib/api';
+import { filterActiveSlots, formatChileDate, formatChileTime } from '../lib/timezone';
 
 interface AvailabilitySlot {
   id: number;
@@ -43,8 +44,10 @@ export default function AvailabilityManager() {
       const res = await authFetch(`/availability/${userId}`);
       if (res.ok) {
         const data: AvailabilitySlot[] = await res.json();
+        // Filtrar horarios expirados usando timezone de Chile
+        const activeSlots = filterActiveSlots(data || []);
         // ensure slots are sorted
-        const sorted = (data || []).sort((a,b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+        const sorted = activeSlots.sort((a,b) => new Date(a.start).getTime() - new Date(b.start).getTime());
         setSlots(sorted);
       }
     } catch (err) {
@@ -311,7 +314,7 @@ export default function AvailabilityManager() {
               <div className="flex justify-between items-center">
                 <div>
                   <div className="font-medium text-gray-900">
-                    {new Date(slot.start).toLocaleDateString('es-ES', {
+                    {formatChileDate(new Date(slot.start), {
                       weekday: 'long',
                       year: 'numeric',
                       month: 'long',
@@ -319,13 +322,7 @@ export default function AvailabilityManager() {
                     })}
                   </div>
                   <div className="text-sm text-gray-600">
-                    {new Date(slot.start).toLocaleTimeString('es-ES', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })} - {new Date(slot.end).toLocaleTimeString('es-ES', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+                    {formatChileTime(new Date(slot.start))} - {formatChileTime(new Date(slot.end))}
                   </div>
                 </div>
                 <button

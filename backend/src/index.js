@@ -15,7 +15,9 @@ import accountRoutes from "./routes/account.js";
 import billingRoutes from "./routes/billing.js";
 import consultationTypesRoutes from "./routes/consultationTypes.js";
 import userRoutes from "./routes/users.js";
+import maintenanceRoutes from "./routes/maintenance.js";
 import { healthCheck } from "./routes/health.js";
+import { cleanupExpiredSlots } from "../scripts/cleanup-expired-slots.js";
 
 const app = express();
 
@@ -91,8 +93,36 @@ app.use("/account", accountRoutes);
 app.use("/billing", billingRoutes);
 app.use("/consultation-types", consultationTypesRoutes);
 app.use("/users", userRoutes);
+app.use("/maintenance", maintenanceRoutes);
 
 app.get("/health", healthCheck);
 app.get("/", (req, res) => res.send("Backend funcionando"));
 
-app.listen(4000, () => console.log("Backend corriendo en http://localhost:4000"));
+// Configurar cleanup automático de horarios expirados
+// Ejecutar cada 30 minutos
+const CLEANUP_INTERVAL = 30 * 60 * 1000; // 30 minutos en millisegundos
+
+// Ejecutar primera limpieza al iniciar el servidor
+setTimeout(async () => {
+  try {
+    console.log('🧹 Ejecutando limpieza inicial de horarios expirados...');
+    await cleanupExpiredSlots();
+  } catch (error) {
+    console.error('❌ Error en limpieza inicial:', error);
+  }
+}, 5000); // Esperar 5 segundos después del inicio
+
+// Configurar limpieza periódica
+setInterval(async () => {
+  try {
+    console.log('🔄 Ejecutando limpieza periódica de horarios expirados...');
+    await cleanupExpiredSlots();
+  } catch (error) {
+    console.error('❌ Error en limpieza periódica:', error);
+  }
+}, CLEANUP_INTERVAL);
+
+app.listen(4000, () => {
+  console.log("Backend corriendo en http://localhost:4000");
+  console.log(`🕒 Limpieza automática configurada cada ${CLEANUP_INTERVAL / (60 * 1000)} minutos`);
+});

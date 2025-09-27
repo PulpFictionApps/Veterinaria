@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../lib/api';
+import { filterActiveSlots, formatChileDate, formatChileTime } from '../lib/timezone';
 
 interface ConsultationType {
   id: number;
@@ -78,11 +79,13 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         throw new Error(errData.error || errData.message || 'Error creando la reserva');
       }
       setMessage('Reserva creada correctamente');
-      // reload available slots
+      // reload available slots después de reservar
       const slotsRes = await fetch(`${API_BASE}/availability/public/${professionalId}`);
       if (slotsRes.ok) {
         const data = await slotsRes.json();
-        setSlots(data || []);
+        // Filtrar horarios expirados usando timezone de Chile
+        const activeSlots = filterActiveSlots(data || []);
+        setSlots(activeSlots);
       }
     } catch (err: any) {
       setMessage(err.message || 'Error');
@@ -101,7 +104,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
 
         if (slotsRes.ok) {
           const slotsData = await slotsRes.json();
-          if (mounted) setSlots(slotsData || []);
+          // Filtrar horarios expirados usando timezone de Chile
+          const activeSlots = filterActiveSlots(slotsData || []);
+          if (mounted) setSlots(activeSlots);
         }
 
         if (typesRes.ok) {
@@ -138,10 +143,13 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   function formatOptionLabel(s: { start: string; end: string }) {
     const start = new Date(s.start);
     const end = new Date(s.end);
-    const weekday = start.toLocaleDateString('es-ES', { weekday: 'long' });
-    const day = start.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-    const startTime = start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-    const endTime = end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    
+    // Usar timezone de Chile para formatear
+    const weekday = formatChileDate(start, { weekday: 'long' });
+    const day = formatChileDate(start, { day: '2-digit', month: '2-digit' });
+    const startTime = formatChileTime(start);
+    const endTime = formatChileTime(end);
+    
     return `${weekday} ${day} - ${startTime} - ${endTime}`;
   }
 

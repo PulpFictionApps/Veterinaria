@@ -1,6 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "../middleware/auth.js";
+import { getChileDate } from "../../scripts/cleanup-expired-slots.js";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -49,11 +50,25 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-// Listar disponibilidad de un profesional
+// Listar disponibilidad de un profesional (filtrar horarios expirados)
 router.get("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
-  const slots = await prisma.availability.findMany({ where: { userId: Number(userId) } });
-  res.json(slots);
+  try {
+    const now = getChileDate();
+    const slots = await prisma.availability.findMany({ 
+      where: { 
+        userId: Number(userId),
+        end: {
+          gt: now // Solo horarios que no han expirado
+        }
+      },
+      orderBy: { start: 'asc' }
+    });
+    res.json(slots);
+  } catch (err) {
+    console.error('Error fetching availability:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Obtener slot por id
@@ -78,13 +93,23 @@ router.delete('/:id', verifyToken, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Disponibilidad pública para link (sin token)
+// Disponibilidad pública para link (sin token) - filtrar horarios expirados
 router.get('/public/:userId', async (req, res) => {
   const { userId } = req.params;
   try {
-    const slots = await prisma.availability.findMany({ where: { userId: Number(userId) } });
+    const now = getChileDate();
+    const slots = await prisma.availability.findMany({ 
+      where: { 
+        userId: Number(userId),
+        end: {
+          gt: now // Solo horarios que no han expirado
+        }
+      },
+      orderBy: { start: 'asc' }
+    });
     res.json(slots);
   } catch (err) {
+    console.error('Error fetching public availability:', err);
     res.status(500).json({ error: err.message });
   }
 });
