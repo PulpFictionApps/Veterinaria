@@ -7,8 +7,8 @@ import { MAIN_MENU_ITEMS } from './OptimizedSidebar';
 export default function OptimizedBottomNav() {
   const pathname = usePathname();
 
-  // Usar solo elementos principales para móvil, excluyendo desktop-only items
-  const mobileItems = MAIN_MENU_ITEMS.filter(item => !item.desktopOnly);
+  // Usar los elementos principales para móvil
+  const mobileItems = MAIN_MENU_ITEMS;
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
