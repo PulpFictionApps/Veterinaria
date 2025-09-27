@@ -235,13 +235,20 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           <label className="block text-sm mb-1">Selecciona un horario disponible</label>
           <select className="w-full p-2 border rounded" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
             <option value="">-- elige un horario --</option>
-            {groupSlotsByDay(slots).map(([day, daySlots]) => (
-              <optgroup key={day} label={new Date(day).toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' })}>
-                {daySlots.map(s => (
-                  <option key={s.id} value={String(s.id)}>{formatOptionLabel(s)}</option>
-                ))}
-              </optgroup>
-            ))}
+            {groupSlotsByDay(slots).map(([day, daySlots]) => {
+              // Parse the day key (YYYY-MM-DD) to avoid timezone issues
+              const [year, month, dayNum] = day.split('-').map(Number);
+              const localDate = new Date(year, month - 1, dayNum); // month is 0-indexed
+              const dayLabel = localDate.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+              
+              return (
+                <optgroup key={day} label={dayLabel}>
+                  {daySlots.map(s => (
+                    <option key={s.id} value={String(s.id)}>{formatOptionLabel(s)}</option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </div>
       ) : (
