@@ -1,5 +1,5 @@
 import express from 'express';
-import { cleanupExpiredSlots } from '../scripts/cleanup-expired-slots.js';
+import { cleanupExpiredSlots } from '../../scripts/cleanup-expired-slots.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
