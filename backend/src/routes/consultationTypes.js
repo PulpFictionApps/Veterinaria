@@ -11,7 +11,14 @@ router.get('/', verifyToken, async (req, res) => {
       where: { userId: req.user.id },
       orderBy: { name: 'asc' }
     });
-    res.json(types);
+    
+    // Convert price from cents back to pesos
+    const typesWithCorrectPrice = types.map(type => ({
+      ...type,
+      price: Math.round(type.price / 100)
+    }));
+    
+    res.json(typesWithCorrectPrice);
   } catch (err) {
     console.error('Error fetching consultation types:', err);
     res.status(500).json({ error: 'Error fetching consultation types' });
@@ -39,7 +46,13 @@ router.post('/', verifyToken, async (req, res) => {
       }
     });
     
-    res.json(type);
+    // Convert price back to pesos for response
+    const responseData = {
+      ...type,
+      price: Math.round(type.price / 100)
+    };
+    
+    res.json(responseData);
   } catch (err) {
     console.error('Error creating consultation type:', err);
     res.status(500).json({ error: 'Error creating consultation type' });
@@ -72,7 +85,54 @@ router.put('/:id', verifyToken, async (req, res) => {
       data: updateData
     });
     
-    res.json(updated);
+    // Convert price back to pesos for response
+    const responseData = {
+      ...updated,
+      price: Math.round(updated.price / 100)
+    };
+    
+    res.json(responseData);
+  } catch (err) {
+    console.error('Error updating consultation type:', err);
+    res.status(500).json({ error: 'Error updating consultation type' });
+  }
+});
+
+// PATCH /consultation-types/:id - Partially update a consultation type
+router.patch('/:id', verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, description, active, duration, color } = req.body;
+    
+    // Verify ownership
+    const existing = await prisma.consultationType.findUnique({
+      where: { id: Number(id) }
+    });
+    
+    if (!existing || existing.userId !== req.user.id) {
+      return res.status(404).json({ error: 'Consultation type not found' });
+    }
+
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (price !== undefined) updateData.price = Math.round(Number(price) * 100); // Convert to cents
+    if (description !== undefined) updateData.description = description;
+    if (active !== undefined) updateData.active = active;
+    if (duration !== undefined) updateData.duration = Number(duration);
+    if (color !== undefined) updateData.color = color;
+    
+    const updated = await prisma.consultationType.update({
+      where: { id: Number(id) },
+      data: updateData
+    });
+    
+    // Convert price back to pesos for response
+    const responseData = {
+      ...updated,
+      price: Math.round(updated.price / 100)
+    };
+    
+    res.json(responseData);
   } catch (err) {
     console.error('Error updating consultation type:', err);
     res.status(500).json({ error: 'Error updating consultation type' });
@@ -132,7 +192,14 @@ router.get('/public/:userId', async (req, res) => {
       },
       orderBy: { name: 'asc' }
     });
-    res.json(types);
+    
+    // Convert price from cents back to pesos
+    const typesWithCorrectPrice = types.map(type => ({
+      ...type,
+      price: Math.round(type.price / 100)
+    }));
+    
+    res.json(typesWithCorrectPrice);
   } catch (err) {
     console.error('Error fetching public consultation types:', err);
     res.status(500).json({ error: 'Error fetching consultation types' });
