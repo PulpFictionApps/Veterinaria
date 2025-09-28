@@ -11,9 +11,9 @@ function SimpleHeader() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-lg font-bold">🏥</span>
+              <span className="text-white text-sm font-bold">VC</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">VetClinic</span>
+            <span className="text-xl font-bold text-gray-800">VetCare</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-gray-600 hover:text-pink-600 transition-colors">

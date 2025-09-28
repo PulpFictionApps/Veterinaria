@@ -148,41 +148,6 @@ export default function CalendarPage() {
             </div>
           )}
         </div>
-
-        {/* Quick Actions */}
-        <div className="mt-8 bg-gradient-to-r from-pink-50 to-blue-50 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Acciones Rápidas</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-2xl">📅</span>
-              <div className="text-left">
-                <div className="font-medium text-gray-900">Nueva Cita</div>
-                <div className="text-sm text-gray-600">Agendar consulta</div>
-              </div>
-            </button>
-            <button className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-2xl">⏰</span>
-              <div className="text-left">
-                <div className="font-medium text-gray-900">Horarios</div>
-                <div className="text-sm text-gray-600">Configurar disponibilidad</div>
-              </div>
-            </button>
-            <button className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-2xl">👥</span>
-              <div className="text-left">
-                <div className="font-medium text-gray-900">Nuevo Cliente</div>
-                <div className="text-sm text-gray-600">Agregar tutor</div>
-              </div>
-            </button>
-            <button className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-2xl">🐾</span>
-              <div className="text-left">
-                <div className="font-medium text-gray-900">Nueva Mascota</div>
-                <div className="text-sm text-gray-600">Registrar paciente</div>
-              </div>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
