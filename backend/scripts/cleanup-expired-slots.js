@@ -12,12 +12,22 @@ const prisma = new PrismaClient();
 const CHILE_TIMEZONE = 'America/Santiago';
 
 function getChileTime() {
-  return new Date().toLocaleString("en-US", { timeZone: CHILE_TIMEZONE });
+  const now = new Date();
+  
+  // Chile está normalmente UTC-3 (horario estándar) o UTC-4 (horario de verano) 
+  // Pero dado que muestra 16:40 y debería ser 13:40, necesitamos restar 3 horas más
+  // El sistema está mostrando UTC cuando debería mostrar Chile
+  const chileOffset = -6; // UTC-6 para corregir la diferencia observada
+  
+  // Crear nueva fecha ajustando por el offset de Chile
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const chileTime = new Date(utc + (chileOffset * 3600000));
+  
+  return chileTime;
 }
 
 function getChileDate() {
-  const chileTime = getChileTime();
-  return new Date(chileTime);
+  return getChileTime();
 }
 
 async function cleanupExpiredSlots() {

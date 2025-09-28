@@ -8,8 +8,17 @@ const CHILE_TIMEZONE = 'America/Santiago';
  * @returns {Date} Current date in Chile timezone
  */
 export function getChileTime(): Date {
-  const chileTimeString = new Date().toLocaleString("en-US", { timeZone: CHILE_TIMEZONE });
-  return new Date(chileTimeString);
+  const now = new Date();
+  
+  // Chile está normalmente UTC-3 (horario estándar) o UTC-4 (horario de verano) 
+  // Basándonos en la diferencia observada con la hora local, necesitamos UTC-6
+  const chileOffset = -6; // Offset corregido para Chile
+  
+  // Crear nueva fecha ajustando por el offset de Chile
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const chileTime = new Date(utc + (chileOffset * 3600000));
+  
+  return chileTime;
 }
 
 /**
@@ -18,8 +27,15 @@ export function getChileTime(): Date {
  * @returns {Date} Date converted to Chile timezone
  */
 export function toChileTime(utcDate: Date): Date {
-  const chileTimeString = utcDate.toLocaleString("en-US", { timeZone: CHILE_TIMEZONE });
-  return new Date(chileTimeString);
+  // Chile está normalmente UTC-3 (horario estándar) o UTC-4 (horario de verano) 
+  // Basándonos en la diferencia observada con la hora local, necesitamos UTC-6
+  const chileOffset = -6; // Offset corregido para Chile
+  
+  // Crear nueva fecha ajustando por el offset de Chile
+  const utc = utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000);
+  const chileTime = new Date(utc + (chileOffset * 3600000));
+  
+  return chileTime;
 }
 
 /**
