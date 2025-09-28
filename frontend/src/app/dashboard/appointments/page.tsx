@@ -268,7 +268,7 @@ export default function AppointmentsPage() {
                 Crear Cita
               </Link>
               <Link
-                href="/dashboard/availability"
+                href="/dashboard/calendar"
                 className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
               >
                 Configurar Disponibilidad

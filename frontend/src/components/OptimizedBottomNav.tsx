@@ -50,7 +50,6 @@ export default function OptimizedBottomNav() {
           className={`flex flex-col items-center py-2 px-3 rounded-xl transition-all text-xs min-w-0 ${
             pathname?.includes('/dashboard/settings') || 
             pathname?.includes('/dashboard/profile') ||
-            pathname?.includes('/dashboard/team') ||
             pathname?.includes('/dashboard/billing')
               ? 'text-white bg-gradient-to-br from-gray-400 to-gray-500 shadow-lg shadow-gray-200/50 scale-105' 
               : 'text-gray-500 hover:text-gray-600 hover:bg-gray-50/70'

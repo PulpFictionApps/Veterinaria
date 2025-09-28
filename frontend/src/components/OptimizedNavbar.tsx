@@ -119,13 +119,6 @@ export default function OptimizedNavbar() {
             <span>+</span>
             Cliente
           </Link>
-          <Link 
-            href="/dashboard/pets/new"
-            className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
-          >
-            <span>+</span>
-            Mascota
-          </Link>
         </div>
       </nav>
 
@@ -193,12 +186,6 @@ export default function OptimizedNavbar() {
                   className="flex items-center justify-center w-full py-3 px-4 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors font-medium"
                 >
                   + Nuevo Cliente
-                </Link>
-                <Link 
-                  href="/dashboard/pets/new"
-                  className="flex items-center justify-center w-full py-3 px-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors font-medium"
-                >
-                  + Nueva Mascota
                 </Link>
               </div>
             </div>

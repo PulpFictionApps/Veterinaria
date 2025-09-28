@@ -14,15 +14,7 @@ export default function PetCard({ name, type, id }: PetCardProps) {
           <p className="text-sm truncate text-gray-600">{type}</p>
         </div>
         <div className="ml-auto">
-          {/** If an id is provided, show edit link to pet edit page under tutors/**/}
-          {typeof id !== 'undefined' && (
-            <a
-              href={`/dashboard/pets/${id}/edit`}
-              className="text-sm text-pink-600 hover:underline ml-4 transition-colors"
-            >
-              Editar
-            </a>
-          )}
+          {/** Pet editing is now handled through the clients system */}
         </div>
       </div>
     </article>

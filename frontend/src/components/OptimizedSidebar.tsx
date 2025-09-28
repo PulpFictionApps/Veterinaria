@@ -170,12 +170,6 @@ export default function OptimizedSidebar() {
               >
                 + Nuevo Cliente
               </Link>
-              <Link 
-                href="/dashboard/pets/new"
-                className="flex items-center justify-center w-full py-2 px-3 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
-              >
-                + Nueva Mascota
-              </Link>
             </div>
           </div>
 
