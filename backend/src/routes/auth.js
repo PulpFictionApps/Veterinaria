@@ -23,22 +23,23 @@ router.post("/register", async (req, res) => {
       data: { email, password: hashedPassword, fullName, phone, clinicName, accountType },
     });
 
-    // If registering a professional (clinic), create a 30-day trial subscription
+    // Si se registra un profesional, crear suscripción de prueba gratuita de 7 días
     let subscription = null;
     if (accountType === 'professional') {
       const now = new Date();
       const expires = new Date(now);
-      expires.setDate(expires.getDate() + 30);
+      expires.setDate(expires.getDate() + 7); // 7 días de prueba gratuita
       subscription = await prisma.subscription.create({
         data: {
           userId: user.id,
           plan: 'basic',
-          status: 'active',
+          status: 'trial',
+          providerId: `trial_${Date.now()}`,
           startedAt: now,
           expiresAt: expires,
         },
       });
-      // keep isPremium for compatibility
+      // Marcar como premium durante el periodo de prueba
       await prisma.user.update({ where: { id: user.id }, data: { isPremium: true } });
     }
 

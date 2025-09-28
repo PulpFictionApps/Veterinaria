@@ -31,9 +31,9 @@ router.post('/webhook-mock', async (req, res) => {
     // Mark or create subscription as active and set providerId
     const uid = Number(userId);
     const now = new Date();
-    // For a paid subscription, we might set expiresAt null (recurring) or a year ahead
+    // Para suscripción pagada: 1 mes a partir de ahora
     const expires = new Date(now);
-    expires.setFullYear(expires.getFullYear() + 1);
+    expires.setMonth(expires.getMonth() + 1);
 
     // Update existing subscription if present, otherwise create
     const existing = await prisma.subscription.findFirst({ where: { userId: uid } });
@@ -64,9 +64,9 @@ router.post('/create-preference', verifyToken, async (req, res) => {
     // configure mercadopago with ACCESS_TOKEN from env
     mercadopago.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
-    // Basic mapping of planId to price and title
+    // Plan único: $15.000 CLP mensual
     const planMap = {
-      basic: { title: 'Plan Básico', price: 15.00 }
+      basic: { title: 'Plan Veterinario Premium', price: 15000.00 }
     };
     const plan = planMap[planId] || planMap['basic'];
 
@@ -142,7 +142,7 @@ router.post('/webhook-mercadopago', express.json(), async (req, res) => {
 
     const now = new Date();
     const expires = new Date(now);
-    expires.setFullYear(expires.getFullYear() + 1);
+    expires.setMonth(expires.getMonth() + 1);
 
     // Update or create subscription
     const existing = await prisma.subscription.findFirst({ where: { userId: uid } });
@@ -162,8 +162,6 @@ router.post('/webhook-mercadopago', express.json(), async (req, res) => {
     res.status(500).json({ error: 'server error' });
   }
 });
-
-export default router;
 
 // POST /billing/create-subscription { preapproval_plan_id? }
 // Creates a pending subscription entry and returns a Mercado Pago subscription checkout URL
@@ -191,3 +189,46 @@ router.post('/create-subscription', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'server error' });
   }
 });
+
+// POST /billing/activate-free-trial
+// Activa automáticamente 7 días de prueba gratuita para el usuario
+router.post('/activate-free-trial', verifyToken, async (req, res) => {
+  try {
+    const uid = Number(req.user.id);
+    
+    // Verificar si el usuario ya tiene una suscripción
+    const existing = await prisma.subscription.findFirst({ where: { userId: uid } });
+    if (existing) {
+      return res.status(400).json({ error: 'Usuario ya tiene una suscripción activa' });
+    }
+    
+    // Crear suscripción de prueba gratuita por 7 días
+    const now = new Date();
+    const trialExpires = new Date(now);
+    trialExpires.setDate(trialExpires.getDate() + 7); // 7 días de prueba
+    
+    const subscription = await prisma.subscription.create({
+      data: {
+        userId: uid,
+        plan: 'basic',
+        status: 'trial',
+        providerId: `trial_${Date.now()}`,
+        startedAt: now,
+        expiresAt: trialExpires
+      }
+    });
+    
+    // Marcar usuario como premium durante el periodo de prueba
+    await prisma.user.update({ 
+      where: { id: uid }, 
+      data: { isPremium: true } 
+    });
+    
+    res.json({ ok: true, subscription });
+  } catch (err) {
+    console.error('activate-free-trial error', err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
+export default router;
