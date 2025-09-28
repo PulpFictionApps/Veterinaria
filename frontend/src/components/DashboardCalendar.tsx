@@ -132,8 +132,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridDay"
           headerToolbar={{
-            left: 'prev,next today',
-            center: 'title',
+            left: '',
+            center: '',
             right: ''
           }}
           events={events}

@@ -40,7 +40,7 @@ export default function AppointmentsPage() {
   const [editSlotId, setEditSlotId] = useState<number | ''>('');
   const [availableSlots, setAvailableSlots] = useState<Array<{ id: number; start: string; end: string }>>([]);
   const [editReason, setEditReason] = useState('');
-  const [filter, setFilter] = useState<'all' | 'today' | 'upcoming' | 'past'>('all');
+  const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -142,8 +142,6 @@ export default function AppointmentsPage() {
       
       // Date filter
       switch (filter) {
-        case 'today':
-          return appointmentDate.toDateString() === today.toDateString();
         case 'upcoming':
           return appointmentDate >= today;
         case 'past':
@@ -184,8 +182,6 @@ export default function AppointmentsPage() {
     
     if (appointmentDate < today) {
       return { status: 'past', color: 'text-gray-500', bg: 'bg-gray-100' };
-    } else if (appointmentDate.toDateString() === today.toDateString()) {
-      return { status: 'today', color: 'text-pink-600', bg: 'bg-pink-50' };
     } else {
       return { status: 'upcoming', color: 'text-green-600', bg: 'bg-green-50' };
     }
@@ -231,7 +227,6 @@ export default function AppointmentsPage() {
           <div className="flex gap-2">
             {[
               { key: 'all', label: 'Todas' },
-              { key: 'today', label: 'Hoy' },
               { key: 'upcoming', label: 'Próximas' },
               { key: 'past', label: 'Pasadas' }
             ].map(filterOption => (
@@ -298,8 +293,7 @@ export default function AppointmentsPage() {
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${status.bg} ${status.color}`}>
-                      {status.status === 'today' ? 'Hoy' : 
-                       status.status === 'upcoming' ? 'Próxima' : 'Pasada'}
+                      {status.status === 'upcoming' ? 'Próxima' : 'Pasada'}
                     </span>
                     <Link 
                       href={`/dashboard/appointments/${appointment.id}/consult`} 
