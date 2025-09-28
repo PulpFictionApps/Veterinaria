@@ -73,11 +73,41 @@ router.post('/create-preference', verifyToken, async (req, res) => {
 
     console.log('✅ MP Access Token configurado:', process.env.MERCADOPAGO_ACCESS_TOKEN?.substring(0, 10) + '...');
 
-    // Detectar si mercadopago es un objeto con configure o necesita acceso a .default
-    const mp = mercadopago.configure ? mercadopago : (mercadopago.default || mercadopago);
+    // Debug: examinar el objeto mercadopago
+    console.log('🔍 Estructura de mercadopago:', {
+      type: typeof mercadopago,
+      keys: Object.keys(mercadopago || {}),
+      hasDefault: !!mercadopago.default,
+      hasConfigure: typeof mercadopago.configure,
+      defaultKeys: mercadopago.default ? Object.keys(mercadopago.default) : null
+    });
+
+    // Intentar diferentes formas de acceder al SDK
+    let mp = null;
     
+    if (mercadopago && typeof mercadopago.configure === 'function') {
+      mp = mercadopago;
+      console.log('✅ Usando mercadopago directo');
+    } else if (mercadopago.default && typeof mercadopago.default.configure === 'function') {
+      mp = mercadopago.default;
+      console.log('✅ Usando mercadopago.default');
+    } else {
+      // Intentar usando require común para versiones problemáticas
+      try {
+        const { createRequire } = await import('module');
+        const require = createRequire(import.meta.url);
+        mp = require('mercadopago');
+        console.log('✅ Usando require(mercadopago)');
+      } catch (reqErr) {
+        console.error('❌ No se pudo obtener MercadoPago SDK:', reqErr.message);
+        return res.status(500).json({ 
+          error: 'SDK de MercadoPago no disponible' 
+        });
+      }
+    }
+
     if (!mp || typeof mp.configure !== 'function') {
-      console.error('❌ SDK de MercadoPago no disponible o versión incompatible');
+      console.error('❌ SDK de MercadoPago no tiene método configure');
       return res.status(500).json({ 
         error: 'Configuración de MercadoPago no disponible' 
       });
