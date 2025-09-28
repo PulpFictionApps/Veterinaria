@@ -1,7 +1,17 @@
 "use client";
 
 import { usePathname } from 'next/navigation';
-import Footer from './Footer';
+
+// Simple footer component since Footer was removed during cleanup
+function SimpleFooter() {
+  return (
+    <footer className="bg-gray-50 border-t border-gray-200 py-8">
+      <div className="max-w-6xl mx-auto px-6 text-center text-gray-600 text-sm">
+        <p>© 2025 Sistema Veterinario. Gestiona tus citas de forma simple.</p>
+      </div>
+    </footer>
+  );
+}
 
 export default function ConditionalFooter() {
   const pathname = usePathname();
@@ -12,5 +22,5 @@ export default function ConditionalFooter() {
   }
   
   // Show footer on all other pages (public pages)
-  return <Footer />;
+  return <SimpleFooter />;
 }
