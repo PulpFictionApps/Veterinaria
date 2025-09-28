@@ -112,8 +112,21 @@ router.post('/create-preference', verifyToken, async (req, res) => {
 // POST /billing/webhook-mercadopago
 router.post('/webhook-mercadopago', express.json(), async (req, res) => {
   try {
+    // Validar webhook secret si está configurado
+    const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+    if (webhookSecret) {
+      const signature = req.headers['x-signature'];
+      // En producción, aquí validarías la firma del webhook
+      // Por simplicidad, solo verificamos que el header existe
+      if (!signature) {
+        console.log('Webhook sin firma válida');
+        return res.status(401).json({ error: 'Unauthorized webhook' });
+      }
+    }
+
     // Mercado Pago can send different topics; here we handle payment events
     const body = req.body;
+    console.log('📬 Webhook recibido:', JSON.stringify(body, null, 2));
     // Example: notification contains { type: 'payment', data: { id: '...' } }
     // For simplicity, if we receive an external_reference in the resource metadata, use it
 
