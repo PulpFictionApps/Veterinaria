@@ -61,13 +61,17 @@ router.post('/create-preference', verifyToken, async (req, res) => {
     const uid = Number(req.user.id);
     const { planId = 'basic' } = req.body;
 
+    console.log('🔄 Creando preferencia MP para usuario:', uid, 'plan:', planId);
+
     // Check if MERCADOPAGO_ACCESS_TOKEN is configured
     if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
-      console.error('MERCADOPAGO_ACCESS_TOKEN not configured in environment');
+      console.error('❌ MERCADOPAGO_ACCESS_TOKEN not configured in environment');
       return res.status(500).json({ 
         error: 'Mercado Pago no está configurado. Contacta al administrador.' 
       });
     }
+
+    console.log('✅ MP Access Token configurado:', process.env.MERCADOPAGO_ACCESS_TOKEN?.substring(0, 10) + '...');
 
     // configure mercadopago with ACCESS_TOKEN from env
     mercadopago.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
@@ -98,13 +102,19 @@ router.post('/create-preference', verifyToken, async (req, res) => {
       external_reference: `${uid}:${planId}`
     };
 
+    console.log('💳 Creando preferencia MP con:', JSON.stringify(preference, null, 2));
+
     const mpRes = await mercadopago.preferences.create(preference);
+    
+    console.log('✅ Preferencia creada exitosamente:', mpRes.body?.id);
     const init_point = mpRes.body.init_point;
 
     res.json({ ok: true, init_point });
   } catch (err) {
-    console.error('create-preference error', err);
-    res.status(500).json({ error: 'server error' });
+    console.error('❌ create-preference error:', err);
+    console.error('❌ Error details:', err.message);
+    console.error('❌ Error stack:', err.stack);
+    res.status(500).json({ error: 'server error', details: err.message });
   }
 });
 
