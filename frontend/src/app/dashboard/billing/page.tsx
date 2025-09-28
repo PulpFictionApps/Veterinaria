@@ -55,6 +55,7 @@ export default function BillingPage() {
       
       if (!res.ok) {
         const data = await res.json();
+        console.error('Server error:', data);
         showNotification(data.error || 'Error al crear la preferencia de pago', 'error');
         return;
       }
@@ -66,6 +67,7 @@ export default function BillingPage() {
         showNotification('No se pudo inicializar el pago', 'error');
       }
     } catch (err) {
+      console.error('Request failed:', err);
       showNotification('Error de conexion', 'error');
     } finally {
       setLoading(false);
@@ -122,7 +124,7 @@ export default function BillingPage() {
               <div className="grid grid-cols-2 gap-2 text-sm">
                 {PLAN_INFO.features.map((feature, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <span className="text-green-500"></span>
+                    <span className="text-green-500">✓</span>
                     <span>{feature}</span>
                   </div>
                 ))}

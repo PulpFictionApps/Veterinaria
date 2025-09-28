@@ -61,6 +61,14 @@ router.post('/create-preference', verifyToken, async (req, res) => {
     const uid = Number(req.user.id);
     const { planId = 'basic' } = req.body;
 
+    // Check if MERCADOPAGO_ACCESS_TOKEN is configured
+    if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
+      console.error('MERCADOPAGO_ACCESS_TOKEN not configured in environment');
+      return res.status(500).json({ 
+        error: 'Mercado Pago no está configurado. Contacta al administrador.' 
+      });
+    }
+
     // configure mercadopago with ACCESS_TOKEN from env
     mercadopago.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
