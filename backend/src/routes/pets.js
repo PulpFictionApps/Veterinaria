@@ -1,12 +1,13 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "../middleware/auth.js";
+import { verifyActiveSubscription } from "../middleware/subscription.js";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 // Crear mascota
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
   try {
     const { name, type, breed, age, weight, sex, birthDate, tutorId } = req.body;
 

@@ -1,12 +1,12 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../lib/prisma.js';
 import { verifyToken } from '../middleware/auth.js';
+import { verifyActiveSubscription } from '../middleware/subscription.js';
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
-// Crear ficha clínica para una mascota
-router.post('/', verifyToken, async (req, res) => {
+// POST /medical-records
+router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
   const { petId, title, content, diagnosis, treatment, weight, temperature } = req.body;
   try {
     const record = await prisma.medicalRecord.create({ 

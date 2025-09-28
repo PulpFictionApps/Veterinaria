@@ -1,12 +1,14 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "../middleware/auth.js";
+import { verifyActiveSubscription } from "../middleware/subscription.js";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 // Crear cita (protegida) - crea appointment y elimina el slot de disponibilidad correspondiente de forma atómica
-router.post("/", verifyToken, async (req, res) => {
+// POST /appointments - crear cita (requiere token)
+router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
   const { petId, tutorId, date, reason, slotId } = req.body;
   try {
     let selectedDate = null;

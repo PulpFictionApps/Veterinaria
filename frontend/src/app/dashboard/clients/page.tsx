@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { authFetch } from '../../../lib/api';
 import { useAuthContext } from '../../../lib/auth-context';
+import SubscriptionGuard from '../../../components/SubscriptionGuard';
 
 interface Client {
   id: number;
@@ -44,40 +45,42 @@ export default function ClientsPage() {
   useEffect(() => { load(); }, [userId]);
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Clientes</h2>
-        <Link
-          href="/dashboard/clients/new"
-          className="bg-green-600 text-white px-3 py-2 rounded"
-        >
-          Nuevo cliente
-        </Link>
+    <SubscriptionGuard>
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">Clientes</h2>
+          <Link
+            href="/dashboard/clients/new"
+            className="bg-green-600 text-white px-3 py-2 rounded"
+          >
+            Nuevo cliente
+          </Link>
+        </div>
+        {loading ? (
+          <div className="text-gray-500">Cargando clientes...</div>
+        ) : error ? (
+          <div className="text-red-600">{error}</div>
+        ) : clients.length === 0 ? (
+          <div className="text-center p-8 bg-white rounded shadow">
+            <p className="text-gray-600 mb-4">No hay clientes aún.</p>
+            <Link href="/dashboard/clients/new" className="bg-green-600 text-white px-4 py-2 rounded">Crear primer cliente</Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {clients.map(c => (
+              <Link
+                key={c.id}
+                href={`/dashboard/clients/${c.id}`}
+                className="p-3 bg-white rounded shadow"
+              >
+                <div className="font-bold">{c.name}</div>
+                <div className="text-sm">{c.email}</div>
+                <div className="text-sm">{c.phone}</div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
-      {loading ? (
-        <div className="text-gray-500">Cargando clientes...</div>
-      ) : error ? (
-        <div className="text-red-600">{error}</div>
-      ) : clients.length === 0 ? (
-        <div className="text-center p-8 bg-white rounded shadow">
-          <p className="text-gray-600 mb-4">No hay clientes aún.</p>
-          <Link href="/dashboard/clients/new" className="bg-green-600 text-white px-4 py-2 rounded">Crear primer cliente</Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {clients.map(c => (
-            <Link
-              key={c.id}
-              href={`/dashboard/clients/${c.id}`}
-              className="p-3 bg-white rounded shadow"
-            >
-              <div className="font-bold">{c.name}</div>
-              <div className="text-sm">{c.email}</div>
-              <div className="text-sm">{c.phone}</div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+    </SubscriptionGuard>
   );
 }

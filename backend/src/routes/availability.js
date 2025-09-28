@@ -1,13 +1,14 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "../middleware/auth.js";
+import { verifyActiveSubscription } from "../middleware/subscription.js";
 import { getChileDate } from "../../scripts/cleanup-expired-slots.js";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 // Crear disponibilidad
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
   const { start, end } = req.body;
   try {
     if (!start || !end) return res.status(400).json({ error: 'start and end are required' });

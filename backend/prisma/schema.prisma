@@ -176,7 +176,7 @@ model Availability {
     userId     Int
     user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     plan       String   @default("basic")
-    status     String   @default("active") // active | canceled | past_due | trial
+    status     String   @default("active") // active | canceled | past_due | trial | expired
     providerId String?  // id from payment provider
     startedAt  DateTime @default(now())
     expiresAt  DateTime?
