@@ -73,8 +73,18 @@ router.post('/create-preference', verifyToken, async (req, res) => {
 
     console.log('✅ MP Access Token configurado:', process.env.MERCADOPAGO_ACCESS_TOKEN?.substring(0, 10) + '...');
 
+    // Detectar si mercadopago es un objeto con configure o necesita acceso a .default
+    const mp = mercadopago.configure ? mercadopago : (mercadopago.default || mercadopago);
+    
+    if (!mp || typeof mp.configure !== 'function') {
+      console.error('❌ SDK de MercadoPago no disponible o versión incompatible');
+      return res.status(500).json({ 
+        error: 'Configuración de MercadoPago no disponible' 
+      });
+    }
+
     // configure mercadopago with ACCESS_TOKEN from env
-    mercadopago.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
+    mp.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
     // Plan único: $15.000 CLP mensual
     const planMap = {
@@ -82,7 +92,7 @@ router.post('/create-preference', verifyToken, async (req, res) => {
     };
     const plan = planMap[planId] || planMap['basic'];
 
-    const preference = {
+    const preferenceData = {
       items: [
         {
           title: plan.title,
@@ -90,9 +100,6 @@ router.post('/create-preference', verifyToken, async (req, res) => {
           quantity: 1
         }
       ],
-      payer: {
-        // we don't send PII; Mercado Pago allows anonymous payer in sandbox
-      },
       back_urls: {
         success: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard/billing?status=success`,
         failure: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard/billing?status=failure`,
@@ -102,9 +109,9 @@ router.post('/create-preference', verifyToken, async (req, res) => {
       external_reference: `${uid}:${planId}`
     };
 
-    console.log('💳 Creando preferencia MP con:', JSON.stringify(preference, null, 2));
+    console.log('💳 Creando preferencia MP con:', JSON.stringify(preferenceData, null, 2));
 
-    const mpRes = await mercadopago.preferences.create(preference);
+    const mpRes = await mp.preferences.create(preferenceData);
     
     console.log('✅ Preferencia creada exitosamente:', mpRes.body?.id);
     const init_point = mpRes.body.init_point;
@@ -150,8 +157,9 @@ router.post('/webhook-mercadopago', express.json(), async (req, res) => {
     if (data && data.id) {
       // fetch payment to read external_reference
       try {
-        mercadopago.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
-        const payment = await mercadopago.payment.findById(data.id);
+        const mp = mercadopago.configure ? mercadopago : (mercadopago.default || mercadopago);
+        mp.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
+        const payment = await mp.payment.findById(data.id);
         external_reference = payment.body.external_reference;
       } catch (e) {
         console.warn('Could not fetch payment from MP', e?.message || e);
