@@ -6,13 +6,64 @@ import { verifyActiveSubscription } from "../middleware/subscription.js";
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Función para encontrar y reservar múltiples bloques consecutivos
+async function findAndReserveConsecutiveSlots(tx, userId, startTime, durationMinutes) {
+  const slotDurationMs = 30 * 60 * 1000; // 30 minutos en millisegundos
+  const slotsNeeded = Math.ceil(durationMinutes / 30); // Cuántos bloques de 30 min necesitamos
+  
+  const slotsToReserve = [];
+  let currentTime = new Date(startTime);
+  
+  // Buscar slots consecutivos
+  for (let i = 0; i < slotsNeeded; i++) {
+    const slotEnd = new Date(currentTime.getTime() + slotDurationMs);
+    
+    // Buscar un slot que empiece exactamente en currentTime
+    const slot = await tx.availability.findFirst({
+      where: {
+        userId: userId,
+        start: currentTime,
+        end: slotEnd
+      }
+    });
+    
+    if (!slot) {
+      throw new Error(`No hay disponibilidad suficiente. Se necesitan ${slotsNeeded} bloques consecutivos de 30 minutos.`);
+    }
+    
+    slotsToReserve.push(slot);
+    currentTime = new Date(currentTime.getTime() + slotDurationMs);
+  }
+  
+  // Eliminar todos los slots reservados
+  for (const slot of slotsToReserve) {
+    await tx.availability.delete({ where: { id: slot.id } });
+  }
+  
+  return slotsToReserve;
+}
+
 // Crear cita (protegida) - crea appointment y elimina el slot de disponibilidad correspondiente de forma atómica
 // POST /appointments - crear cita (requiere token)
 router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
-  const { petId, tutorId, date, reason, slotId } = req.body;
+  const { petId, tutorId, date, reason, slotId, consultationTypeId } = req.body;
   try {
     let selectedDate = null;
     let matching = null;
+    let consultationType = null;
+
+    // Si se proporciona consultationTypeId, obtener la información del tipo
+    if (consultationTypeId) {
+      consultationType = await prisma.consultationType.findUnique({
+        where: { id: Number(consultationTypeId) }
+      });
+      if (!consultationType) {
+        return res.status(400).json({ error: 'Consultation type not found' });
+      }
+    }
+
+    // Determinar duración (por defecto 30 minutos si no hay tipo específico)
+    const durationMinutes = consultationType?.duration || 30;
 
     if (slotId) {
       // prefer slotId when provided
@@ -26,18 +77,31 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      // if slotId was not used, try to find a matching availability range
-      if (!matching) {
-        matching = await tx.availability.findFirst({ where: { userId: req.user.id, start: { lte: selectedDate }, end: { gt: selectedDate } } });
-      }
-      if (!matching) throw new Error('No availability for that time');
-
+      // Verificar que no existe otra cita en ese horario
       const exists = await tx.appointment.findFirst({ where: { userId: req.user.id, date: selectedDate } });
       if (exists) throw new Error('Ya existe una cita en ese horario');
 
-      const appointment = await tx.appointment.create({ data: { petId, tutorId, date: selectedDate, reason: reason || '', userId: req.user.id } });
-      await tx.availability.delete({ where: { id: matching.id } });
-      const full = await tx.appointment.findUnique({ where: { id: appointment.id }, include: { pet: true, tutor: true, consultationType: true } });
+      // Reservar múltiples bloques consecutivos según la duración
+      await findAndReserveConsecutiveSlots(tx, req.user.id, selectedDate, durationMinutes);
+
+      // Crear la cita
+      const appointmentData = { 
+        petId, 
+        tutorId, 
+        date: selectedDate, 
+        reason: reason || '', 
+        userId: req.user.id 
+      };
+      
+      if (consultationTypeId) {
+        appointmentData.consultationTypeId = Number(consultationTypeId);
+      }
+
+      const appointment = await tx.appointment.create({ data: appointmentData });
+      const full = await tx.appointment.findUnique({ 
+        where: { id: appointment.id }, 
+        include: { pet: true, tutor: true, consultationType: true } 
+      });
       return full;
     });
 
@@ -45,7 +109,9 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
   } catch (err) {
     console.error('Error creating appointment:', err);
     const message = err.message || 'Internal server error';
-    if (message.includes('No availability') || message.includes('Ya existe')) return res.status(400).json({ error: message });
+    if (message.includes('No availability') || message.includes('Ya existe') || message.includes('No hay disponibilidad')) {
+      return res.status(400).json({ error: message });
+    }
     res.status(500).json({ error: message });
   }
 });
@@ -229,7 +295,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
 router.post('/public', async (req, res) => {
   const { 
     tutorId, tutorName, tutorEmail, tutorPhone, tutorRut, tutorAddress,
-    petId, petName, petType, petBreed, petAge, petWeight, petSex, petBirthDate,
+    petId, existingPetId, petName, petType, petBreed, petAge, petWeight, petSex, petBirthDate,
     date, reason, professionalId, slotId, consultationTypeId 
   } = req.body;
   try {
@@ -291,9 +357,19 @@ router.post('/public', async (req, res) => {
         }
     }
 
-    // Handle pet: reuse existing pet by name for that tutor if possible
+    // Handle pet: use existingPetId if provided, otherwise handle as before
     let pet = null;
-    if (petId) {
+    if (existingPetId) {
+      pet = await prisma.pet.findUnique({ 
+        where: { id: Number(existingPetId) },
+        include: { tutor: true }
+      });
+      if (!pet) return res.status(400).json({ error: 'Existing pet not found' });
+      // Verify pet belongs to this professional
+      if (pet.tutor.userId !== profIdNum) {
+        return res.status(400).json({ error: 'Pet does not belong to this professional' });
+      }
+    } else if (petId) {
       pet = await prisma.pet.findUnique({ where: { id: Number(petId) } });
       if (!pet) return res.status(400).json({ error: 'Pet not found' });
     } else if (petName) {
@@ -317,19 +393,29 @@ router.post('/public', async (req, res) => {
         });
       }
     } else {
-      return res.status(400).json({ error: 'petName or petId is required' });
+      return res.status(400).json({ error: 'petName, petId, or existingPetId is required' });
     }
 
     // Always create confirmed appointments and delete availability atomically
     try {
       const result = await prisma.$transaction(async (tx) => {
-        const matching = await tx.availability.findFirst({
-          where: { userId: profIdNum, start: { lte: selectedDate }, end: { gt: selectedDate } },
-        });
-        if (!matching) throw new Error('El horario solicitado no está dentro de las disponibilidades del profesional');
+        // Obtener información del tipo de consulta si se proporciona
+        let consultationType = null;
+        if (consultationTypeId) {
+          consultationType = await tx.consultationType.findUnique({
+            where: { id: Number(consultationTypeId) }
+          });
+        }
 
+        // Determinar duración (por defecto 30 minutos si no hay tipo específico)
+        const durationMinutes = consultationType?.duration || 30;
+
+        // Verificar que no existe otra cita en ese horario
         const exists = await tx.appointment.findFirst({ where: { userId: profIdNum, date: selectedDate } });
         if (exists) throw new Error('Ya existe una cita en ese horario');
+
+        // Reservar múltiples bloques consecutivos según la duración
+        await findAndReserveConsecutiveSlots(tx, profIdNum, selectedDate, durationMinutes);
 
         const appointmentData = { 
           petId: pet.id, 
@@ -345,7 +431,6 @@ router.post('/public', async (req, res) => {
         }
 
         const appt = await tx.appointment.create({ data: appointmentData });
-        await tx.availability.delete({ where: { id: matching.id } });
         const full = await tx.appointment.findUnique({ where: { id: appt.id }, include: { pet: true, tutor: true, consultationType: true } });
         return full;
       });
@@ -354,7 +439,9 @@ router.post('/public', async (req, res) => {
     } catch (txErr) {
       console.error('Transaction error creating public appointment:', txErr);
       const msg = txErr.message || 'Internal server error';
-      if (msg.includes('No disponibilidad') || msg.includes('Ya existe')) return res.status(400).json({ error: msg });
+      if (msg.includes('No disponibilidad') || msg.includes('Ya existe') || msg.includes('No hay disponibilidad')) {
+        return res.status(400).json({ error: msg });
+      }
       res.status(500).json({ error: msg });
     }
   } catch (err) {

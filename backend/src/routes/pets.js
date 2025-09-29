@@ -105,4 +105,48 @@ router.delete('/:id', verifyToken, async (req, res) => {
   res.json({ ok: true });
 });
 
+// Crear mascota pública (para formulario de agendamiento)
+router.post('/public/:professionalId', async (req, res) => {
+  try {
+    const { professionalId } = req.params;
+    const { name, type, breed, age, weight, sex, birthDate, tutorId } = req.body;
+
+    if (!name || !type) return res.status(400).json({ error: 'name and type are required' });
+    if (!tutorId) return res.status(400).json({ error: 'tutorId is required' });
+
+    const tutorIdNum = Number(tutorId);
+    if (Number.isNaN(tutorIdNum)) return res.status(400).json({ error: 'tutorId must be a number' });
+
+    // Verify tutor exists and belongs to this professional
+    const tutor = await prisma.tutor.findFirst({ 
+      where: { 
+        id: tutorIdNum,
+        userId: Number(professionalId)
+      } 
+    });
+    if (!tutor) return res.status(400).json({ error: 'Tutor not found for this professional' });
+
+    const now = new Date();
+    const pet = await prisma.pet.create({
+      data: {
+        name,
+        type,
+        breed: breed || null,
+        age: age ? Number(age) : null,
+        weight: weight ? Number(weight) : null,
+        sex: sex || null,
+        birthDate: birthDate ? new Date(birthDate) : null,
+        tutorId: tutorIdNum,
+        createdAt: now,
+        updatedAt: now,
+      },
+    });
+
+    res.json(pet);
+  } catch (err) {
+    console.error('Error creating public pet:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
 export default router;

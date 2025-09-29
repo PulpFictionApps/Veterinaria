@@ -74,4 +74,32 @@ router.delete('/:id', verifyToken, async (req, res) => {
   res.json({ ok: true });
 });
 
+// Buscar tutor por email (público, para un profesional específico)
+router.get('/public/:professionalId/by-email/:email', async (req, res) => {
+  try {
+    const { professionalId, email } = req.params;
+    
+    const tutor = await prisma.tutor.findFirst({
+      where: { 
+        email: email,
+        userId: Number(professionalId)
+      },
+      include: { 
+        pets: {
+          orderBy: { createdAt: 'desc' }
+        }
+      }
+    });
+    
+    if (!tutor) {
+      return res.status(404).json({ message: 'Tutor not found' });
+    }
+    
+    res.json(tutor);
+  } catch (err) {
+    console.error('Error finding tutor by email:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
 export default router;

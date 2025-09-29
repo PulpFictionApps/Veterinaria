@@ -20,9 +20,9 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
 
     if (startDate >= endDate) return res.status(400).json({ error: 'start must be before end' });
 
-    // Split into 1-hour slots (only full 1-hour blocks)
+    // Split into 30-minute slots 
     const slotsToCreate = [];
-    const slotDurationMs = 1000 * 60 * 60; // 1 hour
+    const slotDurationMs = 1000 * 60 * 30; // 30 minutes
     let cursor = new Date(startDate);
     while (cursor.getTime() + slotDurationMs <= endDate.getTime()) {
       const slotStart = new Date(cursor);
@@ -31,9 +31,9 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
       cursor = new Date(cursor.getTime() + slotDurationMs);
     }
 
-    // If no full hour slots found, return error
+    // If no slots found, return error
     if (slotsToCreate.length === 0) {
-      return res.status(400).json({ error: 'The provided range is smaller than 1 hour' });
+      return res.status(400).json({ error: 'The provided range is smaller than 30 minutes' });
     }
 
     const created = [];

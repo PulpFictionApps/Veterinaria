@@ -188,6 +188,11 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             minute: '2-digit',
             hour12: false
           }}
+          selectConstraint={{
+            start: '08:00',
+            end: '20:00'
+          }}
+          snapDuration="00:30:00"
         />
         </div>
       </div>
