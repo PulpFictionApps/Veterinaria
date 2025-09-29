@@ -128,7 +128,6 @@ export default function AppointmentsPage() {
 
   function filterAppointments(appointments: Appointment[]) {
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
     return appointments.filter(appointment => {
       const appointmentDate = new Date(appointment.date);
@@ -143,9 +142,9 @@ export default function AppointmentsPage() {
       // Date filter
       switch (filter) {
         case 'upcoming':
-          return appointmentDate >= today;
+          return appointmentDate >= now;
         case 'past':
-          return appointmentDate < today;
+          return appointmentDate < now;
         default:
           return true;
       }
@@ -178,9 +177,8 @@ export default function AppointmentsPage() {
   function getAppointmentStatus(dateString: string) {
     const appointmentDate = new Date(dateString);
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
-    if (appointmentDate < today) {
+    if (appointmentDate < now) {
       return { status: 'past', color: 'text-gray-500', bg: 'bg-gray-100' };
     } else {
       return { status: 'upcoming', color: 'text-green-600', bg: 'bg-green-50' };

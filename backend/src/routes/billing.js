@@ -1,7 +1,7 @@
 import express from 'express';
 import prisma from '../../lib/prisma.js';
 import { verifyToken } from '../middleware/auth.js';
-import mercadopago from 'mercadopago';
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
 const router = express.Router();
 
@@ -73,48 +73,15 @@ router.post('/create-preference', verifyToken, async (req, res) => {
 
     console.log('✅ MP Access Token configurado:', process.env.MERCADOPAGO_ACCESS_TOKEN?.substring(0, 10) + '...');
 
-    // Debug: examinar el objeto mercadopago
-    console.log('🔍 Estructura de mercadopago:', {
-      type: typeof mercadopago,
-      keys: Object.keys(mercadopago || {}),
-      hasDefault: !!mercadopago.default,
-      hasConfigure: typeof mercadopago.configure,
-      defaultKeys: mercadopago.default ? Object.keys(mercadopago.default) : null
+    // Create MercadoPago client with v2+ API
+    const client = new MercadoPagoConfig({ 
+      accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+      options: {
+        timeout: 5000
+      }
     });
 
-    // Intentar diferentes formas de acceder al SDK
-    let mp = null;
-    
-    if (mercadopago && typeof mercadopago.configure === 'function') {
-      mp = mercadopago;
-      console.log('✅ Usando mercadopago directo');
-    } else if (mercadopago.default && typeof mercadopago.default.configure === 'function') {
-      mp = mercadopago.default;
-      console.log('✅ Usando mercadopago.default');
-    } else {
-      // Intentar usando require común para versiones problemáticas
-      try {
-        const { createRequire } = await import('module');
-        const require = createRequire(import.meta.url);
-        mp = require('mercadopago');
-        console.log('✅ Usando require(mercadopago)');
-      } catch (reqErr) {
-        console.error('❌ No se pudo obtener MercadoPago SDK:', reqErr.message);
-        return res.status(500).json({ 
-          error: 'SDK de MercadoPago no disponible' 
-        });
-      }
-    }
-
-    if (!mp || typeof mp.configure !== 'function') {
-      console.error('❌ SDK de MercadoPago no tiene método configure');
-      return res.status(500).json({ 
-        error: 'Configuración de MercadoPago no disponible' 
-      });
-    }
-
-    // configure mercadopago with ACCESS_TOKEN from env
-    mp.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
+    const preference = new Preference(client);
 
     // Plan único: $15.000 CLP mensual
     const planMap = {
@@ -141,10 +108,10 @@ router.post('/create-preference', verifyToken, async (req, res) => {
 
     console.log('💳 Creando preferencia MP con:', JSON.stringify(preferenceData, null, 2));
 
-    const mpRes = await mp.preferences.create(preferenceData);
+    const mpRes = await preference.create({ body: preferenceData });
     
-    console.log('✅ Preferencia creada exitosamente:', mpRes.body?.id);
-    const init_point = mpRes.body.init_point;
+    console.log('✅ Preferencia creada exitosamente:', mpRes.id);
+    const init_point = mpRes.init_point;
 
     res.json({ ok: true, init_point });
   } catch (err) {
@@ -185,12 +152,14 @@ router.post('/webhook-mercadopago', express.json(), async (req, res) => {
     // Try to fetch external_reference if present
     let external_reference = null;
     if (data && data.id) {
-      // fetch payment to read external_reference
+      // fetch payment to read external_reference using new API
       try {
-        const mp = mercadopago.configure ? mercadopago : (mercadopago.default || mercadopago);
-        mp.configure({ access_token: process.env.MERCADOPAGO_ACCESS_TOKEN });
-        const payment = await mp.payment.findById(data.id);
-        external_reference = payment.body.external_reference;
+        const client = new MercadoPagoConfig({ 
+          accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN 
+        });
+        const payment = new Payment(client);
+        const paymentData = await payment.get({ id: data.id });
+        external_reference = paymentData.external_reference;
       } catch (e) {
         console.warn('Could not fetch payment from MP', e?.message || e);
       }
