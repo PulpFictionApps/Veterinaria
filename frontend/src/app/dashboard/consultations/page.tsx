@@ -40,12 +40,13 @@ export default function ConsultationsPage() {
       const response = await authFetch('/consultation-types');
       if (response.ok) {
         const data = await response.json();
+        console.log('📥 Tipos de consulta cargados del servidor:', data);
         setConsultationTypes(data);
       } else {
-        console.error('Error loading consultation types');
+        console.error('❌ Error cargando tipos de consulta - Status:', response.status);
       }
     } catch (error) {
-      console.error('Error loading consultation types:', error);
+      console.error('❌ Error cargando tipos de consulta:', error);
     } finally {
       setLoading(false);
     }
@@ -54,11 +55,15 @@ export default function ConsultationsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log('🔄 Enviando datos del formulario:', formData);
+      
       const url = editingType 
         ? `/consultation-types/${editingType.id}`
         : '/consultation-types';
       
       const method = editingType ? 'PATCH' : 'POST';
+
+      console.log(`📤 ${method} ${url} con datos:`, formData);
 
       const response = await authFetch(url, {
         method,
@@ -69,11 +74,16 @@ export default function ConsultationsPage() {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+        console.log('✅ Respuesta del servidor:', responseData);
         resetForm();
         loadConsultationTypes();
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        console.error('❌ Error del servidor:', errorData);
       }
     } catch (error) {
-      console.error('Error saving consultation type:', error);
+      console.error('❌ Error guardando tipo de consulta:', error);
     }
   };
 
@@ -91,15 +101,20 @@ export default function ConsultationsPage() {
   };
 
   const editType = (type: ConsultationType) => {
+    console.log('📝 Editando tipo de consulta:', type);
+    
     setEditingType(type);
-    setFormData({
+    const formDataToSet = {
       name: type.name,
       description: type.description || '',
       duration: type.duration || 30,
       price: type.price,
       color: type.color || '#3B82F6',
       active: type.active,
-    });
+    };
+    
+    console.log('📋 Datos del formulario a establecer:', formDataToSet);
+    setFormData(formDataToSet);
     setShowCreateForm(true);
   };
 
