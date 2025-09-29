@@ -104,9 +104,6 @@ router.patch('/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { name, price, description, active, duration, color } = req.body;
     
-    console.log('📝 PATCH consultation type:', id);
-    console.log('📥 Datos recibidos:', { name, price, description, active, duration, color });
-    
     // Verify ownership
     const existing = await prisma.consultationType.findUnique({
       where: { id: Number(id) }
@@ -116,8 +113,6 @@ router.patch('/:id', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Consultation type not found' });
     }
 
-    console.log('📋 Datos existentes:', existing);
-
     const updateData = {};
     if (name !== undefined) updateData.name = name;
     if (price !== undefined) updateData.price = Math.round(Number(price) * 100); // Convert to cents
@@ -126,33 +121,20 @@ router.patch('/:id', verifyToken, async (req, res) => {
     if (duration !== undefined) updateData.duration = Number(duration);
     if (color !== undefined) updateData.color = color;
     
-    console.log('🔄 Datos a actualizar:', updateData);
+    const updated = await prisma.consultationType.update({
+      where: { id: Number(id) },
+      data: updateData
+    });
     
-    try {
-      const updated = await prisma.consultationType.update({
-        where: { id: Number(id) },
-        data: updateData
-      });
-      
-      console.log('✅ Datos actualizados en BD:', updated);
-      
-      // Convert price back to pesos for response
-      const responseData = {
-        ...updated,
-        price: Math.round(updated.price / 100)
-      };
-      
-      console.log('📤 Respuesta enviada:', responseData);
-      
-      res.json(responseData);
-    } catch (updateError) {
-      console.error('❌ Error específico en update de Prisma:', updateError);
-      console.error('❌ Error message:', updateError.message);
-      console.error('❌ Error code:', updateError.code);
-      throw updateError;
-    }
+    // Convert price back to pesos for response
+    const responseData = {
+      ...updated,
+      price: Math.round(updated.price / 100)
+    };
+    
+    res.json(responseData);
   } catch (err) {
-    console.error('❌ Error updating consultation type:', err);
+    console.error('Error updating consultation type:', err);
     res.status(500).json({ error: 'Error updating consultation type' });
   }
 });

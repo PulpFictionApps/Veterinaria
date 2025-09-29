@@ -28,6 +28,27 @@ interface CalendarEvent {
   textColor?: string;
 }
 
+// Función para oscurecer un color hexadecimal
+function darkenColor(hex: string, percent: number): string {
+  // Remover el # si está presente
+  const color = hex.replace('#', '');
+  
+  // Convertir a RGB
+  const r = parseInt(color.substring(0, 2), 16);
+  const g = parseInt(color.substring(2, 4), 16);
+  const b = parseInt(color.substring(4, 6), 16);
+  
+  // Oscurecer cada componente
+  const factor = (100 - percent) / 100;
+  const newR = Math.round(r * factor);
+  const newG = Math.round(g * factor);
+  const newB = Math.round(b * factor);
+  
+  // Convertir de vuelta a hex
+  const toHex = (n: number) => n.toString(16).padStart(2, '0');
+  return `#${toHex(newR)}${toHex(newG)}${toHex(newB)}`;
+}
+
 export default function DashboardCalendar({ userId }: { userId: number }) {
   const calendarRef = useRef<FullCalendar | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -52,15 +73,31 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
         if (appointmentsRes.ok) {
           const appointments = await appointmentsRes.json();
-          // appointments response may include pet and tutor objects
-          const appointmentEvents: CalendarEvent[] = appointments.map((appt: any) => ({
-            title: appt.pet?.name ? `${appt.pet.name} - ${appt.reason}` : `${appt.tutor?.name || 'Reservado'}`,
-            start: appt.date,
-            backgroundColor: "#3B82F6",
-            borderColor: "#1E40AF",
-            textColor: "white",
-          }));
-          setEvents(prev => [...(prev.filter(e => e.backgroundColor !== '#3B82F6')), ...appointmentEvents]);
+          // appointments response may include pet, tutor and consultationType objects
+          const appointmentEvents: CalendarEvent[] = appointments.map((appt: any) => {
+            // Usar el color del tipo de consulta si está disponible, sino color por defecto
+            const consultationColor = appt.consultationType?.color || '#3B82F6';
+            // Crear un color más oscuro para el borde
+            const borderColor = darkenColor(consultationColor, 20);
+            
+            // Construir el título del evento
+            let appointmentTitle = appt.pet?.name ? `${appt.pet.name}` : `${appt.tutor?.name || 'Reservado'}`;
+            if (appt.consultationType?.name) {
+              appointmentTitle += ` (${appt.consultationType.name})`;
+            }
+            if (appt.reason) {
+              appointmentTitle += ` - ${appt.reason}`;
+            }
+            
+            return {
+              title: appointmentTitle,
+              start: appt.date,
+              backgroundColor: consultationColor,
+              borderColor: borderColor,
+              textColor: "white",
+            };
+          });
+          setEvents(prev => [...(prev.filter(e => e.title === 'Disponible')), ...appointmentEvents]);
         }
       } catch (error) {
         console.error('Error loading calendar events:', error);
