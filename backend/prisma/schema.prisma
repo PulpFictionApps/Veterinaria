@@ -94,6 +94,8 @@ model ConsultationType {
   name         String        // e.g., "Consulta General", "Vacunación", "Cirugía Menor"
   price        Int           // price in cents to avoid floating point issues
   description  String?       // optional description
+  duration     Int?          @default(30) // duration in minutes
+  color        String?       @default("#3B82F6") // color for calendar/UI
   active       Boolean       @default(true)
   userId       Int           // belongs to professional
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)

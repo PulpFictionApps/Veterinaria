@@ -128,22 +128,29 @@ router.patch('/:id', verifyToken, async (req, res) => {
     
     console.log('🔄 Datos a actualizar:', updateData);
     
-    const updated = await prisma.consultationType.update({
-      where: { id: Number(id) },
-      data: updateData
-    });
-    
-    console.log('✅ Datos actualizados en BD:', updated);
-    
-    // Convert price back to pesos for response
-    const responseData = {
-      ...updated,
-      price: Math.round(updated.price / 100)
-    };
-    
-    console.log('📤 Respuesta enviada:', responseData);
-    
-    res.json(responseData);
+    try {
+      const updated = await prisma.consultationType.update({
+        where: { id: Number(id) },
+        data: updateData
+      });
+      
+      console.log('✅ Datos actualizados en BD:', updated);
+      
+      // Convert price back to pesos for response
+      const responseData = {
+        ...updated,
+        price: Math.round(updated.price / 100)
+      };
+      
+      console.log('📤 Respuesta enviada:', responseData);
+      
+      res.json(responseData);
+    } catch (updateError) {
+      console.error('❌ Error específico en update de Prisma:', updateError);
+      console.error('❌ Error message:', updateError.message);
+      console.error('❌ Error code:', updateError.code);
+      throw updateError;
+    }
   } catch (err) {
     console.error('❌ Error updating consultation type:', err);
     res.status(500).json({ error: 'Error updating consultation type' });
