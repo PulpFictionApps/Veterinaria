@@ -304,9 +304,9 @@ router.post('/public', async (req, res) => {
     const profIdNum = Number(professionalId);
     if (Number.isNaN(profIdNum)) return res.status(400).json({ error: 'professionalId must be a number' });
 
-    // Require contact info (email and phone) for public bookings
-    if (!tutorEmail || !tutorPhone) {
-      return res.status(400).json({ error: 'tutorEmail and tutorPhone are required for public bookings' });
+    // Require contact info (email, name, and phone) for public bookings
+    if (!tutorEmail || !tutorPhone || !tutorName) {
+      return res.status(400).json({ error: 'tutorEmail, tutorName, and tutorPhone are required for public bookings' });
     }
 
     // Resolve selected date & matching availability. Prefer slotId when provided.
@@ -373,6 +373,17 @@ router.post('/public', async (req, res) => {
       pet = await prisma.pet.findUnique({ where: { id: Number(petId) } });
       if (!pet) return res.status(400).json({ error: 'Pet not found' });
     } else if (petName) {
+      // Validar campos obligatorios para mascotas nuevas
+      if (!petType) {
+        return res.status(400).json({ error: 'petType is required when creating a new pet' });
+      }
+      
+      // Si es un cliente completamente nuevo (tutorCreatedNow), requerir más datos de mascota
+      const tutorCreatedNow = !tutorId && !tutor; // Si no se pasó tutorId y tutor no existía antes
+      if (tutorCreatedNow && (!petAge || !petWeight)) {
+        return res.status(400).json({ error: 'petAge and petWeight are required for new clients' });
+      }
+      
       // try find existing pet by name for this tutor (case-sensitive match)
       pet = await prisma.pet.findFirst({ where: { tutorId: tutor.id, name: petName } });
       if (!pet) {
@@ -380,7 +391,7 @@ router.post('/public', async (req, res) => {
         pet = await prisma.pet.create({ 
           data: { 
             name: petName, 
-            type: petType || 'unknown',
+            type: petType,
             breed: petBreed || null,
             age: petAge ? Number(petAge) : null,
             weight: petWeight ? Number(petWeight) : null,

@@ -142,4 +142,37 @@ router.patch('/:id', verifyToken, async (req, res) => {
   }
 });
 
+// Obtener paleta de colores del profesional (público)
+router.get('/public/:id/colors', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = Number(id);
+    
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        primaryColor: true,
+        secondaryColor: true,
+        accentColor: true,
+        fullName: true,
+        clinicName: true
+      }
+    });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    res.json({
+      primaryColor: user.primaryColor || '#ec4899', // pink-500 por defecto
+      secondaryColor: user.secondaryColor || '#f97316', // orange-500 por defecto
+      accentColor: user.accentColor || '#3b82f6', // blue-500 por defecto
+      professionalName: user.fullName || user.clinicName || 'Profesional'
+    });
+  } catch (err) {
+    console.error('Error getting user colors:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
 export default router;

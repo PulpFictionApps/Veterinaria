@@ -34,10 +34,23 @@ interface TutorData {
   pets: Pet[];
 }
 
+interface ProfessionalColors {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  professionalName: string;
+}
+
 export default function PublicBookingForm({ professionalId }: { professionalId: number }) {
   const [email, setEmail] = useState('');
   const [emailChecked, setEmailChecked] = useState(false);
   const [existingTutor, setExistingTutor] = useState<TutorData | null>(null);
+  const [colors, setColors] = useState<ProfessionalColors>({
+    primaryColor: '#ec4899',
+    secondaryColor: '#f97316', 
+    accentColor: '#3b82f6',
+    professionalName: 'Profesional'
+  });
   
   // Datos del cliente
   const [name, setName] = useState('');
@@ -233,10 +246,11 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     let mounted = true;
     async function loadData() {
       try {
-        // Load slots and consultation types in parallel
-        const [slotsRes, typesRes] = await Promise.all([
+        // Load slots, consultation types, and professional colors in parallel
+        const [slotsRes, typesRes, colorsRes] = await Promise.all([
           fetch(`${API_BASE}/availability/public/${professionalId}`),
-          fetch(`${API_BASE}/consultation-types/public/${professionalId}`)
+          fetch(`${API_BASE}/consultation-types/public/${professionalId}`),
+          fetch(`${API_BASE}/users/public/${professionalId}/colors`)
         ]);
 
         if (slotsRes.ok) {
@@ -249,6 +263,11 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         if (typesRes.ok) {
           const typesData = await typesRes.json();
           if (mounted) setConsultationTypes(typesData || []);
+        }
+
+        if (colorsRes.ok) {
+          const colorsData = await colorsRes.json();
+          if (mounted) setColors(colorsData);
         }
       } catch (err) {
         console.error(err);
@@ -301,7 +320,17 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded shadow">
-      <h3 className="text-base sm:text-lg font-bold mb-4">Reservar hora</h3>
+      <h3 
+        className="text-base sm:text-lg font-bold mb-4"
+        style={{
+          color: colors.primaryColor || '#1f2937',
+          borderBottom: `2px solid ${colors.accentColor || '#3b82f6'}`,
+          paddingBottom: '8px',
+          marginBottom: '16px'
+        }}
+      >
+        Reservar hora
+      </h3>
       
       {/* Email verificación */}
       <div className="mb-4">
@@ -322,13 +351,24 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           <button 
             type="button" 
             onClick={checkEmailExists}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm"
+            className="px-4 py-2 rounded text-sm text-white font-medium transition-colors duration-200 hover:opacity-90"
+            style={{
+              backgroundColor: colors.primaryColor || '#3b82f6',
+              borderColor: colors.primaryColor || '#3b82f6'
+            }}
           >
             Verificar
           </button>
         </div>
         {existingTutor && (
-          <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
+          <div 
+            className="mt-2 p-2 border rounded text-sm"
+            style={{
+              backgroundColor: colors.accentColor ? `${colors.accentColor}15` : '#f0f9ff',
+              borderColor: colors.accentColor || '#bfdbfe',
+              color: '#065f46'
+            }}
+          >
             ✓ Cliente encontrado: <strong>{existingTutor.name}</strong>
             {existingTutor.pets.length > 0 && ` (${existingTutor.pets.length} mascota${existingTutor.pets.length > 1 ? 's' : ''})`}
           </div>
@@ -339,7 +379,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         <>
           {/* Datos del Cliente */}
           <div className="mb-4">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">Datos del Cliente</h4>
+            <h4 
+              className="text-sm font-semibold mb-2"
+              style={{ color: colors.primaryColor || '#374151' }}
+            >
+              Datos del Cliente
+            </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <input 
                 value={name} 
@@ -378,7 +423,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
 
           {/* Selección de Mascota */}
           <div className="mb-4">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">Selección de Mascota</h4>
+            <h4 
+              className="text-sm font-semibold mb-2"
+              style={{ color: colors.primaryColor || '#374151' }}
+            >
+              Selección de Mascota
+            </h4>
             
             {existingTutor && existingTutor.pets.length > 0 && (
               <div className="mb-3">
@@ -418,7 +468,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
 
             {isNewPet && (
               <div>
-                <h5 className="text-sm font-medium text-gray-600 mb-2">Datos de la Nueva Mascota</h5>
+                <h5 
+                  className="text-sm font-medium mb-2"
+                  style={{ color: colors.primaryColor || '#6b7280' }}
+                >
+                  Datos de la Nueva Mascota
+                </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <input 
                     value={petName} 
@@ -482,13 +537,31 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     <option value="castrada">Castrada</option>
                   </select>
                 </div>
-                <input 
-                  value={petBirthDate} 
-                  onChange={e => setPetBirthDate(e.target.value)} 
-                  placeholder="Fecha de nacimiento (opcional)" 
-                  type="date" 
-                  className="w-full p-2 border rounded mt-2" 
-                />
+                
+                {/* Campo de fecha de nacimiento mejorado */}
+                <div className="mt-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-blue-500 text-lg">📅</span>
+                      <div>
+                        <h6 className="text-sm font-medium text-blue-800 mb-1">
+                          Fecha de nacimiento
+                        </h6>
+                        <p className="text-xs text-blue-600">
+                          Si no conoce la fecha exacta, puede ingresar una fecha aproximada. 
+                          Esta información nos ayuda a brindar un mejor cuidado a su mascota.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <input 
+                    value={petBirthDate} 
+                    onChange={e => setPetBirthDate(e.target.value)} 
+                    type="date" 
+                    className="w-full p-2 border rounded focus:border-blue-400 focus:ring-1 focus:ring-blue-400" 
+                    max={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -517,7 +590,10 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           )}
           {selectedType && (
             <div className="space-y-1 mt-1">
-              <p className="text-sm font-semibold text-pink-600">
+              <p 
+                className="text-sm font-semibold"
+                style={{ color: colors.primaryColor || '#ec4899' }}
+              >
                 Precio: {formatPrice(selectedType.price)}
               </p>
               <p className="text-sm text-gray-600">
@@ -564,7 +640,15 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           
           <button 
             type="submit"
-            className="bg-gradient-to-r from-pink-500 to-pink-600 text-white w-full sm:w-auto px-3 py-2 rounded text-sm hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
+            className="w-full sm:w-auto px-3 py-2 rounded text-sm text-white font-medium transition-all duration-200 hover:opacity-90 shadow-lg"
+            style={{
+              background: colors.primaryColor ? 
+                `linear-gradient(135deg, ${colors.primaryColor}, ${colors.secondaryColor || colors.primaryColor})` : 
+                'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              boxShadow: colors.accentColor ? 
+                `0 4px 15px ${colors.accentColor}40` : 
+                '0 4px 15px rgba(59, 130, 246, 0.25)'
+            }}
             disabled={!emailChecked}
           >
             Reservar

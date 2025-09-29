@@ -109,10 +109,15 @@ router.delete('/:id', verifyToken, async (req, res) => {
 router.post('/public/:professionalId', async (req, res) => {
   try {
     const { professionalId } = req.params;
-    const { name, type, breed, age, weight, sex, birthDate, tutorId } = req.body;
+    const { name, type, breed, age, weight, sex, birthDate, tutorId, isNewClient } = req.body;
 
     if (!name || !type) return res.status(400).json({ error: 'name and type are required' });
     if (!tutorId) return res.status(400).json({ error: 'tutorId is required' });
+
+    // Si es cliente nuevo, requerir edad y peso
+    if (isNewClient && (!age || !weight)) {
+      return res.status(400).json({ error: 'age and weight are required for new clients' });
+    }
 
     const tutorIdNum = Number(tutorId);
     if (Number.isNaN(tutorIdNum)) return res.status(400).json({ error: 'tutorId must be a number' });
