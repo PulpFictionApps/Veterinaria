@@ -35,7 +35,8 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
   }
   
   try {
-    const res = await fetch(fullUrl, { ...opts, headers });
+    const fetchOpts: RequestInit = { ...opts, headers, credentials: 'include' };
+    const res = await fetch(fullUrl, fetchOpts);
     
     // Cachear respuestas exitosas de GET requests
     if (res.ok && (!opts.method || opts.method === 'GET')) {

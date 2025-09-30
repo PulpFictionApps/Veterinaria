@@ -61,25 +61,25 @@ function NavbarWithSuspense() {
 }
 
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {
-  const { token, logout } = useAuthContext();
+  const { userId, logout } = useAuthContext();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSidebarStateChange = (isOpen: boolean) => {
     setIsSidebarOpen(isOpen);
   };
 
-  // If there's no token, redirect to login on the client
+  // If there's no authenticated userId, redirect to login on the client
   useEffect(() => {
-    if (token === null) {
+    if (userId === null) {
       // small timeout to avoid next/navigation issues in strict mode
       const t = setTimeout(() => {
         logout();
       }, 50);
       return () => clearTimeout(t);
     }
-  }, [token, logout]);
+  }, [userId, logout]);
 
-  if (!token) return null;
+  if (!userId) return null;
 
   return (
     <div className="min-h-screen">

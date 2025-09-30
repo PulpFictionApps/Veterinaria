@@ -49,6 +49,7 @@ async function cleanupExpiredSlots() {
     console.log(`🗑️  Eliminados ${expiredSlots.count} horarios disponibles expirados`);
 
     // 2. Eliminar appointments que tengan más de 7 días de antigüedad
+    // NOTA: Se mantienen historial médico y recetas de por vida
     const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
     
     const oldAppointments = await prisma.appointment.deleteMany({
@@ -60,14 +61,19 @@ async function cleanupExpiredSlots() {
     });
 
     console.log(`📅 Eliminadas ${oldAppointments.count} citas con más de 7 días de antigüedad`);
+    console.log(`💊 CONSERVADO: Historial médico y recetas médicas de por vida`);
 
     // 3. Estadísticas finales
     const remainingSlots = await prisma.availability.count();
     const remainingAppointments = await prisma.appointment.count();
+    const totalMedicalRecords = await prisma.medicalRecord.count();
+    const totalPrescriptions = await prisma.prescription.count();
 
     console.log(`✅ Limpieza completada:`);
     console.log(`   - Horarios disponibles restantes: ${remainingSlots}`);
     console.log(`   - Citas restantes: ${remainingAppointments}`);
+    console.log(`   - Registros médicos conservados: ${totalMedicalRecords}`);
+    console.log(`   - Recetas médicas conservadas: ${totalPrescriptions}`);
 
   } catch (error) {
     console.error('❌ Error durante la limpieza:', error);

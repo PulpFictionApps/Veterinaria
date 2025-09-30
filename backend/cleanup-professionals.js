@@ -1,4 +1,8 @@
-// Script para eliminar usuarios profesionales y sus datos relacionados
+// ⚠️  SCRIPT DESTRUCTIVO - ELIMINA TODO INCLUYENDO HISTORIAL MÉDICO
+// Para conservar historial médico y recetas, usar: cleanup-professionals-conservative.js
+// 
+// Script para eliminar usuarios profesionales y TODOS sus datos relacionados
+// ELIMINA: historial médico, recetas, mascotas, tutores, citas, disponibilidad
 import { PrismaClient } from "@prisma/client";
 import dotenv from 'dotenv';
 

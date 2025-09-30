@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
 // Routes
 import authRoutes from "./routes/auth.js";
@@ -77,6 +78,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+// parse cookies for auth middleware
+app.use(cookieParser());
 
 // Serve generated PDFs and other temp assets
 // In production (Vercel), files are saved in /tmp which is ephemeral

@@ -64,8 +64,10 @@ router.post("/register", async (req, res) => {
       await prisma.user.update({ where: { id: user.id }, data: { isPremium: true } });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    res.json({ token, subscription });
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  // Set httpOnly cookie so client can't read it via JS (more secure)
+  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
+  res.json({ token, subscription });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -82,7 +84,28 @@ router.post("/login", async (req, res) => {
     if (!valid) return res.status(400).json({ error: "Contraseña incorrecta" });
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.json({ token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Devuelve info del usuario autenticado. Soporta token en cookie 'token' o header Authorization
+router.get('/me', async (req, res) => {
+  try {
+    const token = req.cookies?.token || (req.headers.authorization ? req.headers.authorization.replace(/^Bearer\s+/i, '') : null);
+    if (!token) return res.status(401).json({ error: 'No autorizado' });
+    let payload;
+    try {
+      payload = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (e) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+    const user = await prisma.user.findUnique({ where: { id: payload.id } });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+    // return minimal safe info
+    res.json({ id: user.id, email: user.email, fullName: user.fullName, accountType: user.accountType });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
