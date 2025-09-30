@@ -107,11 +107,17 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
     });
 
     // Enviar confirmación automática por email
+    console.log(`📧 Iniciando envío de confirmación automática para cita ID: ${result.id}`);
     try {
-      await sendAppointmentConfirmation(result.id);
-      console.log(`✅ Confirmación de cita enviada automáticamente para cita ID: ${result.id}`);
+      const emailSent = await sendAppointmentConfirmation(result.id);
+      if (emailSent) {
+        console.log(`✅ Confirmación de cita enviada automáticamente para cita ID: ${result.id}`);
+      } else {
+        console.log(`⚠️  Confirmación NO enviada para cita ID: ${result.id} (sin errores pero falló el envío)`);
+      }
     } catch (emailError) {
-      console.error(`⚠️  Error enviando confirmación de cita ID ${result.id}:`, emailError.message);
+      console.error(`❌ Error enviando confirmación de cita ID ${result.id}:`, emailError.message);
+      console.error(`Stack trace:`, emailError.stack);
       // No fallar la creación de la cita por error de email
     }
 
@@ -457,11 +463,17 @@ router.post('/public', async (req, res) => {
       });
 
       // Enviar confirmación automática por email
+      console.log(`📧 Iniciando envío de confirmación automática para cita pública ID: ${result.id}`);
       try {
-        await sendAppointmentConfirmation(result.id);
-        console.log(`✅ Confirmación de cita pública enviada automáticamente para cita ID: ${result.id}`);
+        const emailSent = await sendAppointmentConfirmation(result.id);
+        if (emailSent) {
+          console.log(`✅ Confirmación de cita pública enviada automáticamente para cita ID: ${result.id}`);
+        } else {
+          console.log(`⚠️  Confirmación pública NO enviada para cita ID: ${result.id} (sin errores pero falló el envío)`);
+        }
       } catch (emailError) {
-        console.error(`⚠️  Error enviando confirmación de cita pública ID ${result.id}:`, emailError.message);
+        console.error(`❌ Error enviando confirmación de cita pública ID ${result.id}:`, emailError.message);
+        console.error(`Stack trace:`, emailError.stack);
         // No fallar la creación de la cita por error de email
       }
 

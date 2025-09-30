@@ -25,7 +25,15 @@ const gmailTransporter = nodemailer.createTransport({
 // Función para enviar confirmación de cita recién agendada
 async function sendAppointmentConfirmation(appointmentId) {
   try {
-    console.log(`📧 Enviando confirmación para cita ID: ${appointmentId}`);
+    console.log(`📧 [CONFIRMACIÓN] Iniciando envío para cita ID: ${appointmentId}`);
+    
+    // Verificar configuración antes de proceder
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      console.error('❌ [CONFIRMACIÓN] Credenciales de Gmail no configuradas');
+      return false;
+    }
+    
+    console.log(`📧 [CONFIRMACIÓN] Credenciales Gmail OK, buscando cita en BD...`);
 
     // Buscar la cita con todos los datos relacionados
     const appointment = await prisma.appointment.findUnique({
@@ -75,7 +83,7 @@ async function sendAppointmentConfirmation(appointmentId) {
     const timeUntil = daysDiff === 0 ? 'HOY' : daysDiff === 1 ? 'mañana' : `en ${daysDiff} días`;
 
     // EMAIL PARA EL PROFESIONAL - Nueva cita agendada
-    const professionalSubject = `🆕 ${CLINIC_NAME} - Nueva cita agendada: ${pet.name} (${tutor.name}) - ${timeUntil}`;
+    const professionalSubject = `🆕 ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} - Nueva cita agendada: ${pet.name} (${tutor.name}) - ${timeUntil}`;
     const professionalHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); padding: 20px; text-align: center;">
@@ -207,35 +215,38 @@ async function sendAppointmentConfirmation(appointmentId) {
 
     try {
       // Enviar email al PROFESIONAL
-      console.log(`👨‍⚕️ Enviando confirmación a profesional: ${professional.email}`);
+      console.log(`👨‍⚕️ [CONFIRMACIÓN] Enviando email a profesional: ${professional.email}`);
+      console.log(`📝 [CONFIRMACIÓN] From: ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} <${GMAIL_USER}>`);
+      
       await gmailTransporter.sendMail({
         from: `${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} <${GMAIL_USER}>`,
         to: professional.email,
         subject: professionalSubject,
         html: professionalHtml
       });
-      console.log(`✅ Confirmación enviada al profesional exitosamente`);
+      console.log(`✅ [CONFIRMACIÓN] Email al profesional enviado exitosamente`);
       successCount++;
 
       // Pausa para evitar rate limits
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Enviar email al CLIENTE
-      console.log(`👤 Enviando confirmación a cliente: ${tutor.email}`);
+      console.log(`👤 [CONFIRMACIÓN] Enviando email a cliente: ${tutor.email}`);
       await gmailTransporter.sendMail({
         from: `${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} <${GMAIL_USER}>`,
         to: tutor.email,
         subject: clientSubject,
         html: clientHtml
       });
-      console.log(`✅ Confirmación enviada al cliente exitosamente`);
+      console.log(`✅ [CONFIRMACIÓN] Email al cliente enviado exitosamente`);
       successCount++;
 
-      console.log(`🎉 Confirmación de cita enviada exitosamente a ${successCount} destinatarios`);
+      console.log(`🎉 [CONFIRMACIÓN] Proceso completado: ${successCount} emails enviados`);
       return true;
 
     } catch (error) {
-      console.error(`❌ Error enviando confirmaciones: ${error.message}`);
+      console.error(`❌ [CONFIRMACIÓN] Error enviando emails: ${error.message}`);
+      console.error(`❌ [CONFIRMACIÓN] Stack trace:`, error.stack);
       return false;
     }
 
