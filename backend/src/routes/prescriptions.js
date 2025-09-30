@@ -4,15 +4,12 @@ import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import Twilio from 'twilio';
 import fetch from 'node-fetch';
 import { verifyToken } from '../middleware/auth.js';
 import { uploadPDF, deletePDF, getPublicUrl } from '../lib/supabaseStorage.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
-
-const twilioClient = process.env.TWILIO_ACCOUNT_SID ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN) : null;
 
 // Helper function to download and cache image
 const downloadImage = async (imageUrl, fileName) => {
@@ -57,7 +54,6 @@ router.post('/', verifyToken, async (req, res) => {
     duration, 
     instructions 
   } = req.body;
-  const sendWhatsApp = req.body.sendWhatsApp || false;
   
   console.log('Creating prescription - Request body:', {
     petId, tutorId, title, medication, dosage, frequency, duration
@@ -433,36 +429,11 @@ router.post('/', verifyToken, async (req, res) => {
         duration: duration || '',
         instructions: instructions || null,
         pdfUrl,
-        pdfPath: supabasePath || outPath, // Store Supabase path or fallback to local path
-        sendWhatsApp,
-        whatsappSent: false
+        pdfPath: supabasePath || outPath // Store Supabase path or fallback to local path
       },
     });
 
     console.log('Prescription saved successfully with ID:', prescription.id);
-
-    // Send via WhatsApp if requested
-    let whatsappSent = false;
-    if (sendWhatsApp && twilioClient && pet.tutor.phone) {
-      try {
-        const to = `whatsapp:${pet.tutor.phone}`;
-        const from = process.env.TWILIO_WHATSAPP_FROM;
-        await twilioClient.messages.create({
-          from,
-          to,
-          body: `🏥 Nueva receta veterinaria para ${pet.name}\n\nHola ${pet.tutor.name}, tienes una nueva receta médica para ${pet.name}. Por favor revisa los detalles en el PDF adjunto.`,
-        });
-        whatsappSent = true;
-        
-        // Update prescription record
-        await prisma.prescription.update({
-          where: { id: prescription.id },
-          data: { whatsappSent: true }
-        });
-      } catch (whatsappError) {
-        console.error('Error sending WhatsApp:', whatsappError);
-      }
-    }
 
     // Return response
     const base = process.env.BACKEND_BASE_URL;
@@ -470,7 +441,7 @@ router.post('/', verifyToken, async (req, res) => {
     
     console.log('Prescription created successfully, returning response');
     res.json({ 
-      prescription: { ...prescription, whatsappSent }, 
+      prescription, 
       file: fullPdfUrl 
     });
   } catch (err) {

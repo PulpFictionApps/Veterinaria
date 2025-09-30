@@ -31,9 +31,7 @@ router.get('/:id', verifyToken, async (req, res) => {
         licenseNumber: true,
         signatureUrl: true,
         logoUrl: true,
-        whatsappNumber: true,
         autoEmail: true,
-        enableWhatsappReminders: true,
         enableEmailReminders: true,
         primaryColor: true,
         secondaryColor: true,
@@ -77,9 +75,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
       licenseNumber,
       signatureUrl,
       logoUrl,
-      whatsappNumber,
       autoEmail,
-      enableWhatsappReminders,
       enableEmailReminders,
       primaryColor,
       secondaryColor,
@@ -98,9 +94,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
     if (licenseNumber !== undefined) updateData.licenseNumber = licenseNumber;
     if (signatureUrl !== undefined) updateData.signatureUrl = signatureUrl;
     if (logoUrl !== undefined) updateData.logoUrl = logoUrl;
-    if (whatsappNumber !== undefined) updateData.whatsappNumber = whatsappNumber;
     if (autoEmail !== undefined) updateData.autoEmail = autoEmail;
-    if (enableWhatsappReminders !== undefined) updateData.enableWhatsappReminders = enableWhatsappReminders;
     if (enableEmailReminders !== undefined) updateData.enableEmailReminders = enableEmailReminders;
     if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
     if (secondaryColor !== undefined) updateData.secondaryColor = secondaryColor;
@@ -122,9 +116,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
         licenseNumber: true,
         signatureUrl: true,
         logoUrl: true,
-        whatsappNumber: true,
         autoEmail: true,
-        enableWhatsappReminders: true,
         enableEmailReminders: true,
         primaryColor: true,
         secondaryColor: true,

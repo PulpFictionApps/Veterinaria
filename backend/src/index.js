@@ -16,8 +16,10 @@ import billingRoutes from "./routes/billing.js";
 import consultationTypesRoutes from "./routes/consultationTypes.js";
 import userRoutes from "./routes/users.js";
 import maintenanceRoutes from "./routes/maintenance.js";
+import reminderRoutes from "./routes/reminders.js";
 import { healthCheck } from "./routes/health.js";
 import { cleanupExpiredSlots } from "../scripts/cleanup-expired-slots.js";
+import { processReminders } from "./lib/reminderService.js";
 
 const app = express();
 
@@ -94,6 +96,7 @@ app.use("/billing", billingRoutes);
 app.use("/consultation-types", consultationTypesRoutes);
 app.use("/users", userRoutes);
 app.use("/maintenance", maintenanceRoutes);
+app.use("/reminders", reminderRoutes);
 
 app.get("/health", healthCheck);
 app.get("/", (req, res) => res.send("Backend funcionando"));
@@ -122,7 +125,32 @@ setInterval(async () => {
   }
 }, CLEANUP_INTERVAL);
 
+// Configurar sistema de recordatorios automáticos
+// Ejecutar cada 10 minutos para verificar recordatorios pendientes
+const REMINDER_INTERVAL = 10 * 60 * 1000; // 10 minutos
+
+// Ejecutar primera verificación de recordatorios al iniciar el servidor
+setTimeout(async () => {
+  try {
+    console.log('📧 Ejecutando verificación inicial de recordatorios...');
+    await processReminders();
+  } catch (error) {
+    console.error('❌ Error en verificación inicial de recordatorios:', error);
+  }
+}, 10000); // Esperar 10 segundos después del inicio
+
+// Configurar verificación periódica de recordatorios
+setInterval(async () => {
+  try {
+    console.log('🔄 Ejecutando verificación periódica de recordatorios...');
+    await processReminders();
+  } catch (error) {
+    console.error('❌ Error en verificación periódica de recordatorios:', error);
+  }
+}, REMINDER_INTERVAL);
+
 app.listen(4000, () => {
   console.log("Backend corriendo en http://localhost:4000");
   console.log(`🕒 Limpieza automática configurada cada ${CLEANUP_INTERVAL / (60 * 1000)} minutos`);
+  console.log(`📧 Recordatorios automáticos configurados cada ${REMINDER_INTERVAL / (60 * 1000)} minutos`);
 });

@@ -11,9 +11,7 @@ interface UserSettings {
   email: string;
   fullName?: string;
   // Automation fields
-  whatsappNumber?: string;
   autoEmail?: string;
-  enableWhatsappReminders?: boolean;
   enableEmailReminders?: boolean;
   // Color customization fields
   primaryColor?: string;
@@ -32,9 +30,7 @@ export default function SettingsPage() {
 
   // Form state
   const [automationData, setAutomationData] = useState({
-    whatsappNumber: '',
     autoEmail: '',
-    enableWhatsappReminders: false,
     enableEmailReminders: false,
   });
 
@@ -60,9 +56,7 @@ export default function SettingsPage() {
       
       // Initialize form with existing data
       setAutomationData({
-        whatsappNumber: data.whatsappNumber || '',
         autoEmail: data.autoEmail || '',
-        enableWhatsappReminders: data.enableWhatsappReminders || false,
         enableEmailReminders: data.enableEmailReminders || false,
       });
 
@@ -226,44 +220,6 @@ export default function SettingsPage() {
         </div>
 
         <form onSubmit={handleAutomationSubmit} className="space-y-6">
-          {/* WhatsApp Configuration */}
-          <div className="bg-green-50 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-              📱 WhatsApp
-            </h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Número de WhatsApp (con código de país)
-                </label>
-                <input
-                  type="tel"
-                  value={automationData.whatsappNumber}
-                  onChange={(e) => handleAutomationChange('whatsappNumber', e.target.value)}
-                  placeholder="+56912345678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Ejemplo: +56912345678 (Chile)
-                </p>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  id="enableWhatsappReminders"
-                  checked={automationData.enableWhatsappReminders}
-                  onChange={(e) => handleAutomationChange('enableWhatsappReminders', e.target.checked)}
-                  className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
-                />
-                <label htmlFor="enableWhatsappReminders" className="text-sm text-gray-700">
-                  Activar recordatorios por WhatsApp
-                </label>
-              </div>
-            </div>
-          </div>
-
           {/* Email Configuration */}
           <div className="bg-blue-50 rounded-lg p-4">
             <h3 className="font-medium text-gray-900 mb-3 flex items-center">

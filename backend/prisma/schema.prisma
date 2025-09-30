@@ -116,6 +116,11 @@ model Appointment {
   // status: pending | confirmed | cancelled. Default kept as confirmed for existing flows.
   status             String           @default("confirmed")
   reason             String
+  // Campos para recordatorios automáticos
+  reminder24hSent    Boolean          @default(false)
+  reminder24hSentAt  DateTime?
+  reminder1hSent     Boolean          @default(false)  
+  reminder1hSentAt   DateTime?
   createdAt          DateTime         @default(now())
 
   pet                Pet              @relation(fields: [petId], references: [id])

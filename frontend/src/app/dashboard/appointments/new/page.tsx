@@ -66,7 +66,7 @@ export default function NewAppointmentPage() {
         setLoading(true);
         const [tutorsRes, typesRes, slotsRes] = await Promise.all([
           authFetch('/tutors'),
-          authFetch(`/consultation-types/${userId}`),
+          authFetch('/consultation-types'),
           authFetch(`/availability/${userId}`)
         ]);
 
