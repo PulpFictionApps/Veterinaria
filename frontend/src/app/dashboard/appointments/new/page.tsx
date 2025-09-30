@@ -106,6 +106,26 @@ export default function NewAppointmentPage() {
     return slotDate === selectedDate;
   });
 
+  // Filtrar slots disponibles según la duración del tipo de consulta seleccionado
+  const filteredAvailableSlots = (() => {
+    if (!selectedConsultationTypeId) return availableSlots;
+    const selectedType = consultationTypes.find(t => t.id === Number(selectedConsultationTypeId));
+    const durationMinutes = selectedType?.duration || 30;
+    const slotsNeeded = Math.ceil(durationMinutes / 30);
+
+    // Build a set of available slot start timestamps for quick lookup
+    const slotStarts = new Set(availableSlots.map(s => new Date(s.start).getTime()));
+
+    return availableSlots.filter(slot => {
+      const startMs = new Date(slot.start).getTime();
+      for (let i = 0; i < slotsNeeded; i++) {
+        const neededStart = startMs + i * 30 * 60 * 1000;
+        if (!slotStarts.has(neededStart)) return false;
+      }
+      return true;
+    });
+  })();
+
   // Manejar envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -254,11 +274,15 @@ export default function NewAppointmentPage() {
               Tipo de Consulta *
             </label>
             <select
-              value={selectedConsultationTypeId}
-              onChange={(e) => setSelectedConsultationTypeId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            >
+                value={selectedConsultationTypeId}
+                onChange={(e) => {
+                  // When changing consultation type, clear any previously selected slot
+                  setSelectedConsultationTypeId(e.target.value);
+                  setSelectedSlotId('');
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              >
               <option value="">Seleccionar tipo...</option>
               {consultationTypes.map(type => (
                 <option key={type.id} value={type.id}>
@@ -289,7 +313,7 @@ export default function NewAppointmentPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Seleccionar horario disponible...</option>
-                  {availableSlots.map(slot => {
+                  {filteredAvailableSlots.map(slot => {
                     const start = new Date(slot.start);
                     const end = new Date(slot.end);
                     return (

@@ -88,9 +88,15 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
               appointmentTitle += ` - ${appt.reason}`;
             }
             
+            // Determine end time from consultationType.duration (minutes) or default to 30 minutes
+            const durationMinutes = appt.consultationType?.duration || 30;
+            const startDate = new Date(appt.date);
+            const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
+
             return {
               title: appointmentTitle,
               start: appt.date,
+              end: endDate.toISOString(),
               backgroundColor: consultationColor,
               borderColor: borderColor,
               textColor: "white",
