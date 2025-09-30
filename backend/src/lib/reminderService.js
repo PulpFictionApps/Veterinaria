@@ -1,21 +1,36 @@
 ﻿import { PrismaClient } from "@prisma/client";
-import fetch from 'node-fetch';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const prisma = new PrismaClient();
 
-// Configuración de email usando Resend
-const EMAIL_API_KEY = process.env.EMAIL_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+// Configuración Gmail SMTP (consistente con appointment-confirmation-service.js)
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
+const CLINIC_NAME = process.env.CLINIC_NAME || 'MyVetAgenda - Clínica Veterinaria';
+
+// Configurar transporter de Gmail
+const gmailTransporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: GMAIL_USER,
+    pass: GMAIL_APP_PASSWORD
+  }
+});
+
+console.log('📧 Sistema de Recordatorios Gmail cargado');
 
 /**
- * Envía recordatorio por email usando Resend API
+ * Envía recordatorio por email usando Gmail SMTP
  */
 async function sendEmailReminder(appointment, reminderType) {
   try {
     const { tutor, pet, date } = appointment;
     
-    if (!EMAIL_API_KEY) {
-      console.log('⚠️  Email API Key no configurado - saltando Email');
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      console.log('⚠️  Credenciales de Gmail no configuradas - saltando Email');
       return false;
     }
 
@@ -109,28 +124,17 @@ async function sendEmailReminder(appointment, reminderType) {
       `;
     }
 
-    // Enviar email usando Resend API
-    const emailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${EMAIL_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: EMAIL_FROM,
-        to: tutor.email,
-        subject: subject,
-        html: htmlContent
-      })
-    });
+    // Enviar email usando Gmail SMTP
+    const mailOptions = {
+      from: `"${CLINIC_NAME}" <${GMAIL_USER}>`,
+      to: tutor.email,
+      subject: subject,
+      html: htmlContent
+    };
 
-    if (emailResponse.ok) {
-      console.log(`✅ Email enviado a ${tutor.name} (${tutor.email})`);
-      return true;
-    } else {
-      const error = await emailResponse.json();
-      throw new Error(`Error API: ${error.message}`);
-    }
+    await gmailTransporter.sendMail(mailOptions);
+    console.log(`✅ Recordatorio enviado por Gmail a ${tutor.name} (${tutor.email})`);
+    return true;
 
   } catch (error) {
     console.error(`❌ Error enviando email a ${appointment.tutor.name}:`, error.message);

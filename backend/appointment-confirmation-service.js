@@ -79,7 +79,7 @@ async function sendAppointmentConfirmation(appointmentId) {
     const professionalHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); padding: 20px; text-align: center;">
-          <h1 style="color: white; margin: 0;">🆕 ${CLINIC_NAME}</h1>
+          <h1 style="color: white; margin: 0;">🆕 ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'}</h1>
           <p style="color: white; margin: 5px 0 0 0;">Nueva Cita Agendada</p>
         </div>
         
@@ -125,18 +125,18 @@ async function sendAppointmentConfirmation(appointmentId) {
           
           <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #666; font-size: 14px;">
             <p>📧 Cita agendada automáticamente desde: ${GMAIL_USER}</p>
-            <p>🏥 ${CLINIC_NAME}</p>
+            <p>🏥 ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'}</p>
           </div>
         </div>
       </div>
     `;
 
     // EMAIL PARA EL CLIENTE - Confirmación de cita
-    const clientSubject = `✅ ${CLINIC_NAME} - ¡Cita confirmada! ${pet.name} el ${formattedDate}`;
+    const clientSubject = `✅ ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} - ¡Cita confirmada! ${pet.name} el ${formattedDate}`;
     const clientHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 20px; text-align: center;">
-          <h1 style="color: white; margin: 0;">✅ ${CLINIC_NAME}</h1>
+          <h1 style="color: white; margin: 0;">✅ ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'}</h1>
           <p style="color: white; margin: 5px 0 0 0;">¡Cita Confirmada!</p>
         </div>
         
@@ -197,7 +197,7 @@ async function sendAppointmentConfirmation(appointmentId) {
           
           <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #666; font-size: 14px;">
             <p>📧 Si tienes dudas, responde a este email</p>
-            <p>🏥 ${CLINIC_NAME} - ${GMAIL_USER}</p>
+            <p>🏥 ${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} - ${professional.contactEmail || professional.email}</p>
           </div>
         </div>
       </div>
@@ -209,7 +209,7 @@ async function sendAppointmentConfirmation(appointmentId) {
       // Enviar email al PROFESIONAL
       console.log(`👨‍⚕️ Enviando confirmación a profesional: ${professional.email}`);
       await gmailTransporter.sendMail({
-        from: `${CLINIC_NAME} <${GMAIL_USER}>`,
+        from: `${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} <${GMAIL_USER}>`,
         to: professional.email,
         subject: professionalSubject,
         html: professionalHtml
@@ -223,7 +223,7 @@ async function sendAppointmentConfirmation(appointmentId) {
       // Enviar email al CLIENTE
       console.log(`👤 Enviando confirmación a cliente: ${tutor.email}`);
       await gmailTransporter.sendMail({
-        from: `${CLINIC_NAME} <${GMAIL_USER}>`,
+        from: `${professional.clinicName || professional.fullName || 'Clínica Veterinaria'} <${GMAIL_USER}>`,
         to: tutor.email,
         subject: clientSubject,
         html: clientHtml

@@ -10,9 +10,6 @@ interface UserSettings {
   id: number;
   email: string;
   fullName?: string;
-  // Automation fields
-  autoEmail?: string;
-  enableEmailReminders?: boolean;
   // Color customization fields
   primaryColor?: string;
   secondaryColor?: string;
@@ -21,6 +18,11 @@ interface UserSettings {
   appointmentInstructions?: string;
   contactEmail?: string;
   contactPhone?: string;
+  // Clinic information fields
+  clinicName?: string;
+  clinicAddress?: string;
+  professionalTitle?: string;
+  professionalPhone?: string;
 }
 
 export default function SettingsPage() {
@@ -32,10 +34,13 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Form state
-  const [automationData, setAutomationData] = useState({
-    autoEmail: '',
-    enableEmailReminders: false,
+  // Form state para configuraciones que realmente se usan
+  const [clinicData, setClinicData] = useState({
+    fullName: '',
+    clinicName: '',
+    clinicAddress: '',
+    professionalTitle: '',
+    professionalPhone: '',
   });
 
   const [colorData, setColorData] = useState({
@@ -65,9 +70,12 @@ export default function SettingsPage() {
       setSettings(data);
       
       // Initialize form with existing data
-      setAutomationData({
-        autoEmail: data.autoEmail || '',
-        enableEmailReminders: data.enableEmailReminders || false,
+      setClinicData({
+        fullName: data.fullName || '',
+        clinicName: data.clinicName || '',
+        clinicAddress: data.clinicAddress || '',
+        professionalTitle: data.professionalTitle || '',
+        professionalPhone: data.professionalPhone || '',
       });
 
       setColorData({
@@ -88,34 +96,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleAutomationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      setSaving(true);
-      setError(null);
-      setSuccess(false);
-      
-      const response = await authFetch(`/users/${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(automationData),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al actualizar configuración');
-      }
-
-      setSuccess(true);
-      await fetchSettings(); // Refresh data
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al actualizar configuración');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleColorSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,8 +127,39 @@ export default function SettingsPage() {
     }
   };
 
-  const handleAutomationChange = (field: string, value: string | boolean) => {
-    setAutomationData(prev => ({ ...prev, [field]: value }));
+
+
+  const handleClinicChange = (field: string, value: string) => {
+    setClinicData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleClinicSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setSaving(true);
+      setError(null);
+      setSuccess(false);
+      
+      const response = await authFetch(`/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(clinicData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al actualizar información de clínica');
+      }
+
+      setSuccess(true);
+      await fetchSettings(); // Refresh data
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al actualizar información de clínica');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleEmailChange = (field: string, value: string) => {
@@ -257,75 +269,151 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Automatización Section */}
+      {/* Sistema Automático Status */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            🤖 Automatización de Recordatorios
+            ✅ Sistema Automático Activo
           </h2>
           <p className="text-sm text-gray-600">
-            Configure los recordatorios automáticos para sus pacientes
+            Tu sistema de emails está funcionando automáticamente
           </p>
         </div>
 
-        <form onSubmit={handleAutomationSubmit} className="space-y-6">
-          {/* Email Configuration */}
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-              📧 Email
-            </h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email para envío automático
-                </label>
-                <input
-                  type="email"
-                  value={automationData.autoEmail}
-                  onChange={(e) => handleAutomationChange('autoEmail', e.target.value)}
-                  placeholder="clinica@ejemplo.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Este email aparecerá como remitente de los recordatorios
-                </p>
-              </div>
+        {/* Status Display */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h4 className="font-semibold text-green-800 mb-2">🎯 Funciones Activas</h4>
+          <ul className="text-sm text-green-700 space-y-2">
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              <strong>Confirmaciones inmediatas:</strong> Se envían automáticamente al crear citas
+            </li>
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              <strong>Recordatorios 24h:</strong> Enviados automáticamente un día antes
+            </li>
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              <strong>Recordatorios 1h:</strong> Enviados automáticamente una hora antes
+            </li>
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              <strong>Personalización dinámica:</strong> Usa tu información de la base de datos
+            </li>
+          </ul>
+        </div>
 
-              <div className="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  id="enableEmailReminders"
-                  checked={automationData.enableEmailReminders}
-                  onChange={(e) => handleAutomationChange('enableEmailReminders', e.target.checked)}
-                  className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
-                />
-                <label htmlFor="enableEmailReminders" className="text-sm text-gray-700">
-                  Activar recordatorios por email
-                </label>
-              </div>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+          <h4 className="font-semibold text-blue-800 mb-2">📧 Configuración de Email</h4>
+          <div className="text-sm text-blue-700 space-y-1">
+            <p><strong>Servidor:</strong> Gmail SMTP (myvetagenda@gmail.com)</p>
+            <p><strong>Verificaciones:</strong> Cada 10 minutos automáticamente</p>
+            <p><strong>Estado:</strong> <span className="text-green-600 font-semibold">✅ Operativo</span></p>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 rounded-lg p-4 mt-4">
+          <p className="text-sm text-gray-600 text-center">
+            <strong>💡 Tip:</strong> Para personalizar los emails, usa las secciones de abajo
+          </p>
+        </div>
+      </div>
+
+      {/* Clinic Information Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            🏥 Información de tu Clínica
+          </h2>
+          <p className="text-sm text-gray-600">
+            Esta información aparece en los emails enviados a tus clientes
+          </p>
+        </div>
+
+        <form onSubmit={handleClinicSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                👨‍⚕️ Tu Nombre Completo
+              </label>
+              <input
+                type="text"
+                value={clinicData.fullName}
+                onChange={(e) => handleClinicChange('fullName', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Dr. Juan Pérez González"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🏥 Nombre de tu Clínica
+              </label>
+              <input
+                type="text"
+                value={clinicData.clinicName}
+                onChange={(e) => handleClinicChange('clinicName', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Veterinaria Mi Mascota"
+              />
             </div>
           </div>
 
-          {/* Features List */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h4 className="font-semibold text-yellow-800 mb-2">⚡ Funcionalidades Automáticas</h4>
-            <ul className="text-sm text-yellow-700 space-y-1">
-              <li>• Recordatorios de citas 24 horas antes</li>
-              <li>• Envío automático de PDFs de recetas por WhatsApp</li>
-              <li>• Notificaciones de confirmación de citas</li>
-              <li>• Seguimiento post-consulta automático</li>
-            </ul>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              📍 Dirección de tu Clínica
+            </label>
+            <input
+              type="text"
+              value={clinicData.clinicAddress}
+              onChange={(e) => handleClinicChange('clinicAddress', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              placeholder="Av. Principal 123, Comuna, Ciudad"
+            />
           </div>
 
-          {/* Save Button */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🎓 Título Profesional (opcional)
+              </label>
+              <input
+                type="text"
+                value={clinicData.professionalTitle}
+                onChange={(e) => handleClinicChange('professionalTitle', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Médico Veterinario"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📞 Teléfono de la Clínica (opcional)
+              </label>
+              <input
+                type="tel"
+                value={clinicData.professionalPhone}
+                onChange={(e) => handleClinicChange('professionalPhone', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="+56 2 2345 6789"
+              />
+            </div>
+          </div>
+
+          <div className="bg-blue-50 rounded-lg p-4">
+            <h4 className="font-semibold text-blue-800 mb-2">👀 Vista Previa</h4>
+            <p className="text-sm text-blue-700">
+              En los emails aparecerá: <strong>"{clinicData.clinicName || clinicData.fullName || 'Tu Clínica'}"</strong>
+            </p>
+          </div>
+
           <div className="flex justify-end pt-4 border-t border-gray-200">
             <button
               type="submit"
               disabled={saving}
               className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
-              {saving ? 'Guardando...' : 'Guardar Automatización'}
+              {saving ? 'Guardando...' : 'Guardar Información de Clínica'}
             </button>
           </div>
         </form>
