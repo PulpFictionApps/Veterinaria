@@ -8,10 +8,31 @@ const prisma = new PrismaClient();
 
 // Registro
 router.post("/register", async (req, res) => {
-  const { email, password, fullName, phone, clinicName, accountType } = req.body;
+  const { email, password, fullName, phone, professionalRut, clinicName, accountType } = req.body;
   try {
+    // Validar campos obligatorios
+    if (!email || !password || !fullName || !phone || !professionalRut) {
+      return res.status(400).json({ error: "Nombre, email, contraseña, teléfono y RUT son obligatorios" });
+    }
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) return res.status(400).json({ error: "Usuario ya existe" });
+
+    // Validar unicidad de teléfono
+    if (phone) {
+      const existingPhone = await prisma.user.findFirst({ where: { phone } });
+      if (existingPhone) {
+        return res.status(400).json({ error: "Este número de teléfono ya está registrado" });
+      }
+    }
+
+    // Validar unicidad de RUT
+    if (professionalRut) {
+      const existingRut = await prisma.user.findFirst({ where: { professionalRut } });
+      if (existingRut) {
+        return res.status(400).json({ error: "Este RUT ya está registrado" });
+      }
+    }
 
     // Only professionals are allowed to register accounts in this app.
     if (accountType !== 'professional') {
@@ -20,7 +41,7 @@ router.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, fullName, phone, clinicName, accountType },
+      data: { email, password: hashedPassword, fullName, phone, professionalRut, clinicName, accountType },
     });
 
     // Si se registra un profesional, crear suscripción de prueba gratuita de 7 días

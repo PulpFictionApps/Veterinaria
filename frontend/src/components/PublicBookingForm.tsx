@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../lib/api';
 import { filterActiveSlots, formatChileDate, formatChileTime } from '../lib/timezone';
+import { formatChileanPhone, validateChileanPhone, formatRutChile, validateRutChile } from '../lib/chilean-validation';
 
 interface ConsultationType {
   id: number;
@@ -67,6 +68,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const [petAge, setPetAge] = useState('');
   const [petWeight, setPetWeight] = useState('');
   const [petSex, setPetSex] = useState('');
+  const [petReproductiveStatus, setPetReproductiveStatus] = useState('');
   const [petBirthDate, setPetBirthDate] = useState('');
   
   // Cita
@@ -77,6 +79,31 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const [selectedConsultationType, setSelectedConsultationType] = useState<string>('');
   const [reason, setReason] = useState('');
   const [message, setMessage] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [rutError, setRutError] = useState('');
+
+  // Funciones para manejar formateo en tiempo real
+  const handlePhoneChange = (value: string) => {
+    const formatted = formatChileanPhone(value);
+    setPhone(formatted);
+    
+    // Validar en tiempo real
+    const validation = validateChileanPhone(formatted);
+    setPhoneError(validation.isValid ? '' : validation.message || '');
+  };
+
+  const handleRutChange = (value: string) => {
+    const formatted = formatRutChile(value);
+    setRut(formatted);
+    
+    // Validar en tiempo real solo si tiene contenido significativo
+    if (formatted.length > 2) {
+      const validation = validateRutChile(formatted);
+      setRutError(validation.isValid ? '' : validation.message || '');
+    } else {
+      setRutError('');
+    }
+  };
 
   async function checkEmailExists() {
     if (!email || !email.includes('@')) {
@@ -94,8 +121,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         
         // Autocompletar datos del cliente
         setName(tutorData.name);
-        setPhone(tutorData.phone || '');
-        setRut(tutorData.rut || '');
+        setPhone(formatChileanPhone(tutorData.phone || ''));
+        setRut(formatRutChile(tutorData.rut || ''));
         setAddress(tutorData.address || '');
         
         // Si tiene mascotas, seleccionar la primera por defecto
@@ -136,9 +163,23 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       return;
     }
 
-    // Require contact info
-    if (!email || !phone || !name) {
-      setMessage('Email, nombre y teléfono son requeridos');
+    // Validar datos obligatorios del cliente
+    if (!email || !phone || !name || !rut || !address) {
+      setMessage('Todos los datos del cliente son obligatorios: email, nombre, teléfono, RUT y dirección');
+      return;
+    }
+
+    // Validar formato de teléfono
+    const phoneValidation = validateChileanPhone(phone);
+    if (!phoneValidation.isValid) {
+      setMessage(phoneValidation.message || 'Teléfono inválido');
+      return;
+    }
+
+    // Validar formato de RUT
+    const rutValidation = validateRutChile(rut);
+    if (!rutValidation.isValid) {
+      setMessage(rutValidation.message || 'RUT inválido');
       return;
     }
 
@@ -153,8 +194,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       return;
     }
 
-    if (isNewPet && (!petName || !petType)) {
-      setMessage('Nombre y tipo de mascota son requeridos para nueva mascota');
+    if (isNewPet && (!petName || !petType || !petBreed || !petAge || !petWeight || !petSex || !petReproductiveStatus || !petBirthDate)) {
+      setMessage('Todos los datos de la mascota son obligatorios: nombre, tipo, raza, edad, peso, sexo, estado reproductivo y fecha de nacimiento');
       return;
     }
 
@@ -173,11 +214,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             body: JSON.stringify({
               name: petName,
               type: petType,
-              breed: petBreed || null,
-              age: petAge ? Number(petAge) : null,
-              weight: petWeight ? Number(petWeight) : null,
-              sex: petSex || null,
-              birthDate: petBirthDate || null,
+              breed: petBreed,
+              age: Number(petAge),
+              weight: Number(petWeight),
+              sex: petSex,
+              reproductiveStatus: petReproductiveStatus,
+              birthDate: petBirthDate,
               tutorId: tutorIdForPet
             }),
           });
@@ -209,11 +251,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         // Cliente nuevo con mascota nueva - enviar datos de mascota
         body.petName = petName;
         body.petType = petType;
-        body.petBreed = petBreed || null;
-        body.petAge = petAge ? Number(petAge) : null;
-        body.petWeight = petWeight ? Number(petWeight) : null;
-        body.petSex = petSex || null;
-        body.petBirthDate = petBirthDate || null;
+        body.petBreed = petBreed;
+        body.petAge = Number(petAge);
+        body.petWeight = Number(petWeight);
+        body.petSex = petSex;
+        body.petReproductiveStatus = petReproductiveStatus;
+        body.petBirthDate = petBirthDate;
       }
 
       if (selectedSlot) body.slotId = Number(selectedSlot);
@@ -394,29 +437,36 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                 required 
                 disabled={!!existingTutor}
               />
-              <input 
-                value={rut} 
-                onChange={e => setRut(e.target.value)} 
-                placeholder="RUT (opcional)" 
-                className="w-full p-2 border rounded" 
-                disabled={!!existingTutor}
-              />
-              <input 
-                value={phone} 
-                onChange={e => setPhone(e.target.value)} 
-                placeholder="Teléfono" 
-                className="w-full p-2 border rounded" 
-                required 
-                disabled={!!existingTutor}
-              />
-              <div></div> {/* Spacer */}
+              <div>
+                <input 
+                  value={rut} 
+                  onChange={e => handleRutChange(e.target.value)} 
+                  placeholder="RUT * (ej: 12.345.678-9)" 
+                  className={`w-full p-2 border rounded ${rutError ? 'border-red-500' : ''}`}
+                  required
+                  disabled={!!existingTutor}
+                />
+                {rutError && <p className="text-red-500 text-xs mt-1">{rutError}</p>}
+              </div>
+              <div>
+                <input 
+                  value={phone} 
+                  onChange={e => handlePhoneChange(e.target.value)} 
+                  placeholder="Teléfono * (ej: +56 9 1234 5678)" 
+                  className={`w-full p-2 border rounded ${phoneError ? 'border-red-500' : ''}`}
+                  required 
+                  disabled={!!existingTutor}
+                />
+                {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+              </div>
             </div>
             <textarea 
               value={address} 
               onChange={e => setAddress(e.target.value)} 
-              placeholder="Dirección (opcional)" 
+              placeholder="Dirección *" 
               className="w-full p-2 border rounded mt-2" 
               rows={2} 
+              required
               disabled={!!existingTutor}
             />
           </div>
@@ -478,7 +528,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                   <input 
                     value={petName} 
                     onChange={e => setPetName(e.target.value)} 
-                    placeholder="Nombre de la mascota" 
+                    placeholder="Nombre de la mascota *" 
                     className="w-full p-2 border rounded" 
                     required={isNewPet}
                   />
@@ -488,7 +538,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     className="w-full p-2 border rounded" 
                     required={isNewPet}
                   >
-                    <option value="">Seleccionar especie</option>
+                    <option value="">Seleccionar especie *</option>
                     <option value="Perro">Perro</option>
                     <option value="Gato">Gato</option>
                     <option value="Conejo">Conejo</option>
@@ -503,38 +553,51 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                   <input 
                     value={petBreed} 
                     onChange={e => setPetBreed(e.target.value)} 
-                    placeholder="Raza (opcional)" 
+                    placeholder="Raza *" 
                     className="w-full p-2 border rounded" 
+                    required={isNewPet}
                   />
                   <input 
                     value={petAge} 
                     onChange={e => setPetAge(e.target.value)} 
-                    placeholder="Edad en años (opcional)" 
+                    placeholder="Edad en años *" 
                     type="number" 
                     min="0" 
                     max="30" 
                     className="w-full p-2 border rounded" 
+                    required={isNewPet}
                   />
                   <input 
                     value={petWeight} 
                     onChange={e => setPetWeight(e.target.value)} 
-                    placeholder="Peso en kg (opcional)" 
+                    placeholder="Peso en kg *" 
                     type="number" 
                     min="0" 
                     max="200" 
                     step="0.1" 
                     className="w-full p-2 border rounded" 
+                    required={isNewPet}
                   />
                   <select 
                     value={petSex} 
                     onChange={e => setPetSex(e.target.value)} 
                     className="w-full p-2 border rounded"
+                    required={isNewPet}
                   >
-                    <option value="">Seleccionar sexo (opcional)</option>
-                    <option value="macho">Macho</option>
-                    <option value="hembra">Hembra</option>
-                    <option value="castrado">Castrado</option>
-                    <option value="castrada">Castrada</option>
+                    <option value="">Seleccionar sexo *</option>
+                    <option value="Macho">Macho</option>
+                    <option value="Hembra">Hembra</option>
+                  </select>
+                  <select 
+                    value={petReproductiveStatus} 
+                    onChange={e => setPetReproductiveStatus(e.target.value)} 
+                    className="w-full p-2 border rounded"
+                    required={isNewPet}
+                  >
+                    <option value="">Estado reproductivo *</option>
+                    <option value="Sin intervenciones">Sin intervenciones</option>
+                    <option value="Castrado">Castrado</option>
+                    <option value="Esterilizada">Esterilizada</option>
                   </select>
                 </div>
                 
@@ -545,7 +608,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                       <span className="text-blue-500 text-lg">📅</span>
                       <div>
                         <h6 className="text-sm font-medium text-blue-800 mb-1">
-                          Fecha de nacimiento
+                          Fecha de nacimiento *
                         </h6>
                         <p className="text-xs text-blue-600">
                           Si no conoce la fecha exacta, puede ingresar una fecha aproximada. 
@@ -560,6 +623,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     type="date" 
                     className="w-full p-2 border rounded focus:border-blue-400 focus:ring-1 focus:ring-blue-400" 
                     max={new Date().toISOString().split('T')[0]}
+                    required={isNewPet}
                   />
                 </div>
               </div>

@@ -311,7 +311,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
 router.post('/public', async (req, res) => {
   const { 
     tutorId, tutorName, tutorEmail, tutorPhone, tutorRut, tutorAddress,
-    petId, existingPetId, petName, petType, petBreed, petAge, petWeight, petSex, petBirthDate,
+    petId, existingPetId, petName, petType, petBreed, petAge, petWeight, petSex, petReproductiveStatus, petBirthDate,
     date, reason, professionalId, slotId, consultationTypeId 
   } = req.body;
   try {
@@ -320,9 +320,9 @@ router.post('/public', async (req, res) => {
     const profIdNum = Number(professionalId);
     if (Number.isNaN(profIdNum)) return res.status(400).json({ error: 'professionalId must be a number' });
 
-    // Require contact info (email, name, and phone) for public bookings
-    if (!tutorEmail || !tutorPhone || !tutorName) {
-      return res.status(400).json({ error: 'tutorEmail, tutorName, and tutorPhone are required for public bookings' });
+    // Require all client info for public bookings
+    if (!tutorEmail || !tutorPhone || !tutorName || !tutorRut || !tutorAddress) {
+      return res.status(400).json({ error: 'Todos los datos del cliente son obligatorios: email, nombre, teléfono, RUT y dirección' });
     }
 
     // Resolve selected date & matching availability. Prefer slotId when provided.
@@ -345,32 +345,48 @@ router.post('/public', async (req, res) => {
       tutor = await prisma.tutor.findUnique({ where: { id: Number(tutorId) } });
       if (!tutor) return res.status(400).json({ error: 'Tutor not found' });
     } else {
-      // Try to find an existing tutor for this professional by email or phone
+      // Check for existing tutor with same email, phone, or RUT for this professional
       tutor = await prisma.tutor.findFirst({
         where: {
           userId: profIdNum,
           OR: [
             { email: tutorEmail },
-            { phone: tutorPhone }
+            { phone: tutorPhone },
+            { rut: tutorRut }
           ]
         }
       });
 
-      let tutorCreatedNow = false;
       if (!tutor) {
-          // create new tutor (use provided name if available)
-          tutor = await prisma.tutor.create({
-            data: { 
-              name: tutorName || 'Cliente público', 
-              email: tutorEmail, 
-              phone: tutorPhone,
-              rut: tutorRut || null,
-              address: tutorAddress || null,
-              userId: profIdNum 
-            },
-          });
-          tutorCreatedNow = true;
+        // Before creating new tutor, check if phone or RUT already exist for this professional
+        const existingByPhone = await prisma.tutor.findFirst({
+          where: { userId: profIdNum, phone: tutorPhone }
+        });
+        
+        if (existingByPhone) {
+          return res.status(400).json({ error: 'Ya existe un cliente con este número de teléfono' });
         }
+
+        const existingByRut = await prisma.tutor.findFirst({
+          where: { userId: profIdNum, rut: tutorRut }
+        });
+        
+        if (existingByRut) {
+          return res.status(400).json({ error: 'Ya existe un cliente con este RUT' });
+        }
+
+        // Create new tutor
+        tutor = await prisma.tutor.create({
+          data: { 
+            name: tutorName, 
+            email: tutorEmail, 
+            phone: tutorPhone,
+            rut: tutorRut,
+            address: tutorAddress,
+            userId: profIdNum 
+          },
+        });
+      }
     }
 
     // Handle pet: use existingPetId if provided, otherwise handle as before
@@ -390,14 +406,8 @@ router.post('/public', async (req, res) => {
       if (!pet) return res.status(400).json({ error: 'Pet not found' });
     } else if (petName) {
       // Validar campos obligatorios para mascotas nuevas
-      if (!petType) {
-        return res.status(400).json({ error: 'petType is required when creating a new pet' });
-      }
-      
-      // Si es un cliente completamente nuevo (tutorCreatedNow), requerir más datos de mascota
-      const tutorCreatedNow = !tutorId && !tutor; // Si no se pasó tutorId y tutor no existía antes
-      if (tutorCreatedNow && (!petAge || !petWeight)) {
-        return res.status(400).json({ error: 'petAge and petWeight are required for new clients' });
+      if (!petName || !petType || !petBreed || !petAge || !petWeight || !petSex || !petReproductiveStatus || !petBirthDate) {
+        return res.status(400).json({ error: 'Todos los datos de la mascota son obligatorios: nombre, tipo, raza, edad, peso, sexo, estado reproductivo y fecha de nacimiento' });
       }
       
       // try find existing pet by name for this tutor (case-sensitive match)
@@ -408,11 +418,12 @@ router.post('/public', async (req, res) => {
           data: { 
             name: petName, 
             type: petType,
-            breed: petBreed || null,
-            age: petAge ? Number(petAge) : null,
-            weight: petWeight ? Number(petWeight) : null,
-            sex: petSex || null,
-            birthDate: petBirthDate ? new Date(petBirthDate) : null,
+            breed: petBreed,
+            age: Number(petAge),
+            weight: Number(petWeight),
+            sex: petSex,
+            reproductiveStatus: petReproductiveStatus,
+            birthDate: new Date(petBirthDate),
             tutorId: tutor.id, 
             createdAt: now, 
             updatedAt: now 

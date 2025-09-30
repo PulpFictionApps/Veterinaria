@@ -5,26 +5,80 @@ import { authFetch } from '../../lib/api';
 import { useAuthContext } from "../../lib/auth-context";
 import { API_BASE } from "../../lib/api";
 import AuthShell from '@/components/AuthShell';
+import { formatChileanPhone, validateChileanPhone, formatRutChile, validateRutChile } from '../../lib/chilean-validation';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [rut, setRut] = useState("");
   const [clinicName, setClinicName] = useState("");
   // Server enforces only 'professional' registrations; default here to professional
   const [accountType, setAccountType] = useState("professional");
   const [error, setError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [rutError, setRutError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuthContext();
+
+  // Manejar cambio en teléfono con formateo
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatChileanPhone(e.target.value);
+    setPhone(formatted);
+    
+    const validation = validateChileanPhone(formatted);
+    if (!validation.isValid && formatted.length > 0) {
+      setPhoneError(validation.message || 'Formato de teléfono inválido');
+    } else {
+      setPhoneError('');
+    }
+  };
+
+  // Manejar cambio en RUT con formateo
+  const handleRutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatRutChile(e.target.value);
+    setRut(formatted);
+    
+    const validation = validateRutChile(formatted);
+    if (!validation.isValid && formatted.length > 0) {
+      setRutError(validation.message || 'RUT inválido');
+    } else {
+      setRutError('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    // Validar campos obligatorios
+    if (!fullName || !email || !password || !phone || !rut) {
+      setError("Todos los campos marcados con * son obligatorios");
+      setLoading(false);
+      return;
+    }
+
+    // Validar teléfono
+    const phoneValidation = validateChileanPhone(phone);
+    if (!phoneValidation.isValid) {
+      setPhoneError(phoneValidation.message || 'Teléfono inválido');
+      setLoading(false);
+      return;
+    }
+
+    // Validar RUT
+    const rutValidation = validateRutChile(rut);
+    if (!rutValidation.isValid) {
+      setRutError(rutValidation.message || 'RUT inválido');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const payload = { email, password, fullName, phone, clinicName, accountType };
+      const payload = { email, password, fullName, phone, professionalRut: rut, clinicName, accountType };
       const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -68,7 +122,9 @@ export default function RegisterPage() {
   <AuthShell title="Crear cuenta" subtitle="Crea tu cuenta para empezar a agendar y gestionar pacientes." variant="register">
       <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+                  Nombre completo *
+                </label>
                 <input
                   id="fullName"
                   type="text"
@@ -76,6 +132,7 @@ export default function RegisterPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
+                  required
                 />
               </div>
 
@@ -96,15 +153,43 @@ export default function RegisterPage() {
               <p id="email-help" className="sr-only">Usa el email con el que te registraste.</p>
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                Teléfono *
+              </label>
               <input
                 id="phone"
                 type="tel"
                 placeholder="+56 9 1234 5678"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors"
+                onChange={handlePhoneChange}
+                className={`w-full px-4 py-3 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors ${
+                  phoneError ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
+                required
               />
+              {phoneError && (
+                <p className="mt-1 text-sm text-red-600">{phoneError}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="rut" className="block text-sm font-medium text-gray-700 mb-2">
+                RUT *
+              </label>
+              <input
+                id="rut"
+                type="text"
+                placeholder="12.345.678-9"
+                value={rut}
+                onChange={handleRutChange}
+                className={`w-full px-4 py-3 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors ${
+                  rutError ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
+                required
+              />
+              {rutError && (
+                <p className="mt-1 text-sm text-red-600">{rutError}</p>
+              )}
             </div>
 
             <div>

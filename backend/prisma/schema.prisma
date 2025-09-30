@@ -71,7 +71,8 @@ model Pet {
   breed        String?       // Raza
   age          Int?          // Edad en años
   weight       Float?        // Peso actual en kg
-  sex          String?       // Sexo (macho, hembra, castrado, castrada)
+  sex          String?       // Sexo (macho, hembra)
+  reproductiveStatus String? // Estado reproductivo (Sin intervenciones, Castrado, Esterilizada)
   birthDate    DateTime?     // Fecha de nacimiento aproximada
   tutorId      Int
   tutor        Tutor         @relation(fields: [tutorId], references: [id])
