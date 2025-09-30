@@ -1,16 +1,16 @@
 // Test del servicio de email con Resend
 import { sendEmailReminder } from './src/lib/reminderService.js';
 
-// Datos de prueba
+// Datos de prueba con tu email real
 const testAppointment = {
   tutor: {
-    name: 'Juan Pérez',
-    email: 'test@example.com'  // Cambia por tu email real para probar
+    name: 'Rafael Benguria',
+    email: 'rafaelalbertobenguria@gmail.com'
   },
   pet: {
-    name: 'Max'
+    name: 'Mascota de Prueba'
   },
-  date: new Date(Date.now() + 24 * 60 * 60 * 1000) // Mañana
+  date: new Date('2025-09-30T15:00:00') // Mañana a las 15:00
 };
 
 console.log('🧪 Probando envío de email de recordatorio...');

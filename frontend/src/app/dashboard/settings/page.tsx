@@ -17,6 +17,10 @@ interface UserSettings {
   primaryColor?: string;
   secondaryColor?: string;
   accentColor?: string;
+  // Email customization fields
+  appointmentInstructions?: string;
+  contactEmail?: string;
+  contactPhone?: string;
 }
 
 export default function SettingsPage() {
@@ -38,6 +42,12 @@ export default function SettingsPage() {
     primaryColor: '#EC4899',
     secondaryColor: '#F9A8D4',
     accentColor: '#BE185D',
+  });
+
+  const [emailData, setEmailData] = useState({
+    appointmentInstructions: 'Llegada: Por favor llega 10-15 minutos antes de tu cita\nDocumentos: Trae la cartilla de vacunación de tu mascota\nAyuno: Si es necesario, te contactaremos para indicar ayuno\nCambios: Si necesitas reprogramar, contáctanos con anticipación',
+    contactEmail: '',
+    contactPhone: '',
   });
 
   useEffect(() => {
@@ -64,6 +74,12 @@ export default function SettingsPage() {
         primaryColor: data.primaryColor || '#EC4899',
         secondaryColor: data.secondaryColor || '#F9A8D4',
         accentColor: data.accentColor || '#BE185D',
+      });
+
+      setEmailData({
+        appointmentInstructions: data.appointmentInstructions || 'Llegada: Por favor llega 10-15 minutos antes de tu cita\nDocumentos: Trae la cartilla de vacunación de tu mascota\nAyuno: Si es necesario, te contactaremos para indicar ayuno\nCambios: Si necesitas reprogramar, contáctanos con anticipación',
+        contactEmail: data.contactEmail || '',
+        contactPhone: data.contactPhone || '',
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -132,6 +148,39 @@ export default function SettingsPage() {
 
   const handleAutomationChange = (field: string, value: string | boolean) => {
     setAutomationData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleEmailChange = (field: string, value: string) => {
+    setEmailData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setSaving(true);
+      setError(null);
+      setSuccess(false);
+      
+      const response = await authFetch(`/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al actualizar personalización de emails');
+      }
+
+      setSuccess(true);
+      await fetchSettings(); // Refresh data
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al actualizar personalización de emails');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleColorChange = (field: string, value: string) => {
@@ -277,6 +326,115 @@ export default function SettingsPage() {
               className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               {saving ? 'Guardando...' : 'Guardar Automatización'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Email Customization Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            📧 Personalización de Emails de Confirmación
+          </h2>
+          <p className="text-sm text-gray-600">
+            Configure las instrucciones importantes y datos de contacto que aparecerán en los emails de confirmación de citas
+          </p>
+        </div>
+
+        <form onSubmit={handleEmailSubmit} className="space-y-6">
+          {/* Instrucciones Importantes */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              📝 Instrucciones Importantes (aparecerán en sección naranja)
+            </label>
+            <textarea
+              value={emailData.appointmentInstructions}
+              onChange={(e) => handleEmailChange('appointmentInstructions', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              rows={6}
+              placeholder="Llegada: Por favor llega 10-15 minutos antes de tu cita&#10;Documentos: Trae la cartilla de vacunación de tu mascota&#10;Ayuno: Si es necesario, te contactaremos para indicar ayuno&#10;Cambios: Si necesitas reprogramar, contáctanos con anticipación"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Separa cada instrucción con una nueva línea. Usa el formato "Título: Descripción" para mejor presentación.
+            </p>
+          </div>
+
+          {/* Información de Contacto */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📧 Email de Contacto (aparecerá en sección azul)
+              </label>
+              <input
+                type="email"
+                value={emailData.contactEmail}
+                onChange={(e) => handleEmailChange('contactEmail', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="contacto@mi-clinica.cl"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Si se deja vacío, se usará su email principal
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📞 Teléfono de Contacto (aparecerá en sección azul)
+              </label>
+              <input
+                type="tel"
+                value={emailData.contactPhone}
+                onChange={(e) => handleEmailChange('contactPhone', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="+56 9 8765 4321"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Teléfono para que los clientes puedan contactarte
+              </p>
+            </div>
+          </div>
+
+          {/* Preview Section */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h4 className="font-semibold text-gray-700 mb-3">👀 Vista Previa del Email</h4>
+            <div className="bg-white rounded-lg p-4 border border-gray-200 max-w-md">
+              {/* Naranja - Instrucciones */}
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-3">
+                <h5 className="text-orange-800 font-medium text-sm mb-2">📝 Instrucciones importantes:</h5>
+                <div className="text-orange-700 text-xs space-y-1">
+                  {emailData.appointmentInstructions.split('\n').map((line, index) => (
+                    <div key={index}>
+                      {line.includes(':') ? (
+                        <><strong>{line.split(':')[0]}:</strong> {line.split(':').slice(1).join(':').trim()}</>
+                      ) : (
+                        line
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Azul - Información de contacto */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <h5 className="text-blue-800 font-medium text-sm mb-2">📍 Información de contacto:</h5>
+                <div className="text-blue-700 text-xs space-y-1">
+                  <div><strong>👨‍⚕️ Profesional:</strong> {settings?.fullName || 'Su Nombre'}</div>
+                  <div><strong>📧 Email:</strong> {emailData.contactEmail || settings?.email || 'su-email@ejemplo.com'}</div>
+                  {emailData.contactPhone && <div><strong>📞 Teléfono:</strong> {emailData.contactPhone}</div>}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end pt-4 border-t border-gray-200">
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            >
+              {saving ? 'Guardando...' : 'Guardar Personalización de Emails'}
             </button>
           </div>
         </form>

@@ -1,10 +1,11 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
-import { verifyToken } from "../middleware/auth.js";
-import { verifyActiveSubscription } from "../middleware/subscription.js";
+import { Router } from 'express';
+import { PrismaClient } from '@prisma/client';
+import { verifyToken } from '../middleware/auth.js';
+import { verifyActiveSubscription } from '../middleware/subscription.js';
+import { sendAppointmentConfirmation } from '../../appointment-confirmation-service.js';
 
 const prisma = new PrismaClient();
-const router = express.Router();
+const router = Router();
 
 // Función para encontrar y reservar múltiples bloques consecutivos
 async function findAndReserveConsecutiveSlots(tx, userId, startTime, durationMinutes) {
@@ -104,6 +105,15 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
       });
       return full;
     });
+
+    // Enviar confirmación automática por email
+    try {
+      await sendAppointmentConfirmation(result.id);
+      console.log(`✅ Confirmación de cita enviada automáticamente para cita ID: ${result.id}`);
+    } catch (emailError) {
+      console.error(`⚠️  Error enviando confirmación de cita ID ${result.id}:`, emailError.message);
+      // No fallar la creación de la cita por error de email
+    }
 
     res.json(result);
   } catch (err) {
@@ -445,6 +455,15 @@ router.post('/public', async (req, res) => {
         const full = await tx.appointment.findUnique({ where: { id: appt.id }, include: { pet: true, tutor: true, consultationType: true } });
         return full;
       });
+
+      // Enviar confirmación automática por email
+      try {
+        await sendAppointmentConfirmation(result.id);
+        console.log(`✅ Confirmación de cita pública enviada automáticamente para cita ID: ${result.id}`);
+      } catch (emailError) {
+        console.error(`⚠️  Error enviando confirmación de cita pública ID ${result.id}:`, emailError.message);
+        // No fallar la creación de la cita por error de email
+      }
 
       res.json(result);
     } catch (txErr) {

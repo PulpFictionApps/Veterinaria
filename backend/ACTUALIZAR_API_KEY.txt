@@ -1,0 +1,18 @@
+# ============================================
+# INSTRUCCIONES PARA ACTUALIZAR API KEY
+# ============================================
+
+# 1. Ve a https://resend.com/signup y crea tu cuenta
+# 2. Obtén tu API Key desde el dashboard
+# 3. Reemplaza la línea EMAIL_API_KEY en .env con tu nueva key
+
+# EJEMPLO DE CÓMO DEBE QUEDAR:
+# EMAIL_API_KEY="re_TuNuevaAPIKey123456789"
+
+# La API key actual no es válida:
+EMAIL_API_KEY="re_MGnwWTH9_MnJyYMMkQRKWmbVqPyA213cJ"
+
+# ⚠️  REEMPLAZA LA LÍNEA DE ARRIBA CON TU API KEY REAL ⚠️
+
+# Ejemplo de reemplazo correcto:
+# EMAIL_API_KEY="re_AbCdEf12_TuNuevaAPIKeyReal"

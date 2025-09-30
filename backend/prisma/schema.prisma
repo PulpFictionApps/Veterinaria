@@ -32,6 +32,10 @@ model User {
   primaryColor         String?   @default("#EC4899")   // Color primario (rosa por defecto)
   secondaryColor       String?   @default("#F9A8D4")   // Color secundario (rosa claro por defecto)
   accentColor          String?   @default("#BE185D")   // Color de acento (rosa oscuro por defecto)
+  // Campos para personalización de emails de confirmación
+  appointmentInstructions String?  @default("Llegada: Por favor llega 10-15 minutos antes de tu cita\nDocumentos: Trae la cartilla de vacunación de tu mascota\nAyuno: Si es necesario, te contactaremos para indicar ayuno\nCambios: Si necesitas reprogramar, contáctanos con anticipación") // Instrucciones importantes configurables
+  contactEmail         String?   // Email de contacto del profesional (si es diferente al principal)
+  contactPhone         String?   // Teléfono de contacto del profesional
   createdAt    DateTime      @default(now())
   tutors       Tutor[]
   availability Availability[]
