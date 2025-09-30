@@ -14,14 +14,11 @@ const CHILE_TIMEZONE = 'America/Santiago';
 function getChileTime() {
   const now = new Date();
   
-  // Chile está normalmente UTC-3 (horario estándar) o UTC-4 (horario de verano) 
-  // Pero dado que muestra 16:40 y debería ser 13:40, necesitamos restar 3 horas más
-  // El sistema está mostrando UTC cuando debería mostrar Chile
-  const chileOffset = -6; // UTC-6 para corregir la diferencia observada
-  
-  // Crear nueva fecha ajustando por el offset de Chile
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const chileTime = new Date(utc + (chileOffset * 3600000));
+  // Chile tiene cambios de horario estacionales:
+  // - Horario de Verano (UTC-3): Primer sábado de septiembre
+  // - Horario de Invierno (UTC-4): Primer sábado de abril
+  // toLocaleString maneja automáticamente estos cambios
+  const chileTime = new Date(now.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
   
   return chileTime;
 }

@@ -1,22 +1,101 @@
 // Utility functions for Chile timezone handling
 // Chile uses America/Santiago timezone
+// CAMBIOS DE HORARIO EN CHILE:
+// - Horario de Invierno (UTC-4): Primer sábado de abril - relojes se atrasan 1 hora
+// - Horario de Verano (UTC-3): Primer sábado de septiembre - relojes se adelantan 1 hora
 
 const CHILE_TIMEZONE = 'America/Santiago';
+
+/**
+ * Create a date from local date and time inputs (avoids timezone issues)
+ * @param {string} dateStr - Date string in YYYY-MM-DD format
+ * @param {string} timeStr - Time string in HH:MM format
+ * @returns {Date} Date object in local timezone
+ */
+export function createLocalDateTime(dateStr: string, timeStr: string): Date {
+  // Parse date and time components
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  
+  // Create date in local timezone (avoids UTC conversion issues)
+  return new Date(year, month - 1, day, hours, minutes);
+}
+
+/**
+ * Get today's date in YYYY-MM-DD format for input fields (in Chile timezone)
+ * @returns {string} Today's date in YYYY-MM-DD format
+ */
+export function getTodayString(): string {
+  const chileToday = getChileTime();
+  return chileToday.toISOString().split('T')[0];
+}
+
+/**
+ * Get current Chile timezone offset in hours
+ * @returns {number} Current offset (UTC-3 in summer, UTC-4 in winter)
+ */
+export function getChileOffset(): number {
+  const now = new Date();
+  
+  // Get UTC time and Chile time
+  const utcTime = new Date(now.toLocaleString("en-US", {timeZone: "UTC"}));
+  const chileTime = new Date(now.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
+  
+  // Calculate difference in hours
+  const offsetMs = chileTime.getTime() - utcTime.getTime();
+  const offsetHours = Math.round(offsetMs / (1000 * 60 * 60));
+  
+  return offsetHours;
+}
+
+/**
+ * Check if Chile is currently in summer time (DST)
+ * @returns {boolean} True if in summer time (UTC-3), false if in winter time (UTC-4)
+ */
+export function isChileSummerTime(): boolean {
+  const offset = getChileOffset();
+  return offset === -3; // Summer time is UTC-3
+}
+
+/**
+ * Get the current season in Chile based on DST
+ * @returns {string} "Verano" or "Invierno"
+ */
+export function getChileSeason(): string {
+  return isChileSummerTime() ? "Verano" : "Invierno";
+}
+
+/**
+ * Get DST transition dates for Chile for a given year
+ * @param {number} year - The year to get transition dates for
+ * @returns {object} Object with summer and winter transition dates
+ */
+export function getChileDSTTransitions(year: number): { summerStart: Date; winterStart: Date } {
+  // Find first Saturday of September (summer starts)
+  const septFirst = new Date(year, 8, 1); // September 1st
+  const septFirstSaturday = new Date(year, 8, 1 + (6 - septFirst.getDay()) % 7);
+  
+  // Find first Saturday of April (winter starts)
+  const aprilFirst = new Date(year, 3, 1); // April 1st
+  const aprilFirstSaturday = new Date(year, 3, 1 + (6 - aprilFirst.getDay()) % 7);
+  
+  return {
+    summerStart: septFirstSaturday,
+    winterStart: aprilFirstSaturday
+  };
+}
 
 /**
  * Get current date/time in Chile timezone
  * @returns {Date} Current date in Chile timezone
  */
 export function getChileTime(): Date {
+  // Use native JavaScript Date with proper timezone handling
+  // This automatically handles DST transitions for America/Santiago
   const now = new Date();
   
-  // Chile está normalmente UTC-3 (horario estándar) o UTC-4 (horario de verano) 
-  // Basándonos en la diferencia observada con la hora local, necesitamos UTC-6
-  const chileOffset = -6; // Offset corregido para Chile
-  
-  // Crear nueva fecha ajustando por el offset de Chile
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const chileTime = new Date(utc + (chileOffset * 3600000));
+  // Get Chile time using the browser's native timezone support
+  const chileTime = new Date(now.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
   
   return chileTime;
 }
@@ -27,14 +106,8 @@ export function getChileTime(): Date {
  * @returns {Date} Date converted to Chile timezone
  */
 export function toChileTime(utcDate: Date): Date {
-  // Chile está normalmente UTC-3 (horario estándar) o UTC-4 (horario de verano) 
-  // Basándonos en la diferencia observada con la hora local, necesitamos UTC-6
-  const chileOffset = -6; // Offset corregido para Chile
-  
-  // Crear nueva fecha ajustando por el offset de Chile
-  const utc = utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000);
-  const chileTime = new Date(utc + (chileOffset * 3600000));
-  
+  // Use proper timezone conversion with automatic DST handling
+  const chileTime = new Date(utcDate.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
   return chileTime;
 }
 

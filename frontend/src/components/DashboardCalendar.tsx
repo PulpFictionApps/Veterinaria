@@ -53,8 +53,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   const calendarRef = useRef<FullCalendar | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
 
-  useEffect(() => {
-    async function loadEvents() {
+  const loadEvents = async () => {
       try {
         const availabilityRes = await authFetch(`/availability/${userId}`);
         const appointmentsRes = await authFetch(`/appointments/${userId}`);
@@ -102,8 +101,15 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       } catch (error) {
         console.error('Error loading calendar events:', error);
       }
-    }
+    };
+
+  useEffect(() => {
     loadEvents();
+    
+    // Auto-refresh calendar every 30 seconds
+    const interval = setInterval(loadEvents, 30000);
+    
+    return () => clearInterval(interval);
   }, [userId]);
 
   const changeView = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
@@ -125,6 +131,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         });
         
         if (res.ok) {
+          // Force immediate reload of events
+          loadEvents();
           const calendarApi = calendarRef.current?.getApi();
           calendarApi?.refetchEvents?.();
         }

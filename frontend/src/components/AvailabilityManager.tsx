@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthContext } from '../lib/auth-context';
 import { authFetch } from '../lib/api';
-import { filterActiveSlots, formatChileDate, formatChileTime } from '../lib/timezone';
+import { filterActiveSlots, formatChileDate, formatChileTime, createLocalDateTime, getTodayString } from '../lib/timezone';
 
 interface AvailabilitySlot {
   id: number;
@@ -20,10 +20,10 @@ export default function AvailabilityManager() {
   const [showForm, setShowForm] = useState(false);
   
   // Form states
-  const [startDate, setStartDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [startDate, setStartDate] = useState(() => getTodayString());
+  const [startTime, setStartTime] = useState('09:00');
+  const [endDate, setEndDate] = useState(() => getTodayString());
+  const [endTime, setEndTime] = useState('10:00');
   const [recurring, setRecurring] = useState(false);
   const [recurringDays, setRecurringDays] = useState<string[]>([]);
 
@@ -57,10 +57,22 @@ export default function AvailabilityManager() {
     }
   }
 
-  useEffect(() => { load(); }, [userId]);
+  useEffect(() => { 
+    load(); 
+    
+    // Auto-refresh every 30 seconds to show updated data
+    const interval = setInterval(() => {
+      if (!loading) {
+        load();
+      }
+    }, 30000);
+    
+    return () => clearInterval(interval);
+  }, [userId, loading]);
 
   function formatDateTime(date: string, time: string) {
-    return new Date(`${date}T${time}`).toISOString();
+    // Use createLocalDateTime to avoid timezone conversion issues
+    return createLocalDateTime(date, time).toISOString();
   }
 
   async function createSlot(e: React.FormEvent) {
@@ -86,8 +98,9 @@ export default function AvailabilityManager() {
           // daysOfWeek starts with monday (index 0). JS getDay: 0=Sunday..6=Saturday
           const targetWeekday = (dayIndex + 1) % 7; // monday->1, sunday->0
 
-          const startBase = new Date(startDate);
-          const endBase = new Date(endDate);
+          // Use createLocalDateTime to avoid timezone issues
+          const startBase = createLocalDateTime(startDate, '00:00');
+          const endBase = createLocalDateTime(endDate, '00:00');
 
           const daysToAdd = (targetWeekday - startBase.getDay() + 7) % 7;
           startBase.setDate(startBase.getDate() + daysToAdd);
@@ -122,15 +135,17 @@ export default function AvailabilityManager() {
         }
       }
       
-  // Reset form and reload slots
-      setStartDate('');
-      setStartTime('');
-      setEndDate('');
-      setEndTime('');
+      // Reset form with default values and reload slots
+      setStartDate(getTodayString());
+      setStartTime('09:00');
+      setEndDate(getTodayString());
+      setEndTime('10:00');
       setRecurring(false);
       setRecurringDays([]);
       setShowForm(false);
-  await load();
+      
+      // Force immediate reload to show new data
+      await load();
     } catch (err) {
       setError('Error de conexión');
     } finally {

@@ -36,31 +36,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Try to validate session with backend using cookie (httpOnly token)
-    let mounted = true;
-    const init = async () => {
-      try {
-        const res = await fetch('/auth/me', { credentials: 'include' });
-        if (!mounted) return;
-        if (res.ok) {
-          const data = await res.json();
-          // backend returns basic user info, token may still be stored in localStorage for compatibility
-          const t = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-          setToken(t);
-          setUserId(data.id || decodeUserId(t));
-        } else {
-          // no session
-          setToken(null);
-          setUserId(null);
-        }
-      } catch (e) {
-        setToken(null);
-        setUserId(null);
-      }
-    };
-    init();
-
-    return () => { mounted = false; };
+    // Initialize from localStorage and sync cookie
+    const t = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (t) {
+      // Sync cookie from localStorage on page load - this ensures middleware can read it
+      document.cookie = `token=${t}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
+      setToken(t);
+      setUserId(decodeUserId(t));
+    } else {
+      setToken(null);
+      setUserId(null);
+    }
   }, []);
 
   const login = useCallback((newToken: string) => {
