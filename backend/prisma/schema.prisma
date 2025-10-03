@@ -29,6 +29,7 @@ model User {
   enableWhatsappReminders Boolean @default(false) // Activar recordatorios por WhatsApp
   enableEmailReminders    Boolean @default(false) // Activar recordatorios por Email
   // Campos para personalización de colores
+  paletteId            String?   // ID de paleta predeterminada seleccionada
   primaryColor         String?   @default("#EC4899")   // Color primario (rosa por defecto)
   secondaryColor       String?   @default("#F9A8D4")   // Color secundario (rosa claro por defecto)
   accentColor          String?   @default("#BE185D")   // Color de acento (rosa oscuro por defecto)

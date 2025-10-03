@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '@/lib/api';
 import { useAuthContext } from '@/lib/auth-context';
+import { useTheme } from '@/lib/theme-context';
+import { COLOR_PALETTES, ColorPalette } from '@/lib/color-palettes';
 import { 
   Settings, 
   Palette, 
@@ -44,10 +46,12 @@ interface UserSettings {
 
 export default function SettingsPage() {
   const { userId } = useAuthContext();
+  const { currentPalette, availablePalettes, setPalette } = useTheme();
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [selectedPaletteId, setSelectedPaletteId] = useState<string>(currentPalette.id);
 
   useEffect(() => {
     if (!userId) return;
@@ -62,6 +66,13 @@ export default function SettingsPage() {
       
       const data = await response.json();
       setSettings(data);
+      
+      // Sincronizar paleta seleccionada
+      if (data.paletteId) {
+        setSelectedPaletteId(data.paletteId);
+      } else {
+        setSelectedPaletteId(currentPalette.id);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
@@ -85,6 +96,18 @@ export default function SettingsPage() {
       secondaryColor: '#059669',
       accentColor: '#DC2626'
     });
+  };
+
+  // Función para aplicar una paleta predeterminada
+  const handlePaletteSelect = async (paletteId: string) => {
+    setSelectedPaletteId(paletteId);
+    try {
+      await setPalette(paletteId);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al aplicar paleta');
+    }
   };
 
   const saveColorChanges = async () => {
@@ -454,20 +477,108 @@ export default function SettingsPage() {
             </div>
           </AnimateOnView>
 
+          {/* Paletas Predeterminadas */}
           <AnimateOnView>
-            <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4">
+            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-medical-500 to-health-500 px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <Palette className="h-6 w-6 text-white" />
-                  <h2 className="text-xl font-bold text-white">Personalización de Colores</h2>
+                  <Heart className="h-6 w-6 text-white" />
+                  <h2 className="text-xl font-bold text-white">Paletas de Colores</h2>
                 </div>
               </div>
               
               <div className="p-6">
                 <div className="mb-6">
-                  <p className="text-neutral-600 mb-4">
-                    Personaliza los colores de tu aplicación para que coincidan con la identidad de tu clínica veterinaria.
+                  <p className="text-neutral-600 mb-6">
+                    Elige una paleta de colores prediseñada que se adapte al estilo de tu clínica veterinaria.
                   </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {availablePalettes.map((palette) => (
+                      <div
+                        key={palette.id}
+                        className={`relative p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                          selectedPaletteId === palette.id
+                            ? 'border-medical-500 bg-medical-50 shadow-md'
+                            : 'border-neutral-200 hover:border-neutral-300'
+                        }`}
+                        onClick={() => handlePaletteSelect(palette.id)}
+                      >
+                        <div className="flex items-center gap-4">
+                          {/* Preview de colores */}
+                          <div className="flex gap-2">
+                            <div 
+                              className="w-8 h-8 rounded-lg shadow-sm"
+                              style={{ backgroundColor: palette.colors.primary }}
+                            />
+                            <div 
+                              className="w-8 h-8 rounded-lg shadow-sm"
+                              style={{ backgroundColor: palette.colors.secondary }}
+                            />
+                            <div 
+                              className="w-8 h-8 rounded-lg shadow-sm"
+                              style={{ backgroundColor: palette.colors.accent }}
+                            />
+                          </div>
+                          
+                          <div className="flex-1">
+                            <h3 className="font-bold text-neutral-800 mb-1">{palette.name}</h3>
+                            <p className="text-sm text-neutral-600">{palette.description}</p>
+                          </div>
+                          
+                          {selectedPaletteId === palette.id && (
+                            <CheckCircle className="h-6 w-6 text-medical-500" />
+                          )}
+                        </div>
+                        
+                        {/* Gradient preview */}
+                        <div 
+                          className="mt-3 h-3 rounded-full"
+                          style={{ background: palette.preview.gradient }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {success && (
+                  <div className="mt-4 p-4 bg-health-50 border border-health-200 text-health-800 rounded-xl flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5" />
+                    <span className="font-medium">Paleta aplicada correctamente</span>
+                  </div>
+                )}
+                
+                {error && (
+                  <div className="mt-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl flex items-center gap-3">
+                    <AlertCircle className="h-5 w-5" />
+                    <span className="font-medium">{error}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </AnimateOnView>
+
+          {/* Personalización Avanzada */}
+          <AnimateOnView>
+            <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <Palette className="h-6 w-6 text-white" />
+                  <h2 className="text-xl font-bold text-white">Personalización Avanzada</h2>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="mb-6">
+                  <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl mb-4">
+                    <div className="flex items-center gap-2">
+                      <Activity className="h-5 w-5" />
+                      <span className="font-medium">Personalización Avanzada</span>
+                    </div>
+                    <p className="mt-2 text-sm">
+                      Crea una combinación de colores personalizada. Esto anulará cualquier paleta predeterminada seleccionada.
+                    </p>
+                  </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Color Primario */}

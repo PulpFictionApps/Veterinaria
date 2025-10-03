@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode, useMe
 import { useAuthContext } from './auth-context';
 import { authFetch } from './api';
 import { useUserSettings, invalidateCache } from '../hooks/useData';
+import { COLOR_PALETTES, ColorPalette, getPaletteById, getDefaultPalette, generatePaletteVariations } from './color-palettes';
 
 export interface ThemeColors {
   primary: string;
@@ -20,7 +21,10 @@ export interface ThemeColors {
 
 interface ThemeContextType {
   colors: ThemeColors;
+  currentPalette: ColorPalette;
+  availablePalettes: ColorPalette[];
   updateColors: (primary: string, secondary: string, accent: string) => Promise<void>;
+  setPalette: (paletteId: string) => Promise<void>;
   resetToDefault: () => Promise<void>;
   isLoading: boolean;
 }
@@ -87,21 +91,52 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   );
   
   const [colors, setColors] = useState<ThemeColors>(defaultThemeColors);
+  const [currentPalette, setCurrentPalette] = useState<ColorPalette>(getDefaultPalette());
   const [isLoading, setIsLoading] = useState(false);
 
   // Actualizar colores cuando cambien las configuraciones
   useEffect(() => {
+    if (settings?.paletteId) {
+      // Si el usuario tiene una paleta guardada, usarla
+      const palette = getPaletteById(settings.paletteId);
+      if (palette) {
+        setCurrentPalette(palette);
+        const newColors = generatePaletteVariations(palette);
+        setColors(newColors);
+        updateCSSVariables(newColors);
+        return;
+      }
+    }
+    
+    // Fallback: usar colores individuales si existen
     if (settings?.primaryColor && settings.secondaryColor && settings.accentColor) {
+      const customPalette: ColorPalette = {
+        id: 'custom',
+        name: 'Personalizada',
+        description: 'Colores personalizados',
+        colors: {
+          primary: settings.primaryColor,
+          secondary: settings.secondaryColor,
+          accent: settings.accentColor
+        },
+        preview: {
+          gradient: `linear-gradient(135deg, ${settings.primaryColor}, ${settings.accentColor})`,
+          shadow: `0 4px 20px ${settings.primaryColor}40`
+        }
+      };
+      setCurrentPalette(customPalette);
       const newColors = generateColorVariations(
         settings.primaryColor, 
         settings.secondaryColor, 
         settings.accentColor
       );
       setColors(newColors);
+      updateCSSVariables(newColors);
     } else {
       setColors(defaultThemeColors);
+      updateCSSVariables(defaultThemeColors);
     }
-  }, [settings, defaultThemeColors]);
+  }, [settings, defaultThemeColors, updateCSSVariables]);
 
   // Función para actualizar CSS variables en tiempo real
   const updateCSSVariables = useCallback((themeColors: ThemeColors) => {
@@ -145,7 +180,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
       if (!response.ok) throw new Error('Error al actualizar colores');
 
-      // Actualizar inmediatamente en el estado local para mejor UX
+      // Crear paleta personalizada y actualizar estado
+      const customPalette: ColorPalette = {
+        id: 'custom',
+        name: 'Personalizada',
+        description: 'Colores personalizados',
+        colors: { primary, secondary, accent },
+        preview: {
+          gradient: `linear-gradient(135deg, ${primary}, ${accent})`,
+          shadow: `0 4px 20px ${primary}40`
+        }
+      };
+      
+      setCurrentPalette(customPalette);
       const newColors = generateColorVariations(primary, secondary, accent);
       setColors(newColors);
       updateCSSVariables(newColors);
@@ -162,22 +209,69 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   }, [userId, revalidate, updateCSSVariables]);
 
+  // Función para establecer una paleta predeterminada
+  const setPalette = useCallback(async (paletteId: string) => {
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const palette = getPaletteById(paletteId);
+    if (!palette) {
+      throw new Error('Paleta no encontrada');
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await authFetch(`/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          paletteId: palette.id,
+          primaryColor: palette.colors.primary,
+          secondaryColor: palette.colors.secondary,
+          accentColor: palette.colors.accent
+        })
+      });
+
+      if (!response.ok) throw new Error('Error al actualizar paleta');
+
+      // Actualizar inmediatamente en el estado local
+      setCurrentPalette(palette);
+      const newColors = generatePaletteVariations(palette);
+      setColors(newColors);
+      updateCSSVariables(newColors);
+      
+      // Revalidar configuraciones del usuario
+      await revalidate();
+      if (userId) invalidateCache.userSettings(userId);
+      
+    } catch (error) {
+      console.error('Error setting palette:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [userId, revalidate, updateCSSVariables]);
+
   const resetToDefault = useCallback(async () => {
     try {
-      await updateColors(defaultColors.primary, defaultColors.secondary, defaultColors.accent);
+      await setPalette(getDefaultPalette().id);
     } catch (error) {
       console.error('Error resetting to default colors:', error);
       throw error;
     }
-  }, [updateColors]);
+  }, [setPalette]);
 
   // Memoizar el value del context para evitar re-renders
   const contextValue = useMemo(() => ({
     colors,
+    currentPalette,
+    availablePalettes: COLOR_PALETTES,
     updateColors,
+    setPalette,
     resetToDefault,
     isLoading: isLoading || settingsLoading
-  }), [colors, updateColors, resetToDefault, isLoading, settingsLoading]);
+  }), [colors, currentPalette, updateColors, setPalette, resetToDefault, isLoading, settingsLoading]);
 
   return (
     <ThemeContext.Provider value={contextValue}>
