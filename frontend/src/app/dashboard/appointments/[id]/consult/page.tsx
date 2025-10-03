@@ -704,15 +704,17 @@ export default function ConsultationPage() {
                   <h3 className="font-semibold text-purple-800">{prescription.title}</h3>
                   <div className="flex gap-2 items-center">
                     <span className="text-sm text-gray-500">{formatDate(prescription.createdAt)}</span>
-                    <button
-                      onClick={() => {
-                        const fileName = `receta_${appointment?.pet?.name || 'mascota'}_${new Date(prescription.createdAt).toISOString().split('T')[0]}.pdf`;
-                        downloadPDF(prescription.id, fileName);
-                      }}
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium"
-                    >
-                      📄 Descargar PDF
-                    </button>
+                    {prescription.pdfUrl && (
+                      <a
+                        href={prescription.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium inline-flex items-center gap-1"
+                        title="Descargar receta en PDF"
+                      >
+                        📄 Descargar PDF
+                      </a>
+                    )}
                   </div>
                 </div>
                 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { authFetch } from '../../../lib/api';
+import { useConsultationTypes, invalidateCache } from '../../../hooks/useData';
 import ThemedButton from '../../../components/ThemedButton';
 
 interface ConsultationType {
@@ -17,8 +18,7 @@ interface ConsultationType {
 }
 
 export default function ConsultationsPage() {
-  const [consultationTypes, setConsultationTypes] = useState<ConsultationType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { consultationTypes, isLoading: loading, revalidate } = useConsultationTypes();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingType, setEditingType] = useState<ConsultationType | null>(null);
   const [formData, setFormData] = useState({
@@ -29,27 +29,6 @@ export default function ConsultationsPage() {
     color: '#3B82F6',
     active: true,
   });
-
-  useEffect(() => {
-    loadConsultationTypes();
-  }, []);
-
-  const loadConsultationTypes = async () => {
-    setLoading(true);
-    try {
-      const response = await authFetch('/consultation-types');
-      if (response.ok) {
-        const data = await response.json();
-        setConsultationTypes(data);
-      } else {
-        console.error('Error cargando tipos de consulta - Status:', response.status);
-      }
-    } catch (error) {
-      console.error('Error cargando tipos de consulta:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +49,8 @@ export default function ConsultationsPage() {
 
       if (response.ok) {
         resetForm();
-        loadConsultationTypes();
+        invalidateCache.consultationTypes();
+        await revalidate();
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
         console.error('Error del servidor:', errorData);
@@ -117,7 +97,8 @@ export default function ConsultationsPage() {
       });
 
       if (response.ok) {
-        loadConsultationTypes();
+        invalidateCache.consultationTypes();
+        await revalidate();
       }
     } catch (error) {
       console.error('Error updating consultation type:', error);
@@ -290,7 +271,7 @@ export default function ConsultationsPage() {
         {/* Consultation Types Grid */}
         {consultationTypes.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {consultationTypes.map((type) => (
+            {consultationTypes.map((type: ConsultationType) => (
               <div
                 key={type.id}
                 className={`bg-white rounded-xl shadow-sm border-2 transition-all ${

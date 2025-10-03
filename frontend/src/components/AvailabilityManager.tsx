@@ -71,7 +71,7 @@ export default function AvailabilityManager() {
 
       if (recurring) {
         // Create recurring slots for each selected day
-        const promises = recurringDays.map(dayId => {
+        const promises = recurringDays.map(async dayId => {
           const dayIndex = daysOfWeek.findIndex(d => d.id === dayId);
           if (dayIndex === -1) return Promise.resolve(null);
 
@@ -89,14 +89,33 @@ export default function AvailabilityManager() {
           const start = formatDateTime(startBase.toISOString().split('T')[0], startTime);
           const end = formatDateTime(endBase.toISOString().split('T')[0], endTime);
 
-          return authFetch('/availability', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, start, end }),
-          }).catch(err => { console.error('Error creating recurring slot', err); return null; });
+          try {
+            const res = await authFetch('/availability', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId, start, end }),
+            });
+            
+            if (!res.ok) {
+              const errorData = await res.json().catch(() => ({ error: 'Error al crear disponibilidad recurrente' }));
+              throw new Error(errorData.error || 'Error al crear disponibilidad recurrente');
+            }
+            
+            return res.json();
+          } catch (err) {
+            console.error('Error creating recurring slot', err);
+            throw err;
+          }
         });
 
-        await Promise.all(promises);
+        const results = await Promise.all(promises);
+        
+        // Check if all slots were created successfully
+        const hasErrors = results.some(result => result === null);
+        if (hasErrors) {
+          setError('Algunos horarios recurrentes no pudieron crearse');
+          return;
+        }
       } else {
         // Create single slot
         const start = formatDateTime(startDate, startTime);
@@ -115,7 +134,7 @@ export default function AvailabilityManager() {
         }
       }
       
-      // Reset form with default values and reload slots
+      // Reset form with default values
       setStartDate(getTodayString());
       setStartTime('09:00');
       setEndDate(getTodayString());
@@ -124,9 +143,11 @@ export default function AvailabilityManager() {
       setRecurringDays([]);
       setShowForm(false);
       
-      // Force immediate reload to show new data
-      await revalidate();
-      if (userId) invalidateCache.availability(userId);
+      // Force immediate reload to show new data - invalidate first then revalidate
+      if (userId) {
+        invalidateCache.availability(userId);
+        await revalidate();
+      }
     } catch (err) {
       setError('Error de conexión');
     } finally {
@@ -140,11 +161,17 @@ export default function AvailabilityManager() {
     try {
       const res = await authFetch(`/availability/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        await revalidate();
-        if (userId) invalidateCache.availability(userId);
+        // Force immediate reload - invalidate first then revalidate
+        if (userId) {
+          invalidateCache.availability(userId);
+          await revalidate();
+        }
+      } else {
+        setError('Error al eliminar la disponibilidad');
       }
     } catch (err) {
       console.error('Error deleting slot:', err);
+      setError('Error de conexión al eliminar');
     }
   }
 

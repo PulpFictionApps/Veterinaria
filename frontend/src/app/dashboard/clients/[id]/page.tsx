@@ -42,6 +42,8 @@ interface Prescription {
   frequency: string;
   duration: string;
   createdAt: string;
+  pdfUrl?: string;
+  pdfPath?: string;
 }
 
 interface Appointment {
@@ -281,7 +283,20 @@ export default function ClientDetail({ params }: PageProps) {
                           <div key={prescription.id} className="bg-purple-50 p-3 rounded border-l-4 border-purple-400">
                             <div className="flex justify-between items-start mb-2">
                               <h5 className="font-medium text-purple-800">{prescription.title}</h5>
-                              <span className="text-xs text-gray-500">{formatDate(prescription.createdAt)}</span>
+                              <div className="flex items-center gap-2">
+                                {prescription.pdfUrl && (
+                                  <a
+                                    href={prescription.pdfUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center px-2 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors"
+                                    title="Descargar receta en PDF"
+                                  >
+                                    📄 PDF
+                                  </a>
+                                )}
+                                <span className="text-xs text-gray-500">{formatDate(prescription.createdAt)}</span>
+                              </div>
                             </div>
                             <div className="text-sm text-gray-700 grid grid-cols-2 gap-2">
                               <p><strong>Medicamento:</strong> {prescription.medication}</p>
