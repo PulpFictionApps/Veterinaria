@@ -168,7 +168,9 @@ export default function OptimizedNavbar() {
                             : 'text-gray-700 hover:bg-pink-50 hover:text-pink-600'
                         }`}
                       >
-                        <span className="text-lg mr-3">{item.icon}</span>
+                        <span className="text-lg mr-3">
+                          <item.icon className="h-5 w-5" />
+                        </span>
                         <span className="font-medium">{item.label}</span>
                       </Link>
                     </li>
@@ -206,7 +208,9 @@ export default function OptimizedNavbar() {
                             : 'text-gray-600 hover:bg-gray-50 hover:text-gray-700'
                         }`}
                       >
-                        <span className="text-base mr-3">{item.icon}</span>
+                        <span className="text-base mr-3">
+                          <item.icon className="h-4 w-4" />
+                        </span>
                         <span className="font-medium">{item.label}</span>
                       </Link>
                     </li>
