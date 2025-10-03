@@ -10,7 +10,7 @@ interface ThemedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
   ({ variant = 'primary', size = 'md', className = '', children, disabled, ...props }, ref) => {
-    const { getPrimaryButtonStyle, secondaryGradient, primary } = useThemeColors();
+    const { getPrimaryButtonStyle } = useThemeColors();
 
     const baseClasses = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
     
@@ -26,14 +26,14 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
           return getPrimaryButtonStyle(false);
         case 'secondary':
           return {
-            background: secondaryGradient,
+            background: 'var(--gradient-secondary)',
             color: 'white',
           };
         case 'outline':
           return {
             backgroundColor: 'transparent',
-            border: `2px solid ${primary}`,
-            color: primary,
+            border: '2px solid var(--color-primary)',
+            color: 'var(--color-primary)',
           };
         default:
           return getPrimaryButtonStyle(false);

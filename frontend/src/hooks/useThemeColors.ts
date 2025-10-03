@@ -31,6 +31,10 @@ export const useThemeColors = () => {
     
     // Alias para compatibilidad
     primaryGradient: 'var(--gradient-primary)',
+    secondaryGradient: 'var(--gradient-secondary)',
+    primary: 'var(--color-primary)',
+    secondary: 'var(--color-secondary)',
+    accent: 'var(--color-accent)',
     
     // Estilos predefinidos
     styles: {
