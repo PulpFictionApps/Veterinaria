@@ -1,0 +1,139 @@
+/* Estilos globales para paletas de colores */
+
+/* Paleta Médico Clásico - Por defecto */
+body.theme-medical-classic,
+body:not([class*="theme-"]) {
+  --color-primary: #ec4899;
+  --color-secondary: #10b981;
+  --color-accent: #3b82f6;
+  --color-primary-hover: #db2777;
+  --gradient-primary: linear-gradient(135deg, #ec4899, #3b82f6);
+  --gradient-secondary: linear-gradient(135deg, #10b981, #ec4899);
+  --shadow-primary: 0 4px 20px rgba(236, 72, 153, 0.3);
+  --shadow-secondary: 0 4px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Paleta Océano Fresco */
+body.theme-ocean-fresh {
+  --color-primary: #0ea5e9;
+  --color-secondary: #06b6d4;
+  --color-accent: #14b8a6;
+  --color-primary-hover: #0284c7;
+  --gradient-primary: linear-gradient(135deg, #0ea5e9, #14b8a6);
+  --gradient-secondary: linear-gradient(135deg, #06b6d4, #0ea5e9);
+  --shadow-primary: 0 4px 20px rgba(14, 165, 233, 0.3);
+  --shadow-secondary: 0 4px 20px rgba(6, 182, 212, 0.3);
+}
+
+/* Paleta Atardecer Cálido */
+body.theme-sunset-warm {
+  --color-primary: #f97316;
+  --color-secondary: #ef4444;
+  --color-accent: #eab308;
+  --color-primary-hover: #ea580c;
+  --gradient-primary: linear-gradient(135deg, #f97316, #ef4444);
+  --gradient-secondary: linear-gradient(135deg, #ef4444, #eab308);
+  --shadow-primary: 0 4px 20px rgba(249, 115, 22, 0.3);
+  --shadow-secondary: 0 4px 20px rgba(239, 68, 68, 0.3);
+}
+
+/* Paleta Naturaleza Zen */
+body.theme-nature-zen {
+  --color-primary: #22c55e;
+  --color-secondary: #16a34a;
+  --color-accent: #84cc16;
+  --color-primary-hover: #16a34a;
+  --gradient-primary: linear-gradient(135deg, #22c55e, #84cc16);
+  --gradient-secondary: linear-gradient(135deg, #16a34a, #22c55e);
+  --shadow-primary: 0 4px 20px rgba(34, 197, 94, 0.3);
+  --shadow-secondary: 0 4px 20px rgba(22, 163, 74, 0.3);
+}
+
+/* Aplicar colores a los componentes principales */
+.bg-primary { background-color: var(--color-primary) !important; }
+.bg-secondary { background-color: var(--color-secondary) !important; }
+.bg-accent { background-color: var(--color-accent) !important; }
+.text-primary { color: var(--color-primary) !important; }
+.text-secondary { color: var(--color-secondary) !important; }
+.text-accent { color: var(--color-accent) !important; }
+.border-primary { border-color: var(--color-primary) !important; }
+.border-secondary { border-color: var(--color-secondary) !important; }
+
+/* Gradientes temáticos */
+.bg-gradient-primary { background: var(--gradient-primary) !important; }
+.bg-gradient-secondary { background: var(--gradient-secondary) !important; }
+
+/* Sombras temáticas */
+.shadow-primary { box-shadow: var(--shadow-primary) !important; }
+.shadow-secondary { box-shadow: var(--shadow-secondary) !important; }
+
+/* Hover states */
+.hover\:bg-primary:hover { background-color: var(--color-primary-hover) !important; }
+
+/* Botones del sidebar - arreglar el problema de transparencia */
+.sidebar-nav-item {
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.2s ease !important;
+}
+
+.sidebar-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.sidebar-nav-item.active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  border-left: 3px solid white !important;
+}
+
+/* Sobrescribir cualquier estilo de botón que cause transparencia */
+.sidebar-nav-button {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.sidebar-nav-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.sidebar-nav-button.active {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+}
+
+/* Asegurar que los botones principales usen los colores de la paleta */
+.btn-primary {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+
+.btn-secondary {
+  background: var(--color-secondary) !important;
+  color: white !important;
+}
+
+.btn-secondary:hover {
+  opacity: 0.9 !important;
+}
+
+/* Cards temáticos */
+.themed-card {
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themed-card:hover {
+  box-shadow: var(--shadow-primary) !important;
+  transform: translateY(-2px) !important;
+}

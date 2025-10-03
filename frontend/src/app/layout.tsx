@@ -1,4 +1,5 @@
 import './globals.css';
+import '../styles/themes.css';
 import { Metadata } from 'next';
 import { AuthProvider } from '../lib/auth-context';
 import { ThemeProvider } from '../lib/theme-context';
