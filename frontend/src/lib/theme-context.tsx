@@ -94,6 +94,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [currentPalette, setCurrentPalette] = useState<ColorPalette>(getDefaultPalette());
   const [isLoading, setIsLoading] = useState(false);
 
+  // Función para actualizar CSS variables en tiempo real
+  const updateCSSVariables = useCallback((themeColors: ThemeColors) => {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      root.style.setProperty('--color-primary', themeColors.primary);
+      root.style.setProperty('--color-secondary', themeColors.secondary);
+      root.style.setProperty('--color-accent', themeColors.accent);
+      root.style.setProperty('--color-primary-hover', themeColors.primaryHover);
+      root.style.setProperty('--gradient-primary', themeColors.primaryGradient);
+      root.style.setProperty('--gradient-secondary', themeColors.secondaryGradient);
+      root.style.setProperty('--gradient-bg', themeColors.bgGradient);
+      root.style.setProperty('--gradient-card', themeColors.cardGradient);
+      root.style.setProperty('--shadow-primary', themeColors.shadowPrimary);
+      root.style.setProperty('--shadow-secondary', themeColors.shadowSecondary);
+    }
+  }, []);
+
   // Actualizar colores cuando cambien las configuraciones
   useEffect(() => {
     if (settings?.paletteId) {
@@ -137,23 +154,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       updateCSSVariables(defaultThemeColors);
     }
   }, [settings, defaultThemeColors, updateCSSVariables]);
-
-  // Función para actualizar CSS variables en tiempo real
-  const updateCSSVariables = useCallback((themeColors: ThemeColors) => {
-    if (typeof document !== 'undefined') {
-      const root = document.documentElement;
-      root.style.setProperty('--color-primary', themeColors.primary);
-      root.style.setProperty('--color-secondary', themeColors.secondary);
-      root.style.setProperty('--color-accent', themeColors.accent);
-      root.style.setProperty('--color-primary-hover', themeColors.primaryHover);
-      root.style.setProperty('--gradient-primary', themeColors.primaryGradient);
-      root.style.setProperty('--gradient-secondary', themeColors.secondaryGradient);
-      root.style.setProperty('--gradient-bg', themeColors.bgGradient);
-      root.style.setProperty('--gradient-card', themeColors.cardGradient);
-      root.style.setProperty('--shadow-primary', themeColors.shadowPrimary);
-      root.style.setProperty('--shadow-secondary', themeColors.shadowSecondary);
-    }
-  }, []);
 
   // Aplicar CSS variables cuando los colores cambien
   useEffect(() => {
