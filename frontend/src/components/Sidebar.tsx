@@ -37,14 +37,15 @@ export default function Sidebar() {
   ];
   const secondary = [
     { href: '/dashboard/profile', label: 'Perfil Profesional', icon: '👨‍⚕️' },
+    { href: '/dashboard/consultationTypes', label: 'Tipos de Consulta', icon: '🩺' },
     { href: '/dashboard/team', label: 'Equipo', icon: '👩‍⚕️' },
     { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
     { href: '/dashboard/integrations', label: 'Integraciones', icon: '🔌' },
-    { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
+    { href: '/dashboard/settings', label: 'Configuración', icon: '⚙️' },
   ];
  
   return (
-    <aside className="w-64 bg-gradient-primary hidden lg:block h-full sticky top-0 shadow-sm">
+    <aside className="w-64 hidden lg:block h-full sticky top-0 shadow-sm" style={{ background: 'var(--gradient-primary)' }}>
       <div className="p-4 top-0 h-full overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-6">
@@ -63,9 +64,12 @@ export default function Sidebar() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3 rounded-lg transition-all sidebar-nav-item ${
-                      isActive ? 'active' : ''
-                    }`}
+                    className="flex items-center px-4 py-3 rounded-lg transition-all"
+                    style={{
+                      backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                      color: 'white',
+                      borderLeft: isActive ? '3px solid white' : 'none'
+                    }}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>
                     <span className="font-medium">{item.label}</span>
@@ -90,9 +94,12 @@ export default function Sidebar() {
                   <li key={item.href}>
                     <Link 
                       href={item.href} 
-                      className={`flex items-center px-4 py-3 rounded-lg transition-all sidebar-nav-item ${
-                        isActive ? 'active' : ''
-                      }`}
+                      className="flex items-center px-4 py-3 rounded-lg transition-all"
+                      style={{
+                        backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                        color: 'white',
+                        borderLeft: isActive ? '3px solid white' : 'none'
+                      }}
                     >
                       <span className="text-lg mr-3">{item.icon}</span>
                       <span className="font-medium">{item.label}</span>
