@@ -286,7 +286,7 @@ body {
     transform: translateY(-2px) !important;
   }
 
-  /* Estilos específicos solo para el sidebar */
+  /* Estilos específicos solo para el sidebar - VERSIÓN CORREGIDA */
   .sidebar-link {
     color: rgba(255, 255, 255, 0.9) !important;
     text-decoration: none !important;
@@ -304,17 +304,17 @@ body {
     color: white !important;
   }
 
-  /* Estado activo con máxima prioridad */
+  /* Estado activo con máxima prioridad - TEXTO BLANCO */
   .sidebar-link.active {
     background-color: rgba(255, 255, 255, 0.25) !important;
-    color: rgb(112, 112, 112) !important;
-    border-left: 3px solid rgb(95, 93, 93) !important;
+    color: white !important;
+    border-left: 3px solid white !important;
   }
 
-  /* Asegurar que el activo mantenga su estilo incluso en hover */
+  /* Asegurar que el activo mantenga su estilo incluso en hover - TEXTO BLANCO */
   .sidebar-link.active:hover {
     background-color: rgba(255, 255, 255, 0.25) !important;
-    color: rgb(95, 94, 94) !important;
+    color: white !important;
     border-left: 3px solid white !important;
   }
 }
