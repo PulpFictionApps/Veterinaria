@@ -206,71 +206,81 @@ export default function AvailabilityManager() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h4 className="text-lg font-semibold text-gray-900 mb-4">Nueva Disponibilidad</h4>
+        <div className="bg-white rounded-2xl border border-medical-100 shadow-card p-8">
+          <div className="mb-6">
+            <h4 className="text-xl font-bold text-neutral-800">Nueva Disponibilidad</h4>
+            <p className="text-sm text-neutral-600 mt-1">Configure sus horarios de atención</p>
+          </div>
           
-          <form onSubmit={createSlot} className="space-y-4">
+          <form onSubmit={createSlot} className="space-y-6">
             {/* Recurring Toggle */}
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="recurring"
-                checked={recurring}
-                onChange={e => setRecurring(e.target.checked)}
-                className="rounded"
-              />
-              <label htmlFor="recurring" className="text-sm font-medium text-gray-700">
-                Disponibilidad recurrente (misma hora todos los días seleccionados)
+            <div className="p-4 bg-health-50 border border-health-200 rounded-xl">
+              <label className="flex items-center gap-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="recurring"
+                  checked={recurring}
+                  onChange={e => setRecurring(e.target.checked)}
+                  className="rounded border-health-300 text-health-600 focus:ring-health-500"
+                />
+                <div>
+                  <span className="text-sm font-semibold text-health-800">
+                    Disponibilidad recurrente
+                  </span>
+                  <p className="text-xs text-health-600">
+                    Crear la misma franja horaria para múltiples días de la semana
+                  </p>
+                </div>
               </label>
             </div>
 
             {/* Date and Time Inputs */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-neutral-700">
                   Fecha de Inicio
                 </label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-neutral-700">
                   Hora de Inicio
                 </label>
                 <input
                   type="time"
                   value={startTime}
                   onChange={e => setStartTime(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-neutral-700">
                   Fecha de Fin
                 </label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-neutral-700">
                   Hora de Fin
                 </label>
                 <input
                   type="time"
                   value={endTime}
                   onChange={e => setEndTime(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                   required
                 />
               </div>
@@ -278,20 +288,20 @@ export default function AvailabilityManager() {
 
             {/* Recurring Days */}
             {recurring && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-neutral-700">
                   Días de la Semana
                 </label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {daysOfWeek.map(day => (
-                    <label key={day.id} className="flex items-center gap-2">
+                    <label key={day.id} className="flex items-center gap-3 p-3 bg-medical-50 border border-medical-200 rounded-lg cursor-pointer hover:bg-medical-100 transition-colors">
                       <input
                         type="checkbox"
                         checked={recurringDays.includes(day.id)}
                         onChange={() => toggleRecurringDay(day.id)}
-                        className="rounded"
+                        className="rounded border-medical-300 text-medical-600 focus:ring-medical-500"
                       />
-                      <span className="text-sm">{day.label}</span>
+                      <span className="text-sm font-medium text-medical-700">{day.label}</span>
                     </label>
                   ))}
                 </div>
@@ -299,25 +309,26 @@ export default function AvailabilityManager() {
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                {error}
+              <div className="bg-emergency-50 border border-emergency-200 text-emergency-700 px-6 py-4 rounded-xl flex items-center gap-3">
+                <span className="text-emergency-500">⚠️</span>
+                <span className="font-medium">{error}</span>
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-neutral-100">
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="w-full sm:flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="w-full sm:flex-1 px-6 py-3 border border-neutral-300 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 font-medium"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full sm:flex-1 bg-gradient-to-r from-health-600 to-health-700 text-white px-6 py-3 rounded-xl hover:from-health-700 hover:to-health-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-health"
               >
-                {loading ? 'Creando...' : 'Crear Disponibilidad'}
+                {loading ? '⏳ Creando...' : '+ Crear Disponibilidad'}
               </button>
             </div>
           </form>

@@ -121,9 +121,9 @@ export default function OptimizedSidebar() {
           </ul>
 
           {/* Secondary Navigation */}
-          <div className="mt-6 border-t pt-4">
-            <h4 className="text-xs text-gray-400 uppercase mb-3 px-4">Configuración</h4>
-            <ul className="space-y-1">
+          <div className="mt-8 border-t border-neutral-200 pt-6">
+            <h4 className="text-xs text-neutral-500 uppercase mb-4 px-4 font-bold tracking-wider">Configuración</h4>
+            <ul className="space-y-1.5">
               {SECONDARY_MENU_ITEMS.map(item => {
                 const active = isActive(item.href);
                 
@@ -136,13 +136,15 @@ export default function OptimizedSidebar() {
                     <li key={item.href}>
                       <button 
                         onClick={handleInstallClick}
-                        className={`w-full flex items-center px-4 py-2.5 rounded-lg transition-all text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-700 ${
-                          canInstall ? 'animate-pulse bg-blue-50 text-blue-700 hover:bg-blue-100' : ''
+                        className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm ${
+                          canInstall 
+                            ? 'animate-pulse bg-health-50 text-health-700 hover:bg-health-100 border border-health-200' 
+                            : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700'
                         }`}
                       >
                         <item.icon className="w-4 h-4 mr-3" />
                         <span className="font-medium">{item.label}</span>
-                        {canInstall && <span className="ml-auto text-xs bg-blue-200 text-blue-700 px-2 py-1 rounded-full">Disponible</span>}
+                        {canInstall && <span className="ml-auto text-xs bg-health-200 text-health-800 px-2 py-1 rounded-full font-semibold">Disponible</span>}
                       </button>
                     </li>
                   );
@@ -153,12 +155,11 @@ export default function OptimizedSidebar() {
                   <li key={item.href}>
                     <Link 
                       href={item.href} 
-                      className={`flex items-center px-4 py-2.5 rounded-lg transition-all text-sm ${
+                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm ${
                         active
-                          ? 'text-white shadow-sm'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-700'
+                          ? 'text-white bg-gradient-to-r from-medical-600 to-medical-700 shadow-medical'
+                          : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700'
                       }`}
-                      style={active ? { background: primaryGradient } : {}}
                     >
                       <item.icon className="w-4 h-4 mr-3" />
                       <span className="font-medium">{item.label}</span>
@@ -170,12 +171,12 @@ export default function OptimizedSidebar() {
           </div>
           
           {/* Quick Actions */}
-          <div className="mt-6 border-t pt-4">
-            <h4 className="text-xs text-gray-400 uppercase mb-3 px-4">Acciones Rápidas</h4>
-            <div className="space-y-2 px-4">
+          <div className="mt-8 border-t border-neutral-200 pt-6">
+            <h4 className="text-xs text-neutral-500 uppercase mb-4 px-4 font-bold tracking-wider">Acciones Rápidas</h4>
+            <div className="space-y-3 px-4">
               <Link 
                 href="/dashboard/clients/new"
-                className="flex items-center justify-center w-full py-2 px-3 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors text-sm font-medium"
+                className="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-health-500 to-health-600 text-white rounded-xl hover:from-health-600 hover:to-health-700 transition-all duration-200 text-sm font-semibold shadow-health"
               >
                 + Nuevo Cliente
               </Link>
@@ -183,14 +184,14 @@ export default function OptimizedSidebar() {
           </div>
 
           {/* Logout */}
-          <div className="mt-6 border-t pt-4">
+          <div className="mt-8 border-t border-neutral-200 pt-6">
             <div className="px-4">
               <button
                 onClick={() => {
                   logout();
                   router.push('/login');
                 }}
-                className="flex items-center w-full px-3 py-2.5 rounded-lg transition-colors text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 text-sm text-emergency-600 hover:bg-emergency-50 hover:text-emergency-700"
               >
                 <span className="text-base mr-3">🚪</span>
                 <span className="font-medium">Cerrar Sesión</span>

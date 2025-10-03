@@ -4,24 +4,48 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { authFetch } from '@/lib/api';
+import { 
+  PawPrint, 
+  Heart, 
+  Calendar, 
+  Scale, 
+  User, 
+  Stethoscope,
+  Save,
+  X,
+  AlertCircle
+} from 'lucide-react';
+import { FadeIn, SlideIn } from '@/components/ui/Transitions';
 
 export default function NewPetPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const resolvedParams = use(params);
   const clientId = Number(resolvedParams.id);
+  
+  // Estados del formulario
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
   const [sex, setSex] = useState('');
+  const [reproductiveStatus, setReproductiveStatus] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Opciones de formulario
   const petTypes = [
     'Perro', 'Gato', 'Conejo', 'Hamster', 'Cobaya', 'Pájaro', 
     'Pez', 'Tortuga', 'Iguana', 'Otro'
+  ];
+
+  const sexOptions = [
+    'Macho', 'Hembra'
+  ];
+
+  const reproductiveStatusOptions = [
+    'Sin intervenciones', 'Castrado', 'Esterilizada'
   ];
 
   async function submit(e: React.FormEvent) {
@@ -42,6 +66,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
           age: age ? Number(age) : null,
           weight: weight ? Number(weight) : null,
           sex: sex || null,
+          reproductiveStatus: reproductiveStatus || null,
           birthDate: birthDate || null,
           tutorId: clientId 
         }) 
@@ -61,145 +86,242 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Nueva Mascota</h1>
+    <div className="w-full min-h-full bg-gradient-to-br from-neutral-50 to-medical-50">
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
         
-        <form onSubmit={submit} className="space-y-6">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-              Nombre de la Mascota *
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Ej: Max, Luna, Rocky"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de Animal *
-            </label>
-            <select
-              id="type"
-              value={type}
-              onChange={e => setType(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            >
-              <option value="">Selecciona un tipo</option>
-              {petTypes.map(petType => (
-                <option key={petType} value={petType}>{petType}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="breed" className="block text-sm font-medium text-gray-700 mb-2">
-              Raza
-            </label>
-            <input
-              id="breed"
-              type="text"
-              value={breed}
-              onChange={e => setBreed(e.target.value)}
-              placeholder="Ej: Golden Retriever, Persa, etc."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-2">
-              Edad (años)
-            </label>
-            <input
-              id="age"
-              type="number"
-              min="0"
-              max="30"
-              value={age}
-              onChange={e => setAge(e.target.value)}
-              placeholder="Ej: 2"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
-              Peso (kg)
-            </label>
-            <input
-              id="weight"
-              type="number"
-              min="0"
-              max="200"
-              step="0.1"
-              value={weight}
-              onChange={e => setWeight(e.target.value)}
-              placeholder="Ej: 25.5"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="sex" className="block text-sm font-medium text-gray-700 mb-2">
-              Sexo
-            </label>
-            <select
-              id="sex"
-              value={sex}
-              onChange={e => setSex(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">Seleccionar sexo</option>
-              <option value="macho">Macho</option>
-              <option value="hembra">Hembra</option>
-              <option value="castrado">Castrado</option>
-              <option value="castrada">Castrada</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 mb-2">
-              Fecha de Nacimiento (aproximada)
-            </label>
-            <input
-              id="birthDate"
-              type="date"
-              value={birthDate}
-              onChange={e => setBirthDate(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
+        {/* Header */}
+        <FadeIn>
+          <div className="bg-white rounded-2xl shadow-card border border-medical-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-medical-600 to-health-600 p-8 text-white">
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <PawPrint className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold mb-2">Nueva Mascota</h1>
+                  <p className="text-white/90">Registra una nueva mascota en el sistema</p>
+                </div>
+              </div>
             </div>
-          )}
-
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Creando...' : 'Crear Mascota'}
-            </button>
           </div>
-        </form>
+        </FadeIn>
+
+        {/* Formulario */}
+        <SlideIn direction="up" delay={200}>
+          <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-8">
+            <form onSubmit={submit} className="space-y-8">
+              
+              {/* Información Básica */}
+              <div>
+                <h2 className="text-xl font-bold text-neutral-800 mb-6 flex items-center">
+                  <Heart className="w-5 h-5 mr-2 text-medical-600" />
+                  Información Básica
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* Nombre */}
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="block text-sm font-semibold text-neutral-700">
+                      Nombre de la Mascota *
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      placeholder="Ej: Max, Luna, Rocky"
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      required
+                    />
+                  </div>
+
+                  {/* Tipo */}
+                  <div className="space-y-2">
+                    <label htmlFor="type" className="block text-sm font-semibold text-neutral-700">
+                      Tipo de Animal *
+                    </label>
+                    <select
+                      id="type"
+                      value={type}
+                      onChange={e => setType(e.target.value)}
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      required
+                    >
+                      <option value="">Selecciona un tipo</option>
+                      {petTypes.map(petType => (
+                        <option key={petType} value={petType}>{petType}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Raza */}
+                  <div className="space-y-2">
+                    <label htmlFor="breed" className="block text-sm font-semibold text-neutral-700">
+                      Raza
+                    </label>
+                    <input
+                      id="breed"
+                      type="text"
+                      value={breed}
+                      onChange={e => setBreed(e.target.value)}
+                      placeholder="Ej: Golden Retriever, Persa, etc."
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    />
+                  </div>
+
+                  {/* Edad */}
+                  <div className="space-y-2">
+                    <label htmlFor="age" className="block text-sm font-semibold text-neutral-700">
+                      Edad (años)
+                    </label>
+                    <input
+                      id="age"
+                      type="number"
+                      min="0"
+                      max="30"
+                      value={age}
+                      onChange={e => setAge(e.target.value)}
+                      placeholder="Ej: 2"
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    />
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Características Físicas */}
+              <div className="border-t border-neutral-200 pt-8">
+                <h2 className="text-xl font-bold text-neutral-800 mb-6 flex items-center">
+                  <Scale className="w-5 h-5 mr-2 text-health-600" />
+                  Características Físicas
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* Peso */}
+                  <div className="space-y-2">
+                    <label htmlFor="weight" className="block text-sm font-semibold text-neutral-700">
+                      Peso (kg)
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="weight"
+                        type="number"
+                        min="0"
+                        max="200"
+                        step="0.1"
+                        value={weight}
+                        onChange={e => setWeight(e.target.value)}
+                        placeholder="25.5"
+                        className="w-full px-4 py-3 pr-12 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      />
+                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-500 font-medium">
+                        kg
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sexo */}
+                  <div className="space-y-2">
+                    <label htmlFor="sex" className="block text-sm font-semibold text-neutral-700">
+                      Sexo
+                    </label>
+                    <select
+                      id="sex"
+                      value={sex}
+                      onChange={e => setSex(e.target.value)}
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    >
+                      <option value="">Seleccionar sexo</option>
+                      {sexOptions.map(option => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Estado Reproductivo */}
+                  <div className="space-y-2">
+                    <label htmlFor="reproductiveStatus" className="block text-sm font-semibold text-neutral-700">
+                      Estado Reproductivo
+                    </label>
+                    <select
+                      id="reproductiveStatus"
+                      value={reproductiveStatus}
+                      onChange={e => setReproductiveStatus(e.target.value)}
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    >
+                      <option value="">Seleccionar estado</option>
+                      {reproductiveStatusOptions.map(option => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Fecha de Nacimiento */}
+                  <div className="space-y-2">
+                    <label htmlFor="birthDate" className="block text-sm font-semibold text-neutral-700">
+                      Fecha de Nacimiento
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="birthDate"
+                        type="date"
+                        value={birthDate}
+                        onChange={e => setBirthDate(e.target.value)}
+                        className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      />
+                      <Calendar className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                    </div>
+                    <p className="text-xs text-neutral-500">Fecha aproximada si no se conoce exacta</p>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Error */}
+              {error && (
+                <div className="bg-emergency-50 border border-emergency-200 text-emergency-700 px-6 py-4 rounded-xl flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-emergency-500 flex-shrink-0" />
+                  <span className="font-medium">{error}</span>
+                </div>
+              )}
+
+              {/* Botones */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-neutral-100">
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="flex-1 px-6 py-3 border border-neutral-300 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 font-medium flex items-center justify-center"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center ${
+                    loading
+                      ? 'bg-neutral-400 text-white cursor-not-allowed'
+                      : 'bg-gradient-to-r from-health-600 to-health-700 text-white hover:from-health-700 hover:to-health-800 shadow-health hover:shadow-lg'
+                  }`}
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                      Creando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Crear Mascota
+                    </>
+                  )}
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </SlideIn>
+
       </div>
     </div>
   );

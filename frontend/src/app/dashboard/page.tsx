@@ -19,6 +19,7 @@ import {
   Activity,
   AlertTriangle 
 } from 'lucide-react';
+import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../components/ui/Transitions';
 
 interface AppointmentSummary {
   id: number;
@@ -147,17 +148,17 @@ export default function Dashboard() {
     }[changeType];
 
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="bg-white rounded-2xl p-6 shadow-card border border-medical-100 hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 group">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{formatValue(value)}</p>
+            <p className="text-sm font-semibold text-neutral-600 mb-2">{title}</p>
+            <p className="text-3xl font-bold text-neutral-900 transition-colors group-hover:text-medical-700">{formatValue(value)}</p>
             {change && (
-              <p className={`text-sm ${changeColor} mt-1`}>{change}</p>
+              <p className={`text-sm ${changeColor} mt-2 font-medium`}>{change}</p>
             )}
           </div>
-          <div className="p-3 bg-blue-50 rounded-lg">
-            <Icon className="w-6 h-6 text-blue-600" />
+          <div className="p-4 bg-gradient-to-br from-medical-50 to-medical-100 rounded-xl group-hover:from-medical-100 group-hover:to-medical-200 transition-all duration-300">
+            <Icon className="w-7 h-7 text-medical-600 group-hover:scale-110 transition-transform duration-300" />
           </div>
         </div>
       </div>
@@ -166,10 +167,29 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
+      <div className="w-full h-full min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-medical-50 to-health-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando panel de control...</p>
+          <div className="relative">
+            {/* Spinner principal */}
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-medical-200 border-t-medical-600 mx-auto mb-6"></div>
+            {/* Puntos animados alrededor */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-2 h-2 bg-medical-400 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-lg font-semibold text-neutral-700">Cargando panel de control</p>
+            <p className="text-sm text-neutral-500">Preparando la información de tu clínica...</p>
+          </div>
+          {/* Skeleton cards */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-white rounded-xl p-4 shadow-sm animate-pulse">
+                <div className="h-4 bg-neutral-200 rounded w-3/4 mb-2"></div>
+                <div className="h-6 bg-neutral-200 rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -179,21 +199,27 @@ export default function Dashboard() {
     <div className="w-full min-h-full bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
         
-        {/* Header con saludo */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Panel de Control</h1>
-            <p className="text-gray-600 mt-1">Bienvenido a tu clínica veterinaria</p>
+        {/* Header con saludo animado */}
+        <FadeIn>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-600 to-health-600 bg-clip-text text-transparent">
+                Panel de Control
+              </h1>
+              <p className="text-neutral-600 mt-2 text-lg">Bienvenido a tu clínica veterinaria</p>
+            </div>
+            <SlideIn direction="right" delay={200}>
+              <div className="text-sm text-neutral-500 bg-white rounded-xl px-4 py-2 shadow-sm border border-medical-100">
+                {new Date().toLocaleDateString('es-CL', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </div>
+            </SlideIn>
           </div>
-          <div className="text-sm text-gray-500">
-            {new Date().toLocaleDateString('es-CL', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </div>
-        </div>
+        </FadeIn>
 
         {/* Alerta de suscripción */}
         {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (
@@ -218,62 +244,76 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Grid de métricas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-          <div className="xl:col-span-2">
-            <MetricCard
-              title="Citas de Hoy"
-              value={metrics.todayAppointments}
-              icon={Calendar}
-              change="+2 vs ayer"
-              changeType="positive"
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <MetricCard
-              title="Total Clientes"
-              value={metrics.totalClients}
-              icon={Users}
-              change="+5 este mes"
-              changeType="positive"
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <MetricCard
-              title="Horarios Disponibles"
-              value={metrics.availableSlots}
-              icon={Clock}
-              change={metrics.availableSlots < 5 ? "Pocos horarios" : "Bien cubierto"}
-              changeType={metrics.availableSlots < 5 ? "negative" : "positive"}
-            />
-          </div>
-        </div>
+        {/* Grid de métricas con animaciones */}
+        <Stagger 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6"
+          staggerDelay={150}
+        >
+          {[
+            <div key="appointments" className="xl:col-span-2">
+              <MetricCard
+                title="Citas de Hoy"
+                value={metrics.todayAppointments}
+                icon={Calendar}
+                change="+2 vs ayer"
+                changeType="positive"
+              />
+            </div>,
+            <div key="clients" className="xl:col-span-2">
+              <MetricCard
+                title="Total Clientes"
+                value={metrics.totalClients}
+                icon={Users}
+                change="+5 este mes"
+                changeType="positive"
+              />
+            </div>,
+            <div key="slots" className="xl:col-span-2">
+              <MetricCard
+                title="Horarios Disponibles"
+                value={metrics.availableSlots}
+                icon={Clock}
+                change={metrics.availableSlots < 5 ? "Pocos horarios" : "Bien cubierto"}
+                changeType={metrics.availableSlots < 5 ? "negative" : "positive"}
+              />
+            </div>
+          ]}
+        </Stagger>
 
-        {/* Segunda fila de métricas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <MetricCard
-            title="Ingresos Semanales"
-            value={metrics.weeklyRevenue}
-            icon={DollarSign}
-            format="currency"
-            change="+12% vs semana anterior"
-            changeType="positive"
-          />
-          <MetricCard
-            title="Consultas Completadas"
-            value={metrics.completedAppointments}
-            icon={Stethoscope}
-            change="Este mes"
-            changeType="neutral"
-          />
-          <MetricCard
-            title="Tareas Pendientes"
-            value={metrics.pendingTasks}
-            icon={AlertTriangle}
-            change={metrics.pendingTasks > 0 ? "Requiere atención" : "Todo al día"}
-            changeType={metrics.pendingTasks > 0 ? "negative" : "positive"}
-          />
-        </div>
+        {/* Segunda fila de métricas con animaciones */}
+        <Stagger 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          delay={500}
+          staggerDelay={100}
+        >
+          {[
+            <MetricCard
+              key="revenue"
+              title="Ingresos Semanales"
+              value={metrics.weeklyRevenue}
+              icon={DollarSign}
+              format="currency"
+              change="+12% vs semana anterior"
+              changeType="positive"
+            />,
+            <MetricCard
+              key="completed"
+              title="Consultas Completadas"
+              value={metrics.completedAppointments}
+              icon={Stethoscope}
+              change="Este mes"
+              changeType="neutral"
+            />,
+            <MetricCard
+              key="tasks"
+              title="Tareas Pendientes"
+              value={metrics.pendingTasks}
+              icon={AlertTriangle}
+              change={metrics.pendingTasks > 0 ? "Requiere atención" : "Todo al día"}
+              changeType={metrics.pendingTasks > 0 ? "negative" : "positive"}
+            />
+          ]}
+        </Stagger>
 
         {/* Gestión de enlaces públicos */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">

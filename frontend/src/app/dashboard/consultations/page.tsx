@@ -139,36 +139,39 @@ export default function ConsultationsPage() {
 
         {/* Create/Edit Form */}
         {showCreateForm && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="bg-white rounded-2xl shadow-card border border-medical-100 mb-8">
+            <div className="px-8 py-6 border-b border-medical-100 bg-gradient-to-r from-medical-50 to-health-50">
+              <h2 className="text-xl font-bold text-neutral-800">
                 {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
               </h2>
+              <p className="text-sm text-neutral-600 mt-1">
+                Configure los detalles del tipo de consulta veterinaria
+              </p>
             </div>
-            <div className="p-6">
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nombre *
+            <div className="p-8">
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-neutral-700">
+                    Nombre del Tipo de Consulta *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                    placeholder="Ej: Consulta General"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    placeholder="Ej: Consulta General, Vacunación, Cirugía"
                     required
                   />
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Duración (minutos) *
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-neutral-700">
+                    Duración de la Consulta *
                   </label>
                   <select
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                   >
                     <option value={15}>15 minutos</option>
                     <option value={30}>30 minutos</option>
@@ -179,73 +182,88 @@ export default function ConsultationsPage() {
                   </select>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-neutral-700">
                     Precio (CLP) *
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1000"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                    placeholder="25000"
-                    required
-                  />
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-500 font-medium">$</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1000"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) || 0 })}
+                      className="w-full pl-8 pr-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      placeholder="25000"
+                      required
+                    />
+                  </div>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Color de identificación
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-neutral-700">
+                    Color de Identificación
                   </label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <input
                       type="color"
                       value={formData.color}
                       onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                      className="w-16 h-12 border-2 border-neutral-300 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-shadow"
                     />
-                    <span className="text-sm text-gray-600">{formData.color}</span>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                        style={{ backgroundColor: formData.color }}
+                      />
+                      <span className="text-sm font-medium text-neutral-600">{formData.color}</span>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="md:col-span-2 space-y-2">
+                  <label className="block text-sm font-semibold text-neutral-700">
                     Descripción
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
-                    rows={3}
-                    placeholder="Descripción opcional del tipo de consulta"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white resize-none"
+                    rows={4}
+                    placeholder="Descripción detallada del tipo de consulta (opcional)"
                   />
                 </div>
                 
-                <div className="md:col-span-2 flex items-center">
-                  <label className="flex items-center">
+                <div className="md:col-span-2">
+                  <label className="flex items-center p-4 bg-health-50 border border-health-200 rounded-xl cursor-pointer hover:bg-health-100 transition-colors">
                     <input
                       type="checkbox"
                       checked={formData.active}
                       onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                      className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+                      className="rounded border-health-300 text-health-600 focus:ring-health-500 mr-3"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Tipo activo</span>
+                    <div>
+                      <span className="text-sm font-semibold text-health-800">Tipo de consulta activo</span>
+                      <p className="text-xs text-health-600">Los tipos inactivos no aparecerán en el sistema de reservas</p>
+                    </div>
                   </label>
                 </div>
                 
-                <div className="md:col-span-2 flex justify-end gap-4 pt-4">
+                <div className="md:col-span-2 flex justify-end gap-4 pt-6 border-t border-neutral-100">
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-8 py-3 border border-neutral-300 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 font-medium"
                   >
                     Cancelar
                   </button>
-                  <ThemedButton type="submit">
-                    {editingType ? 'Guardar Cambios' : 'Crear Tipo'}
-                  </ThemedButton>
+                  <button
+                    type="submit"
+                    className="px-8 py-3 bg-gradient-to-r from-medical-600 to-medical-700 text-white rounded-xl hover:from-medical-700 hover:to-medical-800 transition-all duration-200 font-semibold shadow-medical"
+                  >
+                    {editingType ? '✓ Guardar Cambios' : '+ Crear Tipo'}
+                  </button>
                 </div>
               </form>
             </div>
