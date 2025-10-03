@@ -12,13 +12,7 @@ router.get('/', verifyToken, async (req, res) => {
       orderBy: { name: 'asc' }
     });
     
-    // Convert price from cents back to pesos
-    const typesWithCorrectPrice = types.map(type => ({
-      ...type,
-      price: Math.round(type.price / 100)
-    }));
-    
-    res.json(typesWithCorrectPrice);
+    res.json(types);
   } catch (err) {
     console.error('Error fetching consultation types:', err);
     res.status(500).json({ error: 'Error fetching consultation types' });
@@ -46,13 +40,7 @@ router.post('/', verifyToken, async (req, res) => {
       }
     });
     
-    // Convert price back to pesos for response
-    const responseData = {
-      ...type,
-      price: Math.round(type.price / 100)
-    };
-    
-    res.json(responseData);
+    res.json(type);
   } catch (err) {
     console.error('Error creating consultation type:', err);
     res.status(500).json({ error: 'Error creating consultation type' });
@@ -85,13 +73,7 @@ router.put('/:id', verifyToken, async (req, res) => {
       data: updateData
     });
     
-    // Convert price back to pesos for response
-    const responseData = {
-      ...updated,
-      price: Math.round(updated.price / 100)
-    };
-    
-    res.json(responseData);
+    res.json(updated);
   } catch (err) {
     console.error('Error updating consultation type:', err);
     res.status(500).json({ error: 'Error updating consultation type' });
@@ -126,13 +108,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
       data: updateData
     });
     
-    // Convert price back to pesos for response
-    const responseData = {
-      ...updated,
-      price: Math.round(updated.price / 100)
-    };
-    
-    res.json(responseData);
+    res.json(updated);
   } catch (err) {
     console.error('Error updating consultation type:', err);
     res.status(500).json({ error: 'Error updating consultation type' });

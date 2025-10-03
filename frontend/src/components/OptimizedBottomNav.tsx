@@ -33,8 +33,8 @@ export default function OptimizedBottomNav() {
                   : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50/70'
               }`}
             >
-              <span className={`text-lg mb-0.5 ${active ? 'drop-shadow-sm' : ''}`}>
-                {item.icon}
+              <span className={`mb-0.5 ${active ? 'drop-shadow-sm' : ''}`}>
+                <item.icon className="w-5 h-5" />
               </span>
               <span className={`text-[10px] font-semibold leading-tight ${active ? 'drop-shadow-sm' : 'font-medium'}`}>
                 {item.mobileLabel || item.label}

@@ -8,21 +8,32 @@ import { useThemeColors } from '../hooks/useThemeColors';
 import { useInstallPWA } from '../hooks/useInstallPWA';
 import { authFetch } from '../lib/api';
 import { brand } from '../lib/constants';
+import { 
+  Home, 
+  Calendar, 
+  Users, 
+  Stethoscope, 
+  UserCheck, 
+  Pill, 
+  CreditCard, 
+  Settings, 
+  Smartphone 
+} from 'lucide-react';
 
 // Definición de elementos del menú unificado
-const MAIN_MENU_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: '🏠', mobileLabel: 'Inicio' },
-  { href: '/dashboard/calendar', label: 'Calendar', icon: '📅', mobileLabel: 'Agenda' },
-  { href: '/dashboard/clients', label: 'Clientes', icon: '👥', mobileLabel: 'Clientes' },
-  { href: '/dashboard/appointments', label: 'Citas', icon: '🏥', mobileLabel: 'Citas' },
+export const MAIN_MENU_ITEMS = [
+  { href: '/dashboard', label: 'Dashboard', icon: Home, mobileLabel: 'Inicio' },
+  { href: '/dashboard/calendar', label: 'Agenda', icon: Calendar, mobileLabel: 'Agenda' },
+  { href: '/dashboard/clients', label: 'Clientes', icon: Users, mobileLabel: 'Clientes' },
+  { href: '/dashboard/appointments', label: 'Citas Médicas', icon: Stethoscope, mobileLabel: 'Citas' },
 ];
 
-const SECONDARY_MENU_ITEMS = [
-  { href: '/dashboard/profile', label: 'Perfil Profesional', icon: '👨‍⚕️' },
-  { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: '💊' },
-  { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
-  { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
-  { href: '#install-app', label: 'Descargar App', icon: '📱', action: 'install' },
+export const SECONDARY_MENU_ITEMS = [
+  { href: '/dashboard/profile', label: 'Perfil Profesional', icon: UserCheck },
+  { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: Pill },
+  { href: '/dashboard/billing', label:'Facturación', icon: CreditCard },
+  { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
+  { href: '#install-app', label: 'Instalar App', icon: Smartphone, action: 'install' },
 ];
 
 export default function OptimizedSidebar() {
@@ -63,37 +74,35 @@ export default function OptimizedSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-pink-100 hidden lg:block h-full sticky top-0 shadow-sm shadow-pink-100/50">
-      <div className="p-4 top-0 h-full overflow-auto">
+    <aside className="w-64 bg-white border-r border-medical-200 hidden lg:block h-full sticky top-0 shadow-medical">
+      <div className="p-6 top-0 h-full overflow-auto">
         {/* Logo */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-8">
           <div 
-            className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-lg"
-            style={getNavigationIconStyle()}
+            className="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gradient-to-br from-medical-600 to-medical-700 shadow-medical"
           >
-            <span className="text-white text-sm font-bold">{brand.shortName}</span>
+            <span className="text-white text-base font-bold">{brand.shortName}</span>
           </div>
-          <h2 className="text-lg font-semibold text-gray-800">{brand.name}</h2>
+          <h2 className="text-xl font-bold text-neutral-800 tracking-tight">{brand.name}</h2>
         </div>
 
         {/* Main Navigation */}
         <nav>
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {MAIN_MENU_ITEMS.map((item) => {
               const active = isActive(item.href);
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3 rounded-lg transition-all ${
+                    className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 ${
                       active
-                        ? 'text-white shadow-sm'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'text-white bg-gradient-to-r from-medical-600 to-medical-700 shadow-medical'
+                        : 'text-neutral-700 hover:bg-medical-50 hover:text-medical-700'
                     }`}
-                    style={active ? { background: primaryGradient } : {}}
                   >
-                    <span className="text-lg mr-3">{item.icon}</span>
-                    <span className="font-medium">{item.label}</span>
+                    <item.icon className="w-5 h-5 mr-4" />
+                    <span className="font-semibold text-sm tracking-wide">{item.label}</span>
                     
                     {/* Badge para disponibilidad */}
                     {item.href.includes('calendar') && availabilityCount !== null && (
@@ -131,7 +140,7 @@ export default function OptimizedSidebar() {
                           canInstall ? 'animate-pulse bg-blue-50 text-blue-700 hover:bg-blue-100' : ''
                         }`}
                       >
-                        <span className="text-base mr-3">{item.icon}</span>
+                        <item.icon className="w-4 h-4 mr-3" />
                         <span className="font-medium">{item.label}</span>
                         {canInstall && <span className="ml-auto text-xs bg-blue-200 text-blue-700 px-2 py-1 rounded-full">Disponible</span>}
                       </button>
@@ -151,7 +160,7 @@ export default function OptimizedSidebar() {
                       }`}
                       style={active ? { background: primaryGradient } : {}}
                     >
-                      <span className="text-base mr-3">{item.icon}</span>
+                      <item.icon className="w-4 h-4 mr-3" />
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   </li>
@@ -193,6 +202,3 @@ export default function OptimizedSidebar() {
     </aside>
   );
 }
-
-// Export del menú para uso en otros componentes
-export { MAIN_MENU_ITEMS, SECONDARY_MENU_ITEMS };

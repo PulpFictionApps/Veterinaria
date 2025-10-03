@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '../../../../lib/api';
 import { useAuthContext } from '../../../../lib/auth-context';
+import { useConsultationTypes } from '../../../../hooks/useData';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -38,6 +39,7 @@ interface AvailabilitySlot {
 export default function NewAppointmentPage() {
   const { userId } = useAuthContext();
   const router = useRouter();
+  const { consultationTypes, isLoading: typesLoading } = useConsultationTypes();
   
   // Estados del formulario
   const [tutors, setTutors] = useState<Tutor[]>([]);
@@ -51,7 +53,6 @@ export default function NewAppointmentPage() {
   const [selectedSlotId, setSelectedSlotId] = useState<string>('');
 
   // Estados de carga y datos
-  const [consultationTypes, setConsultationTypes] = useState<ConsultationType[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,20 +65,14 @@ export default function NewAppointmentPage() {
       
       try {
         setLoading(true);
-        const [tutorsRes, typesRes, slotsRes] = await Promise.all([
+        const [tutorsRes, slotsRes] = await Promise.all([
           authFetch('/tutors'),
-          authFetch('/consultation-types'),
           authFetch(`/availability/${userId}`)
         ]);
 
         if (tutorsRes.ok) {
           const tutorsData = await tutorsRes.json();
           setTutors(tutorsData);
-        }
-
-        if (typesRes.ok) {
-          const typesData = await typesRes.json();
-          setConsultationTypes(typesData);
         }
 
         if (slotsRes.ok) {
@@ -109,7 +104,7 @@ export default function NewAppointmentPage() {
   // Filtrar slots disponibles según la duración del tipo de consulta seleccionado
   const filteredAvailableSlots = (() => {
     if (!selectedConsultationTypeId) return availableSlots;
-    const selectedType = consultationTypes.find(t => t.id === Number(selectedConsultationTypeId));
+    const selectedType = consultationTypes.find((t: ConsultationType) => t.id === Number(selectedConsultationTypeId));
     const durationMinutes = selectedType?.duration || 30;
     const slotsNeeded = Math.ceil(durationMinutes / 30);
 
@@ -184,7 +179,7 @@ export default function NewAppointmentPage() {
     }
   };
 
-  if (loading) {
+  if (loading || typesLoading) {
     return (
       <div className="flex justify-center items-center min-h-64">
         <div className="text-gray-600">Cargando...</div>
@@ -284,7 +279,7 @@ export default function NewAppointmentPage() {
                 required
               >
               <option value="">Seleccionar tipo...</option>
-              {consultationTypes.map(type => (
+              {consultationTypes.map((type: ConsultationType) => (
                 <option key={type.id} value={type.id}>
                   {type.name} - ${(type.price / 100).toLocaleString('es-CL')} ({type.duration || 30} min)
                 </option>

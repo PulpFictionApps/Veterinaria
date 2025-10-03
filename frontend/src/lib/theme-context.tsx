@@ -25,11 +25,11 @@ interface ThemeContextType {
   isLoading: boolean;
 }
 
-// Colores por defecto (rosa pastel)
+// Colores por defecto (paleta médica profesional)
 const defaultColors = {
-  primary: '#EC4899',
-  secondary: '#F9A8D4', 
-  accent: '#BE185D'
+  primary: '#2563EB',    // Azul médico profesional
+  secondary: '#059669',  // Verde médico/salud
+  accent: '#DC2626'      // Rojo médico para urgencias
 };
 
 // Función para generar todas las variaciones de color
