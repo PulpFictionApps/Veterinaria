@@ -314,7 +314,7 @@ body {
   /* Asegurar que el activo mantenga su estilo incluso en hover */
   .sidebar-link.active:hover {
     background-color: rgba(255, 255, 255, 0.25) !important;
-    color: white !important;
+    color: rgb(95, 94, 94) !important;
     border-left: 3px solid white !important;
   }
 }
