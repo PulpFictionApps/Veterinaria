@@ -64,32 +64,10 @@ export default function Sidebar() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="flex items-center px-4 py-3 rounded-lg transition-all"
-                    style={{
-                      backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-                      color: 'white !important',
-                      borderLeft: isActive ? '3px solid white' : 'none',
-                      textDecoration: 'none'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }
-                    }}
+                    className={`sidebar-link ${isActive ? 'active' : ''}`}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>
                     <span className="font-medium">{item.label}</span>
-                    {/* Mobile badge: show when availability count is 0 and this is the availability item */}
-                    {item.href.endsWith('/availability') && availabilityCount !== null && (
-                      <span className={`ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${availabilityCount === 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                        {availabilityCount === 0 ? 'Sin horarios' : `${availabilityCount}`}
-                      </span>
-                    )}
                   </Link>
                 </li>
               );
@@ -98,30 +76,14 @@ export default function Sidebar() {
 
           <div className="mt-4 border-t pt-3">
             <h4 className="text-xs text-white/60 uppercase mb-2 px-4">Cuenta</h4>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {secondary.map(item => {
                 const isActive = pathname && pathname.startsWith(item.href);
                 return (
                   <li key={item.href}>
                     <Link 
                       href={item.href} 
-                      className="flex items-center px-4 py-3 rounded-lg transition-all"
-                      style={{
-                        backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-                        color: 'white !important',
-                        borderLeft: isActive ? '3px solid white' : 'none',
-                        textDecoration: 'none'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }
-                      }}
+                      className={`sidebar-link ${isActive ? 'active' : ''}`}
                     >
                       <span className="text-lg mr-3">{item.icon}</span>
                       <span className="font-medium">{item.label}</span>
