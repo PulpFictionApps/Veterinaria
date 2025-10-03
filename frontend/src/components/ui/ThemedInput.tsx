@@ -24,7 +24,7 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
     className = '', 
     ...props 
   }, ref) => {
-    const { primary } = useThemeColors();
+    // Los colores ahora se manejan con CSS variables
 
     const baseInputClasses = `
       w-full px-4 py-3 rounded-xl border transition-all duration-300
@@ -79,7 +79,7 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
               ${className}
             `}
             style={{
-              '--tw-ring-color': error ? '#DC2626' : primary
+              '--tw-ring-color': error ? '#DC2626' : 'var(--color-primary)'
             } as React.CSSProperties}
             {...props}
           />

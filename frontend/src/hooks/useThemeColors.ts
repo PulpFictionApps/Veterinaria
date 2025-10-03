@@ -1,55 +1,51 @@
 'use client';
 
-import { useTheme } from '../lib/theme-context';
-
+// Hook simplificado - Los colores ahora se manejan con CSS
 export const useThemeColors = () => {
-  const { colors } = useTheme();
-  
+  // Valores por defecto usando variables CSS
+  const defaultStyles = {
+    background: 'var(--gradient-primary)',
+    color: 'white',
+    boxShadow: 'var(--shadow-primary)',
+    transition: 'all 0.2s ease'
+  };
+
   return {
-    // Colores directos
-    ...colors,
-    
-    // Clases CSS dinámicas (para uso con style props)
-    styles: {
-      primaryButton: {
-        background: colors.primaryGradient,
-        color: 'white',
-        boxShadow: colors.shadowPrimary,
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          background: colors.primaryHover
-        }
-      },
-      secondaryButton: {
-        background: colors.secondaryGradient,
-        color: 'white',
-        boxShadow: colors.shadowSecondary,
-      },
-      card: {
-        background: colors.cardGradient,
-        boxShadow: colors.shadowPrimary,
-      },
-      navigation: {
-        background: colors.primaryGradient,
-      }
-    },
-    
-    // Utility functions for inline styles
+    // Utility functions for inline styles (mantenidas para compatibilidad)
     getPrimaryButtonStyle: (hover = false) => ({
-      background: hover ? colors.primaryHover : colors.primaryGradient,
+      background: hover ? 'var(--color-primary-hover)' : 'var(--gradient-primary)',
       color: 'white',
-      boxShadow: colors.shadowPrimary,
+      boxShadow: 'var(--shadow-primary)',
       transition: 'all 0.2s ease'
     }),
     
     getCardStyle: () => ({
-      background: colors.cardGradient,
-      boxShadow: colors.shadowPrimary,
+      background: 'white',
+      boxShadow: 'var(--shadow-primary)',
     }),
     
     getNavigationIconStyle: () => ({
-      background: colors.primaryGradient,
-      boxShadow: colors.shadowPrimary,
-    })
+      background: 'var(--gradient-primary)',
+      boxShadow: 'var(--shadow-primary)',
+    }),
+    
+    // Alias para compatibilidad
+    primaryGradient: 'var(--gradient-primary)',
+    
+    // Estilos predefinidos
+    styles: {
+      primaryButton: defaultStyles,
+      secondaryButton: {
+        ...defaultStyles,
+        background: 'var(--gradient-secondary)',
+      },
+      card: {
+        background: 'white',
+        boxShadow: 'var(--shadow-primary)',
+      },
+      navigation: {
+        background: 'var(--gradient-primary)',
+      }
+    }
   };
 };

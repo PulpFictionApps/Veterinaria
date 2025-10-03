@@ -27,7 +27,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     disabled, 
     ...props 
   }, ref) => {
-    const { getPrimaryButtonStyle, secondaryGradient } = useThemeColors();
+    const { getPrimaryButtonStyle } = useThemeColors();
 
     const baseClasses = `
       font-semibold rounded-xl transition-all duration-300 
@@ -55,7 +55,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
           focusRingColor: 'focus:ring-medical-500'
         },
         secondary: {
-          background: secondaryGradient,
+          background: 'var(--gradient-secondary)',
           color: 'white',
           fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white',
           focusRingColor: 'focus:ring-health-500'
