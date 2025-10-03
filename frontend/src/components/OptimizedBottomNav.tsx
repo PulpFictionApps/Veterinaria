@@ -26,15 +26,16 @@ export default function OptimizedBottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              aria-label={item.label}
-              className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 ${
+              aria-label={`Ir a ${item.label}`}
+              aria-current={active ? 'page' : undefined}
+              className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
                 active 
                   ? 'text-white bg-gradient-to-br from-medical-500 to-medical-600 shadow-lg shadow-medical-200/50 scale-105' 
                   : 'text-neutral-600 hover:text-medical-600 hover:bg-medical-50/70'
               }`}
             >
               <span className={`mb-1 ${active ? 'drop-shadow-sm' : ''}`}>
-                <item.icon className="w-5 h-5" />
+                <item.icon className="w-5 h-5" aria-hidden="true" />
               </span>
               <span className={`text-[10px] font-semibold leading-tight ${active ? 'drop-shadow-sm' : 'font-medium'}`}>
                 {item.mobileLabel || item.label}
@@ -46,8 +47,8 @@ export default function OptimizedBottomNav() {
         {/* Botón "Más" para acceder a funciones adicionales */}
         <Link
           href="/dashboard/settings"
-          aria-label="Más opciones"
-          className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 ${
+          aria-label="Acceder a configuración y más opciones"
+          className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 ${
             pathname?.includes('/dashboard/settings') || 
             pathname?.includes('/dashboard/profile') ||
             pathname?.includes('/dashboard/billing')
@@ -55,7 +56,7 @@ export default function OptimizedBottomNav() {
               : 'text-neutral-500 hover:text-neutral-600 hover:bg-neutral-50/70'
           }`}
         >
-          <span className="text-lg mb-1">⚙️</span>
+          <span className="text-lg mb-1" aria-hidden="true">⚙️</span>
           <span className="text-[10px] font-medium leading-tight">Más</span>
         </Link>
       </div>

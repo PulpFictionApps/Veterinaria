@@ -3,7 +3,23 @@
 import { useState } from 'react';
 import { authFetch } from '../../../lib/api';
 import { useConsultationTypes, invalidateCache } from '../../../hooks/useData';
-import ThemedButton from '../../../components/ThemedButton';
+import { 
+  Pill, 
+  Plus, 
+  Edit, 
+  Trash2, 
+  Clock, 
+  DollarSign,
+  Stethoscope,
+  Heart,
+  Shield,
+  CheckCircle,
+  X,
+  Save,
+  Activity
+} from 'lucide-react';
+import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
+import Tooltip from '../../../components/ui/Tooltip';
 
 interface ConsultationType {
   id: number;
@@ -107,35 +123,60 @@ export default function ConsultationsPage() {
 
   if (loading) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando tipos de consulta...</p>
+      <FadeIn>
+        <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50 p-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex justify-center items-center py-20">
+              <div className="bg-white rounded-2xl shadow-xl p-8 border border-medical-100">
+                <div className="flex flex-col items-center">
+                  <div className="relative">
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-medical-100 border-t-medical-500"></div>
+                    <Pill className="h-6 w-6 text-medical-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                  </div>
+                  <p className="mt-6 text-neutral-600 font-medium">Cargando tipos de consulta...</p>
+                  <p className="mt-2 text-sm text-neutral-400">Preparando configuración médica</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </FadeIn>
     );
   }
 
   return (
-    <div className="w-full h-full">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Tipos de Consulta</h1>
-              <p className="text-gray-600 mt-1">
-                Configura los tipos de consulta, precios y duraciones
-              </p>
+    <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50">
+      <div className="max-w-6xl mx-auto p-6">
+        <FadeIn>
+          <div className="mb-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-r from-medical-500 to-health-500 rounded-xl shadow-lg">
+                    <Pill className="h-8 w-8 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent">
+                      Tipos de Consulta Veterinaria
+                    </h1>
+                    <p className="text-neutral-600 mt-1 font-medium">
+                      Configura servicios médicos, precios y duraciones de consultas
+                    </p>
+                  </div>
+                </div>
+                <Tooltip content="Crear nuevo tipo de consulta médica">
+                  <button
+                    onClick={() => setShowCreateForm(true)}
+                    className="group flex items-center gap-2 bg-gradient-to-r from-medical-500 to-health-500 text-white px-6 py-3 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+                  >
+                    <Plus className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    Nuevo Tipo
+                  </button>
+                </Tooltip>
+              </div>
             </div>
-            <ThemedButton
-              onClick={() => setShowCreateForm(true)}
-              className="sm:w-auto w-full"
-            >
-              + Nuevo Tipo
-            </ThemedButton>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Create/Edit Form */}
         {showCreateForm && (
@@ -270,94 +311,126 @@ export default function ConsultationsPage() {
           </div>
         )}
 
-        {/* Empty State */}
-        {consultationTypes.length === 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-            <div className="text-6xl mb-4">💊</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No hay tipos de consulta configurados
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Crea tu primer tipo de consulta para comenzar a agendar citas
-            </p>
-            <ThemedButton onClick={() => setShowCreateForm(true)}>
-              Crear Primer Tipo
-            </ThemedButton>
-          </div>
-        )}
-
-        {/* Consultation Types Grid */}
-        {consultationTypes.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {consultationTypes.map((type: ConsultationType) => (
-              <div
-                key={type.id}
-                className={`bg-white rounded-xl shadow-sm border-2 transition-all ${
-                  type.active 
-                    ? 'border-gray-200 hover:shadow-md' 
-                    : 'border-gray-100 opacity-60'
-                }`}
-              >
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-3 flex-1">
-                      <div
-                        className="w-4 h-4 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: type.color || '#3B82F6' }}
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg">
-                          {type.name}
-                        </h3>
-                        {type.description && (
-                          <p className="text-sm text-gray-600 mt-1">
-                            {type.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => toggleActive(type.id, type.active)}
-                      className={`text-xs px-3 py-1 rounded-full font-medium ${
-                        type.active
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {type.active ? 'Activo' : 'Inactivo'}
-                    </button>
-                  </div>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500 flex items-center gap-1">
-                        ⏱️ Duración:
-                      </span>
-                      <span className="font-medium">
-                        {type.duration || 30} minutos
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 text-sm flex items-center gap-1">
-                        💰 Precio:
-                      </span>
-                      <span className="font-semibold text-lg text-gray-900">
-                        ${type.price.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => editType(type)}
-                    className="w-full py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors"
-                  >
-                    ✏️ Editar
-                  </button>
+        <Stagger className="space-y-8">
+          {/* Empty State */}
+          {consultationTypes.length === 0 && (
+            <AnimateOnView>
+              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-12 text-center">
+                <div className="p-6 bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl mb-6 inline-block">
+                  <Stethoscope className="h-16 w-16 text-medical-500 mx-auto" />
                 </div>
+                <h3 className="text-2xl font-bold text-medical-800 mb-3">
+                  No hay tipos de consulta configurados
+                </h3>
+                <p className="text-neutral-600 mb-8 max-w-md mx-auto">
+                  Crea tu primer tipo de consulta veterinaria para comenzar a ofrecer servicios médicos especializados
+                </p>
+                <Tooltip content="Crear primer tipo de consulta médica">
+                  <button
+                    onClick={() => setShowCreateForm(true)}
+                    className="group inline-flex items-center gap-3 bg-gradient-to-r from-medical-500 to-health-500 text-white px-8 py-4 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-xl hover:shadow-2xl font-bold text-lg"
+                  >
+                    <Heart className="h-6 w-6 group-hover:scale-110 transition-transform duration-300" />
+                    Crear Primer Tipo
+                    <Plus className="h-6 w-6 group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </Tooltip>
               </div>
-            ))}
-          </div>
-        )}
+            </AnimateOnView>
+          )}
+
+          {/* Consultation Types Grid */}
+          {consultationTypes.length > 0 && (
+            <AnimateOnView>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {consultationTypes.map((type: ConsultationType) => (
+                  <div
+                    key={type.id}
+                    className={`group bg-white rounded-2xl shadow-lg border transition-all duration-300 hover:shadow-xl ${
+                      type.active 
+                        ? 'border-medical-200 hover:border-medical-300' 
+                        : 'border-neutral-200 opacity-70'
+                    }`}
+                  >
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div
+                            className="w-6 h-6 rounded-full flex-shrink-0 shadow-lg"
+                            style={{ backgroundColor: type.color || '#3B82F6' }}
+                          />
+                          <div className="flex-1">
+                            <h3 className="font-bold text-medical-800 text-lg group-hover:text-medical-600 transition-colors">
+                              {type.name}
+                            </h3>
+                            {type.description && (
+                              <p className="text-sm text-neutral-600 mt-1">
+                                {type.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <Tooltip content={type.active ? "Desactivar consulta" : "Activar consulta"}>
+                          <button
+                            onClick={() => toggleActive(type.id, type.active)}
+                            className={`text-xs px-3 py-2 rounded-full font-medium transition-all duration-200 flex items-center gap-2 ${
+                              type.active
+                                ? 'bg-health-100 text-health-800 hover:bg-health-200'
+                                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                            }`}
+                          >
+                            {type.active ? (
+                              <>
+                                <CheckCircle className="h-3 w-3" />
+                                Activo
+                              </>
+                            ) : (
+                              <>
+                                <X className="h-3 w-3" />
+                                Inactivo
+                              </>
+                            )}
+                          </button>
+                        </Tooltip>
+                      </div>
+                      
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-medical-50 to-health-50 rounded-lg">
+                          <span className="text-medical-700 font-medium flex items-center gap-2">
+                            <Clock className="h-4 w-4" />
+                            Duración:
+                          </span>
+                          <span className="font-bold text-medical-800">
+                            {type.duration || 30} min
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-health-50 to-medical-50 rounded-lg">
+                          <span className="text-health-700 font-medium flex items-center gap-2">
+                            <DollarSign className="h-4 w-4" />
+                            Precio:
+                          </span>
+                          <span className="font-bold text-xl text-health-800">
+                            ${type.price.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <Tooltip content="Editar tipo de consulta">
+                        <button
+                          onClick={() => editType(type)}
+                          className="group/edit w-full py-3 bg-gradient-to-r from-medical-500 to-health-500 text-white hover:from-medical-600 hover:to-health-600 rounded-xl transition-all duration-300 font-medium flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                        >
+                          <Edit className="h-4 w-4 group-hover/edit:scale-110 transition-transform duration-300" />
+                          Editar Consulta
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AnimateOnView>
+          )}
+        </Stagger>
       </div>
     </div>
   );

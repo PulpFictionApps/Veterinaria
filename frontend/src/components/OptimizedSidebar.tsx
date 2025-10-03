@@ -87,7 +87,7 @@ export default function OptimizedSidebar() {
         </div>
 
         {/* Main Navigation */}
-        <nav>
+        <nav role="navigation" aria-label="Navegación principal">
           <ul className="space-y-2">
             {MAIN_MENU_ITEMS.map((item) => {
               const active = isActive(item.href);
@@ -95,13 +95,15 @@ export default function OptimizedSidebar() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 ${
+                    aria-current={active ? 'page' : undefined}
+                    aria-label={`Ir a ${item.label}`}
+                    className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
                       active
                         ? 'text-white bg-gradient-to-r from-medical-600 to-medical-700 shadow-medical'
                         : 'text-neutral-700 hover:bg-medical-50 hover:text-medical-700'
                     }`}
                   >
-                    <item.icon className="w-5 h-5 mr-4" />
+                    <item.icon className="w-5 h-5 mr-4" aria-hidden="true" />
                     <span className="font-semibold text-sm tracking-wide">{item.label}</span>
                     
                     {/* Badge para disponibilidad */}
@@ -122,8 +124,8 @@ export default function OptimizedSidebar() {
 
           {/* Secondary Navigation */}
           <div className="mt-8 border-t border-neutral-200 pt-6">
-            <h4 className="text-xs text-neutral-500 uppercase mb-4 px-4 font-bold tracking-wider">Configuración</h4>
-            <ul className="space-y-1.5">
+            <h4 className="text-xs text-neutral-500 uppercase mb-4 px-4 font-bold tracking-wider" id="secondary-nav-heading">Configuración</h4>
+            <ul className="space-y-1.5" role="menu" aria-labelledby="secondary-nav-heading">
               {SECONDARY_MENU_ITEMS.map(item => {
                 const active = isActive(item.href);
                 
@@ -136,13 +138,15 @@ export default function OptimizedSidebar() {
                     <li key={item.href}>
                       <button 
                         onClick={handleInstallClick}
-                        className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm ${
+                        disabled={!canInstall}
+                        aria-label={canInstall ? 'Instalar aplicación móvil' : 'Aplicación ya instalada'}
+                        className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-health-500 focus:ring-offset-2 ${
                           canInstall 
                             ? 'animate-pulse bg-health-50 text-health-700 hover:bg-health-100 border border-health-200' 
-                            : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700'
+                            : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50'
                         }`}
                       >
-                        <item.icon className="w-4 h-4 mr-3" />
+                        <item.icon className="w-4 h-4 mr-3" aria-hidden="true" />
                         <span className="font-medium">{item.label}</span>
                         {canInstall && <span className="ml-auto text-xs bg-health-200 text-health-800 px-2 py-1 rounded-full font-semibold">Disponible</span>}
                       </button>
@@ -154,14 +158,17 @@ export default function OptimizedSidebar() {
                 return (
                   <li key={item.href}>
                     <Link 
-                      href={item.href} 
-                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm ${
+                      href={item.href}
+                      role="menuitem"
+                      aria-current={active ? 'page' : undefined}
+                      aria-label={`Ir a ${item.label}`}
+                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
                         active
                           ? 'text-white bg-gradient-to-r from-medical-600 to-medical-700 shadow-medical'
                           : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700'
                       }`}
                     >
-                      <item.icon className="w-4 h-4 mr-3" />
+                      <item.icon className="w-4 h-4 mr-3" aria-hidden="true" />
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   </li>
@@ -191,9 +198,10 @@ export default function OptimizedSidebar() {
                   logout();
                   router.push('/login');
                 }}
-                className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 text-sm text-emergency-600 hover:bg-emergency-50 hover:text-emergency-700"
+                aria-label="Cerrar sesión y salir de la aplicación"
+                className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 text-sm text-emergency-600 hover:bg-emergency-50 hover:text-emergency-700 focus:outline-none focus:ring-2 focus:ring-emergency-500 focus:ring-offset-2"
               >
-                <span className="text-base mr-3">🚪</span>
+                <span className="text-base mr-3" aria-hidden="true">🚪</span>
                 <span className="font-medium">Cerrar Sesión</span>
               </button>
             </div>

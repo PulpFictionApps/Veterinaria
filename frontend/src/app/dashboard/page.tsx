@@ -6,7 +6,6 @@ import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
 import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
 import PublicLinkManager from '../../components/PublicLinkManager';
 import ConsultationsPanel from '../../components/ConsultationsPanel';
-import ThemedButton from '../../components/ThemedButton';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
 import { 
@@ -20,6 +19,8 @@ import {
   AlertTriangle 
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../components/ui/Transitions';
+import ThemedCard from '../../components/ui/ThemedCard';
+import ThemedButton from '../../components/ui/ThemedButton';
 
 interface AppointmentSummary {
   id: number;
@@ -95,9 +96,27 @@ export default function Dashboard() {
           ).length;
         }
 
-        // Simular ingresos semanales (esto podría venir de un endpoint específico)
-        newMetrics.weeklyRevenue = newMetrics.completedAppointments * 25000; // Precio promedio
-        newMetrics.pendingTasks = Math.max(0, 5 - newMetrics.availableSlots); // Lógica ejemplo
+        // Calcular ingresos reales de citas completadas (si hay datos disponibles)
+        if (appointmentsRes.ok) {
+          const appointments = await appointmentsRes.json();
+          // Solo contar citas con precio real de consulta
+          const completedWithPrice = appointments.filter((apt: any) => 
+            apt.status === 'completed' && apt.consultationType?.price
+          );
+          newMetrics.weeklyRevenue = completedWithPrice.reduce((sum: number, apt: any) => 
+            sum + (apt.consultationType.price || 0), 0
+          );
+        }
+        
+        // Tareas pendientes reales basadas en citas próximas sin confirmar
+        if (appointmentsRes.ok) {
+          const appointments = await appointmentsRes.json();
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          newMetrics.pendingTasks = appointments.filter((apt: any) => 
+            new Date(apt.date) <= tomorrow && !apt.confirmed
+          ).length;
+        }
 
         if (mounted) {
           setMetrics(newMetrics);
@@ -148,20 +167,26 @@ export default function Dashboard() {
     }[changeType];
 
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-card border border-medical-100 hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 group">
+      <ThemedCard variant="medical" className="group cursor-pointer">
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-neutral-600 mb-2">{title}</p>
-            <p className="text-3xl font-bold text-neutral-900 transition-colors group-hover:text-medical-700">{formatValue(value)}</p>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-medical-600 mb-2 uppercase tracking-wide">{title}</p>
+            <p className="text-3xl font-black text-neutral-900 transition-colors group-hover:text-medical-700 mb-1">{formatValue(value)}</p>
             {change && (
-              <p className={`text-sm ${changeColor} mt-2 font-medium`}>{change}</p>
+              <div className="flex items-center gap-1">
+                <div className={`w-2 h-2 rounded-full ${
+                  changeType === 'positive' ? 'bg-health-500' : 
+                  changeType === 'negative' ? 'bg-emergency-500' : 'bg-neutral-400'
+                }`} />
+                <p className={`text-xs font-semibold ${changeColor}`}>{change}</p>
+              </div>
             )}
           </div>
-          <div className="p-4 bg-gradient-to-br from-medical-50 to-medical-100 rounded-xl group-hover:from-medical-100 group-hover:to-medical-200 transition-all duration-300">
-            <Icon className="w-7 h-7 text-medical-600 group-hover:scale-110 transition-transform duration-300" />
+          <div className="p-4 bg-gradient-to-br from-medical-100 to-medical-200 rounded-2xl group-hover:from-medical-200 group-hover:to-medical-300 transition-all duration-300 shadow-lg">
+            <Icon className="w-8 h-8 text-medical-700 group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
           </div>
         </div>
-      </div>
+      </ThemedCard>
     );
   };
 
@@ -196,29 +221,39 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="w-full min-h-full bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
+    <div className="w-full min-h-full bg-gradient-to-br from-medical-50/30 via-white to-health-50/30">
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-10">
         
         {/* Header con saludo animado */}
         <FadeIn>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-600 to-health-600 bg-clip-text text-transparent">
-                Panel de Control
-              </h1>
-              <p className="text-neutral-600 mt-2 text-lg">Bienvenido a tu clínica veterinaria</p>
-            </div>
-            <SlideIn direction="right" delay={200}>
-              <div className="text-sm text-neutral-500 bg-white rounded-xl px-4 py-2 shadow-sm border border-medical-100">
-                {new Date().toLocaleDateString('es-CL', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
+          <ThemedCard variant="medical" padding="lg" shadow="xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <div className="p-4 bg-gradient-to-br from-medical-600 to-medical-700 rounded-2xl shadow-xl">
+                  <Activity className="w-10 h-10 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-black bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent mb-2">
+                    Panel de Control Veterinario
+                  </h1>
+                  <p className="text-neutral-600 text-lg font-medium">Centro de gestión médica profesional</p>
+                </div>
               </div>
-            </SlideIn>
-          </div>
+              <SlideIn direction="right" delay={200}>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-medical-600 mb-1">
+                    {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
+                  </div>
+                  <div className="text-2xl font-black text-neutral-800">
+                    {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
+                  </div>
+                  <div className="text-xs text-neutral-500 font-medium">
+                    {new Date().getFullYear()}
+                  </div>
+                </div>
+              </SlideIn>
+            </div>
+          </ThemedCard>
         </FadeIn>
 
         {/* Alerta de suscripción */}
@@ -255,8 +290,8 @@ export default function Dashboard() {
                 title="Citas de Hoy"
                 value={metrics.todayAppointments}
                 icon={Calendar}
-                change="+2 vs ayer"
-                changeType="positive"
+                change={metrics.todayAppointments > 0 ? `${metrics.todayAppointments} programadas` : "Sin citas hoy"}
+                changeType={metrics.todayAppointments > 0 ? "positive" : "neutral"}
               />
             </div>,
             <div key="clients" className="xl:col-span-2">
@@ -264,8 +299,8 @@ export default function Dashboard() {
                 title="Total Clientes"
                 value={metrics.totalClients}
                 icon={Users}
-                change="+5 este mes"
-                changeType="positive"
+                change={metrics.totalClients > 0 ? "Total registrados" : "Sin clientes aún"}
+                changeType="neutral"
               />
             </div>,
             <div key="slots" className="xl:col-span-2">
@@ -293,16 +328,16 @@ export default function Dashboard() {
               value={metrics.weeklyRevenue}
               icon={DollarSign}
               format="currency"
-              change="+12% vs semana anterior"
-              changeType="positive"
+              change={metrics.weeklyRevenue > 0 ? "Ingresos confirmados" : "Sin ingresos registrados"}
+              changeType={metrics.weeklyRevenue > 0 ? "positive" : "neutral"}
             />,
             <MetricCard
               key="completed"
               title="Consultas Completadas"
               value={metrics.completedAppointments}
               icon={Stethoscope}
-              change="Este mes"
-              changeType="neutral"
+              change={metrics.completedAppointments > 0 ? "Atenciones realizadas" : "Sin consultas completadas"}
+              changeType={metrics.completedAppointments > 0 ? "positive" : "neutral"}
             />,
             <MetricCard
               key="tasks"
@@ -316,36 +351,50 @@ export default function Dashboard() {
         </Stagger>
 
         {/* Gestión de enlaces públicos */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Enlace de Reservas</h2>
-            <p className="text-sm text-gray-600 mt-1">Comparte este enlace para que tus clientes puedan agendar citas</p>
-          </div>
-          <div className="p-6">
-            <PublicLinkManager />
-          </div>
-        </div>
-
-        {/* Layout principal con consultas y calendario */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Panel de consultas - 2/3 del espacio */}
-          <div className="xl:col-span-2">
-            <ConsultationsPanel />
-          </div>
-
-          {/* Calendario - 1/3 del espacio */}
-          <div className="xl:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Calendario de Citas</h2>
-                <p className="text-sm text-gray-600 mt-1">Vista rápida de tu agenda</p>
-              </div>
-              <div className="p-6">
-                {uid && <LazyDashboardCalendar userId={uid} />}
+        <AnimateOnView>
+          <ThemedCard variant="health" padding="lg" shadow="xl">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-gradient-to-r from-health-600 to-health-700 rounded-xl">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-health-800">Sistema de Reservas Online</h2>
+                  <p className="text-sm text-health-600 font-medium">Enlace público para que tus clientes reserven citas</p>
+                </div>
               </div>
             </div>
+            <PublicLinkManager />
+          </ThemedCard>
+        </AnimateOnView>
+
+        {/* Layout principal con consultas y calendario */}
+        <AnimateOnView>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            {/* Panel de consultas - 2/3 del espacio */}
+            <div className="xl:col-span-2">
+              <ConsultationsPanel />
+            </div>
+
+            {/* Calendario - 1/3 del espacio */}
+            <div className="xl:col-span-1">
+              <ThemedCard variant="medical" padding="lg" shadow="xl">
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 bg-gradient-to-r from-medical-600 to-medical-700 rounded-xl">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-medical-800">Agenda Médica</h2>
+                      <p className="text-sm text-medical-600 font-medium">Vista general de citas programadas</p>
+                    </div>
+                  </div>
+                </div>
+                {uid && <LazyDashboardCalendar userId={uid} />}
+              </ThemedCard>
+            </div>
           </div>
-        </div>
+        </AnimateOnView>
 
       </div>
     </div>

@@ -3,6 +3,22 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '../../../lib/api';
 import { useNotification } from '../../../components/Notification';
+import { 
+  CreditCard, 
+  Calendar, 
+  CheckCircle, 
+  AlertCircle, 
+  Clock,
+  Star,
+  Stethoscope,
+  Heart,
+  Shield,
+  Zap,
+  FileText,
+  Award
+} from 'lucide-react';
+import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
+import Tooltip from '../../../components/ui/Tooltip';
 
 export default function BillingPage() {
   const { showNotification, NotificationComponent } = useNotification();
@@ -19,12 +35,12 @@ export default function BillingPage() {
     display: 'Plan Veterinario Premium',
     price: '$15.000 CLP / mes',
     features: [
-      '7 dias de prueba gratuita',
-      'Agenda publica ilimitada', 
-      'Gestion de clientes y mascotas',
-      'Citas y disponibilidad',
-      'Recetas en PDF',
-      'Ficha clinica y bitacora'
+      { text: '7 días de prueba gratuita', icon: Clock },
+      { text: 'Agenda pública ilimitada', icon: Calendar },
+      { text: 'Gestión de clientes y mascotas', icon: Heart },
+      { text: 'Citas y disponibilidad', icon: Stethoscope },
+      { text: 'Recetas médicas en PDF', icon: FileText },
+      { text: 'Ficha clínica y bitácora', icon: Shield }
     ]
   };
 
@@ -80,119 +96,230 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-200">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Suscripcion y Facturacion</h1>
-        <p className="text-gray-600">Gestiona tu plan premium y revisa tu historial de pagos.</p>
-      </div>
-
-      {subscription ? (
-        <div className="p-6 rounded-xl border-2 mb-6 bg-blue-50 border-blue-200">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-xl font-bold">{PLAN_INFO.display}</h3>
-                {subscription.status === 'trial' && (
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                    Prueba Gratuita
-                  </span>
-                )}
-                {subscription.status === 'expired' && (
-                  <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
-                    Expirada
-                  </span>
-                )}
-              </div>
-              
-              <p className="text-gray-600 mb-4">{PLAN_INFO.price}</p>
-              
-              <div className="font-semibold mb-3 text-blue-600">
-                {subscription.status === 'trial' ? 'Prueba Gratuita Activa' : 
-                 subscription.status === 'active' ? 'Suscripcion Activa' : 
-                 subscription.status === 'expired' ? 'Suscripcion Expirada' : subscription.status}
-              </div>
-
-              {subscription.expiresAt && (
-                <div className="text-sm text-gray-600 mb-4">
-                  <span className="font-medium">
-                    {subscription.status === 'trial' ? 'Prueba termina:' : 'Expira:'} 
-                  </span> {new Date(subscription.expiresAt).toLocaleDateString()} 
-                  ({getDaysRemaining()} dias restantes)
+    <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50">
+      <div className="max-w-6xl mx-auto p-6">
+        <FadeIn>
+          <div className="mb-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-medical-500 to-health-500 rounded-xl shadow-lg">
+                  <CreditCard className="h-8 w-8 text-white" />
                 </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {PLAN_INFO.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    <span>{feature}</span>
-                  </div>
-                ))}
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent">
+                    Suscripción y Facturación
+                  </h1>
+                  <p className="text-neutral-600 mt-1 font-medium">
+                    Gestiona tu plan veterinario premium y revisa tu historial de pagos
+                  </p>
+                </div>
               </div>
-            </div>
-
-            <div className="ml-6">
-              <button 
-                onClick={startCheckout}
-                disabled={loading}
-                className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all font-medium shadow-lg"
-              >
-                {subscription.status === 'trial' ? 'Activar Plan Premium' :
-                 subscription.status === 'expired' ? 'Reactivar Suscripcion' : 'Renovar Plan'}
-              </button>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="p-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl text-center mb-6">
-          <h3 className="text-2xl font-bold text-blue-900 mb-3">
-            Comienza tu prueba gratuita!
-          </h3>
-          <p className="text-blue-800 mb-6">
-            7 dias gratis del Plan Veterinario Premium, luego $15.000 CLP mensuales.
-          </p>
-          
-          <button 
-            onClick={startCheckout}
-            disabled={loading}
-            className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all font-bold text-lg shadow-xl"
-          >
-            Comenzar Prueba Gratuita
-          </button>
-        </div>
-      )}
+        </FadeIn>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Historial de Pagos</h3>
-        <div className="bg-gray-50 rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-3 text-left">ID</th>
-                <th className="p-3 text-left">Fecha</th>
-                <th className="p-3 text-left">Monto</th>
-                <th className="p-3 text-left">Estado</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {invoices.map((inv, idx) => (
-                <tr key={inv.id} className={idx < invoices.length - 1 ? 'border-b' : ''}>
-                  <td className="p-3 font-mono text-sm">{inv.id}</td>
-                  <td className="p-3">{inv.date}</td>
-                  <td className="p-3 font-semibold">{inv.amount}</td>
-                  <td className="p-3">
-                    <span className={inv.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
-                      {inv.status === 'paid' ? 'Pagada' : 'Pendiente'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Stagger className="space-y-8">
+          {subscription ? (
+            <AnimateOnView>
+              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-medical-500 to-health-500 px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Award className="h-6 w-6 text-white" />
+                      <h2 className="text-xl font-bold text-white">{PLAN_INFO.display}</h2>
+                    </div>
+                    {subscription.status === 'trial' && (
+                      <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        Prueba Gratuita
+                      </span>
+                    )}
+                    {subscription.status === 'expired' && (
+                      <span className="bg-emergency-500 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4" />
+                        Expirada
+                      </span>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2">
+                      <div className="mb-4">
+                        <p className="text-2xl font-bold text-medical-600 mb-2">{PLAN_INFO.price}</p>
+                        <div className="font-semibold text-lg text-health-700 flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-health-500" />
+                          {subscription.status === 'trial' ? 'Prueba Gratuita Activa' : 
+                           subscription.status === 'active' ? 'Suscripción Activa' : 
+                           subscription.status === 'expired' ? 'Suscripción Expirada' : subscription.status}
+                        </div>
+                      </div>
+
+                      {subscription.expiresAt && (
+                        <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-xl p-4 mb-6">
+                          <div className="flex items-center gap-2 text-medical-700">
+                            <Calendar className="h-5 w-5" />
+                            <span className="font-medium">
+                              {subscription.status === 'trial' ? 'Prueba termina:' : 'Expira:'} 
+                            </span>
+                            <span className="font-bold">
+                              {new Date(subscription.expiresAt).toLocaleDateString()} 
+                              ({getDaysRemaining()} días restantes)
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-2 gap-3">
+                        {PLAN_INFO.features.map((feature, idx) => {
+                          const IconComponent = feature.icon;
+                          return (
+                            <div key={idx} className="flex items-center gap-3 p-3 bg-gradient-to-r from-health-50 to-medical-50 rounded-lg">
+                              <IconComponent className="h-5 w-5 text-health-500" />
+                              <span className="text-sm font-medium text-health-700">{feature.text}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-center">
+                      <Tooltip content="Gestionar suscripción veterinaria">
+                        <button 
+                          onClick={startCheckout}
+                          disabled={loading}
+                          className="group w-full px-6 py-4 bg-gradient-to-r from-medical-500 to-health-500 text-white rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          <Zap className={`h-5 w-5 ${loading ? 'animate-spin' : 'group-hover:scale-110 transition-transform duration-300'}`} />
+                          {subscription.status === 'trial' ? 'Activar Plan Premium' :
+                           subscription.status === 'expired' ? 'Reactivar Suscripción' : 'Renovar Plan'}
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AnimateOnView>
+          ) : (
+            <AnimateOnView>
+              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-health-500 to-medical-500 px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <Star className="h-6 w-6 text-white" />
+                    <h2 className="text-xl font-bold text-white">Comienza tu Práctica Veterinaria Premium</h2>
+                  </div>
+                </div>
+                
+                <div className="p-8 text-center">
+                  <div className="mb-6">
+                    <div className="p-4 bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl mb-4">
+                      <Stethoscope className="h-16 w-16 text-medical-500 mx-auto mb-4" />
+                      <h3 className="text-2xl font-bold text-medical-800 mb-3">
+                        ¡7 Días de Prueba Gratuita!
+                      </h3>
+                      <p className="text-medical-700 text-lg mb-4">
+                        Experimenta todas las funciones del Plan Veterinario Premium
+                      </p>
+                      <p className="text-neutral-600 font-medium">
+                        Luego solo <span className="text-medical-600 font-bold text-xl">$15.000 CLP mensuales</span>
+                      </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      {PLAN_INFO.features.map((feature, idx) => {
+                        const IconComponent = feature.icon;
+                        return (
+                          <div key={idx} className="flex items-center gap-2 p-3 bg-gradient-to-r from-health-50 to-medical-50 rounded-lg text-left">
+                            <IconComponent className="h-4 w-4 text-health-500" />
+                            <span className="text-sm font-medium text-health-700">{feature.text}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  
+                  <Tooltip content="Iniciar prueba gratuita de 7 días">
+                    <button 
+                      onClick={startCheckout}
+                      disabled={loading}
+                      className="group px-8 py-4 bg-gradient-to-r from-medical-500 to-health-500 text-white rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
+                    >
+                      <Heart className={`h-5 w-5 ${loading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform duration-300'}`} />
+                      Comenzar Prueba Gratuita
+                      <Star className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                    </button>
+                  </Tooltip>
+                </div>
+              </div>
+            </AnimateOnView>
+          )}
+
+          <AnimateOnView>
+            <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-health-600 to-medical-600 px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <FileText className="h-6 w-6 text-white" />
+                  <h2 className="text-xl font-bold text-white">Historial de Pagos</h2>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-xl overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-gradient-to-r from-medical-100 to-health-100">
+                      <tr>
+                        <th className="p-4 text-left font-bold text-medical-800">ID Factura</th>
+                        <th className="p-4 text-left font-bold text-medical-800">Fecha</th>
+                        <th className="p-4 text-left font-bold text-medical-800">Monto</th>
+                        <th className="p-4 text-left font-bold text-medical-800">Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white">
+                      {invoices.map((inv, idx) => (
+                        <tr key={inv.id} className={`hover:bg-medical-50 transition-colors duration-200 ${idx < invoices.length - 1 ? 'border-b border-medical-100' : ''}`}>
+                          <td className="p-4 font-mono text-sm text-medical-600 font-medium">{inv.id}</td>
+                          <td className="p-4 text-neutral-700">{inv.date}</td>
+                          <td className="p-4 font-bold text-medical-700">{inv.amount}</td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 w-fit ${
+                              inv.status === 'paid' 
+                                ? 'bg-health-100 text-health-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {inv.status === 'paid' ? (
+                                <>
+                                  <CheckCircle className="h-4 w-4" />
+                                  Pagada
+                                </>
+                              ) : (
+                                <>
+                                  <Clock className="h-4 w-4" />
+                                  Pendiente
+                                </>
+                              )}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {invoices.length === 0 && (
+                  <div className="text-center py-12">
+                    <FileText className="h-16 w-16 text-neutral-300 mx-auto mb-4" />
+                    <p className="text-neutral-500 font-medium">No hay facturas disponibles</p>
+                    <p className="text-sm text-neutral-400 mt-1">Los pagos aparecerán aquí cuando se procesen</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </AnimateOnView>
+        </Stagger>
+
+        {NotificationComponent}
       </div>
-
-      {NotificationComponent}
     </div>
   );
 }

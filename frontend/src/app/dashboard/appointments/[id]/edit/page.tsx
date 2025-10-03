@@ -141,7 +141,7 @@ export default function EditAppointmentPage() {
           </label>
           {availableSlots.length > 0 ? (
             <select 
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent" 
               value={slotId} 
               onChange={e => {
                 const selectedId = e.target.value;
@@ -189,7 +189,7 @@ export default function EditAppointmentPage() {
           </label>
           <input 
             type="datetime-local"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-gray-50" 
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent bg-gray-50" 
             value={date ? new Date(date).toISOString().slice(0, 16) : ''} 
             onChange={e => {
               if (e.target.value) {
@@ -211,7 +211,7 @@ export default function EditAppointmentPage() {
             Motivo de la consulta
           </label>
           <textarea 
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent" 
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent" 
             value={reason} 
             onChange={e => setReason(e.target.value)}
             rows={3}
@@ -230,7 +230,7 @@ export default function EditAppointmentPage() {
           </button>
           <button 
             type="submit" 
-            className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
+            className="bg-gradient-to-r from-medical-500 to-health-500 text-white px-6 py-2 rounded-lg hover:from-medical-600 hover:to-health-600 transition-all shadow-lg shadow-medical-200/50"
           >
             Guardar Cambios
           </button>

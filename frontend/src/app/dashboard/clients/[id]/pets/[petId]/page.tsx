@@ -113,85 +113,47 @@ export default function PetDetail({ params }: PageProps) {
         setPet(petData);
       }
 
-      // Cargar registros médicos (simulado por ahora)
-      // const medicalRes = await authFetch(`/pets/${petId}/medical-records`);
-      // if (medicalRes.ok) {
-      //   const medicalData = await medicalRes.json();
-      //   setMedicalRecords(medicalData);
-      // }
-
-      // Cargar prescripciones (simulado por ahora)  
-      // const prescRes = await authFetch(`/pets/${petId}/prescriptions`);
-      // if (prescRes.ok) {
-      //   const prescData = await prescRes.json();
-      //   setPrescriptions(prescData);
-      // }
-
-      // Cargar citas (simulado por ahora)
-      // const appointRes = await authFetch(`/pets/${petId}/appointments`);
-      // if (appointRes.ok) {
-      //   const appointData = await appointRes.json();
-      //   setAppointments(appointData);
-      // }
-
-      // Datos simulados para demostración
-      setMedicalRecords([
-        {
-          id: 1,
-          title: "Consulta General",
-          content: "Revisión rutinaria. Mascota en buen estado general.",
-          diagnosis: "Animal sano",
-          treatment: "Mantener cuidados regulares",
-          weight: 15.2,
-          temperature: 38.5,
-          createdAt: "2024-10-01T10:00:00Z"
-        },
-        {
-          id: 2,
-          title: "Vacunación Anual",
-          content: "Aplicación de vacuna múltiple canina.",
-          diagnosis: "Prevención",
-          treatment: "Vacuna aplicada correctamente",
-          weight: 15.0,
-          createdAt: "2024-09-15T14:30:00Z"
+      // Cargar registros médicos reales
+      try {
+        const medicalRes = await authFetch(`/medical-records/pet/${petId}`);
+        if (medicalRes.ok) {
+          const medicalData = await medicalRes.json();
+          setMedicalRecords(medicalData || []);
+        } else {
+          setMedicalRecords([]);
         }
-      ]);
+      } catch (error) {
+        console.error('Error loading medical records:', error);
+        setMedicalRecords([]);
+      }
 
-      setPrescriptions([
-        {
-          id: 1,
-          title: "Antiparasitario",
-          medication: "Simparica",
-          dosage: "1 comprimido",
-          frequency: "Cada 30 días",
-          duration: "3 meses",
-          instructions: "Administrar con alimento",
-          createdAt: "2024-10-01T10:00:00Z"
+      // Cargar prescripciones reales
+      try {
+        const prescRes = await authFetch(`/prescriptions/pet/${petId}`);
+        if (prescRes.ok) {
+          const prescData = await prescRes.json();
+          setPrescriptions(prescData || []);
+        } else {
+          setPrescriptions([]);
         }
-      ]);
+      } catch (error) {
+        console.error('Error loading prescriptions:', error);
+        setPrescriptions([]);
+      }
 
-      setAppointments([
-        {
-          id: 1,
-          date: "2024-10-01T10:00:00Z",
-          reason: "Consulta de rutina",
-          status: "completed",
-          consultationType: {
-            name: "Consulta General",
-            color: "#3B82F6"
-          }
-        },
-        {
-          id: 2,
-          date: "2024-10-15T15:00:00Z",
-          reason: "Control post-vacuna",
-          status: "scheduled",
-          consultationType: {
-            name: "Control",
-            color: "#10B981"
-          }
+      // Cargar citas reales de esta mascota
+      try {
+        const appointRes = await authFetch(`/appointments/pet/${petId}`);
+        if (appointRes.ok) {
+          const appointData = await appointRes.json();
+          setAppointments(appointData || []);
+        } else {
+          setAppointments([]);
         }
-      ]);
+      } catch (error) {
+        console.error('Error loading appointments:', error);
+        setAppointments([]);
+      }
 
     } catch (error) {
       console.error('Error loading pet data:', error);
