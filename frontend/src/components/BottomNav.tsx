@@ -9,8 +9,8 @@ export default function BottomNav() {
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
-    { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
-    { href: '/dashboard/calendar', label: 'Calendario', icon: '�' },
+    { href: '/dashboard/appointments', label: 'Citas', icon: '🏥' },
+    { href: '/dashboard/calendar', label: 'Calendario', icon: '📅' },
   ]; 
   
   return (

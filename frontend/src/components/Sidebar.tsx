@@ -33,9 +33,9 @@ export default function Sidebar() {
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/clients', label: 'Clientes', icon: '👥' },
-    { href: '/dashboard/appointments', label: 'Citas', icon: '📅' },
+    { href: '/dashboard/appointments', label: 'Citas', icon: '🏥' },
     { href: '/dashboard/consultations', label: 'Consultas', icon: '💊' },
-    { href: '/dashboard/calendar', label: 'Calendario', icon: '�' },
+    { href: '/dashboard/calendar', label: 'Calendario', icon: '📅' },
   ];
   const secondary = [
     { href: '/dashboard/profile', label: 'Perfil Profesional', icon: '👨‍⚕️' },

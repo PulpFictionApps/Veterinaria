@@ -1,4 +1,5 @@
 import { apiCache } from './cache';
+import { mutate } from 'swr';
 
 // Detectar automáticamente el entorno y usar la URL correcta
 const getApiBase = () => {
@@ -57,6 +58,8 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
     // Invalidar cache relacionado en operaciones de escritura
     if (opts.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(opts.method)) {
       invalidateRelatedCache(path);
+      // También invalidar cache de SWR para actualización inmediata
+      invalidateSWRCache(path);
     }
     
     return res;
@@ -98,5 +101,40 @@ function invalidateRelatedCache(path: string) {
         apiCache.delete(key);
       }
     }
+  }
+}
+
+// Función para invalidar cache de SWR y forzar revalidación inmediata
+function invalidateSWRCache(path: string) {
+  // Invalidar citas y disponibilidad
+  if (path.includes('/appointments')) {
+    mutate(key => typeof key === 'string' && key.includes('/appointments'));
+    mutate(key => typeof key === 'string' && key.includes('/availability'));
+  }
+  
+  // Invalidar disponibilidad
+  if (path.includes('/availability')) {
+    mutate(key => typeof key === 'string' && key.includes('/availability'));
+    mutate(key => typeof key === 'string' && key.includes('/appointments'));
+  }
+  
+  // Invalidar clientes/tutores
+  if (path.includes('/tutors') || path.includes('/clients')) {
+    mutate(key => typeof key === 'string' && key.includes('/tutors'));
+  }
+  
+  // Invalidar mascotas
+  if (path.includes('/pets')) {
+    mutate(key => typeof key === 'string' && key.includes('/pets'));
+  }
+  
+  // Invalidar configuración de usuario (para temas)
+  if (path.includes('/users') && path.includes('/settings')) {
+    mutate(key => typeof key === 'string' && key.includes('/users'));
+  }
+  
+  // Invalidar tipos de consulta
+  if (path.includes('/consultation-types')) {
+    mutate('/consultation-types');
   }
 }

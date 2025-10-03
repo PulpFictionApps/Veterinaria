@@ -14,12 +14,12 @@ const MAIN_MENU_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: '🏠', mobileLabel: 'Inicio' },
   { href: '/dashboard/calendar', label: 'Calendar', icon: '📅', mobileLabel: 'Agenda' },
   { href: '/dashboard/clients', label: 'Clientes', icon: '👥', mobileLabel: 'Clientes' },
-  { href: '/dashboard/appointments', label: 'Citas', icon: '�', mobileLabel: 'Citas' },
+  { href: '/dashboard/appointments', label: 'Citas', icon: '🏥', mobileLabel: 'Citas' },
 ];
 
 const SECONDARY_MENU_ITEMS = [
   { href: '/dashboard/profile', label: 'Perfil Profesional', icon: '👨‍⚕️' },
-  { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: '�' },
+  { href: '/dashboard/consultations', label: 'Tipos de Consulta', icon: '💊' },
   { href: '/dashboard/billing', label: 'Facturación', icon: '💳' },
   { href: '/dashboard/settings', label: 'Ajustes', icon: '⚙️' },
   { href: '#install-app', label: 'Descargar App', icon: '📱', action: 'install' },

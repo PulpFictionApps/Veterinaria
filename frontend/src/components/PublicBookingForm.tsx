@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { API_BASE } from '../lib/api';
 import { filterActiveSlots, formatChileDate, formatChileTime } from '../lib/timezone';
 import { formatChileanPhone, validateChileanPhone, formatRutChile, validateRutChile } from '../lib/chilean-validation';
+import { usePublicAvailability, useConsultationTypes, invalidateCache } from '../hooks/useData';
 
 interface ConsultationType {
   id: number;
@@ -43,6 +44,10 @@ interface ProfessionalColors {
 }
 
 export default function PublicBookingForm({ professionalId }: { professionalId: number }) {
+  // Usar hooks SWR para datos en tiempo real
+  const { availability, isLoading: availabilityLoading, revalidate: revalidateAvailability } = usePublicAvailability(professionalId.toString());
+  const { consultationTypes, isLoading: consultationTypesLoading } = useConsultationTypes();
+
   const [email, setEmail] = useState('');
   const [emailChecked, setEmailChecked] = useState(false);
   const [existingTutor, setExistingTutor] = useState<TutorData | null>(null);
@@ -75,7 +80,6 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const [date, setDate] = useState('');
   const [slots, setSlots] = useState<Array<{ id: number; start: string; end: string }>>([]);
   const [selectedSlot, setSelectedSlot] = useState<string>('');
-  const [consultationTypes, setConsultationTypes] = useState<ConsultationType[]>([]);
   const [selectedConsultationType, setSelectedConsultationType] = useState<string>('');
   const [reason, setReason] = useState('');
   const [message, setMessage] = useState('');
@@ -273,51 +277,39 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       }
       setMessage('Reserva creada correctamente');
       
-      // reload available slots después de reservar
-      const slotsRes = await fetch(`${API_BASE}/availability/public/${professionalId}`);
-      if (slotsRes.ok) {
-        const data = await slotsRes.json();
-        const activeSlots = filterActiveSlots(data || []);
-        setSlots(activeSlots);
-      }
+      // Revalidar disponibilidad inmediatamente después de reservar
+      await revalidateAvailability();
+      invalidateCache.availability(professionalId);
+      
+      // Limpiar slots locales para forzar actualización
+      setSlots([]);
     } catch (err: any) {
       setMessage(err.message || 'Error');
     }
   }
 
+  // Actualizar slots cuando cambien los datos de disponibilidad
   useEffect(() => {
-    let mounted = true;
-    async function loadData() {
+    if (availability) {
+      const activeSlots = filterActiveSlots(availability || []);
+      setSlots(activeSlots);
+    }
+  }, [availability]);
+
+  // Cargar colores del profesional
+  useEffect(() => {
+    async function loadColors() {
       try {
-        // Load slots, consultation types, and professional colors in parallel
-        const [slotsRes, typesRes, colorsRes] = await Promise.all([
-          fetch(`${API_BASE}/availability/public/${professionalId}`),
-          fetch(`${API_BASE}/consultation-types/public/${professionalId}`),
-          fetch(`${API_BASE}/users/public/${professionalId}/colors`)
-        ]);
-
-        if (slotsRes.ok) {
-          const slotsData = await slotsRes.json();
-          // Filtrar horarios expirados usando timezone de Chile
-          const activeSlots = filterActiveSlots(slotsData || []);
-          if (mounted) setSlots(activeSlots);
-        }
-
-        if (typesRes.ok) {
-          const typesData = await typesRes.json();
-          if (mounted) setConsultationTypes(typesData || []);
-        }
-
+        const colorsRes = await fetch(`${API_BASE}/users/public/${professionalId}/colors`);
         if (colorsRes.ok) {
           const colorsData = await colorsRes.json();
-          if (mounted) setColors(colorsData);
+          setColors(colorsData);
         }
       } catch (err) {
-        console.error(err);
+        console.error('Error loading professional colors:', err);
       }
     }
-    loadData();
-    return () => { mounted = false };
+    loadColors();
   }, [professionalId]);
 
   function groupSlotsByDay(slots: Array<{ id: number; start: string; end: string }>) {
@@ -359,7 +351,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
     });
   }
 
-  const selectedType = consultationTypes.find(t => t.id === Number(selectedConsultationType));
+  const selectedType = consultationTypes.find((t: ConsultationType) => t.id === Number(selectedConsultationType));
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded shadow">
@@ -643,7 +635,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             required
           >
             <option value="">-- Selecciona tipo de consulta --</option>
-            {consultationTypes.map(type => (
+            {consultationTypes.map((type: ConsultationType) => (
               <option key={type.id} value={String(type.id)}>
                 {type.name} ({type.duration || 30} min) - {formatPrice(type.price)}
               </option>

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from '@/lib/useAuth';
+import { useAuthContext } from '@/lib/auth-context';
 import ThemedButton from './ThemedButton';
 
 export default function PublicLinkManager() {
-  const { getUserId } = useAuth();
+  const { userId } = useAuthContext();
   const [copied, setCopied] = useState(false);
   const [shareMethods, setShareMethods] = useState({
     whatsapp: false,
@@ -13,7 +13,6 @@ export default function PublicLinkManager() {
     sms: false
   });
 
-  const userId = getUserId();
   const bookingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/book/${userId}`;
 
   async function copyLink() {

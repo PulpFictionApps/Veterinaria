@@ -7,6 +7,7 @@ import { DateSelectArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
 import { useEffect, useRef, useState } from "react";
 import { authFetch } from "../lib/api";
+import { useAppointments, useAvailability, invalidateCache } from "../hooks/useData";
 
 interface AvailabilitySlot {
   start: string;
@@ -52,71 +53,55 @@ function darkenColor(hex: string, percent: number): string {
 export default function DashboardCalendar({ userId }: { userId: number }) {
   const calendarRef = useRef<FullCalendar | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  
+  // Usar hooks SWR para datos en tiempo real
+  const { appointments, isLoading: appointmentsLoading } = useAppointments(userId);
+  const { availability, isLoading: availabilityLoading } = useAvailability(userId);
 
-  const loadEvents = async () => {
-      try {
-        const availabilityRes = await authFetch(`/availability/${userId}`);
-        const appointmentsRes = await authFetch(`/appointments/${userId}`);
-
-        if (availabilityRes.ok) {
-          const availability = await availabilityRes.json();
-          const availEvents: CalendarEvent[] = availability.map((slot: AvailabilitySlot) => ({
-            title: "Disponible",
-            start: slot.start,
-            end: slot.end,
-            backgroundColor: "#E0F2FE",
-            borderColor: "#60A5FA",
-          }));
-          setEvents(prev => [...(prev.filter(e => e.title !== 'Disponible')), ...availEvents]);
-        }
-
-        if (appointmentsRes.ok) {
-          const appointments = await appointmentsRes.json();
-          // appointments response may include pet, tutor and consultationType objects
-          const appointmentEvents: CalendarEvent[] = appointments.map((appt: any) => {
-            // Usar el color del tipo de consulta si está disponible, sino color por defecto
-            const consultationColor = appt.consultationType?.color || '#3B82F6';
-            // Crear un color más oscuro para el borde
-            const borderColor = darkenColor(consultationColor, 20);
-            
-            // Construir el título del evento
-            let appointmentTitle = appt.pet?.name ? `${appt.pet.name}` : `${appt.tutor?.name || 'Reservado'}`;
-            if (appt.consultationType?.name) {
-              appointmentTitle += ` (${appt.consultationType.name})`;
-            }
-            if (appt.reason) {
-              appointmentTitle += ` - ${appt.reason}`;
-            }
-            
-            // Determine end time from consultationType.duration (minutes) or default to 30 minutes
-            const durationMinutes = appt.consultationType?.duration || 30;
-            const startDate = new Date(appt.date);
-            const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
-
-            return {
-              title: appointmentTitle,
-              start: appt.date,
-              end: endDate.toISOString(),
-              backgroundColor: consultationColor,
-              borderColor: borderColor,
-              textColor: "white",
-            };
-          });
-          setEvents(prev => [...(prev.filter(e => e.title === 'Disponible')), ...appointmentEvents]);
-        }
-      } catch (error) {
-        console.error('Error loading calendar events:', error);
-      }
-    };
-
+  // Actualizar eventos cuando cambien los datos
   useEffect(() => {
-    loadEvents();
-    
-    // Auto-refresh calendar every 30 seconds
-    const interval = setInterval(loadEvents, 30000);
-    
-    return () => clearInterval(interval);
-  }, [userId]);
+    const availEvents: CalendarEvent[] = (availability || []).map((slot: AvailabilitySlot) => ({
+      title: "Disponible",
+      start: slot.start,
+      end: slot.end,
+      backgroundColor: "#E0F2FE",
+      borderColor: "#60A5FA",
+    }));
+
+    const appointmentEvents: CalendarEvent[] = (appointments || []).map((appt: any) => {
+      // Usar el color del tipo de consulta si está disponible, sino color por defecto
+      const consultationColor = appt.consultationType?.color || '#3B82F6';
+      // Crear un color más oscuro para el borde
+      const borderColor = darkenColor(consultationColor, 20);
+      
+      // Construir el título del evento
+      let appointmentTitle = appt.pet?.name ? `${appt.pet.name}` : `${appt.tutor?.name || 'Reservado'}`;
+      if (appt.consultationType?.name) {
+        appointmentTitle += ` (${appt.consultationType.name})`;
+      }
+      if (appt.reason) {
+        appointmentTitle += ` - ${appt.reason}`;
+      }
+      
+      // Determine end time from consultationType.duration (minutes) or default to 30 minutes
+      const durationMinutes = appt.consultationType?.duration || 30;
+      const startDate = new Date(appt.date);
+      const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
+
+      return {
+        title: appointmentTitle,
+        start: appt.date,
+        end: endDate.toISOString(),
+        backgroundColor: consultationColor,
+        borderColor: borderColor,
+        textColor: "white",
+      };
+    });
+
+    setEvents([...availEvents, ...appointmentEvents]);
+  }, [appointments, availability]);
+
+  const isLoading = appointmentsLoading || availabilityLoading;
 
   const changeView = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
     const calendarApi = calendarRef.current?.getApi();
@@ -137,8 +122,9 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         });
         
         if (res.ok) {
-          // Force immediate reload of events
-          loadEvents();
+          // SWR se encargará de la actualización automática
+          // Pero podemos forzar una revalidación inmediata
+          invalidateCache.availability(userId);
           const calendarApi = calendarRef.current?.getApi();
           calendarApi?.refetchEvents?.();
         }
@@ -176,7 +162,15 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       </div>
 
       {/* Calendar */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden relative">
+        {isLoading && (
+          <div className="absolute top-4 right-4 z-10">
+            <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Actualizando...
+            </div>
+          </div>
+        )}
         <div className="w-full overflow-auto">
         <FullCalendar
           ref={calendarRef}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuthContext } from '../lib/auth-context';
 import { authFetch } from '../lib/api';
 import { filterActiveSlots, formatChileDate, formatChileTime, createLocalDateTime, getTodayString } from '../lib/timezone';
+import { useAvailability, invalidateCache } from '../hooks/useData';
 
 interface AvailabilitySlot {
   id: number;
@@ -14,6 +15,7 @@ interface AvailabilitySlot {
 
 export default function AvailabilityManager() {
   const { userId } = useAuthContext();
+  const { availability, isLoading: dataLoading, revalidate } = useAvailability(userId);
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -37,38 +39,16 @@ export default function AvailabilityManager() {
     { id: 'sunday', label: 'Domingo' }
   ];
 
-  async function load() {
-    if (!userId) return;
-    setLoading(true);
-    try {
-      const res = await authFetch(`/availability/${userId}`);
-      if (res.ok) {
-        const data: AvailabilitySlot[] = await res.json();
-        // Filtrar horarios expirados usando timezone de Chile
-        const activeSlots = filterActiveSlots(data || []);
-        // ensure slots are sorted
-        const sorted = activeSlots.sort((a,b) => new Date(a.start).getTime() - new Date(b.start).getTime());
-        setSlots(sorted);
-      }
-    } catch (err) {
-      console.error('Error loading availability:', err);
-    } finally {
-      setLoading(false);
+  // Actualizar slots cuando cambien los datos de SWR
+  useEffect(() => {
+    if (availability) {
+      // Filtrar horarios expirados usando timezone de Chile
+      const activeSlots = filterActiveSlots(availability || []);
+      // ensure slots are sorted
+      const sorted = activeSlots.sort((a,b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+      setSlots(sorted as AvailabilitySlot[]);
     }
-  }
-
-  useEffect(() => { 
-    load(); 
-    
-    // Auto-refresh every 30 seconds to show updated data
-    const interval = setInterval(() => {
-      if (!loading) {
-        load();
-      }
-    }, 30000);
-    
-    return () => clearInterval(interval);
-  }, [userId, loading]);
+  }, [availability]);
 
   function formatDateTime(date: string, time: string) {
     // Use createLocalDateTime to avoid timezone conversion issues
@@ -145,7 +125,8 @@ export default function AvailabilityManager() {
       setShowForm(false);
       
       // Force immediate reload to show new data
-      await load();
+      await revalidate();
+      if (userId) invalidateCache.availability(userId);
     } catch (err) {
       setError('Error de conexión');
     } finally {
@@ -159,7 +140,8 @@ export default function AvailabilityManager() {
     try {
       const res = await authFetch(`/availability/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        await load();
+        await revalidate();
+        if (userId) invalidateCache.availability(userId);
       }
     } catch (err) {
       console.error('Error deleting slot:', err);

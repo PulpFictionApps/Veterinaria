@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback } from 'react';
 import { useAuthContext } from './auth-context';
 import { authFetch } from './api';
+import { useUserSettings, invalidateCache } from '../hooks/useData';
 
 export interface ThemeColors {
   primary: string;
@@ -76,7 +77,8 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { token, userId } = useAuthContext(); // Usar useAuthContext en lugar de useAuth
+  const { userId } = useAuthContext();
+  const { settings, isLoading: settingsLoading, revalidate } = useUserSettings(userId);
   
   // Colores por defecto memoizados
   const defaultThemeColors = useMemo(
@@ -86,66 +88,42 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   
   const [colors, setColors] = useState<ThemeColors>(defaultThemeColors);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasLoadedUserColors, setHasLoadedUserColors] = useState(false);
 
-  // Función memoizada para cargar colores del usuario
-  const loadUserColors = useCallback(async () => {
-    // Si ya se cargaron y no hay cambios en userId/token, no recargar
-    if (hasLoadedUserColors && !isLoading) {
-      return;
-    }
-
-    // Si no hay usuario autenticado, usar colores por defecto
-    if (!userId || !token) {
-      setColors(defaultThemeColors);
-      setHasLoadedUserColors(true);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const response = await authFetch(`/users/${userId}`);
-      
-      if (!response.ok) {
-        console.warn('Could not load user colors, using defaults');
-        setColors(defaultThemeColors);
-        setHasLoadedUserColors(true);
-        return;
-      }
-      
-      const userData = await response.json();
-      
-      const userColors = generateColorVariations(
-        userData.primaryColor || defaultColors.primary,
-        userData.secondaryColor || defaultColors.secondary,
-        userData.accentColor || defaultColors.accent
+  // Actualizar colores cuando cambien las configuraciones
+  useEffect(() => {
+    if (settings?.theme?.primary && settings.theme.secondary && settings.theme.accent) {
+      const newColors = generateColorVariations(
+        settings.theme.primary, 
+        settings.theme.secondary, 
+        settings.theme.accent
       );
-      
-      setColors(userColors);
-      setHasLoadedUserColors(true);
-    } catch (error) {
-      console.warn('Error loading user colors, using defaults:', error);
+      setColors(newColors);
+    } else {
       setColors(defaultThemeColors);
-      setHasLoadedUserColors(true);
-    } finally {
-      setIsLoading(false);
     }
-  }, [token, userId, defaultThemeColors, hasLoadedUserColors, isLoading]);
+  }, [settings, defaultThemeColors]);
 
-  // Resetear el flag cuando cambie el usuario
+  // Función para actualizar CSS variables en tiempo real
+  const updateCSSVariables = useCallback((themeColors: ThemeColors) => {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      root.style.setProperty('--color-primary', themeColors.primary);
+      root.style.setProperty('--color-secondary', themeColors.secondary);
+      root.style.setProperty('--color-accent', themeColors.accent);
+      root.style.setProperty('--color-primary-hover', themeColors.primaryHover);
+      root.style.setProperty('--gradient-primary', themeColors.primaryGradient);
+      root.style.setProperty('--gradient-secondary', themeColors.secondaryGradient);
+      root.style.setProperty('--gradient-bg', themeColors.bgGradient);
+      root.style.setProperty('--gradient-card', themeColors.cardGradient);
+      root.style.setProperty('--shadow-primary', themeColors.shadowPrimary);
+      root.style.setProperty('--shadow-secondary', themeColors.shadowSecondary);
+    }
+  }, []);
+
+  // Aplicar CSS variables cuando los colores cambien
   useEffect(() => {
-    setHasLoadedUserColors(false);
-  }, [userId, token]);
-
-  // Cargar colores del usuario cuando esté autenticado (con debounce para evitar llamadas repetitivas)
-  useEffect(() => {
-    // Debounce de 100ms para evitar llamadas múltiples
-    const timer = setTimeout(() => {
-      loadUserColors();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [loadUserColors]);
+    updateCSSVariables(colors);
+  }, [colors, updateCSSVariables]);
 
   const updateColors = useCallback(async (primary: string, secondary: string, accent: string) => {
     if (!userId) return;
@@ -167,11 +145,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
       if (!response.ok) throw new Error('Error al actualizar colores');
 
+      // Actualizar inmediatamente en el estado local para mejor UX
       const newColors = generateColorVariations(primary, secondary, accent);
       setColors(newColors);
-      
-      // Aplicar CSS variables dinámicamente
       updateCSSVariables(newColors);
+      
+      // Revalidar configuraciones del usuario para actualización inmediata
+      await revalidate();
+      if (userId) invalidateCache.userSettings(userId);
       
     } catch (error) {
       console.error('Error updating colors:', error);
@@ -179,42 +160,27 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [userId]);
+  }, [userId, revalidate, updateCSSVariables]);
 
   const resetToDefault = useCallback(async () => {
-    await updateColors(defaultColors.primary, defaultColors.secondary, defaultColors.accent);
+    try {
+      await updateColors(defaultColors.primary, defaultColors.secondary, defaultColors.accent);
+    } catch (error) {
+      console.error('Error resetting to default colors:', error);
+      throw error;
+    }
   }, [updateColors]);
 
-  // Función para actualizar CSS variables en tiempo real
-  const updateCSSVariables = (themeColors: ThemeColors) => {
-    const root = document.documentElement;
-    root.style.setProperty('--color-primary', themeColors.primary);
-    root.style.setProperty('--color-secondary', themeColors.secondary);
-    root.style.setProperty('--color-accent', themeColors.accent);
-    root.style.setProperty('--color-primary-hover', themeColors.primaryHover);
-    root.style.setProperty('--gradient-primary', themeColors.primaryGradient);
-    root.style.setProperty('--gradient-secondary', themeColors.secondaryGradient);
-    root.style.setProperty('--gradient-bg', themeColors.bgGradient);
-    root.style.setProperty('--gradient-card', themeColors.cardGradient);
-    root.style.setProperty('--shadow-primary', themeColors.shadowPrimary);
-    root.style.setProperty('--shadow-secondary', themeColors.shadowSecondary);
-  };
-
-  // Aplicar CSS variables cuando los colores cambien
-  useEffect(() => {
-    updateCSSVariables(colors);
-  }, [colors]);
-
   // Memoizar el value del context para evitar re-renders
-  const value = useMemo(() => ({
+  const contextValue = useMemo(() => ({
     colors,
     updateColors,
     resetToDefault,
-    isLoading
-  }), [colors, updateColors, resetToDefault, isLoading]);
+    isLoading: isLoading || settingsLoading
+  }), [colors, updateColors, resetToDefault, isLoading, settingsLoading]);
 
   return (
-    <ThemeContext.Provider value={value}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

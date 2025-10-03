@@ -1,6 +1,7 @@
 import './globals.css';
 import { AuthProvider } from '../lib/auth-context';
 import { ThemeProvider } from '../lib/theme-context';
+import SWRProvider from '../components/SWRProvider';
 import ConditionalHeader from '../components/ConditionalHeader';
 import ConditionalFooter from '../components/ConditionalFooter';
 import ClientLayoutWrapper from '../components/ClientLayoutWrapper';
@@ -56,29 +57,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body>
-        <AuthProvider>
-          <ThemeProvider>
-            <ClientLayoutWrapper>
-              <div className="flex-1 flex flex-col min-h-0">
-                {/* header only shown on public pages, not dashboard */}
-                <ConditionalHeader />
-                <main className="flex-1 w-full mx-auto px-0 py-0 min-h-0 overflow-auto">
-                  <div className="w-full h-full flex min-h-0">
-                    <div className="w-full flex-1 flex flex-col min-h-0">
-                      {children}
+        <SWRProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <ClientLayoutWrapper>
+                <div className="flex-1 flex flex-col min-h-0">
+                  {/* header only shown on public pages, not dashboard */}
+                  <ConditionalHeader />
+                  <main className="flex-1 w-full mx-auto px-0 py-0 min-h-0 overflow-auto">
+                    <div className="w-full h-full flex min-h-0">
+                      <div className="w-full flex-1 flex flex-col min-h-0">
+                        {children}
+                      </div>
                     </div>
-                  </div>
-                </main>
-                <ConditionalFooter />
-                
-                {/* PWA Components */}
-                <PWAInstallPrompt />
-                <IOSInstallInstructions />
-                <UpdateNotification />
-              </div>
-            </ClientLayoutWrapper>
-          </ThemeProvider>
-        </AuthProvider>
+                  </main>
+                  <ConditionalFooter />
+                  
+                  {/* PWA Components */}
+                  <PWAInstallPrompt />
+                  <IOSInstallInstructions />
+                  <UpdateNotification />
+                </div>
+              </ClientLayoutWrapper>
+            </ThemeProvider>
+          </AuthProvider>
+        </SWRProvider>
       </body>
     </html>
   );
