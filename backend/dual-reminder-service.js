@@ -39,7 +39,7 @@ async function sendDualEmailReminder(appointment, reminderType) {
   const professionalHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: linear-gradient(135deg, ${urgencyColor} 0%, #764ba2 100%); padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">🏥 VetCare - Panel Profesional</h1>
+        <h1 style="color: white; margin: 0;">🏥 Vetrium - Panel Profesional</h1>
         <p style="color: white; margin: 5px 0 0 0;">Recordatorio de cita programada</p>
       </div>
       
@@ -78,7 +78,7 @@ async function sendDualEmailReminder(appointment, reminderType) {
   const clientHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: linear-gradient(135deg, ${urgencyColor} 0%, #764ba2 100%); padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">🐾 VetCare</h1>
+        <h1 style="color: white; margin: 0;">🐾 Vetrium</h1>
         <p style="color: white; margin: 5px 0 0 0;">Recordatorio de cita veterinaria</p>
       </div>
       

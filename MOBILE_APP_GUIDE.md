@@ -1,4 +1,4 @@
-# 📱 Guía de Transformación a App Móvil - VetConnect
+# 📱 Guía de Transformación a App Móvil - Vetrium
 
 ## ✅ **PWA (Progressive Web App) - YA IMPLEMENTADA**
 

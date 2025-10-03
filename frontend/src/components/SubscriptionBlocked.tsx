@@ -45,7 +45,7 @@ export default function SubscriptionBlocked({ subscription, onRetry }: Subscript
     : '¡Suscripción requerida!';
   
   const message = isExpiredTrial
-    ? 'Los 7 días de prueba gratuita han expirado. Para continuar usando todas las funcionalidades de VetCare, activa tu Plan Premium.'
+    ? 'Los 7 días de prueba gratuita han expirado. Para continuar usando todas las funcionalidades de Vetrium, activa tu Plan Premium.'
     : 'Necesitas una suscripción activa para acceder a esta funcionalidad. Activa tu Plan Premium para continuar.';
 
   return (
@@ -115,7 +115,7 @@ export default function SubscriptionBlocked({ subscription, onRetry }: Subscript
             <p className="text-xs text-gray-500">
               ¿Problemas con el pago? 
               <br />
-              <a href="mailto:soporte@vetcare.cl" className="text-blue-600 hover:underline">
+              <a href="mailto:soporte@vetrium.cl" className="text-blue-600 hover:underline">
                 Contacta con soporte
               </a>
             </p>

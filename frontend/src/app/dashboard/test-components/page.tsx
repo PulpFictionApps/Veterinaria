@@ -26,7 +26,7 @@ export default function ComponentsTestPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-black bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent mb-4">
-            Componentes Temáticos VetCare
+            Componentes Temáticos Vetrium
           </h1>
           <p className="text-lg text-gray-600 font-medium">
             Prueba de los nuevos componentes profesionales quirúrgicamente perfectos

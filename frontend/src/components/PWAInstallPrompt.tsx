@@ -75,7 +75,7 @@ export default function PWAInstallPrompt() {
         <div className="text-3xl">📱</div>
         <div className="flex-1">
           <h3 className="font-bold text-base mb-1">
-            ¡Instala VetConnect!
+            ¡Instala Vetrium!
           </h3>
           <p className="text-sm opacity-90 mb-4">
             Obtén acceso rápido y funciones offline

@@ -53,7 +53,7 @@ export function useInstallPWA() {
       const isIOSFirefox = isIOS && /FxiOS/.test(navigator.userAgent);
       const isSafari = isIOS && !isIOSChrome && !isIOSFirefox;
       
-      let message = 'Para instalar VetConnect:\n\n';
+      let message = 'Para instalar Vetrium:\n\n';
       
       if (isIOS) {
         if (!isSafari) {

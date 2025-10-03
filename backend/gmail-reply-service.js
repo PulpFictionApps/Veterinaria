@@ -13,7 +13,7 @@ const EMAIL_FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev';
 
 // Gmail para recibir respuestas y contacto
 const CLINIC_GMAIL = 'vetconnect@gmail.com'; // Tu Gmail para la clínica
-const CLINIC_NAME = 'VetConnect - Clínica Veterinaria';
+const CLINIC_NAME = 'Vetrium - Clínica Veterinaria';
 
 console.log('🚀 Sistema con Gmail de respuesta configurado');
 

@@ -1,4 +1,4 @@
-# 📱 Iconos PWA - VetConnect
+# 📱 Iconos PWA - Vetrium
 
 ## 📋 Estado Actual
 - ✅ SVG placeholder generados para desarrollo
@@ -31,6 +31,6 @@ Los iconos están configurados en:
 ## ✨ Características del Diseño
 - Gradiente rosa/púrpura (colores del tema)
 - Icono de veterinaria estilizado
-- Texto "VetConnect" legible
+- Texto "Vetrium" legible
 - Esquinas redondeadas
 - Optimizado para diferentes tamaños

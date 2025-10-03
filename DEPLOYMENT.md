@@ -1,6 +1,6 @@
-# 🚀 Guía de Deployment - VetConnect PWA
+# 🚀 Guía de Deployment - Vetrium PWA
 
-## 📋 Checklist Pre-Deploy
+## Despliegue de Vetrium
 
 ### ✅ Configuración Básica
 - [ ] Variables de entorno configuradas en `.env.production`
@@ -27,7 +27,7 @@ cd frontend
 vercel --prod
 
 # Configurar variables de entorno en dashboard
-# - NEXT_PUBLIC_API_BASE
+# - NEXT_PUBLIC_APP_NAME="Vetrium"
 # - NEXT_PUBLIC_PWA_VERSION
 ```
 

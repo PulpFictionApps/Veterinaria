@@ -16,7 +16,7 @@ TWILIO_WHATSAPP_NUMBER="+14155238886"
 
 # Email (via Resend)
 EMAIL_API_KEY="your-resend-api-key"
-EMAIL_FROM="noreply@vetcare.cl"
+EMAIL_FROM="noreply@vetrium.cl"
 ```
 
 ### 2. Configuración del Profesional

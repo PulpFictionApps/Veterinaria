@@ -1,4 +1,5 @@
 import './globals.css';
+import { Metadata } from 'next';
 import { AuthProvider } from '../lib/auth-context';
 import { ThemeProvider } from '../lib/theme-context';
 import SWRProvider from '../components/SWRProvider';
@@ -9,23 +10,25 @@ import PWAInstallPrompt from '../components/PWAInstallPrompt';
 import IOSInstallInstructions from '../components/IOSInstallInstructions';
 import UpdateNotification from '../components/UpdateNotification';
 
-export const metadata = {
-  title: 'VetConnect - Sistema Veterinario',
-  description: 'Sistema completo de gestión veterinaria para profesionales',
+export const metadata: Metadata = {
+  title: 'Vetrium - Sistema Veterinario',
+  description: 'Sistema de gestión veterinaria completo con agenda, clientes, mascotas y más.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'VetConnect',
+    title: 'Vetrium',
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: 'website',
-    siteName: 'VetConnect',
-    title: 'VetConnect - Sistema Veterinario',
-    description: 'Sistema completo de gestión veterinaria para profesionales',
+    locale: 'es_CL',
+    url: 'https://vetrium.cl',
+    title: 'Vetrium',
+    description: 'Sistema de gestión veterinaria completo',
+    siteName: 'Vetrium',
   },
   icons: {
     shortcut: '/favicon.ico',
@@ -50,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="VetConnect" />
+        <meta name="apple-mobile-web-app-title" content="Vetrium" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#ec4899" />

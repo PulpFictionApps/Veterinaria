@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * 🎨 Generador de Iconos PWA - VetConnect
+ * 🎨 Generador de Iconos PWA - Vetrium
  * Genera iconos básicos SVG para PWA (placeholder)
  * En producción, usar herramientas como PWA Asset Generator
  */
@@ -33,10 +33,10 @@ const createIconSVG = (size) => `
     <rect x="${size * 0.1}" y="${size * 0.45}" width="${size * 0.4}" height="${size * 0.03}" fill="white" opacity="0.7" rx="${size * 0.015}"/>
     <rect x="${size * 0.1}" y="${size * 0.5}" width="${size * 0.3}" height="${size * 0.03}" fill="white" opacity="0.5" rx="${size * 0.015}"/>
   </g>
-  <text x="${size/2}" y="${size * 0.85}" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="${size * 0.08}" font-weight="bold">VetConnect</text>
+  <text x="${size/2}" y="${size * 0.85}" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="${size * 0.08}" font-weight="bold">Vetrium</text>
 </svg>`;
 
-console.log('🎨 Generando iconos PWA para VetConnect...\n');
+console.log('🎨 Generando iconos PWA para Vetrium...\n');
 
 iconSizes.forEach(size => {
   const svgContent = createIconSVG(size);
@@ -51,7 +51,7 @@ iconSizes.forEach(size => {
 
 // Crear archivo de instrucciones
 const instructions = `
-# 📱 Iconos PWA - VetConnect
+# 📱 Iconos PWA - Vetrium
 
 ## 📋 Estado Actual
 - ✅ SVG placeholder generados para desarrollo
@@ -84,7 +84,7 @@ Los iconos están configurados en:
 ## ✨ Características del Diseño
 - Gradiente rosa/púrpura (colores del tema)
 - Icono de veterinaria estilizado
-- Texto "VetConnect" legible
+- Texto "Vetrium" legible
 - Esquinas redondeadas
 - Optimizado para diferentes tamaños
 `;

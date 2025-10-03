@@ -1,6 +1,6 @@
 {
-  "name": "VetConnect - Sistema Veterinario",
-  "short_name": "VetConnect",
+  "name": "Vetrium - Sistema Veterinario",
+  "short_name": "Vetrium",
   "description": "Sistema completo de gestión veterinaria para profesionales",
   "start_url": "/dashboard",
   "display": "standalone",

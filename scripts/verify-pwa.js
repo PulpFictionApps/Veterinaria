@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * 🔍 Script de Verificación PWA - VetConnect
+ * 🔍 Script de Verificación PWA - Vetrium
  * Verifica que todos los componentes PWA estén correctamente configurados
  */
 
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 Verificando configuración PWA de VetConnect...\n');
+console.log('🔍 Verificando configuración PWA de Vetrium...\n');
 
 const checks = [];
 

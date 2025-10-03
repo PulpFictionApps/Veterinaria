@@ -60,7 +60,7 @@ export default function IOSInstallInstructions() {
         <div className="text-2xl">📱</div>
         <div className="flex-1">
           <h3 className="font-semibold text-sm mb-2">
-            Instalar VetConnect en iPhone/iPad
+            Instalar Vetrium en iPhone/iPad
           </h3>
 
           {!canInstall && browser !== 'Safari' && (

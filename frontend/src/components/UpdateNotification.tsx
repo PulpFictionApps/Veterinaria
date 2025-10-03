@@ -67,7 +67,7 @@ export default function UpdateNotification() {
             Actualización Disponible
           </h3>
           <p className="text-xs text-blue-100 mb-3">
-            Una nueva versión de VetConnect está lista. ¡Actualiza para obtener las últimas mejoras!
+            Una nueva versión de Vetrium está lista. ¡Actualiza para obtener las últimas mejoras!
           </p>
           <div className="flex gap-2">
             <button

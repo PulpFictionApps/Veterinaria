@@ -1,7 +1,7 @@
 // Brand configuration
 export const brand = {
-  name: 'VetCare',
-  shortName: 'VC',
+  name: 'Vetrium',
+  shortName: 'VR',
   tagline: 'Tu clínica veterinaria digital',
   description: 'Gestión profesional para clínicas veterinarias modernas'
 };

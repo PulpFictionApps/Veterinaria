@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 // Configuración Gmail SMTP
 const GMAIL_USER = process.env.GMAIL_USER; // vetconnect@gmail.com
 const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD; // Contraseña de aplicación
-const CLINIC_NAME = process.env.CLINIC_NAME || 'VetConnect - Clínica Veterinaria';
+const CLINIC_NAME = process.env.CLINIC_NAME || 'Vetrium - Clínica Veterinaria';
 
 console.log('📧 Sistema Gmail SMTP cargado');
 console.log(`✉️  Email: ${GMAIL_USER}`);

@@ -97,7 +97,7 @@ export const theme = defaultTheme;
 
 // Brand name configuration
 export const brand = {
-  name: 'VetCare',
+  name: 'Vetrium',
   shortName: 'VC',
   tagline: 'Tu clínica veterinaria digital',
   description: 'Gestión profesional para clínicas veterinarias modernas'
