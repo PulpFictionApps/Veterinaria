@@ -28,6 +28,9 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import ThemedCard from '../../../components/ui/ThemedCard';
+import ThemedButton from '../../../components/ui/ThemedButton';
+import ThemedInput from '../../../components/ui/ThemedInput';
 
 interface Appointment {
   id: number;

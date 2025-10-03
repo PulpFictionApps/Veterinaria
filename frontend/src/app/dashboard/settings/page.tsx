@@ -69,6 +69,58 @@ export default function SettingsPage() {
     }
   };
 
+  const handleColorChange = (colorType: 'primaryColor' | 'secondaryColor' | 'accentColor', value: string) => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      [colorType]: value
+    });
+  };
+
+  const resetColorsToDefault = () => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      primaryColor: '#2563EB',
+      secondaryColor: '#059669',
+      accentColor: '#DC2626'
+    });
+  };
+
+  const saveColorChanges = async () => {
+    if (!settings || !userId) return;
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await authFetch(`/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          primaryColor: settings.primaryColor,
+          secondaryColor: settings.secondaryColor,
+          accentColor: settings.accentColor
+        })
+      });
+
+      if (!response.ok) throw new Error('Error al guardar colores');
+      
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+      
+      // Recargar la página para aplicar los nuevos colores
+      window.location.reload();
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al guardar cambios');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <FadeIn>
@@ -395,6 +447,138 @@ export default function SettingsPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-health-500 rounded-full animate-pulse"></div>
                       <span className="text-sm font-medium text-health-700">Activo</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AnimateOnView>
+
+          <AnimateOnView>
+            <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <Palette className="h-6 w-6 text-white" />
+                  <h2 className="text-xl font-bold text-white">Personalización de Colores</h2>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="mb-6">
+                  <p className="text-neutral-600 mb-4">
+                    Personaliza los colores de tu aplicación para que coincidan con la identidad de tu clínica veterinaria.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Color Primario */}
+                    <div className="space-y-3">
+                      <label className="block text-sm font-semibold text-neutral-700">
+                        Color Primario
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="color"
+                          value={settings?.primaryColor || '#2563EB'}
+                          onChange={(e) => handleColorChange('primaryColor', e.target.value)}
+                          className="w-12 h-12 rounded-lg border-2 border-neutral-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={settings?.primaryColor || '#2563EB'}
+                          onChange={(e) => handleColorChange('primaryColor', e.target.value)}
+                          className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="#2563EB"
+                        />
+                      </div>
+                      <p className="text-xs text-neutral-500">Botones principales y navegación</p>
+                    </div>
+
+                    {/* Color Secundario */}
+                    <div className="space-y-3">
+                      <label className="block text-sm font-semibold text-neutral-700">
+                        Color Secundario
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="color"
+                          value={settings?.secondaryColor || '#059669'}
+                          onChange={(e) => handleColorChange('secondaryColor', e.target.value)}
+                          className="w-12 h-12 rounded-lg border-2 border-neutral-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={settings?.secondaryColor || '#059669'}
+                          onChange={(e) => handleColorChange('secondaryColor', e.target.value)}
+                          className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                          placeholder="#059669"
+                        />
+                      </div>
+                      <p className="text-xs text-neutral-500">Elementos de salud y bienestar</p>
+                    </div>
+
+                    {/* Color de Acento */}
+                    <div className="space-y-3">
+                      <label className="block text-sm font-semibold text-neutral-700">
+                        Color de Acento
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="color"
+                          value={settings?.accentColor || '#DC2626'}
+                          onChange={(e) => handleColorChange('accentColor', e.target.value)}
+                          className="w-12 h-12 rounded-lg border-2 border-neutral-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={settings?.accentColor || '#DC2626'}
+                          onChange={(e) => handleColorChange('accentColor', e.target.value)}
+                          className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                          placeholder="#DC2626"
+                        />
+                      </div>
+                      <p className="text-xs text-neutral-500">Alertas y elementos de atención</p>
+                    </div>
+                  </div>
+
+                  {/* Botones de acción */}
+                  <div className="flex gap-3 mt-6 pt-6 border-t border-neutral-200">
+                    <button
+                      onClick={resetColorsToDefault}
+                      className="px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors"
+                    >
+                      Restablecer por Defecto
+                    </button>
+                    <button
+                      onClick={saveColorChanges}
+                      disabled={loading}
+                      className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50"
+                    >
+                      {loading ? 'Guardando...' : 'Guardar Cambios'}
+                    </button>
+                  </div>
+
+                  {/* Vista previa */}
+                  <div className="mt-6 p-4 bg-gradient-to-r from-neutral-50 to-neutral-100 rounded-xl border border-neutral-200">
+                    <h4 className="font-semibold text-neutral-800 mb-3">Vista previa</h4>
+                    <div className="flex gap-3">
+                      <button 
+                        className="px-4 py-2 text-white rounded-lg transition-all"
+                        style={{ backgroundColor: settings?.primaryColor || '#2563EB' }}
+                      >
+                        Botón Primario
+                      </button>
+                      <button 
+                        className="px-4 py-2 text-white rounded-lg transition-all"
+                        style={{ backgroundColor: settings?.secondaryColor || '#059669' }}
+                      >
+                        Botón Secundario
+                      </button>
+                      <button 
+                        className="px-4 py-2 text-white rounded-lg transition-all"
+                        style={{ backgroundColor: settings?.accentColor || '#DC2626' }}
+                      >
+                        Botón de Acento
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -21,9 +21,9 @@ export default function ThemedCard({
   const { getCardStyle } = useThemeColors();
   
   const paddingClasses = {
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8'
+    sm: 'p-3 sm:p-4',
+    md: 'p-4 sm:p-6',
+    lg: 'p-6 sm:p-8'
   };
 
   const shadowClasses = {
@@ -48,9 +48,10 @@ export default function ThemedCard({
         ${shadowClasses[shadow]} 
         ${variantClasses[variant]}
         transition-all duration-300 
-        hover:shadow-xl 
-        hover:-translate-y-1 
+        sm:hover:shadow-xl 
+        sm:hover:-translate-y-1 
         group
+        touch-manipulation
         ${className}
       `}
       style={variant === 'default' ? getCardStyle() : {}}

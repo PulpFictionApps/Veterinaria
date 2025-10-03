@@ -16,6 +16,9 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../../components/ui/Transitions';
 import Tooltip from '../../../../components/ui/Tooltip';
+import ThemedCard from '../../../../components/ui/ThemedCard';
+import ThemedButton from '../../../../components/ui/ThemedButton';
+import ThemedInput from '../../../../components/ui/ThemedInput';
 
 export default function NewClientPage() {
   const router = useRouter();
@@ -187,32 +190,27 @@ export default function NewClientPage() {
                 </div>
 
                 <div className="flex gap-4 pt-6">
-                  <button
-                    type="button"
+                  <ThemedButton
+                    variant="outline"
                     onClick={() => router.back()}
-                    className="flex-1 px-8 py-4 border-2 border-neutral-300 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-300 font-bold"
+                    size="lg"
+                    fullWidth
                   >
                     Cancelar
-                  </button>
+                  </ThemedButton>
                   <Tooltip content="Crear nuevo cliente veterinario">
-                    <button
+                    <ThemedButton
+                      variant="medical"
                       type="submit"
                       disabled={loading}
-                      className="group flex-1 px-8 py-4 bg-gradient-to-r from-medical-500 to-health-500 text-white rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed font-bold flex items-center justify-center gap-3"
+                      loading={loading}
+                      icon={loading ? undefined : Save}
+                      iconPosition="left"
+                      size="lg"
+                      fullWidth
                     >
-                      {loading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                          Creando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                          Crear Cliente
-                          <Heart className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                        </>
-                      )}
-                    </button>
+                      {loading ? 'Creando Cliente...' : 'Crear Cliente'}
+                    </ThemedButton>
                   </Tooltip>
                 </div>
               </Stagger>

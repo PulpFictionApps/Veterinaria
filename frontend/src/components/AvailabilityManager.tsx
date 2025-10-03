@@ -194,40 +194,40 @@ export default function AvailabilityManager() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">Disponibilidad</h3>
+    <div className="space-y-3 sm:space-y-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Disponibilidad</h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50"
+          className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-pink-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50 text-sm sm:text-base touch-manipulation"
         >
           {showForm ? 'Cancelar' : '+ Agregar Horario'}
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-2xl border border-medical-100 shadow-card p-8">
-          <div className="mb-6">
-            <h4 className="text-xl font-bold text-neutral-800">Nueva Disponibilidad</h4>
+        <div className="bg-white rounded-2xl border border-medical-100 shadow-card p-4 sm:p-8">
+          <div className="mb-4 sm:mb-6">
+            <h4 className="text-lg sm:text-xl font-bold text-neutral-800">Nueva Disponibilidad</h4>
             <p className="text-sm text-neutral-600 mt-1">Configure sus horarios de atención</p>
           </div>
           
-          <form onSubmit={createSlot} className="space-y-6">
+          <form onSubmit={createSlot} className="space-y-4 sm:space-y-6">
             {/* Recurring Toggle */}
-            <div className="p-4 bg-health-50 border border-health-200 rounded-xl">
-              <label className="flex items-center gap-4 cursor-pointer">
+            <div className="p-3 sm:p-4 bg-health-50 border border-health-200 rounded-xl">
+              <label className="flex items-start sm:items-center gap-3 sm:gap-4 cursor-pointer">
                 <input
                   type="checkbox"
                   id="recurring"
                   checked={recurring}
                   onChange={e => setRecurring(e.target.checked)}
-                  className="rounded border-health-300 text-health-600 focus:ring-health-500"
+                  className="rounded border-health-300 text-health-600 focus:ring-health-500 mt-0.5 sm:mt-0 flex-shrink-0 touch-manipulation"
                 />
-                <div>
-                  <span className="text-sm font-semibold text-health-800">
+                <div className="min-w-0">
+                  <span className="text-sm font-semibold text-health-800 block">
                     Disponibilidad recurrente
                   </span>
-                  <p className="text-xs text-health-600">
+                  <p className="text-xs text-health-600 mt-1">
                     Crear la misma franja horaria para múltiples días de la semana
                   </p>
                 </div>
@@ -235,7 +235,7 @@ export default function AvailabilityManager() {
             </div>
 
             {/* Date and Time Inputs */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-neutral-700">
                   Fecha de Inicio
@@ -244,7 +244,7 @@ export default function AvailabilityManager() {
                   type="date"
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -256,7 +256,7 @@ export default function AvailabilityManager() {
                   type="time"
                   value={startTime}
                   onChange={e => setStartTime(e.target.value)}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -268,7 +268,7 @@ export default function AvailabilityManager() {
                   type="date"
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -280,7 +280,7 @@ export default function AvailabilityManager() {
                   type="time"
                   value={endTime}
                   onChange={e => setEndTime(e.target.value)}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>

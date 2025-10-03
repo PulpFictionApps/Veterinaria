@@ -167,23 +167,23 @@ export default function Dashboard() {
     }[changeType];
 
     return (
-      <ThemedCard variant="medical" className="group cursor-pointer">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <p className="text-sm font-bold text-medical-600 mb-2 uppercase tracking-wide">{title}</p>
-            <p className="text-3xl font-black text-neutral-900 transition-colors group-hover:text-medical-700 mb-1">{formatValue(value)}</p>
+      <ThemedCard variant="medical" className="group cursor-pointer touch-manipulation">
+        <div className="flex items-center justify-between gap-3 sm:gap-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-sm font-bold text-medical-600 mb-2 uppercase tracking-wide truncate">{title}</p>
+            <p className="text-2xl sm:text-3xl font-black text-neutral-900 transition-colors group-hover:text-medical-700 mb-1 leading-tight">{formatValue(value)}</p>
             {change && (
               <div className="flex items-center gap-1">
-                <div className={`w-2 h-2 rounded-full ${
+                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                   changeType === 'positive' ? 'bg-health-500' : 
                   changeType === 'negative' ? 'bg-emergency-500' : 'bg-neutral-400'
                 }`} />
-                <p className={`text-xs font-semibold ${changeColor}`}>{change}</p>
+                <p className={`text-xs font-semibold ${changeColor} truncate`}>{change}</p>
               </div>
             )}
           </div>
-          <div className="p-4 bg-gradient-to-br from-medical-100 to-medical-200 rounded-2xl group-hover:from-medical-200 group-hover:to-medical-300 transition-all duration-300 shadow-lg">
-            <Icon className="w-8 h-8 text-medical-700 group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
+          <div className="p-3 sm:p-4 bg-gradient-to-br from-medical-100 to-medical-200 rounded-2xl sm:group-hover:from-medical-200 sm:group-hover:to-medical-300 transition-all duration-300 shadow-lg flex-shrink-0">
+            <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-medical-700 sm:group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
           </div>
         </div>
       </ThemedCard>
@@ -222,29 +222,29 @@ export default function Dashboard() {
 
   return (
     <div className="w-full min-h-full bg-gradient-to-br from-medical-50/30 via-white to-health-50/30">
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-10">
         
         {/* Header con saludo animado */}
         <FadeIn>
           <ThemedCard variant="medical" padding="lg" shadow="xl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="p-4 bg-gradient-to-br from-medical-600 to-medical-700 rounded-2xl shadow-xl">
-                  <Activity className="w-10 h-10 text-white" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+              <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
+                <div className="p-3 sm:p-4 bg-gradient-to-br from-medical-600 to-medical-700 rounded-2xl shadow-xl flex-shrink-0">
+                  <Activity className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
-                <div>
-                  <h1 className="text-4xl font-black bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent mb-2">
+                <div className="min-w-0 flex-1 sm:flex-initial">
+                  <h1 className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent mb-2 leading-tight">
                     Panel de Control Veterinario
                   </h1>
-                  <p className="text-neutral-600 text-lg font-medium">Centro de gestión médica profesional</p>
+                  <p className="text-neutral-600 text-base sm:text-lg font-medium">Centro de gestión médica profesional</p>
                 </div>
               </div>
               <SlideIn direction="right" delay={200}>
-                <div className="text-center">
-                  <div className="text-sm font-bold text-medical-600 mb-1">
+                <div className="text-center bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm flex-shrink-0 w-full sm:w-auto">
+                  <div className="text-xs sm:text-sm font-bold text-medical-600 mb-1">
                     {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
                   </div>
-                  <div className="text-2xl font-black text-neutral-800">
+                  <div className="text-xl sm:text-2xl font-black text-neutral-800">
                     {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
                   </div>
                   <div className="text-xs text-neutral-500 font-medium">
@@ -259,19 +259,19 @@ export default function Dashboard() {
         {/* Alerta de suscripción */}
         {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (
           <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Activity className="w-5 h-5 text-blue-600 mr-2" />
-                <div>
-                  <strong className="font-semibold text-blue-900">Período de prueba activo</strong>
-                  <span className="ml-2 text-sm text-blue-700">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <Activity className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+                <div className="min-w-0">
+                  <strong className="font-semibold text-blue-900 block">Período de prueba activo</strong>
+                  <span className="text-sm text-blue-700 block sm:inline sm:ml-2">
                     Te quedan {Math.ceil((new Date(subscription.expiresAt).getTime() - Date.now()) / (1000*60*60*24))} días
                   </span>
                 </div>
               </div>
               <a 
                 href="/dashboard/billing" 
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium w-full sm:w-auto touch-manipulation"
               >
                 Actualizar Plan
               </a>

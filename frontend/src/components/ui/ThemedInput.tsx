@@ -31,6 +31,8 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
       focus:outline-none focus:ring-2 focus:ring-offset-1
       disabled:opacity-50 disabled:cursor-not-allowed
       placeholder:text-gray-400
+      text-base sm:text-sm
+      touch-manipulation
     `;
 
     const variantClasses = {
@@ -62,7 +64,7 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
         <div className="relative">
           {Icon && iconPosition === 'left' && (
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Icon className="h-5 w-5 text-gray-400" />
+              <Icon className="h-5 w-5 sm:h-4 sm:w-4 text-gray-400" />
             </div>
           )}
           
@@ -84,7 +86,7 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
           
           {Icon && iconPosition === 'right' && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <Icon className="h-5 w-5 text-gray-400" />
+              <Icon className="h-5 w-5 sm:h-4 sm:w-4 text-gray-400" />
             </div>
           )}
         </div>

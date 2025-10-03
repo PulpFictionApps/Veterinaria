@@ -135,25 +135,25 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* View Controls */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">Calendario</h3>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Calendario</h3>
+        <div className="flex gap-1 sm:gap-2 w-full sm:w-auto">
           <button 
-            className="px-3 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-lg text-sm font-medium hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50" 
+            className="flex-1 sm:flex-initial px-2 sm:px-3 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-lg text-xs sm:text-sm font-medium hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50 touch-manipulation" 
             onClick={() => changeView("timeGridDay")}
           >
             Día
           </button>
           <button 
-            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" 
+            className="flex-1 sm:flex-initial px-2 sm:px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors touch-manipulation" 
             onClick={() => changeView("timeGridWeek")}
           >
             Semana
           </button>
           <button 
-            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" 
+            className="flex-1 sm:flex-initial px-2 sm:px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors touch-manipulation" 
             onClick={() => changeView("dayGridMonth")}
           >
             Mes
@@ -164,14 +164,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       {/* Calendar */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden relative">
         {isLoading && (
-          <div className="absolute top-4 right-4 z-10">
-            <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Actualizando...
+          <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10">
+            <div className="bg-blue-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm flex items-center gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="hidden sm:inline">Actualizando...</span>
             </div>
           </div>
         )}
-        <div className="w-full overflow-auto">
+        <div className="w-full overflow-auto touch-auto">
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -182,7 +182,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             right: ''
           }}
           events={events}
-          height="auto"
+          height={window.innerWidth < 768 ? 400 : "auto"}
           selectable={true}
           slotDuration="00:30:00"
           slotMinTime="08:00:00"
@@ -190,7 +190,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           allDaySlot={false}
           locale={esLocale}
           select={handleSelect}
-          dayHeaderFormat={{ weekday: 'long' }}
+          dayHeaderFormat={ window.innerWidth < 768 ? { weekday: 'short' } : { weekday: 'long' }}
           slotLabelFormat={{
             hour: '2-digit',
             minute: '2-digit',
@@ -201,6 +201,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             end: '20:00'
           }}
           snapDuration="00:30:00"
+          eventMaxStack={window.innerWidth < 768 ? 2 : 4}
+          eventClassNames="touch-manipulation"
         />
         </div>
       </div>

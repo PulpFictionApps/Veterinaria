@@ -138,7 +138,7 @@ export function useConsultationTypes() {
 // Hook para configuración de usuario (incluyendo colores de tema)
 export function useUserSettings(userId: number | null) {
   const { data, error, isLoading, mutate: revalidate } = useSWR(
-    userId ? `/users/${userId}/settings` : null,
+    userId ? `/users/${userId}` : null,
     fetcher,
     swrConfig
   );

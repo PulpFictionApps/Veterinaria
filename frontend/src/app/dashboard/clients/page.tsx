@@ -22,6 +22,10 @@ import {
 } from 'lucide-react';
 import { FadeIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import ThemedCard from '../../../components/ui/ThemedCard';
+import ThemedButton from '../../../components/ui/ThemedButton';
+import ThemedInput from '../../../components/ui/ThemedInput';
+import ThemedBadge from '../../../components/ui/ThemedBadge';
 
 interface Client {
   id: number;
@@ -120,81 +124,76 @@ export default function ClientsPage() {
   return (
     <SubscriptionGuard>
       <div className="w-full min-h-full bg-gradient-to-br from-neutral-50 to-medical-50">
-        <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-6 sm:space-y-8">
           
           {/* Header */}
           <FadeIn>
-            <div className="bg-white rounded-2xl shadow-card border border-medical-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-medical-600 to-health-600 p-8 text-white">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                      <Users className="w-8 h-8 text-white" />
+            <ThemedCard variant="medical" padding="lg" shadow="xl">
+              <div className="bg-gradient-to-r from-medical-600 to-health-600 p-4 sm:p-8 text-white rounded-xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+                  <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                      <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                     </div>
-                    <div>
-                      <h1 className="text-3xl font-bold mb-2">Gestión de Clientes</h1>
-                      <p className="text-white/90">
+                    <div className="min-w-0 flex-1 sm:flex-initial">
+                      <h1 className="text-2xl sm:text-3xl font-bold mb-2 leading-tight">Gestión de Clientes</h1>
+                      <p className="text-white/90 text-sm sm:text-base">
                         {filteredClients.length} cliente{filteredClients.length !== 1 && 's'} registrado{filteredClients.length !== 1 && 's'}
                       </p>
                     </div>
                   </div>
-                  <Link
-                    href="/dashboard/clients/new"
-                    className="flex items-center px-6 py-3 bg-white/20 rounded-xl hover:bg-white/30 transition-colors font-semibold"
-                  >
-                    <Plus className="w-5 h-5 mr-2" />
-                    Nuevo Cliente
+                  <Link href="/dashboard/clients/new" className="w-full sm:w-auto">
+                    <ThemedButton variant="secondary" icon={Plus} size="lg" className="w-full sm:w-auto touch-manipulation">
+                      Nuevo Cliente
+                    </ThemedButton>
                   </Link>
                 </div>
               </div>
-            </div>
+            </ThemedCard>
           </FadeIn>
 
           {/* Barra de búsqueda y filtros */}
           <AnimateOnView animation="slide">
-            <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-6">
-              <div className="flex flex-col lg:flex-row gap-4">
+            <ThemedCard variant="default" padding="lg">
+              <div className="flex flex-col sm:flex-row gap-4">
                 
                 {/* Búsqueda */}
-                <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                  <input
-                    type="text"
+                <div className="flex-1">
+                  <ThemedInput
+                    variant="search"
+                    icon={Search}
                     placeholder="Buscar por nombre, email, teléfono o RUT..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
                 {/* Controles de vista */}
-                <div className="flex items-center space-x-2">
-                  <div className="bg-neutral-100 rounded-xl p-1 flex">
-                    <button
+                <div className="flex items-center justify-center sm:justify-start">
+                  <div className="bg-neutral-100 rounded-xl p-1 flex touch-manipulation">
+                    <ThemedButton
+                      variant={viewMode === 'grid' ? 'medical' : 'ghost'}
+                      size="sm"
+                      icon={Grid3x3}
                       onClick={() => setViewMode('grid')}
-                      className={`p-2 rounded-lg transition-colors ${
-                        viewMode === 'grid'
-                          ? 'bg-medical-600 text-white'
-                          : 'text-neutral-600 hover:bg-neutral-200'
-                      }`}
+                      className="text-xs sm:text-sm px-2 sm:px-3"
                     >
-                      <Grid3x3 className="w-4 h-4" />
-                    </button>
-                    <button
+                      <span className="hidden sm:inline">Grid</span>
+                    </ThemedButton>
+                    <ThemedButton
+                      variant={viewMode === 'list' ? 'medical' : 'ghost'}
+                      size="sm"
+                      icon={List}
                       onClick={() => setViewMode('list')}
-                      className={`p-2 rounded-lg transition-colors ${
-                        viewMode === 'list'
-                          ? 'bg-medical-600 text-white'
-                          : 'text-neutral-600 hover:bg-neutral-200'
-                      }`}
+                      className="text-xs sm:text-sm px-2 sm:px-3"
                     >
-                      <List className="w-4 h-4" />
-                    </button>
+                      <span className="hidden sm:inline">Lista</span>
+                    </ThemedButton>
                   </div>
                 </div>
 
               </div>
-            </div>
+            </ThemedCard>
           </AnimateOnView>
 
           {/* Contenido */}
@@ -207,21 +206,22 @@ export default function ClientsPage() {
               </div>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-2xl shadow-card border border-emergency-200 p-8 text-center">
+            <ThemedCard variant="emergency" padding="lg" className="text-center">
               <div className="w-16 h-16 bg-emergency-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-emergency-600" />
               </div>
               <h3 className="text-xl font-bold text-emergency-800 mb-2">Error al cargar</h3>
               <p className="text-emergency-600 mb-4">{error}</p>
-              <button
+              <ThemedButton
+                variant="emergency"
                 onClick={load}
-                className="px-6 py-3 bg-emergency-600 text-white rounded-xl hover:bg-emergency-700 transition-colors font-semibold"
+                size="lg"
               >
                 Reintentar
-              </button>
-            </div>
+              </ThemedButton>
+            </ThemedCard>
           ) : filteredClients.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-12 text-center">
+            <ThemedCard variant="medical" padding="lg" className="text-center">
               <div className="w-20 h-20 bg-medical-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <UserPlus className="w-10 h-10 text-medical-600" />
               </div>
@@ -235,78 +235,80 @@ export default function ClientsPage() {
                 }
               </p>
               {!searchTerm && (
-                <Link 
-                  href="/dashboard/clients/new" 
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-health-600 to-health-700 text-white rounded-xl hover:from-health-700 hover:to-health-800 transition-all duration-200 font-semibold shadow-health"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Crear Primer Cliente
+                <Link href="/dashboard/clients/new">
+                  <ThemedButton
+                    variant="health"
+                    icon={Plus}
+                    size="lg"
+                  >
+                    Crear Primer Cliente
+                  </ThemedButton>
                 </Link>
               )}
-            </div>
+            </ThemedCard>
           ) : (
             <div className={viewMode === 'grid' 
-              ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" 
-              : "space-y-4"
+              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" 
+              : "space-y-3 sm:space-y-4"
             }>
               <Stagger staggerDelay={100}>
                 {filteredClients.map(client => (
                   <Link
                     key={client.id}
                     href={`/dashboard/clients/${client.id}`}
-                    className={`group ${viewMode === 'grid' 
-                      ? 'bg-white rounded-2xl shadow-card border border-medical-100 p-6 hover:shadow-card-hover transition-all duration-200 transform hover:-translate-y-1'
-                      : 'bg-white rounded-xl shadow-sm border border-medical-100 p-4 hover:shadow-md transition-all duration-200 flex items-center space-x-6'
+                    className={`group touch-manipulation ${viewMode === 'grid' 
+                      ? 'bg-white rounded-2xl shadow-card border border-medical-100 p-4 sm:p-6 hover:shadow-card-hover transition-all duration-200 transform hover:-translate-y-1'
+                      : 'bg-white rounded-xl shadow-sm border border-medical-100 p-3 sm:p-4 hover:shadow-md transition-all duration-200 flex items-center space-x-3 sm:space-x-6'
                     }`}
                   >
                     
                     {viewMode === 'grid' ? (
                       // Vista de cards
                       <>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-medical-100 to-health-100 rounded-xl flex items-center justify-center group-hover:from-medical-200 group-hover:to-health-200 transition-colors">
-                            <User className="w-6 h-6 text-medical-600" />
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-medical-100 to-health-100 rounded-xl flex items-center justify-center group-hover:from-medical-200 group-hover:to-health-200 transition-colors flex-shrink-0">
+                            <User className="w-5 h-5 sm:w-6 sm:h-6 text-medical-600" />
                           </div>
-                          <div className="flex space-x-2">
+                          <div className="flex space-x-1 sm:space-x-2">
                             {client.pets && client.pets.length > 0 && (
                               <Tooltip content={`${client.pets.length} mascota${client.pets.length !== 1 ? 's' : ''}`}>
-                                <div className="w-8 h-8 bg-health-100 rounded-lg flex items-center justify-center">
-                                  <PawPrint className="w-4 h-4 text-health-600" />
+                                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-health-100 rounded-lg flex items-center justify-center">
+                                  <PawPrint className="w-3 h-3 sm:w-4 sm:h-4 text-health-600" />
                                 </div>
                               </Tooltip>
                             )}
                             {client.appointments && client.appointments.length > 0 && (
                               <Tooltip content="Tiene citas programadas">
-                                <div className="w-8 h-8 bg-medical-100 rounded-lg flex items-center justify-center">
-                                  <Calendar className="w-4 h-4 text-medical-600" />
+                                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-medical-100 rounded-lg flex items-center justify-center">
+                                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-medical-600" />
                                 </div>
                               </Tooltip>
                             )}
                           </div>
                         </div>
                         
-                        <div className="space-y-3">
-                          <h3 className="text-lg font-bold text-neutral-800 group-hover:text-medical-700 transition-colors">
+                        <div className="space-y-2 sm:space-y-3">
+                          <h3 className="text-base sm:text-lg font-bold text-neutral-800 group-hover:text-medical-700 transition-colors leading-tight">
                             {client.name}
                           </h3>
                           
-                          <div className="space-y-2">
+                          <div className="space-y-1.5 sm:space-y-2">
                             {client.email && (
-                              <div className="flex items-center text-sm text-neutral-600">
-                                <Mail className="w-4 h-4 mr-2 text-neutral-400" />
-                                {client.email}
+                              <div className="flex items-center text-xs sm:text-sm text-neutral-600">
+                                <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-neutral-400 flex-shrink-0" />
+                                <span className="truncate">{client.email}</span>
                               </div>
                             )}
                             {client.phone && (
-                              <div className="flex items-center text-sm text-neutral-600">
-                                <Phone className="w-4 h-4 mr-2 text-neutral-400" />
-                                {client.phone}
+                              <div className="flex items-center text-xs sm:text-sm text-neutral-600">
+                                <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-neutral-400 flex-shrink-0" />
+                                <span className="truncate">{client.phone}</span>
                               </div>
                             )}
                             {client.address && (
-                              <div className="flex items-center text-sm text-neutral-600">
-                                <MapPin className="w-4 h-4 mr-2 text-neutral-400" />
-                                {client.address}
+                              <div className="flex items-center text-xs sm:text-sm text-neutral-600">
+                                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-neutral-400 flex-shrink-0" />
+                                <span className="truncate">{client.address}</span>
                               </div>
                             )}
                           </div>
@@ -314,16 +316,16 @@ export default function ClientsPage() {
                           {client.pets && client.pets.length > 0 && (
                             <div className="mt-4 pt-3 border-t border-neutral-100">
                               <p className="text-xs text-neutral-500 mb-2">Mascotas:</p>
-                              <div className="flex flex-wrap gap-1">
+                              <div className="flex flex-wrap gap-1 sm:gap-2">
                                 {client.pets.slice(0, 3).map(pet => (
-                                  <span key={pet.id} className="px-2 py-1 bg-health-50 text-health-700 rounded-lg text-xs font-medium">
+                                  <ThemedBadge key={pet.id} variant="secondary" size="xs">
                                     {pet.name}
-                                  </span>
+                                  </ThemedBadge>
                                 ))}
                                 {client.pets.length > 3 && (
-                                  <span className="px-2 py-1 bg-neutral-100 text-neutral-600 rounded-lg text-xs">
+                                  <ThemedBadge variant="neutral" size="xs">
                                     +{client.pets.length - 3} más
-                                  </span>
+                                  </ThemedBadge>
                                 )}
                               </div>
                             </div>
@@ -333,42 +335,40 @@ export default function ClientsPage() {
                     ) : (
                       // Vista de lista
                       <>
-                        <div className="w-12 h-12 bg-gradient-to-br from-medical-100 to-health-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <User className="w-6 h-6 text-medical-600" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-medical-100 to-health-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-medical-600" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-neutral-800 group-hover:text-medical-700 transition-colors truncate">
+                          <h3 className="text-base sm:text-lg font-bold text-neutral-800 group-hover:text-medical-700 transition-colors truncate">
                             {client.name}
                           </h3>
-                          <div className="flex items-center space-x-4 mt-1 text-sm text-neutral-600">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mt-1 text-xs sm:text-sm text-neutral-600 space-y-1 sm:space-y-0">
                             {client.email && (
-                              <span className="flex items-center">
-                                <Mail className="w-3 h-3 mr-1" />
-                                {client.email}
+                              <span className="flex items-center truncate">
+                                <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">{client.email}</span>
                               </span>
                             )}
                             {client.phone && (
                               <span className="flex items-center">
-                                <Phone className="w-3 h-3 mr-1" />
+                                <Phone className="w-3 h-3 mr-1 flex-shrink-0" />
                                 {client.phone}
                               </span>
                             )}
                           </div>
                         </div>
 
-                        <div className="flex items-center space-x-3 flex-shrink-0">
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 flex-shrink-0">
                           {client.pets && client.pets.length > 0 && (
-                            <div className="flex items-center px-3 py-1 bg-health-50 rounded-lg">
-                              <PawPrint className="w-4 h-4 mr-1 text-health-600" />
-                              <span className="text-sm font-medium text-health-700">{client.pets.length}</span>
-                            </div>
+                            <ThemedBadge variant="secondary" size="sm" icon={PawPrint} count={client.pets.length}>
+                              Mascotas
+                            </ThemedBadge>
                           )}
                           {client.appointments && client.appointments.length > 0 && (
-                            <div className="flex items-center px-3 py-1 bg-medical-50 rounded-lg">
-                              <Calendar className="w-4 h-4 mr-1 text-medical-600" />
-                              <span className="text-sm font-medium text-medical-700">{client.appointments.length}</span>
-                            </div>
+                            <ThemedBadge variant="primary" size="sm" icon={Calendar} count={client.appointments.length}>
+                              Citas
+                            </ThemedBadge>
                           )}
                         </div>
                       </>

@@ -91,11 +91,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   // Actualizar colores cuando cambien las configuraciones
   useEffect(() => {
-    if (settings?.theme?.primary && settings.theme.secondary && settings.theme.accent) {
+    if (settings?.primaryColor && settings.secondaryColor && settings.accentColor) {
       const newColors = generateColorVariations(
-        settings.theme.primary, 
-        settings.theme.secondary, 
-        settings.theme.accent
+        settings.primaryColor, 
+        settings.secondaryColor, 
+        settings.accentColor
       );
       setColors(newColors);
     } else {

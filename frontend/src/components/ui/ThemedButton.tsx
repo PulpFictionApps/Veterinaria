@@ -33,53 +33,62 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
       font-semibold rounded-xl transition-all duration-300 
       focus:outline-none focus:ring-2 focus:ring-offset-2 
       disabled:opacity-50 disabled:cursor-not-allowed
-      transform hover:scale-105 active:scale-95
+      transform hover:scale-105 active:scale-95 active:transition-none
       shadow-lg hover:shadow-xl
+      select-none touch-manipulation
       ${fullWidth ? 'w-full' : ''}
+      sm:hover:scale-105 hover:scale-100
     `;
     
     const sizeClasses = {
-      sm: 'px-3 py-2 text-sm',
-      md: 'px-4 py-2.5 text-sm',
-      lg: 'px-6 py-3 text-base',
-      xl: 'px-8 py-4 text-lg'
+      sm: 'px-3 py-2 text-sm sm:px-4 sm:py-2.5',
+      md: 'px-4 py-2.5 text-sm sm:px-5 sm:py-3 sm:text-base',
+      lg: 'px-6 py-3 text-base sm:px-8 sm:py-4 sm:text-lg',
+      xl: 'px-8 py-4 text-lg sm:px-10 sm:py-5 sm:text-xl'
     };
 
     const getVariantStyle = () => {
       const styles: Record<string, any> = {
         primary: {
           ...getPrimaryButtonStyle(),
+          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white',
           focusRingColor: 'focus:ring-medical-500'
         },
         secondary: {
           background: secondaryGradient,
           color: 'white',
+          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white',
           focusRingColor: 'focus:ring-health-500'
         },
         medical: {
           background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
           color: 'white',
+          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white',
           focusRingColor: 'focus:ring-medical-500'
         },
         health: {
           background: 'linear-gradient(135deg, #059669, #047857)',
           color: 'white',
+          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white',
           focusRingColor: 'focus:ring-health-500'
         },
         emergency: {
           background: 'linear-gradient(135deg, #DC2626, #B91C1C)',
           color: 'white',
+          fallbackClasses: 'bg-emergency-600 hover:bg-emergency-700 text-white',
           focusRingColor: 'focus:ring-emergency-500'
         },
         outline: {
           background: 'transparent',
           color: '#2563EB',
           border: '2px solid #2563EB',
+          fallbackClasses: 'border-2 border-medical-600 text-medical-600 hover:bg-medical-50',
           focusRingColor: 'focus:ring-medical-500'
         },
         ghost: {
           background: 'transparent',
           color: '#374151',
+          fallbackClasses: 'text-neutral-700 hover:bg-neutral-100',
           focusRingColor: 'focus:ring-gray-500'
         }
       };
@@ -98,6 +107,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
           ${baseClasses} 
           ${sizeClasses[size]} 
           ${variantStyle.focusRingColor}
+          ${variantStyle.fallbackClasses || ''}
           ${additionalClasses}
           ${className}
         `}

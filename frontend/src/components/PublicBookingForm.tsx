@@ -354,9 +354,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const selectedType = consultationTypes.find((t: ConsultationType) => t.id === Number(selectedConsultationType));
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded shadow">
+    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-lg">
       <h3 
-        className="text-base sm:text-lg font-bold mb-4"
+        className="text-lg sm:text-xl font-bold mb-4 sm:mb-6"
         style={{
           color: colors.primaryColor || '#1f2937',
           borderBottom: `2px solid ${colors.accentColor || '#3b82f6'}`,
@@ -368,9 +368,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       </h3>
       
       {/* Email verificación */}
-      <div className="mb-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">Verificación de Cliente</h4>
-        <div className="flex gap-2">
+      <div className="mb-4 sm:mb-6">
+        <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">Verificación de Cliente</h4>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <input 
             value={email} 
             onChange={(e) => {
@@ -380,16 +380,17 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             }} 
             placeholder="Email del cliente" 
             type="email" 
-            className="flex-1 p-2 border rounded" 
+            className="flex-1 px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
             required 
           />
           <button 
             type="button" 
             onClick={checkEmailExists}
-            className="px-4 py-2 rounded text-sm text-white font-medium transition-colors duration-200 hover:opacity-90"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:opacity-90 touch-manipulation"
             style={{
               backgroundColor: colors.primaryColor || '#3b82f6',
-              borderColor: colors.primaryColor || '#3b82f6'
+              borderColor: colors.primaryColor || '#3b82f6',
+              color: 'white'
             }}
           >
             Verificar
@@ -420,12 +421,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             >
               Datos del Cliente
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-3 sm:gap-4">
               <input 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
                 placeholder="Nombre completo" 
-                className="w-full p-2 border rounded" 
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
                 required 
                 disabled={!!existingTutor}
               />
@@ -434,7 +435,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                   value={rut} 
                   onChange={e => handleRutChange(e.target.value)} 
                   placeholder="RUT * (ej: 12.345.678-9)" 
-                  className={`w-full p-2 border rounded ${rutError ? 'border-red-500' : ''}`}
+                  className={`w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${rutError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500'}`}
                   required
                   disabled={!!existingTutor}
                 />
@@ -445,7 +446,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                   value={phone} 
                   onChange={e => handlePhoneChange(e.target.value)} 
                   placeholder="Teléfono * (ej: +56 9 1234 5678)" 
-                  className={`w-full p-2 border rounded ${phoneError ? 'border-red-500' : ''}`}
+                  className={`w-full px-3 py-2.5 border rounded-lg focus:ring-2 text-base touch-manipulation ${phoneError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'}`}
                   required 
                   disabled={!!existingTutor}
                 />
@@ -516,18 +517,18 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                 >
                   Datos de la Nueva Mascota
                 </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-3">
                   <input 
                     value={petName} 
                     onChange={e => setPetName(e.target.value)} 
                     placeholder="Nombre de la mascota *" 
-                    className="w-full p-2 border rounded" 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
                     required={isNewPet}
                   />
                   <select 
                     value={petType} 
                     onChange={e => setPetType(e.target.value)} 
-                    className="w-full p-2 border rounded" 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
                     required={isNewPet}
                   >
                     <option value="">Seleccionar especie *</option>
@@ -546,7 +547,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     value={petBreed} 
                     onChange={e => setPetBreed(e.target.value)} 
                     placeholder="Raza *" 
-                    className="w-full p-2 border rounded" 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
                     required={isNewPet}
                   />
                   <input 
@@ -661,9 +662,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       )}
 
       {slots.length > 0 ? (
-        <div className="mb-2">
-          <label className="block text-sm mb-1">Selecciona un horario disponible</label>
-          <select className="w-full p-2 border rounded" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
+        <div className="mb-4 sm:mb-6">
+          <label className="block text-sm sm:text-base font-medium mb-2 sm:mb-3">Selecciona un horario disponible</label>
+          <select className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
             <option value="">-- elige un horario --</option>
             {groupSlotsByDay(slots).map(([day, daySlots]) => {
               // Parse the day key (YYYY-MM-DD) to avoid timezone issues

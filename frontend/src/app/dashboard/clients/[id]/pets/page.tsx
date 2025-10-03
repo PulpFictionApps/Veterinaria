@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { use } from 'react';
 import { authFetch } from '@/lib/api';
+import ThemedCard from '../../../../../components/ui/ThemedCard';
+import ThemedButton from '../../../../../components/ui/ThemedButton';
+import { Plus, PawPrint } from 'lucide-react';
 
 interface Pet {
   id: number;
@@ -58,10 +61,17 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
       ) : error ? (
         <div className="text-red-600">{error}</div>
       ) : pets.length === 0 ? (
-        <div className="text-center p-8 bg-white rounded shadow">
-          <p className="text-gray-600 mb-4">No se encontraron mascotas para este cliente.</p>
-          <Link href={`/dashboard/clients/${clientId}/pet/new`} className="bg-blue-600 text-white px-4 py-2 rounded">Agregar mascota</Link>
-        </div>
+        <ThemedCard variant="medical" padding="lg" className="text-center">
+          <div className="p-4">
+            <PawPrint className="w-16 h-16 text-medical-400 mx-auto mb-4" />
+            <p className="text-gray-600 mb-6 text-lg font-medium">No se encontraron mascotas para este cliente.</p>
+            <Link href={`/dashboard/clients/${clientId}/pet/new`}>
+              <ThemedButton variant="medical" icon={Plus} size="lg">
+                Agregar Primera Mascota
+              </ThemedButton>
+            </Link>
+          </div>
+        </ThemedCard>
       ) : (
         <ul>
           {pets.map(p => (

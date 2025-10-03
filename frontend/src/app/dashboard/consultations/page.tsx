@@ -20,6 +20,9 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import ThemedCard from '../../../components/ui/ThemedCard';
+import ThemedButton from '../../../components/ui/ThemedButton';
+import ThemedInput from '../../../components/ui/ThemedInput';
 
 interface ConsultationType {
   id: number;
@@ -165,13 +168,14 @@ export default function ConsultationsPage() {
                   </div>
                 </div>
                 <Tooltip content="Crear nuevo tipo de consulta médica">
-                  <button
+                  <ThemedButton
+                    variant="medical"
+                    icon={Plus}
                     onClick={() => setShowCreateForm(true)}
-                    className="group flex items-center gap-2 bg-gradient-to-r from-medical-500 to-health-500 text-white px-6 py-3 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+                    size="lg"
                   >
-                    <Plus className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     Nuevo Tipo
-                  </button>
+                  </ThemedButton>
                 </Tooltip>
               </div>
             </div>
@@ -292,19 +296,20 @@ export default function ConsultationsPage() {
                 </div>
                 
                 <div className="md:col-span-2 flex justify-end gap-4 pt-6 border-t border-neutral-100">
-                  <button
-                    type="button"
+                  <ThemedButton
+                    variant="outline"
                     onClick={resetForm}
-                    className="px-8 py-3 border border-neutral-300 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 font-medium"
+                    size="lg"
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </ThemedButton>
+                  <ThemedButton
+                    variant="medical"
                     type="submit"
-                    className="px-8 py-3 bg-gradient-to-r from-medical-600 to-medical-700 text-white rounded-xl hover:from-medical-700 hover:to-medical-800 transition-all duration-200 font-semibold shadow-medical"
+                    size="lg"
                   >
                     {editingType ? '✓ Guardar Cambios' : '+ Crear Tipo'}
-                  </button>
+                  </ThemedButton>
                 </div>
               </form>
             </div>

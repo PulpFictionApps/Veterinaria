@@ -87,19 +87,19 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="w-full min-h-full bg-gradient-to-br from-neutral-50 to-medical-50">
-      <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-6 sm:space-y-8">
         
         {/* Header */}
         <FadeIn>
           <div className="bg-white rounded-2xl shadow-card border border-medical-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-medical-600 to-health-600 p-8 text-white">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                  <PawPrint className="w-8 h-8 text-white" />
+            <div className="bg-gradient-to-r from-medical-600 to-health-600 p-4 sm:p-8 text-white">
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <PawPrint className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">Nueva Mascota</h1>
-                  <p className="text-white/90">Registra una nueva mascota en el sistema</p>
+                <div className="min-w-0">
+                  <h1 className="text-2xl sm:text-3xl font-bold mb-2 leading-tight">Nueva Mascota</h1>
+                  <p className="text-white/90 text-sm sm:text-base">Registra una nueva mascota en el sistema</p>
                 </div>
               </div>
             </div>
@@ -108,16 +108,16 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
 
         {/* Formulario */}
         <SlideIn direction="up" delay={200}>
-          <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-8">
-            <form onSubmit={submit} className="space-y-8">
+          <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-4 sm:p-8">
+            <form onSubmit={submit} className="space-y-6 sm:space-y-8">
               
               {/* Información Básica */}
               <div>
-                <h2 className="text-xl font-bold text-neutral-800 mb-6 flex items-center">
-                  <Heart className="w-5 h-5 mr-2 text-medical-600" />
+                <h2 className="text-lg sm:text-xl font-bold text-neutral-800 mb-4 sm:mb-6 flex items-center">
+                  <Heart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-medical-600" />
                   Información Básica
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   
                   {/* Nombre */}
                   <div className="space-y-2">
@@ -130,7 +130,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                       value={name}
                       onChange={e => setName(e.target.value)}
                       placeholder="Ej: Max, Luna, Rocky"
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                       required
                     />
                   </div>
@@ -144,7 +144,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                       id="type"
                       value={type}
                       onChange={e => setType(e.target.value)}
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                       required
                     >
                       <option value="">Selecciona un tipo</option>
@@ -165,7 +165,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                       value={breed}
                       onChange={e => setBreed(e.target.value)}
                       placeholder="Ej: Golden Retriever, Persa, etc."
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                     />
                   </div>
 
@@ -182,7 +182,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                       value={age}
                       onChange={e => setAge(e.target.value)}
                       placeholder="Ej: 2"
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                     />
                   </div>
 
@@ -190,12 +190,12 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               </div>
 
               {/* Características Físicas */}
-              <div className="border-t border-neutral-200 pt-8">
-                <h2 className="text-xl font-bold text-neutral-800 mb-6 flex items-center">
-                  <Scale className="w-5 h-5 mr-2 text-health-600" />
+              <div className="border-t border-neutral-200 pt-6 sm:pt-8">
+                <h2 className="text-lg sm:text-xl font-bold text-neutral-800 mb-4 sm:mb-6 flex items-center">
+                  <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-health-600" />
                   Características Físicas
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   
                   {/* Peso */}
                   <div className="space-y-2">
@@ -212,9 +212,9 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                         value={weight}
                         onChange={e => setWeight(e.target.value)}
                         placeholder="25.5"
-                        className="w-full px-4 py-3 pr-12 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                       />
-                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-500 font-medium">
+                      <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-neutral-500 font-medium text-sm">
                         kg
                       </div>
                     </div>
@@ -229,7 +229,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                       id="sex"
                       value={sex}
                       onChange={e => setSex(e.target.value)}
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                     >
                       <option value="">Seleccionar sexo</option>
                       {sexOptions.map(option => (
@@ -247,7 +247,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                       id="reproductiveStatus"
                       value={reproductiveStatus}
                       onChange={e => setReproductiveStatus(e.target.value)}
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                     >
                       <option value="">Seleccionar estado</option>
                       {reproductiveStatusOptions.map(option => (
