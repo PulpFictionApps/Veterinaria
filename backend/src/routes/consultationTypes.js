@@ -22,7 +22,7 @@ router.get('/', verifyToken, async (req, res) => {
 // POST /consultation-types - Create a new consultation type
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { name, price, description, active = true } = req.body;
+    const { name, price, description, active = true, duration = 30, color = '#3B82F6' } = req.body;
     
     if (!name || price === undefined) {
       return res.status(400).json({ error: 'Name and price are required' });
@@ -35,6 +35,8 @@ router.post('/', verifyToken, async (req, res) => {
         name,
         price: priceInCents,
         description,
+        duration: Number(duration),
+        color,
         active,
         userId: req.user.id
       }
@@ -51,7 +53,7 @@ router.post('/', verifyToken, async (req, res) => {
 router.put('/:id', verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, description, active } = req.body;
+    const { name, price, description, active, duration, color } = req.body;
     
     // Verify ownership
     const existing = await prisma.consultationType.findUnique({
@@ -67,6 +69,8 @@ router.put('/:id', verifyToken, async (req, res) => {
     if (price !== undefined) updateData.price = Math.round(Number(price) * 100);
     if (description !== undefined) updateData.description = description;
     if (active !== undefined) updateData.active = active;
+    if (duration !== undefined) updateData.duration = Number(duration);
+    if (color !== undefined) updateData.color = color;
     
     const updated = await prisma.consultationType.update({
       where: { id: Number(id) },

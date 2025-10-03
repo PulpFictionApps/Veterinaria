@@ -9,7 +9,7 @@ import { brand } from '../lib/constants';
 export default function Sidebar() {
   const pathname = usePathname();
   const { userId } = useAuthContext();
-  const { getNavigationIconStyle, primaryGradient } = useThemeColors();
+  const { getNavigationIconStyle, primaryGradient, getPrimaryButtonStyle } = useThemeColors();
   const [availabilityCount, setAvailabilityCount] = useState<number | null>(null);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Sidebar() {
                         ? 'text-white shadow-sm'
                         : 'text-gray-700 hover:bg-gray-50'
                     }`}
-                    style={isActive ? { background: primaryGradient } : {}}
+                    style={isActive ? getPrimaryButtonStyle() : {}}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>
                     <span className="font-medium">{item.label}</span>
@@ -103,7 +103,7 @@ export default function Sidebar() {
                           ? 'text-white shadow-sm'
                           : 'text-gray-700 hover:bg-gray-50'
                       }`}
-                      style={isActive ? { background: primaryGradient } : {}}
+                      style={isActive ? getPrimaryButtonStyle() : {}}
                     >
                       <span className="text-lg mr-3">{item.icon}</span>
                       <span className="font-medium">{item.label}</span>

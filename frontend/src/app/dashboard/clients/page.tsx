@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { authFetch } from '../../../lib/api';
 import { useAuthContext } from '../../../lib/auth-context';
+import { usePets } from '../../../hooks/useData';
 import SubscriptionGuard from '../../../components/SubscriptionGuard';
 import { 
   Users, 
@@ -57,7 +58,7 @@ export default function ClientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  async function load() {
+  async function loadClientsWithPets() {
     if (!userId) return;
     setLoading(true);
     setError('');
@@ -71,17 +72,37 @@ export default function ClientsPage() {
       }
       const data: Client[] = await res.json();
       
-      // Agregar datos simulados para las mascotas y citas
-      const enrichedData = data.map(client => ({
-        ...client,
-        pets: [
-          { id: 1, name: 'Max', type: 'Perro' },
-          { id: 2, name: 'Luna', type: 'Gato' }
-        ], // Datos simulados
-        appointments: [
-          { id: 1, date: '2024-10-15', status: 'scheduled' }
-        ] // Datos simulados
-      }));
+      // Cargar las mascotas reales para cada cliente
+      const enrichedData = await Promise.all(
+        data.map(async (client) => {
+          try {
+            const petsRes = await authFetch(`/pets?tutorId=${client.id}`);
+            const pets = petsRes.ok ? await petsRes.json() : [];
+            
+            // También podemos cargar las citas reales si es necesario
+            const appointmentsRes = await authFetch(`/appointments/${userId}`);
+            let appointments = [];
+            if (appointmentsRes.ok) {
+              const allAppointments = await appointmentsRes.json();
+              // Filtrar citas de este cliente específico
+              appointments = allAppointments.filter((apt: any) => apt.tutorId === client.id);
+            }
+            
+            return {
+              ...client,
+              pets: pets || [],
+              appointments: appointments || []
+            };
+          } catch (err) {
+            console.error(`Error loading data for client ${client.id}:`, err);
+            return {
+              ...client,
+              pets: [],
+              appointments: []
+            };
+          }
+        })
+      );
       
       setClients(enrichedData || []);
       setFilteredClients(enrichedData || []);
@@ -110,7 +131,7 @@ export default function ClientsPage() {
     }
   }, [searchTerm, clients]);
 
-  useEffect(() => { load(); }, [userId]);
+  useEffect(() => { loadClientsWithPets(); }, [userId]);
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return '';
@@ -214,7 +235,7 @@ export default function ClientsPage() {
               <p className="text-emergency-600 mb-4">{error}</p>
               <ThemedButton
                 variant="emergency"
-                onClick={load}
+                onClick={loadClientsWithPets}
                 size="lg"
               >
                 Reintentar
