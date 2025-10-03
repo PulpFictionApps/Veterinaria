@@ -67,8 +67,19 @@ export default function Sidebar() {
                     className="flex items-center px-4 py-3 rounded-lg transition-all"
                     style={{
                       backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-                      color: 'white',
-                      borderLeft: isActive ? '3px solid white' : 'none'
+                      color: 'white !important',
+                      borderLeft: isActive ? '3px solid white' : 'none',
+                      textDecoration: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
                     }}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>
@@ -97,8 +108,19 @@ export default function Sidebar() {
                       className="flex items-center px-4 py-3 rounded-lg transition-all"
                       style={{
                         backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-                        color: 'white',
-                        borderLeft: isActive ? '3px solid white' : 'none'
+                        color: 'white !important',
+                        borderLeft: isActive ? '3px solid white' : 'none',
+                        textDecoration: 'none'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }
                       }}
                     >
                       <span className="text-lg mr-3">{item.icon}</span>

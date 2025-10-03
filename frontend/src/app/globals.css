@@ -285,4 +285,36 @@ body {
     box-shadow: var(--shadow-primary) !important;
     transform: translateY(-2px) !important;
   }
+
+  /* Sobrescribir TODOS los estados de enlaces en el sidebar */
+  aside a {
+    color: white !important;
+    text-decoration: none !important;
+  }
+
+  aside a:hover {
+    color: white !important;
+    text-decoration: none !important;
+  }
+
+  aside a:focus {
+    color: white !important;
+    text-decoration: none !important;
+    outline: none !important;
+  }
+
+  aside a:active {
+    color: white !important;
+    text-decoration: none !important;
+  }
+
+  aside a:visited {
+    color: white !important;
+    text-decoration: none !important;
+  }
+
+  /* Sobrescribir específicamente los spans dentro de los enlaces del sidebar */
+  aside a span {
+    color: white !important;
+  }
 }
