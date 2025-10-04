@@ -99,7 +99,7 @@ export default function OptimizedSidebar() {
                     aria-label={`Ir a ${item.label}`}
                     className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
                       active
-                        ? 'text-white bg-gradient-to-r from-medical-600 to-medical-700 shadow-medical'
+                        ? 'text-white bg-gray-600 shadow-lg border-l-4 border-white'  // PLOMO COMO PEDISTE
                         : 'text-neutral-700 hover:bg-medical-50 hover:text-medical-700'
                     }`}
                   >
@@ -164,7 +164,7 @@ export default function OptimizedSidebar() {
                       aria-label={`Ir a ${item.label}`}
                       className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
                         active
-                          ? 'text-white bg-gradient-to-r from-medical-600 to-medical-700 shadow-medical'
+                          ? 'text-white bg-gray-600 shadow-lg border-l-4 border-white'  // PLOMO COMO PEDISTE
                           : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700'
                       }`}
                     >
