@@ -59,14 +59,24 @@ export default function Sidebar() {
         <nav>
           <ul className="space-y-1">
             {menuItems.map((item) => {
-              // Mejorar la detección de rutas activas para evitar conflictos
+              // Detección de rutas activas mejorada
               const isActive = pathname === item.href || 
                 (item.href !== '/dashboard' && pathname?.startsWith(item.href + '/'));
+              
+              // Debug temporal para ver qué está pasando
+              console.log(`Item: ${item.href}, Current: ${pathname}, Active: ${isActive}`);
+              
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     className={`sidebar-link ${isActive ? 'active' : ''}`}
+                    style={{
+                      // Forzar estilos inline como backup
+                      backgroundColor: isActive ? '#374151' : 'transparent',
+                      color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.8)',
+                      borderLeft: isActive ? '3px solid #FFFFFF' : '3px solid transparent'
+                    }}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>
                     <span className="font-medium">{item.label}</span>
@@ -80,14 +90,24 @@ export default function Sidebar() {
             <h4 className="text-xs text-white/60 uppercase mb-2 px-4">Cuenta</h4>
             <ul className="space-y-1">
               {secondary.map(item => {
-                // Mejorar la detección de rutas activas para evitar conflictos
+                // Detección de rutas activas mejorada
                 const isActive = pathname === item.href || 
                   (pathname?.startsWith(item.href + '/'));
+                
+                // Debug temporal para ver qué está pasando
+                console.log(`Secondary Item: ${item.href}, Current: ${pathname}, Active: ${isActive}`);
+                
                 return (
                   <li key={item.href}>
                     <Link 
                       href={item.href} 
                       className={`sidebar-link ${isActive ? 'active' : ''}`}
+                      style={{
+                        // Forzar estilos inline como backup
+                        backgroundColor: isActive ? '#374151' : 'transparent',
+                        color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.8)',
+                        borderLeft: isActive ? '3px solid #FFFFFF' : '3px solid transparent'
+                      }}
                     >
                       <span className="text-lg mr-3">{item.icon}</span>
                       <span className="font-medium">{item.label}</span>
