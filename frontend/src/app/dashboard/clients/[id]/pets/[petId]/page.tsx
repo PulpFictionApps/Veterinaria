@@ -318,7 +318,7 @@ export default function PetDetail({ params }: PageProps) {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center px-6 py-3 rounded-xl transition-all duration-200 ${
                     activeTab === tab.id
-                      ? 'bg-gradient-to-r from-medical-600 to-medical-700 text-white shadow-medical'
+                      ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'  // PLOMO COMO EL SIDEBAR
                       : 'text-neutral-600 hover:bg-medical-50 hover:text-medical-700'
                   }`}
                 >

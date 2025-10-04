@@ -108,7 +108,7 @@ export default function CalendarPage() {
                         onClick={() => setCurrentView('unified')}
                         className={`group px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                           currentView === 'unified'
-                            ? 'bg-gradient-to-r from-medical-500 to-health-500 text-white shadow-lg'
+                            ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'
                             : 'text-neutral-600 hover:text-medical-600 hover:bg-white'
                         }`}
                       >
@@ -122,7 +122,7 @@ export default function CalendarPage() {
                         onClick={() => setCurrentView('appointments')}
                         className={`group px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                           currentView === 'appointments'
-                            ? 'bg-gradient-to-r from-medical-500 to-health-500 text-white shadow-lg'
+                            ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'
                             : 'text-neutral-600 hover:text-medical-600 hover:bg-white'
                         }`}
                       >
@@ -136,7 +136,7 @@ export default function CalendarPage() {
                         onClick={() => setCurrentView('availability')}
                         className={`group px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                           currentView === 'availability'
-                            ? 'bg-gradient-to-r from-medical-500 to-health-500 text-white shadow-lg'
+                            ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'
                             : 'text-neutral-600 hover:text-medical-600 hover:bg-white'
                         }`}
                       >

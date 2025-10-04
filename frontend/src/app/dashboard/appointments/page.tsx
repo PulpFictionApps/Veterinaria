@@ -316,7 +316,7 @@ export default function AppointmentsPage() {
                           onClick={() => setFilter(filterOption.key as any)}
                           className={`group px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                             filter === filterOption.key
-                              ? 'bg-gradient-to-r from-medical-500 to-health-500 text-white shadow-lg'
+                              ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'  // PLOMO CONSISTENTE
                               : 'bg-medical-50 text-medical-600 hover:bg-medical-100 border border-medical-100'
                           }`}
                         >
