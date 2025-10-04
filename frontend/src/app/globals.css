@@ -218,11 +218,17 @@ body {
   /* Hover states */
   .hover\:bg-primary:hover { background-color: var(--color-primary-hover) !important; }
 
-  /* Botones del sidebar - arreglar el problema de transparencia */
+  /* SIDEBAR - Sistema de navegación completamente reescrito */
   .sidebar-nav-item {
     background-color: transparent !important;
     color: rgba(255, 255, 255, 0.8) !important;
     transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 4px !important;
+    text-decoration: none !important;
   }
 
   .sidebar-nav-item:hover {
@@ -231,15 +237,25 @@ body {
   }
 
   .sidebar-nav-item.active {
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    background-color: #6B7280 !important; /* Plomo/Gris como solicitaste */
     color: white !important;
     border-left: 3px solid white !important;
   }
 
-  /* Sobrescribir cualquier estilo de botón que cause transparencia */
+  /* Botones específicos del sidebar */
   .sidebar-nav-button {
     background: transparent !important;
     color: rgba(255, 255, 255, 0.8) !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 4px !important;
+    width: 100% !important;
+    text-align: left !important;
   }
 
   .sidebar-nav-button:hover {
@@ -248,8 +264,9 @@ body {
   }
 
   .sidebar-nav-button.active {
-    background: rgba(255, 255, 255, 0.15) !important;
+    background: #6B7280 !important; /* Plomo/Gris como solicitaste */
     color: white !important;
+    border-left: 3px solid white !important;
   }
 
   /* Asegurar que los botones principales usen los colores de la paleta */
@@ -286,9 +303,11 @@ body {
     transform: translateY(-2px) !important;
   }
 
-  /* Estilos específicos solo para el sidebar - VERSIÓN CORREGIDA */
+  /* SIDEBAR LINKS - Sistema unificado y definitivo */
   .sidebar-link {
-    color: rgba(255, 255, 255, 0.9) !important;
+    /* Estado base: texto blanco semitransparente, fondo transparente */
+    color: rgba(255, 255, 255, 0.8) !important;
+    background-color: transparent !important;
     text-decoration: none !important;
     display: flex !important;
     align-items: center !important;
@@ -296,24 +315,25 @@ body {
     border-radius: 8px !important;
     transition: all 0.2s ease !important;
     margin-bottom: 4px !important;
+    border-left: 3px solid transparent !important;
   }
 
-  /* Hover solo para elementos NO activos */
+  /* Hover: solo si NO está activo */
   .sidebar-link:not(.active):hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
     color: white !important;
   }
 
-  /* Estado activo con máxima prioridad - TEXTO BLANCO */
+  /* Estado ACTIVO: fondo plomo, texto blanco, borde blanco */
   .sidebar-link.active {
-    background-color: rgba(255, 255, 255, 0.25) !important;
+    background-color: #6B7280 !important; /* Plomo/Gris */
     color: white !important;
     border-left: 3px solid white !important;
   }
 
-  /* Asegurar que el activo mantenga su estilo incluso en hover - TEXTO BLANCO */
+  /* Mantener estado activo incluso en hover */
   .sidebar-link.active:hover {
-    background-color: rgba(255, 255, 255, 0.25) !important;
+    background-color: #6B7280 !important; /* Mantener plomo */
     color: white !important;
     border-left: 3px solid white !important;
   }
