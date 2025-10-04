@@ -59,7 +59,9 @@ export default function Sidebar() {
         <nav>
           <ul className="space-y-1">
             {menuItems.map((item) => {
-              const isActive = pathname && pathname.startsWith(item.href);
+              // Mejorar la detección de rutas activas para evitar conflictos
+              const isActive = pathname === item.href || 
+                (item.href !== '/dashboard' && pathname?.startsWith(item.href + '/'));
               return (
                 <li key={item.href}>
                   <Link
@@ -78,7 +80,9 @@ export default function Sidebar() {
             <h4 className="text-xs text-white/60 uppercase mb-2 px-4">Cuenta</h4>
             <ul className="space-y-1">
               {secondary.map(item => {
-                const isActive = pathname && pathname.startsWith(item.href);
+                // Mejorar la detección de rutas activas para evitar conflictos
+                const isActive = pathname === item.href || 
+                  (pathname?.startsWith(item.href + '/'));
                 return (
                   <li key={item.href}>
                     <Link 
