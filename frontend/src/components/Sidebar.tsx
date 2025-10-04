@@ -72,14 +72,23 @@ export default function Sidebar() {
                     href={item.href}
                     className={`sidebar-link ${isActive ? 'active' : ''}`}
                     style={{
-                      // Forzar estilos inline como backup
-                      backgroundColor: isActive ? '#374151' : 'transparent',
+                      // ESTILOS INLINE ABSOLUTOS - imposible de sobrescribir
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '12px 16px',
+                      marginBottom: '4px',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease',
+                      backgroundColor: isActive ? '#1F2937' : 'transparent', // Gris muy oscuro
                       color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.8)',
-                      borderLeft: isActive ? '3px solid #FFFFFF' : '3px solid transparent'
+                      borderLeft: isActive ? '4px solid #FFFFFF' : '3px solid transparent',
+                      fontWeight: isActive ? '700' : '500',
+                      boxShadow: isActive ? 'inset 0 0 0 1px rgba(255, 255, 255, 0.3)' : 'none'
                     }}
                   >
-                    <span className="text-lg mr-3">{item.icon}</span>
-                    <span className="font-medium">{item.label}</span>
+                    <span className="text-lg mr-3" style={{ color: 'inherit' }}>{item.icon}</span>
+                    <span className="font-medium" style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.label}</span>
                   </Link>
                 </li>
               );
@@ -103,14 +112,23 @@ export default function Sidebar() {
                       href={item.href} 
                       className={`sidebar-link ${isActive ? 'active' : ''}`}
                       style={{
-                        // Forzar estilos inline como backup
-                        backgroundColor: isActive ? '#374151' : 'transparent',
+                        // ESTILOS INLINE ABSOLUTOS - imposible de sobrescribir
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '12px 16px',
+                        marginBottom: '4px',
+                        borderRadius: '8px',
+                        textDecoration: 'none',
+                        transition: 'all 0.2s ease',
+                        backgroundColor: isActive ? '#1F2937' : 'transparent', // Gris muy oscuro
                         color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.8)',
-                        borderLeft: isActive ? '3px solid #FFFFFF' : '3px solid transparent'
+                        borderLeft: isActive ? '4px solid #FFFFFF' : '3px solid transparent',
+                        fontWeight: isActive ? '700' : '500',
+                        boxShadow: isActive ? 'inset 0 0 0 1px rgba(255, 255, 255, 0.3)' : 'none'
                       }}
                     >
-                      <span className="text-lg mr-3">{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
+                      <span className="text-lg mr-3" style={{ color: 'inherit' }}>{item.icon}</span>
+                      <span className="font-medium" style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.label}</span>
                     </Link>
                   </li>
                 );
