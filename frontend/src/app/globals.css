@@ -132,6 +132,49 @@ body {
   box-shadow: 0 8px 25px var(--color-primary)30;
 }
 
+/* Force white text on gradient buttons */
+button[style*="linear-gradient"] {
+  color: white !important;
+}
+
+button[style*="linear-gradient"] * {
+  color: white !important;
+}
+
+/* Specific fix for ThemedButton variants */
+.themed-button-primary {
+  color: white !important;
+  background: linear-gradient(135deg, #EC4899, #BE185D) !important;
+}
+
+.themed-button-secondary {
+  color: white !important;
+  background: linear-gradient(135deg, #F9A8D4, #EC4899) !important;
+}
+
+.themed-button-medical {
+  color: white !important;
+  background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+}
+
+.themed-button-health {
+  color: white !important;
+  background: linear-gradient(135deg, #059669, #047857) !important;
+}
+
+.themed-button-emergency {
+  color: white !important;
+  background: linear-gradient(135deg, #DC2626, #B91C1C) !important;
+}
+
+.themed-button-primary *,
+.themed-button-secondary *,
+.themed-button-medical *,
+.themed-button-health *,
+.themed-button-emergency * {
+  color: white !important;
+}
+
 .fc .fc-timegrid-event {
   font-size: 0.9rem; /* opcional, ajustar texto dentro del slot */
 }

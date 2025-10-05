@@ -38,7 +38,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
       select-none touch-manipulation
       ${fullWidth ? 'w-full' : ''}
       sm:hover:scale-105 hover:scale-100
-      ${variant !== 'outline' && variant !== 'ghost' ? 'text-white' : ''}
+      ${variant !== 'outline' && variant !== 'ghost' ? '!text-white' : ''}
     `;
     
     const sizeClasses = {
@@ -51,12 +51,13 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     const getVariantStyle = () => {
       const styles: Record<string, any> = {
         primary: {
-          ...getPrimaryButtonStyle(),
+          background: 'linear-gradient(135deg, #EC4899, #BE185D)',
+          color: 'white',
           fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white !text-white',
           focusRingColor: 'focus:ring-medical-500'
         },
         secondary: {
-          background: 'var(--gradient-secondary)',
+          background: 'linear-gradient(135deg, #F9A8D4, #EC4899)',
           color: 'white',
           fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white !text-white',
           focusRingColor: 'focus:ring-health-500'
@@ -110,13 +111,16 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
           ${variantStyle.focusRingColor}
           ${variantStyle.fallbackClasses || ''}
           ${additionalClasses}
+          ${variant !== 'outline' && variant !== 'ghost' ? `themed-button-${variant}` : ''}
           ${className}
         `}
         style={variant !== 'outline' && variant !== 'ghost' ? {
           background: variantStyle.background,
+          color: 'white',
           border: variantStyle.border || 'none'
         } : {
-          border: variantStyle.border || 'none'
+          border: variantStyle.border || 'none',
+          color: variantStyle.color
         }}
         {...props}
       >
