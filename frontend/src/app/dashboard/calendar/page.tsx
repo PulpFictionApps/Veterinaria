@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
+
 import { useAuthContext } from '../../../lib/auth-context';
 import { 
   Calendar, 
@@ -18,40 +18,9 @@ import {
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
 
-// Lazy load components for better performance with medical loading states
-const LazyDashboardCalendar = dynamic(() => import('../../../components/DashboardCalendar'), {
-  loading: () => (
-    <FadeIn>
-      <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl h-96 flex items-center justify-center border border-medical-100">
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-medical-100 border-t-medical-500"></div>
-            <Calendar className="h-5 w-5 text-medical-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <p className="mt-4 text-neutral-600 font-medium">Cargando calendario médico...</p>
-        </div>
-      </div>
-    </FadeIn>
-  ),
-  ssr: false
-});
-
-const LazyAvailabilityManager = dynamic(() => import('../../../components/AvailabilityManager'), {
-  loading: () => (
-    <FadeIn>
-      <div className="bg-gradient-to-r from-health-50 to-medical-50 rounded-2xl h-64 flex items-center justify-center border border-health-100">
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-health-100 border-t-health-500"></div>
-            <Clock className="h-5 w-5 text-health-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <p className="mt-4 text-neutral-600 font-medium">Cargando horarios disponibles...</p>
-        </div>
-      </div>
-    </FadeIn>
-  ),
-  ssr: false
-});
+// Usar componentes Lazy pre-creados para consistencia
+import LazyDashboardCalendar from '../../../components/LazyDashboardCalendar';
+import LazyAvailabilityManager from '../../../components/LazyAvailabilityManager';
 
 type CalendarView = 'appointments' | 'availability' | 'unified';
 

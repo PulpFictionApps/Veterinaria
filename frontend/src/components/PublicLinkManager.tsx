@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuthContext } from '@/lib/auth-context';
-import ThemedButton from './ThemedButton';
+import ThemedButton from './ui/ThemedButton';
 
 export default function PublicLinkManager() {
   const { userId } = useAuthContext();
