@@ -184,7 +184,7 @@ export default function ConsultationsPage() {
 
         {/* Create/Edit Form */}
         {showCreateForm && (
-          <div className="bg-white rounded-2xl shadow-card border border-medical-100 mb-8">
+          <ThemedCard variant="medical" className="mb-8">
             <div className="px-8 py-6 border-b border-medical-100 bg-gradient-to-r from-medical-50 to-health-50">
               <h2 className="text-xl font-bold text-neutral-800">
                 {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
@@ -313,7 +313,7 @@ export default function ConsultationsPage() {
                 </div>
               </form>
             </div>
-          </div>
+          </ThemedCard>
         )}
 
         <Stagger className="space-y-8">

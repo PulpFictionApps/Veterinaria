@@ -4,17 +4,13 @@
   --background: #ffffff;
   --foreground: #171717;
   
-  /* Dynamic Theme Colors - will be updated by ThemeProvider */
+  /* Dynamic Theme Colors - Core essentials */
   --color-primary: #EC4899;
   --color-secondary: #F9A8D4;
   --color-accent: #BE185D;
   --color-primary-hover: #DB2777;
   --gradient-primary: linear-gradient(135deg, #EC4899, #BE185D);
-  --gradient-secondary: linear-gradient(135deg, #F9A8D4, #EC4899);
-  --gradient-bg: linear-gradient(135deg, #F9A8D410, #EC489905);
-  --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
   --shadow-primary: 0 4px 20px #EC489940;
-  --shadow-secondary: 0 8px 30px #F9A8D430;
   
   /* Legacy brand colors (kept for compatibility) */
   --brand-50: #f3fbf6;
@@ -114,52 +110,15 @@ body {
   height: 60px; /* aumenta el tamaño de cada hora */
 }
 
-/* Dynamic Theme Utility Classes */
-.bg-theme-primary {
-  background-color: var(--color-primary);
-}
+/* Dynamic Theme Utility Classes - Consolidated */
+.bg-theme-primary { background-color: var(--color-primary); }
+.bg-theme-secondary { background-color: var(--color-secondary); }
+.text-theme-primary { color: var(--color-primary); }
+.border-theme-primary { border-color: var(--color-primary); }
+.bg-gradient-theme-primary { background: var(--gradient-primary); }
+.shadow-theme-primary { box-shadow: var(--shadow-primary); }
 
-.bg-theme-secondary {
-  background-color: var(--color-secondary);
-}
-
-.bg-theme-accent {
-  background-color: var(--color-accent);
-}
-
-.text-theme-primary {
-  color: var(--color-primary);
-}
-
-.text-theme-accent {
-  color: var(--color-accent);
-}
-
-.border-theme-primary {
-  border-color: var(--color-primary);
-}
-
-.bg-gradient-theme-primary {
-  background: var(--gradient-primary);
-}
-
-.bg-gradient-theme-secondary {
-  background: var(--gradient-secondary);
-}
-
-.shadow-theme-primary {
-  box-shadow: var(--shadow-primary);
-}
-
-.shadow-theme-secondary {
-  box-shadow: var(--shadow-secondary);
-}
-
-.hover\:bg-theme-primary-hover:hover {
-  background-color: var(--color-primary-hover);
-}
-
-/* Button variants with theme colors */
+/* Essential button variant */  
 .btn-theme-primary {
   background: var(--gradient-primary);
   color: white;
@@ -170,18 +129,6 @@ body {
 .btn-theme-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 25px var(--color-primary)30;
-}
-
-.btn-theme-secondary {
-  background: var(--color-secondary);
-  color: var(--color-accent);
-  border: 2px solid var(--color-primary);
-  transition: all 0.2s ease;
-}
-
-.btn-theme-secondary:hover {
-  background: var(--color-primary);
-  color: white;
 }
 
 .fc .fc-timegrid-event {

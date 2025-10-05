@@ -16,6 +16,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { FadeIn, SlideIn } from '@/components/ui/Transitions';
+import ThemedCard from '@/components/ui/ThemedCard';
 
 export default function NewPetPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -91,7 +92,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
         
         {/* Header */}
         <FadeIn>
-          <div className="bg-white rounded-2xl shadow-card border border-medical-100 overflow-hidden">
+          <ThemedCard variant="medical" className="overflow-hidden">
             <div className="bg-gradient-to-r from-medical-600 to-health-600 p-4 sm:p-8 text-white">
               <div className="flex items-center space-x-3 sm:space-x-4">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -103,12 +104,12 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                 </div>
               </div>
             </div>
-          </div>
+          </ThemedCard>
         </FadeIn>
 
         {/* Formulario */}
         <SlideIn direction="up" delay={200}>
-          <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-4 sm:p-8">
+          <ThemedCard variant="medical" className="p-4 sm:p-8">
             <form onSubmit={submit} className="space-y-6 sm:space-y-8">
               
               {/* Información Básica */}
@@ -319,7 +320,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               </div>
 
             </form>
-          </div>
+          </ThemedCard>
         </SlideIn>
 
       </div>

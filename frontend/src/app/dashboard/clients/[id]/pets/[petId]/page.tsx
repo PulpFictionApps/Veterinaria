@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, AnimateOnView } from '@/components/ui/Transitions';
 import Tooltip from '@/components/ui/Tooltip';
+import ThemedCard from '@/components/ui/ThemedCard';
 
 interface Pet {
   id: number;
@@ -222,7 +223,7 @@ export default function PetDetail({ params }: PageProps) {
         
         {/* Header con información básica */}
         <FadeIn>
-          <div className="bg-white rounded-2xl shadow-card border border-medical-100 overflow-hidden">
+          <ThemedCard variant="medical" className="overflow-hidden">
             <div className="bg-gradient-to-r from-medical-600 to-health-600 p-8 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-6">
@@ -300,12 +301,12 @@ export default function PetDetail({ params }: PageProps) {
                 )}
               </div>
             </div>
-          </div>
+          </ThemedCard>
         </FadeIn>
 
         {/* Tabs de navegación */}
         <SlideIn direction="up" delay={200}>
-          <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-2">
+          <ThemedCard variant="medical" className="p-2">
             <div className="flex space-x-2">
               {[
                 { id: 'overview', label: 'Información General', icon: FileText },
@@ -327,7 +328,7 @@ export default function PetDetail({ params }: PageProps) {
                 </button>
               ))}
             </div>
-          </div>
+          </ThemedCard>
         </SlideIn>
 
         {/* Contenido de tabs */}
@@ -338,7 +339,7 @@ export default function PetDetail({ params }: PageProps) {
             {activeTab === 'overview' && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Datos básicos */}
-                <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-6">
+                <ThemedCard variant="medical">
                   <h3 className="text-xl font-bold text-neutral-800 mb-6 flex items-center">
                     <Activity className="w-5 h-5 mr-2 text-medical-600" />
                     Datos Básicos
@@ -377,11 +378,11 @@ export default function PetDetail({ params }: PageProps) {
                       <span className="font-semibold text-neutral-800">{formatDate(pet.createdAt)}</span>
                     </div>
                   </div>
-                </div>
+                </ThemedCard>
 
                 {/* Estadísticas rápidas */}
                 <div className="space-y-6">
-                  <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-6">
+                  <ThemedCard variant="medical">
                     <h3 className="text-xl font-bold text-neutral-800 mb-6">Estadísticas</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-health-50 rounded-xl p-4 text-center">
@@ -403,7 +404,7 @@ export default function PetDetail({ params }: PageProps) {
                         <div className="text-sm text-emergency-600">Citas Pendientes</div>
                       </div>
                     </div>
-                  </div>
+                  </ThemedCard>
                 </div>
               </div>
             )}
@@ -412,14 +413,14 @@ export default function PetDetail({ params }: PageProps) {
             {activeTab === 'medical' && (
               <div className="space-y-6">
                 {medicalRecords.length === 0 ? (
-                  <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-12 text-center">
+                  <ThemedCard variant="medical" className="p-12 text-center">
                     <Stethoscope className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-neutral-700 mb-2">Sin registros médicos</h3>
                     <p className="text-neutral-500">Aún no hay registros médicos para esta mascota.</p>
-                  </div>
+                  </ThemedCard>
                 ) : (
                   medicalRecords.map((record) => (
-                    <div key={record.id} className="bg-white rounded-2xl shadow-card border border-medical-100 p-6">
+                    <ThemedCard key={record.id} variant="medical">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-xl font-bold text-neutral-800">{record.title}</h3>
                         <span className="text-sm text-neutral-500">{formatDate(record.createdAt)}</span>
@@ -460,7 +461,7 @@ export default function PetDetail({ params }: PageProps) {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </ThemedCard>
                   ))
                 )}
               </div>
@@ -470,14 +471,14 @@ export default function PetDetail({ params }: PageProps) {
             {activeTab === 'prescriptions' && (
               <div className="space-y-6">
                 {prescriptions.length === 0 ? (
-                  <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-12 text-center">
+                  <ThemedCard variant="medical" className="p-12 text-center">
                     <Pill className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-neutral-700 mb-2">Sin prescripciones</h3>
                     <p className="text-neutral-500">Aún no hay prescripciones registradas para esta mascota.</p>
-                  </div>
+                  </ThemedCard>
                 ) : (
                   prescriptions.map((prescription) => (
-                    <div key={prescription.id} className="bg-white rounded-2xl shadow-card border border-medical-100 p-6">
+                    <ThemedCard key={prescription.id} variant="medical">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-xl font-bold text-neutral-800">{prescription.title}</h3>
                         <span className="text-sm text-neutral-500">{formatDate(prescription.createdAt)}</span>
@@ -510,7 +511,7 @@ export default function PetDetail({ params }: PageProps) {
                           <p className="text-emergency-700">{prescription.instructions}</p>
                         </div>
                       )}
-                    </div>
+                    </ThemedCard>
                   ))
                 )}
               </div>
@@ -520,14 +521,14 @@ export default function PetDetail({ params }: PageProps) {
             {activeTab === 'appointments' && (
               <div className="space-y-6">
                 {appointments.length === 0 ? (
-                  <div className="bg-white rounded-2xl shadow-card border border-medical-100 p-12 text-center">
+                  <ThemedCard variant="medical" className="p-12 text-center">
                     <Calendar className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-neutral-700 mb-2">Sin citas registradas</h3>
                     <p className="text-neutral-500">Aún no hay citas registradas para esta mascota.</p>
-                  </div>
+                  </ThemedCard>
                 ) : (
                   appointments.map((appointment) => (
-                    <div key={appointment.id} className="bg-white rounded-2xl shadow-card border border-medical-100 p-6">
+                    <ThemedCard key={appointment.id} variant="medical">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-4">
                           <div 
@@ -556,7 +557,7 @@ export default function PetDetail({ params }: PageProps) {
                         </div>
                       </div>
                       <p className="text-neutral-600">{appointment.reason}</p>
-                    </div>
+                    </ThemedCard>
                   ))
                 )}
               </div>
