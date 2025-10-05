@@ -119,6 +119,28 @@ body {
 .bg-gradient-theme-primary { background: var(--gradient-primary); }
 .shadow-theme-primary { box-shadow: var(--shadow-primary); }
 
+/* Specific gradient utility classes to replace Tailwind failures */
+.gradient-medical-health {
+  background: linear-gradient(to right, #3b82f6, #10b981) !important;
+  color: white !important;
+}
+
+.gradient-health-medical {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+  color: white !important;
+}
+
+.gradient-medical-br {
+  background: linear-gradient(to bottom right, #3b82f6, #1d4ed8) !important;
+  color: white !important;
+}
+
+.gradient-medical-health *,
+.gradient-health-medical *,
+.gradient-medical-br * {
+  color: white !important;
+}
+
 /* Essential button variant */  
 .btn-theme-primary {
   background: var(--gradient-primary);
@@ -175,6 +197,93 @@ button[style*="linear-gradient"] * {
   color: white !important;
 }
 
+/* Fix for gradient backgrounds that appear white/transparent */
+.bg-gradient-to-r {
+  background-image: var(--tw-gradient-stops) !important;
+}
+
+/* Specific gradient fixes */
+.bg-gradient-to-r.from-medical-500.to-health-500 {
+  background: linear-gradient(to right, #3b82f6, #10b981) !important;
+}
+
+.bg-gradient-to-r.from-medical-600.to-medical-700 {
+  background: linear-gradient(to right, #2563eb, #1d4ed8) !important;
+}
+
+.bg-gradient-to-r.from-health-500.to-medical-500 {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+}
+
+.bg-gradient-to-r.from-medical-600.to-health-600 {
+  background: linear-gradient(to right, #2563eb, #059669) !important;
+}
+
+.bg-gradient-to-br.from-medical-600.to-medical-700 {
+  background: linear-gradient(to bottom right, #2563eb, #1d4ed8) !important;
+}
+
+/* Force text color on gradient containers */
+.bg-gradient-to-r .text-white,
+.bg-gradient-to-br .text-white {
+  color: white !important;
+}
+
+/* Force icon colors */
+.bg-gradient-to-r svg,
+.bg-gradient-to-br svg {
+  color: white !important;
+}
+
+/* Comprehensive gradient fallbacks */
+/* Comprehensive gradient fixes for all medical/health combinations */
+[class*="bg-gradient-to-r"][class*="from-medical-500"][class*="to-health-500"],
+[class*="bg-gradient-to-r"][class*="from-medical-600"][class*="to-health-600"] {
+  background: linear-gradient(to right, #3b82f6, #10b981) !important;
+  color: white !important;
+}
+
+[class*="bg-gradient-to-r"][class*="from-health-500"][class*="to-medical-500"],
+[class*="bg-gradient-to-r"][class*="from-health-600"][class*="to-medical-600"] {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+  color: white !important;
+}
+
+[class*="bg-gradient-to-br"][class*="from-medical"][class*="to-medical"] {
+  background: linear-gradient(to bottom right, #3b82f6, #1d4ed8) !important;
+  color: white !important;
+}
+
+/* More specific medical/health gradient combinations */
+.from-medical-600.to-health-600,
+.from-medical-500.to-health-500 {
+  background: linear-gradient(to right, #3b82f6, #10b981) !important;
+}
+
+.from-health-600.to-medical-600,
+.from-health-500.to-medical-500 {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+}
+
+.from-medical-600.to-medical-700,
+.from-medical-500.to-medical-600 {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+}
+
+/* Medical gradient containers should always have white text and icons */
+[class*="bg-gradient-to-r"] *,
+[class*="bg-gradient-to-br"] * {
+  color: inherit;
+}
+
+[class*="bg-gradient-to-r"] .text-white,
+[class*="bg-gradient-to-br"] .text-white,
+[class*="bg-gradient-to-r"] svg,
+[class*="bg-gradient-to-br"] svg {
+  color: white !important;
+  fill: white !important;
+}
+
 .fc .fc-timegrid-event {
   font-size: 0.9rem; /* opcional, ajustar texto dentro del slot */
 }
@@ -188,6 +297,48 @@ button[style*="linear-gradient"] * {
   .animate-fadeIn {
     animation: fadeIn 0.5s ease-out forwards;
   }
+}
+
+/* FINAL GRADIENT FIXES - Override all problematic Tailwind gradients */
+/* Universal fallback for any gradient that might not render */
+div[class*="bg-gradient-to-r"] {
+  background-color: #3b82f6 !important; /* fallback */
+}
+
+/* Super specific overrides for exact class combinations found in codebase */
+.bg-gradient-to-r.from-medical-500.to-health-500,
+div[class~="bg-gradient-to-r"][class~="from-medical-500"][class~="to-health-500"] {
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%) !important;
+  color: white !important;
+}
+
+.bg-gradient-to-r.from-medical-600.to-health-600,
+div[class~="bg-gradient-to-r"][class~="from-medical-600"][class~="to-health-600"] {
+  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
+  color: white !important;
+}
+
+.bg-gradient-to-br.from-medical-600.to-medical-700,
+div[class~="bg-gradient-to-br"][class~="from-medical-600"][class~="to-medical-700"] {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: white !important;
+}
+
+/* Force white text and icons on all gradient containers */
+.bg-gradient-to-r,
+.bg-gradient-to-br {
+  color: white !important;
+}
+
+.bg-gradient-to-r *,
+.bg-gradient-to-br * {
+  color: white !important;
+}
+
+.bg-gradient-to-r svg,
+.bg-gradient-to-br svg {
+  fill: white !important;
+  color: white !important;
 
   /* Utilidades de color temático */
   .bg-primary { background-color: var(--color-primary) !important; }
@@ -314,4 +465,46 @@ button[style*="linear-gradient"] * {
   button {
     color: inherit;
   }
+}
+
+/* FINAL GRADIENT FIXES - Override all problematic Tailwind gradients */
+/* Universal fallback for any gradient that might not render */
+div[class*="bg-gradient-to-r"] {
+  background-color: #3b82f6 !important; /* fallback */
+}
+
+/* Super specific overrides for exact class combinations found in codebase */
+.bg-gradient-to-r.from-medical-500.to-health-500,
+div[class~="bg-gradient-to-r"][class~="from-medical-500"][class~="to-health-500"] {
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%) !important;
+  color: white !important;
+}
+
+.bg-gradient-to-r.from-medical-600.to-health-600,
+div[class~="bg-gradient-to-r"][class~="from-medical-600"][class~="to-health-600"] {
+  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
+  color: white !important;
+}
+
+.bg-gradient-to-br.from-medical-600.to-medical-700,
+div[class~="bg-gradient-to-br"][class~="from-medical-600"][class~="to-medical-700"] {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: white !important;
+}
+
+/* Force white text and icons on all gradient containers */
+.bg-gradient-to-r,
+.bg-gradient-to-br {
+  color: white !important;
+}
+
+.bg-gradient-to-r *,
+.bg-gradient-to-br * {
+  color: white !important;
+}
+
+.bg-gradient-to-r svg,
+.bg-gradient-to-br svg {
+  fill: white !important;
+  color: white !important;
 }

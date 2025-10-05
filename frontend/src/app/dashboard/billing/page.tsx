@@ -102,7 +102,7 @@ export default function BillingPage() {
           <div className="mb-8">
             <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-medical-500 to-health-500 rounded-xl shadow-lg">
+                <div className="p-3 gradient-medical-health rounded-xl shadow-lg">
                   <CreditCard className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -122,7 +122,7 @@ export default function BillingPage() {
           {subscription ? (
             <AnimateOnView>
               <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-medical-500 to-health-500 px-6 py-4">
+                <div className="gradient-medical-health px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Award className="h-6 w-6 text-white" />
@@ -204,7 +204,7 @@ export default function BillingPage() {
           ) : (
             <AnimateOnView>
               <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-health-500 to-medical-500 px-6 py-4">
+                <div className="gradient-health-medical px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Star className="h-6 w-6 text-white" />
                     <h2 className="text-xl font-bold text-white">Comienza tu Práctica Veterinaria Premium</h2>
@@ -257,7 +257,7 @@ export default function BillingPage() {
 
           <AnimateOnView>
             <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-health-600 to-medical-600 px-6 py-4">
+              <div className="gradient-health-medical px-6 py-4">
                 <div className="flex items-center gap-3">
                   <FileText className="h-6 w-6 text-white" />
                   <h2 className="text-xl font-bold text-white">Historial de Pagos</h2>
