@@ -38,6 +38,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
       select-none touch-manipulation
       ${fullWidth ? 'w-full' : ''}
       sm:hover:scale-105 hover:scale-100
+      ${variant !== 'outline' && variant !== 'ghost' ? 'text-white' : ''}
     `;
     
     const sizeClasses = {
@@ -51,31 +52,31 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
       const styles: Record<string, any> = {
         primary: {
           ...getPrimaryButtonStyle(),
-          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white',
+          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white !text-white',
           focusRingColor: 'focus:ring-medical-500'
         },
         secondary: {
           background: 'var(--gradient-secondary)',
           color: 'white',
-          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white',
+          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white !text-white',
           focusRingColor: 'focus:ring-health-500'
         },
         medical: {
           background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
           color: 'white',
-          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white',
+          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white !text-white',
           focusRingColor: 'focus:ring-medical-500'
         },
         health: {
           background: 'linear-gradient(135deg, #059669, #047857)',
           color: 'white',
-          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white',
+          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white !text-white',
           focusRingColor: 'focus:ring-health-500'
         },
         emergency: {
           background: 'linear-gradient(135deg, #DC2626, #B91C1C)',
           color: 'white',
-          fallbackClasses: 'bg-emergency-600 hover:bg-emergency-700 text-white',
+          fallbackClasses: 'bg-emergency-600 hover:bg-emergency-700 text-white !text-white',
           focusRingColor: 'focus:ring-emergency-500'
         },
         outline: {
@@ -113,11 +114,9 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
         `}
         style={variant !== 'outline' && variant !== 'ghost' ? {
           background: variantStyle.background,
-          color: variantStyle.color,
           border: variantStyle.border || 'none'
         } : {
-          border: variantStyle.border || 'none',
-          color: variantStyle.color
+          border: variantStyle.border || 'none'
         }}
         {...props}
       >

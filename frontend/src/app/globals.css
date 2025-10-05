@@ -10,6 +10,7 @@
   --color-accent: #BE185D;
   --color-primary-hover: #DB2777;
   --gradient-primary: linear-gradient(135deg, #EC4899, #BE185D);
+  --gradient-secondary: linear-gradient(135deg, #F9A8D4, #EC4899);
   --shadow-primary: 0 4px 20px #EC489940;
   
   /* Legacy brand colors (kept for compatibility) */
