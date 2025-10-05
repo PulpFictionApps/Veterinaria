@@ -67,6 +67,9 @@ body {
   min-height: 100vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
+  
+  /* EMERGENCIA: Asegurar que el texto sea visible por defecto */
+  color: #1f2937 !important;
 }
 
 /* Utility: make a container stretch to viewport height but allow children to scroll inside */
@@ -298,5 +301,39 @@ body {
   aside .sidebar-link.active.sidebar-link.active.sidebar-link.active span {
     color: #FFFFFF !important;
     font-weight: inherit !important;
+  }
+
+  /* EMERGENCIA: Arreglar visibilidad de elementos principales */
+  
+  /* Contenido principal del dashboard */
+  main, .main-content, [class*="dashboard"], [class*="page"] {
+    color: #1f2937 !important;
+  }
+  
+  /* Tarjetas y contenedores */
+  .bg-white, [class*="card"], [class*="Card"] {
+    background-color: white !important;
+    color: #1f2937 !important;
+  }
+  
+  /* Texto en general (excepto sidebar) */
+  p:not(aside p), div:not(aside div), span:not(aside span), 
+  h1:not(aside h1), h2:not(aside h2), h3:not(aside h3), 
+  h4:not(aside h4), h5:not(aside h5), h6:not(aside h6) {
+    color: #1f2937 !important;
+  }
+  
+  /* Botones principales visibles */
+  button:not(aside button) {
+    color: #1f2937 !important;
+  }
+  
+  /* Excepciones para botones que deben ser blancos */
+  button.bg-gray-600, 
+  button[class*="bg-gradient"], 
+  button[class*="bg-medical"],
+  button[class*="bg-primary"],
+  button[class*="text-white"] {
+    color: white !important;
   }
 }
