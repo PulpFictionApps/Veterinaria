@@ -1,0 +1,50 @@
+/* Gradient utility classes to fix rendering issues */
+
+/* Medical to Health gradients */
+.gradient-medical-health {
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%) !important;
+  color: white !important;
+}
+
+.gradient-health-medical {
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%) !important;
+  color: white !important;
+}
+
+.gradient-medical-br {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: white !important;
+}
+
+/* Ensure all gradients have white text */
+.gradient-medical-health *,
+.gradient-health-medical *,
+.gradient-medical-br * {
+  color: white !important;
+}
+
+.gradient-medical-health svg,
+.gradient-health-medical svg,
+.gradient-medical-br svg {
+  fill: white !important;
+  color: white !important;
+}
+
+/* Override specific Tailwind combinations that fail */
+.bg-gradient-to-r.from-medical-500.to-health-500 {
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%) !important;
+}
+
+.bg-gradient-to-r.from-medical-600.to-health-600 {
+  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
+}
+
+.bg-gradient-to-br.from-medical-600.to-medical-700 {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+/* Force fallback colors for all gradient elements */
+[class*="bg-gradient-to-"] {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
