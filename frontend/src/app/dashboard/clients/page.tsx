@@ -144,13 +144,13 @@ export default function ClientsPage() {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gradient-to-br from-primary-50 via-primary-50 to-secondary-100">
+      <div className="w-full min-h-full bg-gradient-to-br from-gray-50 via-white to-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
           
           {/* Header */}
           <FadeIn>
-            <div className="bg-white rounded-3xl shadow-soft border border-primary-200">
-              <div className="bg-gradient-mixed p-6 sm:p-8 text-white rounded-3xl shadow-medium">
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-200">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-3xl shadow-xl">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                   <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
                     <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
@@ -175,7 +175,7 @@ export default function ClientsPage() {
 
           {/* Barra de búsqueda y filtros */}
           <AnimateOnView animation="slide">
-            <div className="bg-white rounded-2xl shadow-soft border border-primary-200 p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 
                 {/* Búsqueda */}
@@ -191,13 +191,13 @@ export default function ClientsPage() {
 
                 {/* Controles de vista */}
                 <div className="flex items-center justify-center sm:justify-start">
-                  <div className="bg-primary-200 rounded-xl p-1 flex touch-manipulation">
+                  <div className="bg-gray-100 rounded-xl p-1 flex touch-manipulation">
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
                         viewMode === 'grid' 
-                          ? 'bg-white text-primary-800 shadow-subtle' 
-                          : 'text-primary-600 hover:text-primary-800 hover:bg-primary-100'
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
                       }`}
                     >
                       <Grid3x3 className="w-4 h-4" />
@@ -207,8 +207,8 @@ export default function ClientsPage() {
                       onClick={() => setViewMode('list')}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
                         viewMode === 'list' 
-                          ? 'bg-white text-primary-800 shadow-subtle' 
-                          : 'text-primary-600 hover:text-primary-800 hover:bg-primary-100'
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
                       }`}
                     >
                       <List className="w-4 h-4" />
@@ -225,34 +225,34 @@ export default function ClientsPage() {
           {loading ? (
             <div className="flex items-center justify-center min-h-[40vh]">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-300 border-t-primary-700 mx-auto mb-6"></div>
-                <p className="text-lg font-bold text-primary-800">🔄 Cargando clientes</p>
-                <p className="text-sm text-primary-600">Obteniendo información de la base de datos...</p>
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-300 border-t-gray-700 mx-auto mb-6"></div>
+                <p className="text-lg font-bold text-gray-800">🔄 Cargando clientes</p>
+                <p className="text-sm text-gray-600">Obteniendo información de la base de datos...</p>
               </div>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-3xl shadow-soft border border-danger-200 p-8 text-center">
-              <div className="w-16 h-16 bg-danger-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-danger-500" />
+            <div className="bg-white rounded-3xl shadow-md border border-red-200 p-8 text-center">
+              <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-red-500" />
               </div>
-              <h3 className="text-xl font-bold text-primary-800 mb-2">Error al cargar</h3>
-              <p className="text-primary-600 mb-4">{error}</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Error al cargar</h3>
+              <p className="text-gray-600 mb-4">{error}</p>
               <button
                 onClick={loadClientsWithPets}
-                className="bg-primary-800 hover:bg-primary-900 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 Reintentar
               </button>
             </div>
           ) : filteredClients.length === 0 ? (
-            <div className="bg-white rounded-3xl shadow-soft border border-primary-200 p-8 text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-subtle">
-                <UserPlus className="w-12 h-12 text-primary-700" />
+            <div className="bg-white rounded-3xl shadow-md border border-gray-200 p-8 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <UserPlus className="w-12 h-12 text-gray-700" />
               </div>
-              <h3 className="text-3xl font-black text-primary-800 mb-4">
+              <h3 className="text-3xl font-black text-gray-800 mb-4">
                 {searchTerm ? '🔍 No se encontraron clientes' : '👥 No hay clientes registrados'}
               </h3>
-              <p className="text-primary-600 mb-6 max-w-md mx-auto">
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
                 {searchTerm 
                   ? `No hay clientes que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
                   : 'Comienza agregando tu primer cliente para gestionar sus mascotas y citas médicas.'
@@ -260,7 +260,7 @@ export default function ClientsPage() {
               </p>
               {!searchTerm && (
                 <Link href="/dashboard/clients/new">
-                  <button className="bg-primary-800 hover:bg-primary-900 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto">
+                  <button className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto">
                     <Plus className="w-5 h-5" />
                     Crear Primer Cliente
                   </button>
@@ -278,8 +278,8 @@ export default function ClientsPage() {
                     key={client.id}
                     href={`/dashboard/clients/${client.id}`}
                     className={`group touch-manipulation ${viewMode === 'grid' 
-                      ? 'bg-white rounded-3xl shadow-soft border border-primary-200 p-6 sm:p-8 hover:shadow-medium hover:border-primary-300 transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01]'
-                      : 'bg-white rounded-2xl shadow-soft border border-primary-200 p-4 sm:p-6 hover:shadow-medium hover:border-primary-300 transition-all duration-300 flex items-center space-x-4 sm:space-x-8'
+                      ? 'bg-white rounded-3xl shadow-md border border-gray-200 p-6 sm:p-8 hover:shadow-lg hover:border-gray-300 transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01]'
+                      : 'bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex items-center space-x-4 sm:space-x-8'
                     }`}
                   >
                     
@@ -287,8 +287,8 @@ export default function ClientsPage() {
                       // Vista de cards
                       <>
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-2xl flex items-center justify-center group-hover:from-primary-300 group-hover:to-secondary-300 transition-all duration-300 flex-shrink-0 shadow-subtle">
-                            <User className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700 group-hover:scale-110 transition-transform" />
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center group-hover:from-gray-200 group-hover:to-gray-300 transition-all duration-300 flex-shrink-0 shadow-sm">
+                            <User className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 group-hover:scale-110 transition-transform" />
                           </div>
                           <div className="flex space-x-1 sm:space-x-2">
                             {client.pets && client.pets.length > 0 && (
@@ -309,26 +309,26 @@ export default function ClientsPage() {
                         </div>
                         
                         <div className="space-y-2 sm:space-y-3">
-                          <h3 className="text-lg sm:text-xl font-black text-primary-800 group-hover:text-primary-900 transition-colors leading-tight mb-2">
+                          <h3 className="text-lg sm:text-xl font-black text-gray-800 group-hover:text-gray-900 transition-colors leading-tight mb-2">
                             👤 {client.name}
                           </h3>
                           
                           <div className="space-y-2 sm:space-y-3">
                             {client.email && (
-                              <div className="flex items-center text-sm sm:text-base text-primary-700 bg-primary-100 rounded-lg p-2">
-                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-primary-600 flex-shrink-0" />
+                              <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
+                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-blue-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.email}</span>
                               </div>
                             )}
                             {client.phone && (
-                              <div className="flex items-center text-sm sm:text-base text-primary-700 bg-primary-100 rounded-lg p-2">
-                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-secondary-600 flex-shrink-0" />
+                              <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
+                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-green-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.phone}</span>
                               </div>
                             )}
                             {client.address && (
-                              <div className="flex items-center text-sm sm:text-base text-primary-700 bg-primary-100 rounded-lg p-2">
-                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-accent-600 flex-shrink-0" />
+                              <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-purple-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.address}</span>
                               </div>
                             )}
@@ -356,12 +356,12 @@ export default function ClientsPage() {
                     ) : (
                       // Vista de lista
                       <>
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-lg font-bold text-primary-800 group-hover:text-primary-900 transition-colors truncate">
+                          <h3 className="text-base sm:text-lg font-bold text-gray-800 group-hover:text-gray-900 transition-colors truncate">
                             {client.name}
                           </h3>
                           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mt-1 text-xs sm:text-sm text-neutral-600 space-y-1 sm:space-y-0">
