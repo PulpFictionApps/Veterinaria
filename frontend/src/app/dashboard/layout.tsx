@@ -31,11 +31,11 @@ function NavbarWithSuspense() {
   return (
     <div className="lg:hidden">
       <Suspense fallback={
-        <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-blue-100 backdrop-blur-sm">
+        <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-gray-100 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <button
               aria-label="Abrir menú"
-              className="p-2 rounded-md hover:bg-blue-50 transition-colors"
+              className="p-2 rounded-md hover:bg-gray-50 transition-colors"
               disabled
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

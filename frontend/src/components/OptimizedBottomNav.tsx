@@ -19,7 +19,7 @@ export default function OptimizedBottomNav() {
 
   return (
     <nav aria-label="Navegación inferior" className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 lg:hidden">
-      <div className="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl px-2 py-3 flex items-center gap-1 border border-blue-100/50 shadow-primary">
+      <div className="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl px-2 py-3 flex items-center gap-1 border border-gray-100/50 shadow-primary">
         {mobileItems.map((item) => {
           const active = isActive(item.href);
           return (

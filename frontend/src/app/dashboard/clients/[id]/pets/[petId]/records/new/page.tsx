@@ -157,7 +157,7 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="bg-gray-50 border border-gray-200 text-gray-700 px-4 py-3 rounded-lg">
               {error}
             </div>
           )}
@@ -173,7 +173,7 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? 'Creando...' : 'Crear Ficha Clínica'}
             </button>

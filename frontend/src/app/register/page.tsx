@@ -163,12 +163,12 @@ export default function RegisterPage() {
                 value={phone}
                 onChange={handlePhoneChange}
                 className={`w-full px-4 py-3 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors ${
-                  phoneError ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  phoneError ? 'border-gray-300 bg-gray-50' : 'border-gray-300'
                 }`}
                 required
               />
               {phoneError && (
-                <p className="mt-1 text-sm text-red-600">{phoneError}</p>
+                <p className="mt-1 text-sm text-gray-600">{phoneError}</p>
               )}
             </div>
 
@@ -183,12 +183,12 @@ export default function RegisterPage() {
                 value={rut}
                 onChange={handleRutChange}
                 className={`w-full px-4 py-3 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 transition-colors ${
-                  rutError ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  rutError ? 'border-gray-300 bg-gray-50' : 'border-gray-300'
                 }`}
                 required
               />
               {rutError && (
-                <p className="mt-1 text-sm text-red-600">{rutError}</p>
+                <p className="mt-1 text-sm text-gray-600">{rutError}</p>
               )}
             </div>
 
@@ -234,7 +234,7 @@ export default function RegisterPage() {
             </div>
 
             {error && (
-              <div role="alert" aria-live="assertive" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <div role="alert" aria-live="assertive" className="bg-gray-50 border border-gray-200 text-gray-700 px-4 py-3 rounded-lg">
                 <strong className="font-medium">Error: </strong>
                 <span className="ml-1">{error}</span>
               </div>

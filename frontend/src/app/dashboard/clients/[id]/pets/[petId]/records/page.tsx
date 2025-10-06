@@ -53,7 +53,7 @@ export default function RecordsPage({ params }: { params: Promise<{ id: string; 
         <h1 className="text-2xl font-bold text-gray-900">Historial Clínico</h1>
         <Link 
           href={`./new`} 
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
         >
           + Nueva Ficha
         </Link>
@@ -66,7 +66,7 @@ export default function RecordsPage({ params }: { params: Promise<{ id: string; 
           <p className="text-gray-500 mb-4">Comienza creando la primera ficha clínica para esta mascota.</p>
           <Link 
             href={`./new`} 
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Crear Primera Ficha
           </Link>
@@ -120,7 +120,7 @@ export default function RecordsPage({ params }: { params: Promise<{ id: string; 
               {record.diagnosis && (
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-700 mb-2">🔍 Diagnóstico</h4>
-                  <p className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">{record.diagnosis}</p>
+                  <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{record.diagnosis}</p>
                 </div>
               )}
 
@@ -128,7 +128,7 @@ export default function RecordsPage({ params }: { params: Promise<{ id: string; 
               {record.treatment && (
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-700 mb-2">💊 Tratamiento</h4>
-                  <p className="text-sm text-gray-600 bg-green-50 p-3 rounded-lg">{record.treatment}</p>
+                  <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{record.treatment}</p>
                 </div>
               )}
 

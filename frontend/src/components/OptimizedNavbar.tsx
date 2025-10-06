@@ -96,7 +96,7 @@ export default function OptimizedNavbar() {
             aria-expanded={open}
             aria-controls="mobile-drawer"
             onClick={() => setOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-pink-50 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -114,7 +114,7 @@ export default function OptimizedNavbar() {
         <div className="hidden lg:flex items-center gap-3">
           <Link 
             href="/dashboard/clients/new"
-            className="flex items-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors text-sm font-medium"
+            className="flex items-center gap-2 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
           >
             <span>+</span>
             Cliente
@@ -143,7 +143,7 @@ export default function OptimizedNavbar() {
             <button 
               aria-label="Cerrar menú" 
               onClick={() => setOpen(false)} 
-              className="p-2 rounded-lg hover:bg-pink-50 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -165,7 +165,7 @@ export default function OptimizedNavbar() {
                         className={`flex items-center px-3 py-3 rounded-lg transition-colors ${
                           active 
                             ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-lg shadow-pink-200/50' 
-                            : 'text-gray-700 hover:bg-pink-50 hover:text-pink-600'
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-gray-600'
                         }`}
                       >
                         <span className="text-lg mr-3">
@@ -185,7 +185,7 @@ export default function OptimizedNavbar() {
               <div className="space-y-2">
                 <Link 
                   href="/dashboard/clients/new"
-                  className="flex items-center justify-center w-full py-3 px-4 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors font-medium"
+                  className="flex items-center justify-center w-full py-3 px-4 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors font-medium"
                 >
                   + Nuevo Cliente
                 </Link>
@@ -222,7 +222,7 @@ export default function OptimizedNavbar() {
                       logout();
                       router.push('/login');
                     }}
-                    className="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                    className="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-700"
                   >
                     <span className="text-base mr-3">🚪</span>
                     <span className="font-medium">Cerrar Sesión</span>

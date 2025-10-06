@@ -84,7 +84,7 @@ export default function PublicLinkManager() {
             size="sm"
             className="flex items-center gap-2"
           >
-            <span className="text-green-600">💬</span>
+            <span className="text-gray-600">💬</span>
             WhatsApp
           </ThemedButton>
           
@@ -94,7 +94,7 @@ export default function PublicLinkManager() {
             size="sm"
             className="flex items-center gap-2"
           >
-            <span className="text-blue-600">📧</span>
+            <span className="text-gray-600">📧</span>
             Email
           </ThemedButton>
           

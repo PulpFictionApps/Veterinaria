@@ -74,7 +74,7 @@ export default function OptimizedSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-blue-200 hidden lg:block h-full sticky top-0 shadow-md">
+    <aside className="w-64 bg-white border-r border-gray-200 hidden lg:block h-full sticky top-0 shadow-md">
       <div className="p-6 top-0 h-full overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-8">
@@ -85,7 +85,7 @@ export default function OptimizedSidebar() {
           </div>
           <div className="flex flex-col">
             <h2 className="text-xl font-black text-neutral-800 tracking-tight leading-tight">{brand.name}</h2>
-            <span className="text-xs text-blue-600 font-semibold">Sistema Veterinario</span>
+            <span className="text-xs text-gray-600 font-semibold">Sistema Veterinario</span>
           </div>
         </div>
 
@@ -113,8 +113,8 @@ export default function OptimizedSidebar() {
                     {item.href.includes('calendar') && availabilityCount !== null && (
                       <span className={`ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
                         availabilityCount === 0 
-                          ? 'bg-red-100 text-red-700' 
-                          : 'bg-green-100 text-green-700'
+                          ? 'bg-gray-100 text-gray-700' 
+                          : 'bg-gray-100 text-gray-700'
                       }`}>
                         {availabilityCount === 0 ? 'Sin horarios' : `${availabilityCount}`}
                       </span>
@@ -202,7 +202,7 @@ export default function OptimizedSidebar() {
                   router.push('/login');
                 }}
                 aria-label="Cerrar sesión y salir de la aplicación"
-                className="flex items-center w-full px-4 py-3 rounded-xl transition-all duration-200 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-semibold border border-red-200 hover:border-red-300"
+                className="flex items-center w-full px-4 py-3 rounded-xl transition-all duration-200 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-semibold border border-gray-200 hover:border-gray-300"
               >
                 <span className="text-base mr-3" aria-hidden="true">🚪</span>
                 <span className="font-medium">Cerrar Sesión</span>

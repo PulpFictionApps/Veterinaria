@@ -51,29 +51,29 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     const getVariantStyle = () => {
       const styles: Record<string, any> = {
         primary: {
-          background: 'var(--gradient-primary)',
+          background: 'linear-gradient(135deg, rgb(55 65 81), rgb(75 85 99))',
           color: 'white',
-          fallbackClasses: 'bg-blue-600 hover:bg-blue-700 text-white',
-          focusRingColor: 'focus:ring-blue-500'
+          fallbackClasses: 'bg-gray-700 hover:bg-gray-800 text-white',
+          focusRingColor: 'focus:ring-gray-500'
         },
         secondary: {
-          background: 'var(--gradient-secondary)',
+          background: 'linear-gradient(135deg, rgb(75 85 99), rgb(107 114 128))',
           color: 'white',
-          fallbackClasses: 'bg-green-600 hover:bg-green-700 text-white',
-          focusRingColor: 'focus:ring-green-500'
+          fallbackClasses: 'bg-gray-600 hover:bg-gray-700 text-white',
+          focusRingColor: 'focus:ring-gray-500'
         },
         danger: {
-          background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+          background: 'linear-gradient(135deg, rgb(75 85 99), rgb(55 65 81))',
           color: 'white',
-          fallbackClasses: 'bg-red-600 hover:bg-red-700 text-white',
-          focusRingColor: 'focus:ring-red-500'
+          fallbackClasses: 'bg-gray-700 hover:bg-gray-800 text-white',
+          focusRingColor: 'focus:ring-gray-500'
         },
         outline: {
           background: 'transparent',
-          color: 'var(--primary-500)',
-          border: '2px solid var(--primary-500)',
-          fallbackClasses: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50',
-          focusRingColor: 'focus:ring-blue-500'
+          color: 'rgb(75 85 99)',
+          border: '2px solid rgb(75 85 99)',
+          fallbackClasses: 'border-2 border-gray-600 text-gray-600 hover:bg-gray-50',
+          focusRingColor: 'focus:ring-gray-500'
         },
         ghost: {
           background: 'transparent',
@@ -86,7 +86,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     };
 
     const variantStyle = getVariantStyle();
-    const additionalClasses = variant === 'outline' ? 'border-2 hover:bg-blue-50' : 
+    const additionalClasses = variant === 'outline' ? 'border-2 hover:bg-gray-50' : 
                               variant === 'ghost' ? 'hover:bg-gray-100' : '';
 
     return (

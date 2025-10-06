@@ -96,7 +96,7 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Nueva Receta Veterinaria</h1>
         
         {/* Pet Info */}
-        <div className="bg-blue-50 rounded-lg p-4 mb-6">
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <h3 className="font-semibold text-blue-900 mb-2">Información del Paciente</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
@@ -152,7 +152,7 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
           </div>
 
           {/* WhatsApp Option */}
-          <div className="bg-green-50 rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-4">
             <label className="flex items-start gap-3">
               <input
                 type="checkbox"
@@ -176,7 +176,7 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="bg-gray-50 border border-gray-200 text-gray-700 px-4 py-3 rounded-lg">
               {error}
             </div>
           )}
@@ -192,7 +192,7 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
             <button
               type="submit"
               disabled={loading || (!pet.tutor.phone && sendWhatsApp)}
-              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? 'Creando...' : 'Crear Receta'}
             </button>

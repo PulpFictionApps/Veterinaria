@@ -51,7 +51,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
         <h2 className="text-xl font-bold">Mascotas</h2>
         <Link
           href={`/dashboard/clients/${clientId}/pet/new`}
-          className="bg-blue-600 text-white px-3 py-1 rounded"
+          className="bg-gray-700 text-white px-3 py-1 rounded"
         >
           Nueva mascota
         </Link>

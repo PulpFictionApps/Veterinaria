@@ -161,8 +161,8 @@ export default function Dashboard() {
     };
 
     const changeColor = {
-      positive: 'text-green-600',
-      negative: 'text-red-600',
+      positive: 'text-gray-600',
+      negative: 'text-gray-600',
       neutral: 'text-gray-600'
     }[changeType];
 
@@ -175,8 +175,8 @@ export default function Dashboard() {
             {change && (
               <div className="flex items-center gap-1">
                 <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                  changeType === 'positive' ? 'bg-green-500' : 
-                  changeType === 'negative' ? 'bg-red-500' : 'bg-gray-400'
+                  changeType === 'positive' ? 'bg-gray-500' : 
+                  changeType === 'negative' ? 'bg-gray-600' : 'bg-gray-400'
                 }`} />
                 <p className={`text-xs font-semibold ${changeColor} truncate`}>{change}</p>
               </div>

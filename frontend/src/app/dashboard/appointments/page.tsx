@@ -208,7 +208,7 @@ export default function AppointmentsPage() {
     if (appointmentDate < now) {
       return { status: 'past', color: 'text-gray-500', bg: 'bg-gray-100' };
     } else {
-      return { status: 'upcoming', color: 'text-green-600', bg: 'bg-green-50' };
+      return { status: 'upcoming', color: 'text-gray-600', bg: 'bg-gray-50' };
     }
   }
 
@@ -424,7 +424,7 @@ export default function AppointmentsPage() {
                       <Tooltip content="Eliminar cita">
                         <button 
                           onClick={() => deleteAppointment(appointment.id)} 
-                          className="group p-2 text-red-600 hover:text-red-700 hover:bg-red-100 rounded-xl transition-all duration-300 border border-red-200 hover:border-red-300"
+                          className="group p-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-all duration-300 border border-gray-200 hover:border-gray-300"
                         >
                           <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                         </button>

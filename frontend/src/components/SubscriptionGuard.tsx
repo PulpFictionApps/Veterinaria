@@ -16,7 +16,7 @@ export default function SubscriptionGuard({ children, requiresActive = true }: S
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-gray-600">Verificando suscripción...</p>
         </div>
       </div>

@@ -33,10 +33,10 @@ export function Notification({
 
   const baseStyles = "fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md animate-in slide-in-from-right-2";
   const typeStyles = {
-    success: "bg-green-50 text-green-800 border border-green-200",
-    error: "bg-red-50 text-red-800 border border-red-200",
-    warning: "bg-yellow-50 text-yellow-800 border border-yellow-200",
-    info: "bg-pink-50 text-pink-800 border border-pink-200"
+    success: "bg-gray-50 text-gray-800 border border-gray-200",
+    error: "bg-gray-50 text-gray-800 border border-gray-200",
+    warning: "bg-gray-50 text-gray-800 border border-gray-200",
+    info: "bg-gray-50 text-gray-800 border border-gray-200"
   };
 
   return (

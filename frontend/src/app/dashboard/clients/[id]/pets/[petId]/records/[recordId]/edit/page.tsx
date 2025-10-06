@@ -97,7 +97,7 @@ export default function EditRecord(props: any) {
 
           <div className="flex gap-4">
             <button type="button" onClick={() => router.back()} className="flex-1 px-6 py-3 border rounded-lg">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">{saving ? 'Guardando...' : 'Guardar'}</button>
+            <button type="submit" disabled={saving} className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800">{saving ? 'Guardando...' : 'Guardar'}</button>
           </div>
         </form>
       </div>

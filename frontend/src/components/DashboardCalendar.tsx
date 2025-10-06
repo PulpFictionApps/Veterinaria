@@ -165,7 +165,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden relative">
         {isLoading && (
           <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10">
-            <div className="bg-blue-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm flex items-center gap-2">
+            <div className="bg-gray-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm flex items-center gap-2">
               <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               <span className="hidden sm:inline">Actualizando...</span>
             </div>

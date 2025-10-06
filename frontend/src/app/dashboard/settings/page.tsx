@@ -200,14 +200,14 @@ export default function SettingsPage() {
 
         {/* Messages */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+            <p className="text-sm text-gray-600">{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-            <p className="text-sm text-green-600">✅ Configuración actualizada correctamente</p>
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+            <p className="text-sm text-gray-600">✅ Configuración actualizada correctamente</p>
           </div>
         )}
 
@@ -224,9 +224,9 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
-              <h4 className="font-semibold text-green-800 mb-2">🎯 Funciones Activas</h4>
-              <ul className="text-sm text-green-700 space-y-2">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4">
+              <h4 className="font-semibold text-gray-800 mb-2">🎯 Funciones Activas</h4>
+              <ul className="text-sm text-gray-700 space-y-2">
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                   <strong>Confirmaciones inmediatas:</strong> Se envían automáticamente al crear citas
@@ -242,11 +242,11 @@ export default function SettingsPage() {
               </ul>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-              <h4 className="font-semibold text-blue-800 mb-2">📧 Configuración de Email</h4>
-              <div className="text-sm text-blue-700 space-y-1">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+              <h4 className="font-semibold text-gray-800 mb-2">📧 Configuración de Email</h4>
+              <div className="text-sm text-gray-700 space-y-1">
                 <p><strong>Servidor:</strong> Gmail SMTP (myvetagenda@gmail.com)</p>
-                <p><strong>Estado:</strong> <span className="text-green-600 font-semibold">✅ Operativo</span></p>
+                <p><strong>Estado:</strong> <span className="text-gray-600 font-semibold">✅ Operativo</span></p>
               </div>
             </div>
           </div>
@@ -274,13 +274,13 @@ export default function SettingsPage() {
                     key={palette.id}
                     className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
                       isActive 
-                        ? 'border-blue-500 bg-blue-50 shadow-lg' 
+                        ? 'border-gray-500 bg-gray-50 shadow-lg' 
                         : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                     onClick={() => handlePaletteChange(palette.id)}
                   >
                     {isActive && (
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center shadow-lg">
                         <CheckCircle className="w-5 h-5 text-white" />
                       </div>
                     )}
@@ -296,7 +296,7 @@ export default function SettingsPage() {
 
                     {isChangingPalette && isActive && (
                       <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-2xl">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500"></div>
                       </div>
                     )}
                   </div>
@@ -485,9 +485,9 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                    <h5 className="text-blue-800 font-medium text-sm mb-2">📍 Información de contacto:</h5>
-                    <div className="text-blue-700 text-xs space-y-1">
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <h5 className="text-gray-800 font-medium text-sm mb-2">📍 Información de contacto:</h5>
+                    <div className="text-gray-700 text-xs space-y-1">
                       <div><strong>👨‍⚕️ Profesional:</strong> {settings?.fullName || 'Su Nombre'}</div>
                       <div><strong>📧 Email:</strong> {emailData.contactEmail || settings?.email || 'su-email@ejemplo.com'}</div>
                       {emailData.contactPhone && <div><strong>📞 Teléfono:</strong> {emailData.contactPhone}</div>}

@@ -206,7 +206,7 @@ export default function AvailabilityManager() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-2xl border border-blue-100 shadow-card p-4 sm:p-8">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-card p-4 sm:p-8">
           <div className="mb-4 sm:mb-6">
             <h4 className="text-lg sm:text-xl font-bold text-neutral-800">Nueva Disponibilidad</h4>
             <p className="text-sm text-neutral-600 mt-1">Configure sus horarios de atención</p>
@@ -214,20 +214,20 @@ export default function AvailabilityManager() {
           
           <form onSubmit={createSlot} className="space-y-4 sm:space-y-6">
             {/* Recurring Toggle */}
-            <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div className="p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-xl">
               <label className="flex items-start sm:items-center gap-3 sm:gap-4 cursor-pointer">
                 <input
                   type="checkbox"
                   id="recurring"
                   checked={recurring}
                   onChange={e => setRecurring(e.target.checked)}
-                  className="rounded border-green-300 text-secondary focus:ring-green-500 mt-0.5 sm:mt-0 flex-shrink-0 touch-manipulation"
+                  className="rounded border-gray-300 text-secondary focus:ring-gray-500 mt-0.5 sm:mt-0 flex-shrink-0 touch-manipulation"
                 />
                 <div className="min-w-0">
-                  <span className="text-sm font-semibold text-green-800 block">
+                  <span className="text-sm font-semibold text-gray-800 block">
                     Disponibilidad recurrente
                   </span>
-                  <p className="text-xs text-green-600 mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     Crear la misma franja horaria para múltiples días de la semana
                   </p>
                 </div>
@@ -294,14 +294,14 @@ export default function AvailabilityManager() {
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {daysOfWeek.map(day => (
-                    <label key={day.id} className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors">
+                    <label key={day.id} className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
                       <input
                         type="checkbox"
                         checked={recurringDays.includes(day.id)}
                         onChange={() => toggleRecurringDay(day.id)}
                         className="rounded border-gray-300 text-gray-700 focus:ring-gray-500"
                       />
-                      <span className="text-sm font-medium text-blue-700">{day.label}</span>
+                      <span className="text-sm font-medium text-gray-700">{day.label}</span>
                     </label>
                   ))}
                 </div>
@@ -309,8 +309,8 @@ export default function AvailabilityManager() {
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-3">
-                <span className="text-red-500">⚠️</span>
+              <div className="bg-gray-50 border border-gray-200 text-gray-700 px-6 py-4 rounded-xl flex items-center gap-3">
+                <span className="text-gray-500">⚠️</span>
                 <span className="font-medium">{error}</span>
               </div>
             )}
@@ -362,7 +362,7 @@ export default function AvailabilityManager() {
                 </div>
                 <button
                   onClick={() => deleteSlot(slot.id)}
-                  className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 hover:text-red-800 text-sm font-semibold transition-all duration-200 border border-red-200"
+                  className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-800 text-sm font-semibold transition-all duration-200 border border-gray-200"
                 >
                   🗑️ Eliminar
                 </button>

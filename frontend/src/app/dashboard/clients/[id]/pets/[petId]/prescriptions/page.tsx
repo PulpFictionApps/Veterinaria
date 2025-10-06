@@ -52,7 +52,7 @@ export default function PrescriptionsPage({ params }: { params: Promise<{ id: st
         <h1 className="text-2xl font-bold text-gray-900">Recetas Veterinarias</h1>
         <Link 
           href={`./new`} 
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
         >
           + Nueva Receta
         </Link>
@@ -65,7 +65,7 @@ export default function PrescriptionsPage({ params }: { params: Promise<{ id: st
           <p className="text-gray-500 mb-4">Comienza creando la primera receta para esta mascota.</p>
           <Link 
             href={`./new`} 
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+            className="bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Crear Primera Receta
           </Link>

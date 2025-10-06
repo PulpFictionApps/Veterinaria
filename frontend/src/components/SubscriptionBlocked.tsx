@@ -62,29 +62,29 @@ export default function SubscriptionBlocked({ subscription, onRetry }: Subscript
 
           {/* Plan details */}
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
-            <h3 className="font-bold text-blue-900 mb-3">Plan Veterinario Premium</h3>
-            <div className="text-3xl font-bold text-blue-600 mb-2">$15.000 CLP</div>
-            <div className="text-sm text-blue-700 mb-4">por mes</div>
+            <h3 className="font-bold text-gray-900 mb-3">Plan Veterinario Premium</h3>
+            <div className="text-3xl font-bold text-gray-600 mb-2">$15.000 CLP</div>
+            <div className="text-sm text-gray-700 mb-4">por mes</div>
             
             <div className="space-y-2 text-sm text-left">
               <div className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-gray-500">✓</span>
                 <span>Agenda pública ilimitada</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-gray-500">✓</span>
                 <span>Gestión completa de pacientes</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-gray-500">✓</span>
                 <span>Recetas digitales en PDF</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-gray-500">✓</span>
                 <span>Historiales médicos completos</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-gray-500">✓</span>
                 <span>Reportes y estadísticas</span>
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function SubscriptionBlocked({ subscription, onRetry }: Subscript
             <p className="text-xs text-gray-500">
               ¿Problemas con el pago? 
               <br />
-              <a href="mailto:soporte@vetrium.cl" className="text-blue-600 hover:underline">
+              <a href="mailto:soporte@vetrium.cl" className="text-gray-600 hover:underline">
                 Contacta con soporte
               </a>
             </p>

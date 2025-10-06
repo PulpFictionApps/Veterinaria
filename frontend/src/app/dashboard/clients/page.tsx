@@ -232,7 +232,7 @@ export default function ClientsPage() {
             </div>
           ) : error ? (
             <div className="bg-white rounded-3xl shadow-md border border-red-200 p-8 text-center">
-              <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-red-500" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">Error al cargar</h3>
@@ -316,13 +316,13 @@ export default function ClientsPage() {
                           <div className="space-y-2 sm:space-y-3">
                             {client.email && (
                               <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
-                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-blue-600 flex-shrink-0" />
+                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-gray-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.email}</span>
                               </div>
                             )}
                             {client.phone && (
                               <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
-                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-green-600 flex-shrink-0" />
+                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-gray-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.phone}</span>
                               </div>
                             )}
