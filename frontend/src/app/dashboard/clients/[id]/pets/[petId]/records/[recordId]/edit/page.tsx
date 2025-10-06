@@ -59,7 +59,7 @@ export default function EditRecord(props: any) {
   }
 
   if (loading) return <div>Loading...</div>;
-  if (!data) return <div className="text-red-600">No se encontró la ficha.</div>;
+  if (!data) return <div className="text-gray-600">No se encontró la ficha.</div>;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -93,7 +93,7 @@ export default function EditRecord(props: any) {
             </div>
           </div>
 
-          {error && <div className="text-red-600">{error}</div>}
+          {error && <div className="text-gray-600">{error}</div>}
 
           <div className="flex gap-4">
             <button type="button" onClick={() => router.back()} className="flex-1 px-6 py-3 border rounded-lg">Cancelar</button>

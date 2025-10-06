@@ -59,7 +59,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
       {loading ? (
         <div className="text-gray-500">Cargando mascotas...</div>
       ) : error ? (
-        <div className="text-red-600">{error}</div>
+        <div className="text-gray-600">{error}</div>
       ) : pets.length === 0 ? (
         <ThemedCard variant="medical" padding="lg" className="text-center">
           <div className="p-4">
@@ -78,7 +78,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
             <li key={p.id} className="p-2 border-b">
               <Link
                 href={`/dashboard/clients/${clientId}/pets/${p.id}`}
-                className="text-blue-600"
+                className="text-gray-600"
               >
                 {p.name} ({p.type})
               </Link>

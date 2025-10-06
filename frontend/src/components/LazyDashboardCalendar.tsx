@@ -6,7 +6,7 @@ const DashboardCalendarComponent = dynamic(() => import('./DashboardCalendar'), 
   loading: () => (
     <div className="flex items-center justify-center h-96 bg-gray-50 rounded-lg">
       <div className="flex flex-col items-center space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600"></div>
         <p className="text-gray-600">Cargando calendario...</p>
       </div>
     </div>
@@ -23,7 +23,7 @@ export default function LazyDashboardCalendar(props: DashboardCalendarProps) {
     <Suspense fallback={
       <div className="flex items-center justify-center h-96 bg-gray-50 rounded-lg">
         <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600"></div>
           <p className="text-gray-600">Cargando calendario...</p>
         </div>
       </div>

@@ -93,7 +93,7 @@ export default function PrescriptionsPage({ params }: { params: Promise<{ id: st
                       href={prescription.pdfUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      className="text-gray-600 hover:text-gray-700 text-sm font-medium"
                     >
                       📄 Ver PDF
                     </a>
@@ -112,16 +112,16 @@ export default function PrescriptionsPage({ params }: { params: Promise<{ id: st
                   <div className="flex items-center gap-2">
                     <span className="text-gray-600">WhatsApp:</span>
                     {prescription.whatsappSent ? (
-                      <span className="text-green-600 font-medium">✅ Enviado</span>
+                      <span className="text-gray-600 font-medium">✅ Enviado</span>
                     ) : (
-                      <span className="text-yellow-600 font-medium">⏳ Pendiente</span>
+                      <span className="text-gray-600 font-medium">⏳ Pendiente</span>
                     )}
                   </div>
                 )}
                 {prescription.pdfUrl && (
                   <div className="flex items-center gap-2">
                     <span className="text-gray-600">PDF:</span>
-                    <span className="text-green-600 font-medium">✅ Generado</span>
+                    <span className="text-gray-600 font-medium">✅ Generado</span>
                   </div>
                 )}
               </div>

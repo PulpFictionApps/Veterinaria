@@ -91,7 +91,7 @@ export default function RecordsPage({ params }: { params: Promise<{ id: string; 
                 <div className="flex gap-2">
                   <Link
                     href={`./${record.id}/edit`}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    className="text-gray-600 hover:text-gray-700 text-sm font-medium"
                   >
                     Editar
                   </Link>

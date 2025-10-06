@@ -231,9 +231,9 @@ export default function ClientsPage() {
               </div>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-3xl shadow-md border border-red-200 p-8 text-center">
+            <div className="bg-white rounded-3xl shadow-md border border-gray-200 p-8 text-center">
               <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-red-500" />
+                <Users className="w-8 h-8 text-gray-500" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">Error al cargar</h3>
               <p className="text-gray-600 mb-4">{error}</p>
@@ -328,7 +328,7 @@ export default function ClientsPage() {
                             )}
                             {client.address && (
                               <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
-                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-purple-600 flex-shrink-0" />
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-gray-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.address}</span>
                               </div>
                             )}

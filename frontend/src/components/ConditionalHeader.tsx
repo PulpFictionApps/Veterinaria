@@ -16,7 +16,7 @@ function SimpleHeader() {
             <span className="text-xl font-bold text-gray-800">Vetrium</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-gray-600 hover:text-pink-600 transition-colors">
+            <Link href="/login" className="text-gray-600 hover:text-gray-700 transition-colors">
               Iniciar sesión
             </Link>
             <Link href="/register" className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-pink-500 hover:to-pink-600 transition-all">

@@ -193,7 +193,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               {/* Características Físicas */}
               <div className="border-t border-neutral-200 pt-6 sm:pt-8">
                 <h2 className="text-lg sm:text-xl font-bold text-neutral-800 mb-4 sm:mb-6 flex items-center">
-                  <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-600" />
+                  <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-600" />
                   Características Físicas
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">

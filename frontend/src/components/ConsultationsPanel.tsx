@@ -98,7 +98,7 @@ export default function ConsultationsPanel() {
         </h3>
         <Link 
           href="/dashboard/appointments"
-          className="text-sm text-pink-600 hover:text-pink-700 font-medium"
+          className="text-sm text-gray-600 hover:text-gray-700 font-medium"
         >
           Ver todas →
         </Link>
@@ -110,7 +110,7 @@ export default function ConsultationsPanel() {
           <p className="text-gray-600 mb-4">No hay consultas realizadas aún</p>
           <Link 
             href="/dashboard/appointments"
-            className="inline-block bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors text-sm"
+            className="inline-block bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
           >
             Ver Citas Programadas
           </Link>
@@ -121,8 +121,8 @@ export default function ConsultationsPanel() {
             <div key={consultation.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <span className="text-green-600 font-medium text-sm">
+                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                    <span className="text-gray-600 font-medium text-sm">
                       {consultation.pet.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -137,7 +137,7 @@ export default function ConsultationsPanel() {
                 </div>
                 <Link
                   href={`/dashboard/appointments/${consultation.id}/consult`}
-                  className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded text-xs font-medium transition-colors"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium transition-colors"
                 >
                   Ver Consulta
                 </Link>
@@ -165,7 +165,7 @@ export default function ConsultationsPanel() {
                 <div className="mt-2 text-sm">
                   <span className="text-gray-500">💊 Tipo:</span>
                   <span className="ml-1 text-gray-700">{consultation.consultationType.name}</span>
-                  <span className="ml-2 text-green-600 font-medium">
+                  <span className="ml-2 text-gray-600 font-medium">
                     ${(consultation.consultationType.price / 100).toLocaleString('es-CL')}
                   </span>
                 </div>

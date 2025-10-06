@@ -89,7 +89,7 @@ export default function OptimizedNavbar() {
 
   return (
     <>
-      <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-pink-100 backdrop-blur-sm">
+      <nav className="bg-white/95 text-gray-700 p-3 sticky top-0 z-40 flex justify-between items-center border-b border-gray-100 backdrop-blur-sm">
         <div className="flex items-center gap-3">
           <button
             aria-label="Abrir menú"
@@ -130,7 +130,7 @@ export default function OptimizedNavbar() {
           ref={containerRef}
           role="dialog"
           aria-modal="true"
-          className={`absolute left-0 top-0 h-full w-80 max-w-full bg-white border-r border-pink-100 transform transition-transform duration-300 ease-in-out overflow-y-auto ${open ? 'translate-x-0' : '-translate-x-full'}`}
+          className={`absolute left-0 top-0 h-full w-80 max-w-full bg-white border-r border-gray-100 transform transition-transform duration-300 ease-in-out overflow-y-auto ${open ? 'translate-x-0' : '-translate-x-full'}`}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-100">

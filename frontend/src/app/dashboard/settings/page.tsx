@@ -470,9 +470,9 @@ export default function SettingsPage() {
               <div className="bg-gray-50 rounded-xl p-4">
                 <h4 className="font-semibold text-gray-700 mb-3">👀 Vista Previa del Email</h4>
                 <div className="bg-white rounded-lg p-4 border border-gray-200 max-w-md">
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-3">
-                    <h5 className="text-orange-800 font-medium text-sm mb-2">📝 Instrucciones importantes:</h5>
-                    <div className="text-orange-700 text-xs space-y-1">
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3">
+                    <h5 className="text-gray-800 font-medium text-sm mb-2">📝 Instrucciones importantes:</h5>
+                    <div className="text-gray-700 text-xs space-y-1">
                       {emailData.appointmentInstructions.split('\n').map((line, index) => (
                         <div key={index}>
                           {line.includes(':') ? (

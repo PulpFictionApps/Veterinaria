@@ -61,7 +61,7 @@ export default function PetTimeline(props: any) {
   }, [petId]);
 
   if (loading) return <div>Cargando bitácora...</div>;
-  if (error) return <div className="text-red-600">{error}</div>;
+  if (error) return <div className="text-gray-600">{error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto">

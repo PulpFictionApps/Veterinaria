@@ -110,9 +110,9 @@ export default function NewClientPage() {
               </div>            <form onSubmit={submit} className="p-8">
               {error && (
                 <SlideIn direction="down" delay={0.1}>
-                  <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-xl flex items-center gap-3">
-                    <AlertCircle className="h-5 w-5 text-red-500" />
-                    <span className="text-red-800 font-medium">{error}</span>
+                  <div className="mb-6 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl flex items-center gap-3">
+                    <AlertCircle className="h-5 w-5 text-gray-500" />
+                    <span className="text-gray-800 font-medium">{error}</span>
                   </div>
                 </SlideIn>
               )}

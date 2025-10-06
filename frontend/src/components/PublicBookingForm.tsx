@@ -380,7 +380,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             }} 
             placeholder="Email del cliente" 
             type="email" 
-            className="flex-1 px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
+            className="flex-1 px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" 
             required 
           />
           <button 
@@ -435,22 +435,22 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                   value={rut} 
                   onChange={e => handleRutChange(e.target.value)} 
                   placeholder="RUT * (ej: 12.345.678-9)" 
-                  className={`w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${rutError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500'}`}
+                  className={`w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-500 text-base touch-manipulation ${rutError ? 'border-gray-500 focus:border-gray-500 focus:ring-gray-500' : 'border-gray-300 focus:border-gray-500'}`}
                   required
                   disabled={!!existingTutor}
                 />
-                {rutError && <p className="text-red-500 text-xs mt-1">{rutError}</p>}
+                {rutError && <p className="text-gray-500 text-xs mt-1">{rutError}</p>}
               </div>
               <div>
                 <input 
                   value={phone} 
                   onChange={e => handlePhoneChange(e.target.value)} 
                   placeholder="Teléfono * (ej: +56 9 1234 5678)" 
-                  className={`w-full px-3 py-2.5 border rounded-lg focus:ring-2 text-base touch-manipulation ${phoneError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'}`}
+                  className={`w-full px-3 py-2.5 border rounded-lg focus:ring-2 text-base touch-manipulation ${phoneError ? 'border-gray-500 focus:border-gray-500 focus:ring-gray-500' : 'border-gray-300 focus:border-gray-500 focus:ring-gray-500'}`}
                   required 
                   disabled={!!existingTutor}
                 />
-                {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+                {phoneError && <p className="text-gray-500 text-xs mt-1">{phoneError}</p>}
               </div>
             </div>
             <textarea 
@@ -596,14 +596,14 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                 
                 {/* Campo de fecha de nacimiento mejorado */}
                 <div className="mt-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-2">
                     <div className="flex items-start space-x-2">
-                      <span className="text-blue-500 text-lg">📅</span>
+                      <span className="text-gray-500 text-lg">📅</span>
                       <div>
-                        <h6 className="text-sm font-medium text-blue-800 mb-1">
+                        <h6 className="text-sm font-medium text-gray-800 mb-1">
                           Fecha de nacimiento *
                         </h6>
-                        <p className="text-xs text-blue-600">
+                        <p className="text-xs text-gray-600">
                           Si no conoce la fecha exacta, puede ingresar una fecha aproximada. 
                           Esta información nos ayuda a brindar un mejor cuidado a su mascota.
                         </p>
@@ -614,7 +614,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     value={petBirthDate} 
                     onChange={e => setPetBirthDate(e.target.value)} 
                     type="date" 
-                    className="w-full p-2 border rounded focus:border-blue-400 focus:ring-1 focus:ring-blue-400" 
+                    className="w-full p-2 border rounded focus:border-gray-400 focus:ring-1 focus:ring-gray-400" 
                     max={new Date().toISOString().split('T')[0]}
                     required={isNewPet}
                   />
@@ -664,7 +664,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       {slots.length > 0 ? (
         <div className="mb-4 sm:mb-6">
           <label className="block text-sm sm:text-base font-medium mb-2 sm:mb-3">Selecciona un horario disponible</label>
-          <select className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
+          <select className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required>
             <option value="">-- elige un horario --</option>
             {groupSlotsByDay(slots).map(([day, daySlots]) => {
               // Parse the day key (YYYY-MM-DD) to avoid timezone issues
@@ -720,7 +720,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       )}
 
       {message && (
-        <p className={`mt-3 text-sm ${message.includes('correctamente') ? 'text-green-600' : message.includes('encontrado') ? 'text-blue-600' : 'text-red-600'}`}>
+        <p className={`mt-3 text-sm ${message.includes('correctamente') ? 'text-gray-600' : message.includes('encontrado') ? 'text-gray-600' : 'text-gray-600'}`}>
           {message}
         </p>
       )}

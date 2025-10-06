@@ -97,7 +97,7 @@ export default function EditAppointmentPage() {
   }
 
   if (loading) return <div className="flex justify-center items-center h-32"><div className="text-gray-500">Cargando...</div></div>;
-  if (error) return <div className="max-w-lg mx-auto bg-white p-6 rounded shadow"><p className="text-red-600">{error}</p></div>;
+  if (error) return <div className="max-w-lg mx-auto bg-white p-6 rounded shadow"><p className="text-gray-600">{error}</p></div>;
   if (!appointment) return <div className="max-w-lg mx-auto bg-white p-6 rounded shadow"><p>No encontrado</p></div>;
 
   return (

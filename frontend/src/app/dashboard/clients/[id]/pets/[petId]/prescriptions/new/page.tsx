@@ -97,7 +97,7 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
         
         {/* Pet Info */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-blue-900 mb-2">Información del Paciente</h3>
+          <h3 className="font-semibold text-gray-900 mb-2">Información del Paciente</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-medium">Nombre:</span> {pet.name}
@@ -161,13 +161,13 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
                 className="mt-1"
               />
               <div>
-                <div className="font-medium text-green-900">📱 Enviar por WhatsApp</div>
-                <div className="text-sm text-green-700 mt-1">
+                <div className="font-medium text-gray-900">📱 Enviar por WhatsApp</div>
+                <div className="text-sm text-gray-700 mt-1">
                   La receta se enviará automáticamente al tutor por WhatsApp junto con el PDF.
                   {pet.tutor.phone ? ` (${pet.tutor.phone})` : ' (No hay teléfono registrado)'}
                 </div>
                 {!pet.tutor.phone && (
-                  <div className="text-sm text-red-600 mt-1">
+                  <div className="text-sm text-gray-600 mt-1">
                     ⚠️ No se puede enviar por WhatsApp: falta el número de teléfono del tutor
                   </div>
                 )}

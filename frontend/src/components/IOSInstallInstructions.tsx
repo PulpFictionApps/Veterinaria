@@ -55,7 +55,7 @@ export default function IOSInstallInstructions() {
   const { browser, version, canInstall } = browserInfo;
 
   return (
-    <div className="fixed top-4 left-4 right-4 bg-blue-600 text-white rounded-lg shadow-lg p-4 z-50 mx-auto max-w-md">
+    <div className="fixed top-4 left-4 right-4 bg-gray-600 text-white rounded-lg shadow-lg p-4 z-50 mx-auto max-w-md">
       <div className="flex items-start gap-3">
         <div className="text-2xl">📱</div>
         <div className="flex-1">
@@ -64,11 +64,11 @@ export default function IOSInstallInstructions() {
           </h3>
 
           {!canInstall && browser !== 'Safari' && (
-            <div className="bg-red-500/20 border border-red-300/20 rounded p-3 mb-3">
-              <p className="text-xs text-red-100 mb-2">
+            <div className="bg-gray-500/20 border border-gray-300/20 rounded p-3 mb-3">
+              <p className="text-xs text-gray-100 mb-2">
                 <strong>⚠️ Navegador no compatible</strong>
               </p>
-              <p className="text-xs text-red-100">
+              <p className="text-xs text-gray-100">
                 Las PWA solo se pueden instalar desde <strong>Safari</strong> en iOS.
                 Actualmente usas <strong>{browser}</strong>.
               </p>
@@ -76,22 +76,22 @@ export default function IOSInstallInstructions() {
           )}
 
           {parseFloat(version) < 11.3 && (
-            <div className="bg-orange-500/20 border border-orange-300/20 rounded p-3 mb-3">
-              <p className="text-xs text-orange-100 mb-2">
+            <div className="bg-gray-500/20 border border-gray-300/20 rounded p-3 mb-3">
+              <p className="text-xs text-gray-100 mb-2">
                 <strong>⚠️ iOS muy antiguo</strong>
               </p>
-              <p className="text-xs text-orange-100">
+              <p className="text-xs text-gray-100">
                 Tu iOS {version} no soporta PWA. Necesitas iOS 11.3 o superior.
               </p>
             </div>
           )}
 
           {canInstall && (
-            <div className="bg-green-500/20 border border-green-300/20 rounded p-3 mb-3">
-              <p className="text-xs font-medium text-green-100 mb-2">
+            <div className="bg-gray-500/20 border border-gray-300/20 rounded p-3 mb-3">
+              <p className="text-xs font-medium text-gray-100 mb-2">
                 ✅ Tu dispositivo es compatible
               </p>
-              <ol className="text-xs text-green-100 space-y-1">
+              <ol className="text-xs text-gray-100 space-y-1">
                 <li>1️⃣ Toca el botón <strong>Compartir</strong> ⬆️ abajo</li>
                 <li>2️⃣ Desplázate y toca <strong>"Agregar a pantalla de inicio"</strong></li>
                 <li>3️⃣ Toca <strong>"Agregar"</strong> para confirmar</li>
@@ -109,7 +109,7 @@ export default function IOSInstallInstructions() {
             {!canInstall && (
               <a
                 href="https://apps.apple.com/app/safari/id1146562112"
-                className="text-xs bg-white text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-md transition-colors"
+                className="text-xs bg-white text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -120,7 +120,7 @@ export default function IOSInstallInstructions() {
         </div>
         <button
           onClick={dismiss}
-          className="text-blue-200 hover:text-white text-lg font-bold"
+          className="text-gray-200 hover:text-white text-lg font-bold"
           aria-label="Cerrar"
         >
           ×

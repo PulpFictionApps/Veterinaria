@@ -32,11 +32,11 @@ export default function CalendarPage() {
     return (
       <FadeIn>
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center">
-          <div className="bg-white rounded-3xl shadow-2xl p-10 border border-blue-100">
+          <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
             <div className="flex flex-col items-center">
               <div className="relative">
-                <div className="animate-spin rounded-full h-20 w-20 border-4 border-blue-200 border-t-blue-600 shadow-lg"></div>
-                <Stethoscope className="h-8 w-8 text-blue-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                <div className="animate-spin rounded-full h-20 w-20 border-4 border-gray-200 border-t-gray-600 shadow-lg"></div>
+                <Stethoscope className="h-8 w-8 text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
               </div>
               <p className="mt-8 text-neutral-700 font-bold text-lg">🏥 Inicializando sistema médico...</p>
               <p className="mt-3 text-sm text-neutral-500 font-medium">Verificando credenciales y cargando datos</p>
@@ -70,7 +70,7 @@ export default function CalendarPage() {
                 </div>
                 
                 {/* Professional View Toggle */}
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-3 border border-blue-200 shadow-inner">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl p-3 border border-gray-200 shadow-inner">
                   <div className="flex gap-2">
                     <Tooltip content="Vista completa con agenda y horarios">
                       <button
@@ -106,10 +106,10 @@ export default function CalendarPage() {
                         className={`group px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-3 ${
                           currentView === 'availability'
                             ? 'bg-gradient-secondary text-white shadow-xl transform scale-105'
-                            : 'text-neutral-600 hover:text-green-600 hover:bg-white/80 hover:scale-105'
+                            : 'text-neutral-600 hover:text-gray-600 hover:bg-white/80 hover:scale-105'
                         }`}
                       >
-                        <Clock className={`h-5 w-5 ${currentView === 'availability' ? 'text-white' : 'text-green-500'} group-hover:scale-110 transition-transform duration-300`} />
+                        <Clock className={`h-5 w-5 ${currentView === 'availability' ? 'text-white' : 'text-gray-500'} group-hover:scale-110 transition-transform duration-300`} />
                         ⏰ Horarios
                       </button>
                     </Tooltip>
@@ -127,7 +127,7 @@ export default function CalendarPage() {
             <AnimateOnView>
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <div className="xl:col-span-2">
-                  <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden">
+                  <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
                     <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
                       <div className="flex items-center gap-3">
                         <CalendarDays className="h-6 w-6 text-white" />
@@ -144,7 +144,7 @@ export default function CalendarPage() {
                 </div>
                 
                 <div className="xl:col-span-1">
-                  <div className="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
+                  <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
                     <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
                       <div className="flex items-center gap-3">
                         <Clock className="h-6 w-6 text-white" />
@@ -166,7 +166,7 @@ export default function CalendarPage() {
           {/* Appointments Only View */}
           {currentView === 'appointments' && (
             <SlideIn direction="up">
-              <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-8 py-6">
                   <div className="flex items-center gap-4">
                     <div className="p-2 bg-white/20 rounded-xl">
@@ -190,7 +190,7 @@ export default function CalendarPage() {
           {/* Availability Only View */}
           {currentView === 'availability' && (
             <SlideIn direction="up">
-              <div className="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-8 py-6">
                   <div className="flex items-center gap-4">
                     <div className="p-2 bg-white/20 rounded-xl">

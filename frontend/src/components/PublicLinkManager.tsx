@@ -104,7 +104,7 @@ export default function PublicLinkManager() {
             size="sm" 
             className="flex items-center gap-2"
           >
-            <span className="text-purple-600">📱</span>
+            <span className="text-gray-600">📱</span>
             SMS
           </ThemedButton>
         </div>
@@ -116,7 +116,7 @@ export default function PublicLinkManager() {
             href={bookingUrl} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-sm text-pink-600 hover:text-pink-700 underline"
+            className="text-sm text-gray-600 hover:text-gray-700 underline"
           >
             Ver formulario público →
           </a>

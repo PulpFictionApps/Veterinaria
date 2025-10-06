@@ -343,7 +343,7 @@ export default function ConsultationPage() {
 
   if (error) {
     return (
-      <div className="text-red-600 text-center">
+      <div className="text-gray-600 text-center">
         <p>Error: {error}</p>
         <button
           onClick={() => router.back()}
@@ -446,7 +446,7 @@ export default function ConsultationPage() {
           <button
             type="submit"
             disabled={savingPet}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50"
           >
             {savingPet ? 'Guardando...' : 'Actualizar Información'}
           </button>
@@ -534,7 +534,7 @@ export default function ConsultationPage() {
           <button
             type="submit"
             disabled={savingRecord}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50"
           >
             {savingRecord ? 'Guardando...' : 'Crear Registro Médico'}
           </button>
@@ -634,7 +634,7 @@ export default function ConsultationPage() {
           <button
             type="submit"
             disabled={savingPrescription}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50"
           >
             {savingPrescription ? 'Guardando...' : 'Crear Receta Médica'}
           </button>
@@ -699,9 +699,9 @@ export default function ConsultationPage() {
         ) : (
           <div className="space-y-4">
             {prescriptions.map((prescription) => (
-              <div key={prescription.id} className="border border-gray-200 rounded-lg p-4 bg-purple-50">
+              <div key={prescription.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-purple-800">{prescription.title}</h3>
+                  <h3 className="font-semibold text-gray-800">{prescription.title}</h3>
                   <div className="flex gap-2 items-center">
                     <span className="text-sm text-gray-500">{formatDate(prescription.createdAt)}</span>
                     {prescription.pdfUrl && (
@@ -709,7 +709,7 @@ export default function ConsultationPage() {
                         href={prescription.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium inline-flex items-center gap-1"
+                        className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs font-medium inline-flex items-center gap-1"
                         title="Descargar receta en PDF"
                       >
                         📄 Descargar PDF
@@ -720,33 +720,33 @@ export default function ConsultationPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                   <div>
-                    <span className="font-medium text-purple-700">💊 Medicamento:</span>
+                    <span className="font-medium text-gray-700">💊 Medicamento:</span>
                     <p className="text-gray-700">{prescription.medication}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-purple-700">⚖️ Dosis:</span>
+                    <span className="font-medium text-gray-700">⚖️ Dosis:</span>
                     <p className="text-gray-700">{prescription.dosage}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-purple-700">⏰ Frecuencia:</span>
+                    <span className="font-medium text-gray-700">⏰ Frecuencia:</span>
                     <p className="text-gray-700">{prescription.frequency}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-purple-700">📅 Duración:</span>
+                    <span className="font-medium text-gray-700">📅 Duración:</span>
                     <p className="text-gray-700">{prescription.duration}</p>
                   </div>
                 </div>
 
                 {prescription.content && (
                   <div className="mb-2">
-                    <span className="font-medium text-purple-700">📝 Notas:</span>
+                    <span className="font-medium text-gray-700">📝 Notas:</span>
                     <p className="text-gray-700">{prescription.content}</p>
                   </div>
                 )}
 
                 {prescription.instructions && (
                   <div>
-                    <span className="font-medium text-purple-700">⚠️ Instrucciones especiales:</span>
+                    <span className="font-medium text-gray-700">⚠️ Instrucciones especiales:</span>
                     <p className="text-gray-700">{prescription.instructions}</p>
                   </div>
                 )}
