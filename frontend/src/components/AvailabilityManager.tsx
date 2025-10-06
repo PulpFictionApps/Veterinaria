@@ -206,7 +206,7 @@ export default function AvailabilityManager() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-2xl border border-medical-100 shadow-card p-4 sm:p-8">
+        <div className="bg-white rounded-2xl border border-blue-100 shadow-card p-4 sm:p-8">
           <div className="mb-4 sm:mb-6">
             <h4 className="text-lg sm:text-xl font-bold text-neutral-800">Nueva Disponibilidad</h4>
             <p className="text-sm text-neutral-600 mt-1">Configure sus horarios de atención</p>
@@ -214,20 +214,20 @@ export default function AvailabilityManager() {
           
           <form onSubmit={createSlot} className="space-y-4 sm:space-y-6">
             {/* Recurring Toggle */}
-            <div className="p-3 sm:p-4 bg-health-50 border border-health-200 rounded-xl">
+            <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-xl">
               <label className="flex items-start sm:items-center gap-3 sm:gap-4 cursor-pointer">
                 <input
                   type="checkbox"
                   id="recurring"
                   checked={recurring}
                   onChange={e => setRecurring(e.target.checked)}
-                  className="rounded border-health-300 text-health-600 focus:ring-health-500 mt-0.5 sm:mt-0 flex-shrink-0 touch-manipulation"
+                  className="rounded border-green-300 text-secondary focus:ring-green-500 mt-0.5 sm:mt-0 flex-shrink-0 touch-manipulation"
                 />
                 <div className="min-w-0">
-                  <span className="text-sm font-semibold text-health-800 block">
+                  <span className="text-sm font-semibold text-green-800 block">
                     Disponibilidad recurrente
                   </span>
-                  <p className="text-xs text-health-600 mt-1">
+                  <p className="text-xs text-green-600 mt-1">
                     Crear la misma franja horaria para múltiples días de la semana
                   </p>
                 </div>
@@ -244,7 +244,7 @@ export default function AvailabilityManager() {
                   type="date"
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -256,7 +256,7 @@ export default function AvailabilityManager() {
                   type="time"
                   value={startTime}
                   onChange={e => setStartTime(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -268,7 +268,7 @@ export default function AvailabilityManager() {
                   type="date"
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -280,7 +280,7 @@ export default function AvailabilityManager() {
                   type="time"
                   value={endTime}
                   onChange={e => setEndTime(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -294,14 +294,14 @@ export default function AvailabilityManager() {
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {daysOfWeek.map(day => (
-                    <label key={day.id} className="flex items-center gap-3 p-3 bg-medical-50 border border-medical-200 rounded-lg cursor-pointer hover:bg-medical-100 transition-colors">
+                    <label key={day.id} className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors">
                       <input
                         type="checkbox"
                         checked={recurringDays.includes(day.id)}
                         onChange={() => toggleRecurringDay(day.id)}
-                        className="rounded border-medical-300 text-medical-600 focus:ring-medical-500"
+                        className="rounded border-blue-300 text-primary focus:ring-blue-500"
                       />
-                      <span className="text-sm font-medium text-medical-700">{day.label}</span>
+                      <span className="text-sm font-medium text-blue-700">{day.label}</span>
                     </label>
                   ))}
                 </div>
@@ -309,8 +309,8 @@ export default function AvailabilityManager() {
             )}
 
             {error && (
-              <div className="bg-emergency-50 border border-emergency-200 text-emergency-700 px-6 py-4 rounded-xl flex items-center gap-3">
-                <span className="text-emergency-500">⚠️</span>
+              <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-3">
+                <span className="text-red-500">⚠️</span>
                 <span className="font-medium">{error}</span>
               </div>
             )}
@@ -326,7 +326,7 @@ export default function AvailabilityManager() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 bg-gradient-to-r from-health-600 to-health-700 text-white px-6 py-3 rounded-xl hover:from-health-700 hover:to-health-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-health"
+                className="w-full sm:flex-1 bg-gradient-secondary text-white px-6 py-3 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-secondary"
               >
                 {loading ? '⏳ Creando...' : '+ Crear Disponibilidad'}
               </button>

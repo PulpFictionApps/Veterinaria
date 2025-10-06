@@ -19,7 +19,7 @@ export default function OptimizedBottomNav() {
 
   return (
     <nav aria-label="Navegación inferior" className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 lg:hidden">
-      <div className="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl px-2 py-3 flex items-center gap-1 border border-medical-100/50 shadow-medical">
+      <div className="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl px-2 py-3 flex items-center gap-1 border border-blue-100/50 shadow-primary">
         {mobileItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -28,10 +28,10 @@ export default function OptimizedBottomNav() {
               href={item.href}
               aria-label={`Ir a ${item.label}`}
               aria-current={active ? 'page' : undefined}
-              className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
+              className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                 active 
-                  ? 'text-white bg-gradient-to-br from-medical-500 to-medical-600 shadow-lg shadow-medical-200/50 scale-105' 
-                  : 'text-neutral-600 hover:text-medical-600 hover:bg-medical-50/70'
+                  ? 'text-white bg-gradient-primary shadow-lg shadow-blue-200/50 scale-105' 
+                  : 'text-neutral-600 hover:text-primary hover:bg-blue-50/70'
               }`}
             >
               <span className={`mb-1 ${active ? 'drop-shadow-sm' : ''}`}>

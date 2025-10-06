@@ -217,14 +217,14 @@ export default function AppointmentsPage() {
   if (loading) {
     return (
       <FadeIn>
-        <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-6">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-center items-center py-20">
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-medical-100">
+              <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
                 <div className="flex flex-col items-center">
                   <div className="relative">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-medical-100 border-t-medical-500"></div>
-                    <Stethoscope className="h-6 w-6 text-medical-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-100 border-t-primary"></div>
+                    <Stethoscope className="h-6 w-6 text-primary absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </div>
                   <p className="mt-6 text-neutral-600 font-medium">Cargando agenda médica...</p>
                   <p className="mt-2 text-sm text-neutral-400">Preparando vista de citas</p>
@@ -238,19 +238,19 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <div className="p-6 max-w-7xl mx-auto">
         {/* Medical Header */}
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-8">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gradient-to-r from-medical-500 to-health-500 rounded-xl shadow-lg">
+                  <div className="p-3 bg-gradient-mixed rounded-xl shadow-lg">
                     <CalendarDays className="h-8 w-8 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-mixed bg-clip-text text-transparent">
                       Agenda Médica
                     </h1>
                     <p className="text-neutral-600 mt-1 font-medium">
@@ -263,7 +263,7 @@ export default function AppointmentsPage() {
                   <Tooltip content="Configurar disponibilidad">
                     <Link
                       href="/dashboard/calendar"
-                      className="group bg-gradient-to-r from-health-500 to-medical-500 text-white px-6 py-3 rounded-xl hover:from-health-600 hover:to-medical-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
+                      className="group bg-gradient-mixed text-white px-6 py-3 rounded-xl hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
                     >
                       <Settings className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
                       Disponibilidad
@@ -272,7 +272,7 @@ export default function AppointmentsPage() {
                   
                   <Link
                     href="/dashboard/appointments/new"
-                    className="group bg-gradient-to-r from-medical-500 to-health-500 text-white px-6 py-3 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
+                    className="group bg-gradient-mixed text-white px-6 py-3 rounded-xl hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
                   >
                     <PlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     Nueva Cita
@@ -424,7 +424,7 @@ export default function AppointmentsPage() {
                       <Tooltip content="Eliminar cita">
                         <button 
                           onClick={() => deleteAppointment(appointment.id)} 
-                          className="group p-2 text-neutral-600 hover:text-emergency-600 hover:bg-emergency-50 rounded-xl transition-all duration-300"
+                          className="group p-2 text-neutral-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-300"
                         >
                           <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                         </button>

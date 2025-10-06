@@ -30,11 +30,11 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     const { getPrimaryButtonStyle } = useThemeColors();
 
     const baseClasses = `
-      font-semibold rounded-xl transition-all duration-300 
+      font-semibold rounded-xl transition-all duration-200 
       focus:outline-none focus:ring-2 focus:ring-offset-2 
       disabled:opacity-50 disabled:cursor-not-allowed
       transform hover:scale-105 active:scale-95 active:transition-none
-      shadow-lg hover:shadow-xl
+      shadow-md hover:shadow-lg
       select-none touch-manipulation
       ${fullWidth ? 'w-full' : ''}
       sm:hover:scale-105 hover:scale-100
@@ -51,46 +51,46 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     const getVariantStyle = () => {
       const styles: Record<string, any> = {
         primary: {
-          background: 'linear-gradient(135deg, #EC4899, #BE185D)',
+          background: 'var(--gradient-primary)',
           color: 'white',
-          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white !text-white',
-          focusRingColor: 'focus:ring-medical-500'
+          fallbackClasses: 'bg-primary text-white hover:opacity-90',
+          focusRingColor: 'focus:ring-blue-500'
         },
         secondary: {
-          background: 'linear-gradient(135deg, #F9A8D4, #EC4899)',
+          background: 'var(--gradient-secondary)',
           color: 'white',
-          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white !text-white',
-          focusRingColor: 'focus:ring-health-500'
+          fallbackClasses: 'bg-secondary text-white hover:opacity-90',
+          focusRingColor: 'focus:ring-green-500'
         },
         medical: {
-          background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+          background: 'var(--gradient-primary)',
           color: 'white',
-          fallbackClasses: 'bg-medical-600 hover:bg-medical-700 text-white !text-white',
-          focusRingColor: 'focus:ring-medical-500'
+          fallbackClasses: 'bg-primary text-white hover:opacity-90',
+          focusRingColor: 'focus:ring-blue-500'
         },
         health: {
-          background: 'linear-gradient(135deg, #059669, #047857)',
+          background: 'var(--gradient-secondary)',
           color: 'white',
-          fallbackClasses: 'bg-health-600 hover:bg-health-700 text-white !text-white',
-          focusRingColor: 'focus:ring-health-500'
+          fallbackClasses: 'bg-secondary text-white hover:opacity-90',
+          focusRingColor: 'focus:ring-green-500'
         },
         emergency: {
-          background: 'linear-gradient(135deg, #DC2626, #B91C1C)',
+          background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
           color: 'white',
-          fallbackClasses: 'bg-emergency-600 hover:bg-emergency-700 text-white !text-white',
-          focusRingColor: 'focus:ring-emergency-500'
+          fallbackClasses: 'bg-red-600 hover:bg-red-700 text-white',
+          focusRingColor: 'focus:ring-red-500'
         },
         outline: {
           background: 'transparent',
-          color: '#2563EB',
-          border: '2px solid #2563EB',
-          fallbackClasses: 'border-2 border-medical-600 text-medical-600 hover:bg-medical-50',
-          focusRingColor: 'focus:ring-medical-500'
+          color: 'var(--primary-500)',
+          border: '2px solid var(--primary-500)',
+          fallbackClasses: 'border-2 border-primary text-primary hover:bg-blue-50',
+          focusRingColor: 'focus:ring-blue-500'
         },
         ghost: {
           background: 'transparent',
           color: '#374151',
-          fallbackClasses: 'text-neutral-700 hover:bg-neutral-100',
+          fallbackClasses: 'text-gray-700 hover:bg-gray-100',
           focusRingColor: 'focus:ring-gray-500'
         }
       };
@@ -98,7 +98,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     };
 
     const variantStyle = getVariantStyle();
-    const additionalClasses = variant === 'outline' ? 'border-2 hover:bg-medical-50' : 
+    const additionalClasses = variant === 'outline' ? 'border-2 hover:bg-blue-50' : 
                               variant === 'ghost' ? 'hover:bg-gray-100' : '';
 
     return (
@@ -117,10 +117,11 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
         style={variant !== 'outline' && variant !== 'ghost' ? {
           background: variantStyle.background,
           color: 'white',
-          border: variantStyle.border || 'none'
+          border: 'none'
         } : {
           border: variantStyle.border || 'none',
-          color: variantStyle.color
+          color: variantStyle.color,
+          background: variantStyle.background
         }}
         {...props}
       >

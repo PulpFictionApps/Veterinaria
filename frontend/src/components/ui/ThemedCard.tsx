@@ -35,9 +35,9 @@ export default function ThemedCard({
 
   const variantClasses = {
     default: 'border border-gray-200',
-    medical: 'border border-medical-200 bg-gradient-to-br from-medical-50/50 to-white',
-    health: 'border border-health-200 bg-gradient-to-br from-health-50/50 to-white',
-    emergency: 'border border-emergency-200 bg-gradient-to-br from-emergency-50/50 to-white'
+    medical: 'border border-blue-200 bg-gradient-to-br from-blue-50/50 to-white',
+    health: 'border border-green-200 bg-gradient-to-br from-green-50/50 to-white',
+    emergency: 'border border-red-200 bg-gradient-to-br from-red-50/50 to-white'
   };
 
   return (

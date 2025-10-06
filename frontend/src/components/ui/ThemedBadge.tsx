@@ -36,11 +36,11 @@ export default function ThemedBadge({
   };
 
   const variantClasses = {
-    primary: 'bg-medical-100 text-medical-700 border border-medical-200 hover:bg-medical-200',
-    secondary: 'bg-health-100 text-health-700 border border-health-200 hover:bg-health-200',
+    primary: 'bg-blue-100 text-primary border border-blue-200 hover:bg-blue-200',
+    secondary: 'bg-green-100 text-secondary border border-green-200 hover:bg-green-200',
     success: 'bg-green-100 text-green-700 border border-green-200 hover:bg-green-200',
     warning: 'bg-yellow-100 text-yellow-700 border border-yellow-200 hover:bg-yellow-200',
-    danger: 'bg-emergency-100 text-emergency-700 border border-emergency-200 hover:bg-emergency-200',
+    danger: 'bg-red-100 text-red-700 border border-red-200 hover:bg-red-200',
     info: 'bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200',
     neutral: 'bg-neutral-100 text-neutral-700 border border-neutral-200 hover:bg-neutral-200'
   };

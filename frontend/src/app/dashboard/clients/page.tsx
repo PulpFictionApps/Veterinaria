@@ -228,11 +228,11 @@ export default function ClientsPage() {
             </div>
           ) : error ? (
             <ThemedCard variant="emergency" padding="lg" className="text-center">
-              <div className="w-16 h-16 bg-emergency-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-emergency-600" />
+              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-red-600" />
               </div>
-              <h3 className="text-xl font-bold text-emergency-800 mb-2">Error al cargar</h3>
-              <p className="text-emergency-600 mb-4">{error}</p>
+              <h3 className="text-xl font-bold text-red-800 mb-2">Error al cargar</h3>
+              <p className="text-red-600 mb-4">{error}</p>
               <ThemedButton
                 variant="emergency"
                 onClick={loadClientsWithPets}

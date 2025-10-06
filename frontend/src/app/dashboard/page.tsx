@@ -170,20 +170,20 @@ export default function Dashboard() {
       <ThemedCard variant="medical" className="group cursor-pointer touch-manipulation">
         <div className="flex items-center justify-between gap-3 sm:gap-4">
           <div className="flex-1 min-w-0">
-            <p className="text-xs sm:text-sm font-bold text-medical-600 mb-2 uppercase tracking-wide truncate">{title}</p>
-            <p className="text-2xl sm:text-3xl font-black text-neutral-900 transition-colors group-hover:text-medical-700 mb-1 leading-tight">{formatValue(value)}</p>
+            <p className="text-xs sm:text-sm font-bold text-primary mb-2 uppercase tracking-wide truncate">{title}</p>
+            <p className="text-2xl sm:text-3xl font-black text-neutral-900 transition-colors group-hover:text-primary mb-1 leading-tight">{formatValue(value)}</p>
             {change && (
               <div className="flex items-center gap-1">
                 <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                  changeType === 'positive' ? 'bg-health-500' : 
-                  changeType === 'negative' ? 'bg-emergency-500' : 'bg-neutral-400'
+                  changeType === 'positive' ? 'bg-secondary' : 
+                  changeType === 'negative' ? 'bg-red-500' : 'bg-neutral-400'
                 }`} />
                 <p className={`text-xs font-semibold ${changeColor} truncate`}>{change}</p>
               </div>
             )}
           </div>
-          <div className="p-3 sm:p-4 bg-gradient-to-br from-medical-100 to-medical-200 rounded-2xl sm:group-hover:from-medical-200 sm:group-hover:to-medical-300 transition-all duration-300 shadow-lg flex-shrink-0">
-            <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-medical-700 sm:group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
+          <div className="p-3 sm:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl sm:group-hover:from-blue-200 sm:group-hover:to-blue-300 transition-all duration-300 shadow-lg flex-shrink-0">
+            <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary sm:group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
           </div>
         </div>
       </ThemedCard>
@@ -192,14 +192,14 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="w-full h-full min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-medical-50 to-health-50">
+      <div className="w-full h-full min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-blue-50 to-green-50">
         <div className="text-center">
           <div className="relative">
             {/* Spinner principal */}
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-medical-200 border-t-medical-600 mx-auto mb-6"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-primary mx-auto mb-6"></div>
             {/* Puntos animados alrededor */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-2 h-2 bg-medical-400 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
             </div>
           </div>
           <div className="space-y-2">
@@ -221,7 +221,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="w-full min-h-full bg-gradient-to-br from-medical-50/30 via-white to-health-50/30">
+    <div className="w-full min-h-full bg-gradient-to-br from-blue-50/30 via-white to-green-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-10">
         
         {/* Header con saludo animado */}
@@ -229,11 +229,11 @@ export default function Dashboard() {
           <ThemedCard variant="medical" padding="lg" shadow="xl">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
               <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
-                <div className="p-3 sm:p-4 bg-gradient-to-br from-medical-600 to-medical-700 rounded-2xl shadow-xl flex-shrink-0">
+                <div className="p-3 sm:p-4 bg-gradient-primary rounded-2xl shadow-xl flex-shrink-0">
                   <Activity className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
                 <div className="min-w-0 flex-1 sm:flex-initial">
-                  <h1 className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent mb-2 leading-tight">
+                  <h1 className="text-2xl sm:text-4xl font-black bg-gradient-mixed bg-clip-text text-transparent mb-2 leading-tight">
                     Panel de Control Veterinario
                   </h1>
                   <p className="text-neutral-600 text-base sm:text-lg font-medium">Centro de gestión médica profesional</p>
@@ -241,7 +241,7 @@ export default function Dashboard() {
               </div>
               <SlideIn direction="right" delay={200}>
                 <div className="text-center bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm flex-shrink-0 w-full sm:w-auto">
-                  <div className="text-xs sm:text-sm font-bold text-medical-600 mb-1">
+                  <div className="text-xs sm:text-sm font-bold text-primary mb-1">
                     {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
                   </div>
                   <div className="text-xl sm:text-2xl font-black text-neutral-800">
@@ -355,12 +355,12 @@ export default function Dashboard() {
           <ThemedCard variant="health" padding="lg" shadow="xl">
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-gradient-to-r from-health-600 to-health-700 rounded-xl">
+                <div className="p-2 bg-gradient-secondary rounded-xl">
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-health-800">Sistema de Reservas Online</h2>
-                  <p className="text-sm text-health-600 font-medium">Enlace público para que tus clientes reserven citas</p>
+                  <h2 className="text-xl font-bold text-secondary">Sistema de Reservas Online</h2>
+                  <p className="text-sm text-secondary font-medium">Enlace público para que tus clientes reserven citas</p>
                 </div>
               </div>
             </div>
@@ -381,12 +381,12 @@ export default function Dashboard() {
               <ThemedCard variant="medical" padding="lg" shadow="xl">
                 <div className="mb-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 bg-gradient-to-r from-medical-600 to-medical-700 rounded-xl">
+                    <div className="p-2 bg-gradient-primary rounded-xl">
                       <Calendar className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-medical-800">Agenda Médica</h2>
-                      <p className="text-sm text-medical-600 font-medium">Vista general de citas programadas</p>
+                      <h2 className="text-xl font-bold text-primary">Agenda Médica</h2>
+                      <p className="text-sm text-primary font-medium">Vista general de citas programadas</p>
                     </div>
                   </div>
                 </div>

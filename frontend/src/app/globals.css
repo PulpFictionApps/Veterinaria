@@ -1,38 +1,54 @@
 @import "tailwindcss";
 
+/* ========================================
+   VARIABLES CSS - SISTEMA UNIFICADO
+   ======================================== */
 :root {
+  /* Colores base del sistema */
   --background: #ffffff;
   --foreground: #171717;
   
-  /* Dynamic Theme Colors - Core essentials */
-  --color-primary: #EC4899;
-  --color-secondary: #F9A8D4;
-  --color-accent: #BE185D;
-  --color-primary-hover: #DB2777;
-  --gradient-primary: linear-gradient(135deg, #EC4899, #BE185D);
-  --gradient-secondary: linear-gradient(135deg, #F9A8D4, #EC4899);
-  --shadow-primary: 0 4px 20px #EC489940;
+  /* PALETA PRINCIPAL VETERINARIA */
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  --primary-500: #3b82f6;  /* Azul médico principal */
+  --primary-600: #2563eb;  /* Azul médico más oscuro */
+  --primary-700: #1d4ed8;
+  --primary-800: #1e40af;
+  --primary-900: #1e3a8a;
   
-  /* Legacy brand colors (kept for compatibility) */
-  --brand-50: #f3fbf6;
-  --brand-100: #e6f7ed;
-  --brand-200: #c0efd5;
-  --brand-300: #9be6bc;
-  --brand-400: #55d694;
-  --brand-500: #2cc67a;
-  --brand-600: #22a763;
-  --brand-700: #1a7f4c;
-  --brand-800: #135b37;
-  --brand-900: #0b3b24;
-}
-
-/* Replace @theme (unsupported by many CSS linters) with a utility class.
-   Use the class on the root element when you want the "inline" theme variables. */
-.theme-inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* VERDE SALUD COMPLEMENTARIO */
+  --secondary-50: #f0fdf4;
+  --secondary-100: #dcfce7;
+  --secondary-200: #bbf7d0;
+  --secondary-300: #86efac;
+  --secondary-400: #4ade80;
+  --secondary-500: #10b981;  /* Verde salud principal */
+  --secondary-600: #059669;  /* Verde salud más oscuro */
+  --secondary-700: #047857;
+  --secondary-800: #065f46;
+  --secondary-900: #064e3b;
+  
+  /* COLORES DE ESTADO */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* GRADIENTES PRINCIPALES */
+  --gradient-primary: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  --gradient-secondary: linear-gradient(135deg, #10b981, #047857);
+  --gradient-mixed: linear-gradient(135deg, #3b82f6, #10b981);
+  
+  /* SOMBRAS */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-primary: 0 4px 20px rgba(59, 130, 246, 0.25);
+  --shadow-secondary: 0 4px 20px rgba(16, 185, 129, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,7 +58,9 @@
   }
 }
 
-/* Make root take full viewport and provide safe defaults for mobile */
+/* ========================================
+   RESET Y BASE STYLES
+   ======================================== */
 :root, html, body, #__next {
   height: 100%;
 }
@@ -55,140 +73,157 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-/* App background */
 body {
-  /* Use a gentle neutral background and let page shells control stronger accents */
-  background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   background-repeat: no-repeat;
-  /* Allow body to scroll; inner containers may also handle overflow */
   min-height: 100vh;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
-  color: #1f2937; /* Color de texto por defecto sin !important */
+  -webkit-overflow-scrolling: touch;
+  color: #374151;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Utility: make a container stretch to viewport height but allow children to scroll inside */
+/* ========================================
+   LAYOUT UTILITIES
+   ======================================== */
 .app-shell {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-.fill-viewport {
-  min-height: 100vh;
-  height: 100vh;
-}
-
-/* Dashboard-specific container: center content and allow inner max-w-* elements to expand
-   This lets pages that used e.g. `max-w-4xl` inside the dashboard take the full
-   available admin width while keeping inner card styling. */
 .site-center {
   width: 100%;
-  /* match home container (approx Tailwind max-w-6xl = 72rem / 1152px) */
   max-width: 72rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.5rem; /* px-6 */
+  padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
 
-/* Ensure any inner max-w-* inside site center expands to use the full site width */
 .site-center :where(.max-w-6xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl, .max-w-lg, .max-w-md, .max-w-full) {
   max-width: 100% !important;
   width: 100% !important;
 }
 
-/* Helper for pages that should remain narrow */
-.narrow {
-  max-width: 800px !important;
-  margin-left: auto;
-  margin-right: auto;
+/* ========================================
+   UTILITY CLASSES - SISTEMA UNIFICADO
+   ======================================== */
+
+/* Color utilities usando variables CSS */
+.bg-primary { background-color: var(--primary-500) !important; }
+.bg-secondary { background-color: var(--secondary-500) !important; }
+.text-primary { color: var(--primary-500) !important; }
+.text-secondary { color: var(--secondary-500) !important; }
+.border-primary { border-color: var(--primary-500) !important; }
+.border-secondary { border-color: var(--secondary-500) !important; }
+
+/* Gradientes unificados */
+.bg-gradient-primary { 
+  background: var(--gradient-primary) !important; 
+  color: white !important;
 }
-
-
-/* globals.css o un CSS específico para el calendario */
-.fc .fc-timegrid-slot {
-  height: 60px; /* aumenta el tamaño de cada hora */
+.bg-gradient-secondary { 
+  background: var(--gradient-secondary) !important; 
+  color: white !important;
 }
-
-/* Dynamic Theme Utility Classes - Consolidated */
-.bg-theme-primary { background-color: var(--color-primary); }
-.bg-theme-secondary { background-color: var(--color-secondary); }
-.text-theme-primary { color: var(--color-primary); }
-.border-theme-primary { border-color: var(--color-primary); }
-.bg-gradient-theme-primary { background: var(--gradient-primary); }
-.shadow-theme-primary { box-shadow: var(--shadow-primary); }
-
-/* Specific gradient utility classes to replace Tailwind failures */
-.gradient-medical-health {
-  background: linear-gradient(to right, #3b82f6, #10b981) !important;
+.bg-gradient-mixed { 
+  background: var(--gradient-mixed) !important; 
   color: white !important;
 }
 
-.gradient-health-medical {
-  background: linear-gradient(to right, #10b981, #3b82f6) !important;
-  color: white !important;
-}
+/* Sombras */
+.shadow-primary { box-shadow: var(--shadow-primary) !important; }
+.shadow-secondary { box-shadow: var(--shadow-secondary) !important; }
 
-.gradient-medical-br {
-  background: linear-gradient(to bottom right, #3b82f6, #1d4ed8) !important;
-  color: white !important;
-}
+/* ========================================
+   COMPONENTES BASE
+   ======================================== */
 
-.gradient-medical-health *,
-.gradient-health-medical *,
-.gradient-medical-br * {
-  color: white !important;
-}
-
-/* Essential button variant */  
-.btn-theme-primary {
+/* Botones principales */
+.btn-primary {
   background: var(--gradient-primary);
   color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
   box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+  background: var(--gradient-secondary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-secondary);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+/* Cards estándar */
+.card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
 }
 
-.btn-theme-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px var(--color-primary)30;
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
 }
 
-/* Force white text on gradient buttons */
-button[style*="linear-gradient"] {
-  color: white !important;
-}
+/* ========================================
+   THEMEDBUTTON VARIANTS
+   ======================================== */
 
-button[style*="linear-gradient"] * {
-  color: white !important;
-}
-
-/* Specific fix for ThemedButton variants */
+/* Clases para ThemedButton con máxima especificidad */
 .themed-button-primary {
+  background: var(--gradient-primary) !important;
   color: white !important;
-  background: linear-gradient(135deg, #EC4899, #BE185D) !important;
+  border: none !important;
 }
 
 .themed-button-secondary {
+  background: var(--gradient-secondary) !important;
   color: white !important;
-  background: linear-gradient(135deg, #F9A8D4, #EC4899) !important;
+  border: none !important;
 }
 
 .themed-button-medical {
+  background: var(--gradient-primary) !important;
   color: white !important;
-  background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+  border: none !important;
 }
 
 .themed-button-health {
+  background: var(--gradient-secondary) !important;
   color: white !important;
-  background: linear-gradient(135deg, #059669, #047857) !important;
+  border: none !important;
 }
 
 .themed-button-emergency {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
   color: white !important;
-  background: linear-gradient(135deg, #DC2626, #B91C1C) !important;
+  border: none !important;
 }
 
+/* Forzar texto blanco en todos los botones temáticos */
 .themed-button-primary *,
 .themed-button-secondary *,
 .themed-button-medical *,
@@ -196,315 +231,136 @@ button[style*="linear-gradient"] * {
 .themed-button-emergency * {
   color: white !important;
 }
+/* ========================================
+   SIDEBAR STYLES
+   ======================================== */
 
-/* Fix for gradient backgrounds that appear white/transparent */
+.sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
+  margin-bottom: 4px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  background-color: transparent !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.sidebar-link.active {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  border-left: 4px solid #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+}
+
+.sidebar-link.active:hover {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+.sidebar-link span,
+.sidebar-link.active span {
+  color: inherit !important;
+}
+
+/* ========================================
+   GRADIENTES TAILWIND FIXES
+   ======================================== */
+
+/* Fix para gradientes de Tailwind que no renderizan */
 .bg-gradient-to-r {
-  background-image: var(--tw-gradient-stops) !important;
+  background-image: linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to)) !important;
 }
 
-/* Specific gradient fixes */
-.bg-gradient-to-r.from-medical-500.to-health-500 {
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to)) !important;
+}
+
+/* Combinaciones específicas comunes */
+.from-blue-500.to-green-500 {
   background: linear-gradient(to right, #3b82f6, #10b981) !important;
+  color: white !important;
 }
 
-.bg-gradient-to-r.from-medical-600.to-medical-700 {
-  background: linear-gradient(to right, #2563eb, #1d4ed8) !important;
-}
-
-.bg-gradient-to-r.from-health-500.to-medical-500 {
-  background: linear-gradient(to right, #10b981, #3b82f6) !important;
-}
-
-.bg-gradient-to-r.from-medical-600.to-health-600 {
+.from-blue-600.to-green-600 {
   background: linear-gradient(to right, #2563eb, #059669) !important;
-}
-
-.bg-gradient-to-br.from-medical-600.to-medical-700 {
-  background: linear-gradient(to bottom right, #2563eb, #1d4ed8) !important;
-}
-
-/* Force text color on gradient containers */
-.bg-gradient-to-r .text-white,
-.bg-gradient-to-br .text-white {
   color: white !important;
 }
 
-/* Force icon colors */
-.bg-gradient-to-r svg,
-.bg-gradient-to-br svg {
+.from-blue-600.to-blue-700 {
+  background: linear-gradient(to right, #2563eb, #1d4ed8) !important;
   color: white !important;
 }
 
-/* Comprehensive gradient fallbacks */
-/* Comprehensive gradient fixes for all medical/health combinations */
-[class*="bg-gradient-to-r"][class*="from-medical-500"][class*="to-health-500"],
-[class*="bg-gradient-to-r"][class*="from-medical-600"][class*="to-health-600"] {
-  background: linear-gradient(to right, #3b82f6, #10b981) !important;
-  color: white !important;
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-[class*="bg-gradient-to-r"][class*="from-health-500"][class*="to-medical-500"],
-[class*="bg-gradient-to-r"][class*="from-health-600"][class*="to-medical-600"] {
-  background: linear-gradient(to right, #10b981, #3b82f6) !important;
-  color: white !important;
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-[class*="bg-gradient-to-br"][class*="from-medical"][class*="to-medical"] {
-  background: linear-gradient(to bottom right, #3b82f6, #1d4ed8) !important;
-  color: white !important;
-}
+/* ========================================
+   FULLCALENDAR FIXES
+   ======================================== */
 
-/* More specific medical/health gradient combinations */
-.from-medical-600.to-health-600,
-.from-medical-500.to-health-500 {
-  background: linear-gradient(to right, #3b82f6, #10b981) !important;
-}
-
-.from-health-600.to-medical-600,
-.from-health-500.to-medical-500 {
-  background: linear-gradient(to right, #10b981, #3b82f6) !important;
-}
-
-.from-medical-600.to-medical-700,
-.from-medical-500.to-medical-600 {
-  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
-}
-
-/* Medical gradient containers should always have white text and icons */
-[class*="bg-gradient-to-r"] *,
-[class*="bg-gradient-to-br"] * {
-  color: inherit;
-}
-
-[class*="bg-gradient-to-r"] .text-white,
-[class*="bg-gradient-to-br"] .text-white,
-[class*="bg-gradient-to-r"] svg,
-[class*="bg-gradient-to-br"] svg {
-  color: white !important;
-  fill: white !important;
+.fc .fc-timegrid-slot {
+  height: 60px;
 }
 
 .fc .fc-timegrid-event {
-  font-size: 0.9rem; /* opcional, ajustar texto dentro del slot */
+  font-size: 0.9rem;
 }
 
-@layer utilities {
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* ========================================
+   RESPONSIVE HELPERS
+   ======================================== */
 
-  .animate-fadeIn {
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-}
-
-/* FINAL GRADIENT FIXES - Override all problematic Tailwind gradients */
-/* Universal fallback for any gradient that might not render */
-div[class*="bg-gradient-to-r"] {
-  background-color: #3b82f6 !important; /* fallback */
-}
-
-/* Super specific overrides for exact class combinations found in codebase */
-.bg-gradient-to-r.from-medical-500.to-health-500,
-div[class~="bg-gradient-to-r"][class~="from-medical-500"][class~="to-health-500"] {
-  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%) !important;
-  color: white !important;
-}
-
-.bg-gradient-to-r.from-medical-600.to-health-600,
-div[class~="bg-gradient-to-r"][class~="from-medical-600"][class~="to-health-600"] {
-  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
-  color: white !important;
-}
-
-.bg-gradient-to-br.from-medical-600.to-medical-700,
-div[class~="bg-gradient-to-br"][class~="from-medical-600"][class~="to-medical-700"] {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-  color: white !important;
-}
-
-/* Force white text and icons on all gradient containers */
-.bg-gradient-to-r,
-.bg-gradient-to-br {
-  color: white !important;
-}
-
-.bg-gradient-to-r *,
-.bg-gradient-to-br * {
-  color: white !important;
-}
-
-.bg-gradient-to-r svg,
-.bg-gradient-to-br svg {
-  fill: white !important;
-  color: white !important;
-
-  /* Utilidades de color temático */
-  .bg-primary { background-color: var(--color-primary) !important; }
-  .bg-secondary { background-color: var(--color-secondary) !important; }
-  .bg-accent { background-color: var(--color-accent) !important; }
-  .text-primary { color: var(--color-primary) !important; }
-  .text-secondary { color: var(--color-secondary) !important; }
-  .text-accent { color: var(--color-accent) !important; }
-  .border-primary { border-color: var(--color-primary) !important; }
-  .border-secondary { border-color: var(--color-secondary) !important; }
-
-  /* Gradientes temáticos */
-  .bg-gradient-primary { background: var(--gradient-primary) !important; }
-  .bg-gradient-secondary { background: var(--gradient-secondary) !important; }
-
-  /* Sombras temáticas */
-  .shadow-primary { box-shadow: var(--shadow-primary) !important; }
-  .shadow-secondary { box-shadow: var(--shadow-secondary) !important; }
-
-  /* Hover states */
-  .hover\:bg-primary:hover { background-color: var(--color-primary-hover) !important; }
-
-
-
-  /* Asegurar que los botones principales usen los colores de la paleta */
-  .btn-primary {
-    background: var(--gradient-primary) !important;
-    border: none !important;
-    color: white !important;
-  }
-
-  .btn-primary:hover {
-    background: var(--color-primary-hover) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: var(--shadow-primary) !important;
-  }
-
-  .btn-secondary {
-    background: var(--color-secondary) !important;
-    color: white !important;
-  }
-
-  .btn-secondary:hover {
-    opacity: 0.9 !important;
-  }
-
-  /* Cards temáticos */
-  .themed-card {
-    background: white !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-  }
-
-  .themed-card:hover {
-    box-shadow: var(--shadow-primary) !important;
-    transform: translateY(-2px) !important;
-  }
-
-  /* SIDEBAR - MÁXIMA ESPECIFICIDAD POSIBLE */
-  aside .sidebar-link.sidebar-link.sidebar-link {
-    display: flex !important;
-    align-items: center !important;
-    padding: 12px 16px !important;
-    margin-bottom: 4px !important;
-    border-radius: 8px !important;
-    text-decoration: none !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    background-color: transparent !important;
-    border-left: 3px solid transparent !important;
-    transition: all 0.2s ease !important;
-    font-weight: 500 !important;
-  }
-
-  aside .sidebar-link.sidebar-link.sidebar-link:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
-    text-decoration: none !important;
-  }
-
-  /* ESTADO ACTIVO CON TRIPLE ESPECIFICIDAD */
-  aside .sidebar-link.active.sidebar-link.active.sidebar-link.active {
-    background-color: #1F2937 !important; /* Gris MUCHO más oscuro */
-    color: #FFFFFF !important;
-    border-left: 4px solid #FFFFFF !important; /* Borde más grueso */
-    font-weight: 700 !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
-  }
-
-  aside .sidebar-link.active.sidebar-link.active.sidebar-link.active:hover {
-    background-color: #1F2937 !important;
-    color: #FFFFFF !important;
-    border-left: 4px solid #FFFFFF !important;
-  }
-
-  /* Sobrescribir TODOS los spans con máxima especificidad */
-  aside .sidebar-link.sidebar-link.sidebar-link span {
-    color: inherit !important;
-  }
-
-  aside .sidebar-link.active.sidebar-link.active.sidebar-link.active span {
-    color: #FFFFFF !important;
-    font-weight: inherit !important;
-  }
-
-  /* Estilos base más limpios sin !important agresivos */
-  
-  /* Contenido principal legible */
-  main, .main-content {
-    color: #1f2937;
-  }
-  
-  /* Tarjetas con buen contraste */
-  .bg-white {
-    background-color: white;
-    color: #1f2937;
-  }
-  
-  /* Textos base legibles */
-  p, div, span, h1, h2, h3, h4, h5, h6 {
-    color: inherit;
-  }
-  
-  /* Botones con buen contraste */
-  button {
-    color: inherit;
+@media (max-width: 640px) {
+  .site-center {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
-/* FINAL GRADIENT FIXES - Override all problematic Tailwind gradients */
-/* Universal fallback for any gradient that might not render */
-div[class*="bg-gradient-to-r"] {
-  background-color: #3b82f6 !important; /* fallback */
+/* ========================================
+   LEGACY COMPATIBILITY
+   ======================================== */
+
+/* Asegurar que textos estén legibles en contenido principal */
+main, .main-content {
+  color: #374151;
 }
 
-/* Super specific overrides for exact class combinations found in codebase */
-.bg-gradient-to-r.from-medical-500.to-health-500,
-div[class~="bg-gradient-to-r"][class~="from-medical-500"][class~="to-health-500"] {
-  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%) !important;
-  color: white !important;
+/* Tarjetas con buen contraste */
+.bg-white {
+  background-color: white;
+  color: #374151;
 }
 
-.bg-gradient-to-r.from-medical-600.to-health-600,
-div[class~="bg-gradient-to-r"][class~="from-medical-600"][class~="to-health-600"] {
-  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
-  color: white !important;
+/* Textos base legibles */
+p, div, span, h1, h2, h3, h4, h5, h6 {
+  color: inherit;
 }
 
-.bg-gradient-to-br.from-medical-600.to-medical-700,
-div[class~="bg-gradient-to-br"][class~="from-medical-600"][class~="to-medical-700"] {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-  color: white !important;
-}
-
-/* Force white text and icons on all gradient containers */
-.bg-gradient-to-r,
-.bg-gradient-to-br {
-  color: white !important;
-}
-
-.bg-gradient-to-r *,
-.bg-gradient-to-br * {
-  color: white !important;
-}
-
-.bg-gradient-to-r svg,
-.bg-gradient-to-br svg {
-  fill: white !important;
-  color: white !important;
+/* Helper para páginas que deben mantenerse estrechas */
+.narrow {
+  max-width: 800px !important;
+  margin-left: auto;
+  margin-right: auto;
 }

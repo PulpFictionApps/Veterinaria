@@ -74,12 +74,12 @@ export default function OptimizedSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-medical-200 hidden lg:block h-full sticky top-0 shadow-medical">
+    <aside className="w-64 bg-white border-r border-blue-200 hidden lg:block h-full sticky top-0 shadow-md">
       <div className="p-6 top-0 h-full overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-8">
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gradient-to-br from-medical-600 to-medical-700 shadow-medical"
+            className="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gradient-primary shadow-primary"
           >
             <span className="text-white text-base font-bold">{brand.shortName}</span>
           </div>
@@ -97,10 +97,10 @@ export default function OptimizedSidebar() {
                     href={item.href}
                     aria-current={active ? 'page' : undefined}
                     aria-label={`Ir a ${item.label}`}
-                    className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
+                    className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                       active
                         ? 'text-white bg-gray-600 shadow-lg border-l-4 border-white'  // PLOMO COMO PEDISTE
-                        : 'text-neutral-700 hover:bg-medical-50 hover:text-medical-700'
+                        : 'text-neutral-700 hover:bg-blue-50 hover:text-primary'
                     }`}
                   >
                     <item.icon className="w-5 h-5 mr-4" aria-hidden="true" />
@@ -140,15 +140,15 @@ export default function OptimizedSidebar() {
                         onClick={handleInstallClick}
                         disabled={!canInstall}
                         aria-label={canInstall ? 'Instalar aplicación móvil' : 'Aplicación ya instalada'}
-                        className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-health-500 focus:ring-offset-2 ${
+                        className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
                           canInstall 
-                            ? 'animate-pulse bg-health-50 text-health-700 hover:bg-health-100 border border-health-200' 
+                            ? 'animate-pulse bg-green-50 text-secondary hover:bg-green-100 border border-green-200' 
                             : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50'
                         }`}
                       >
                         <item.icon className="w-4 h-4 mr-3" aria-hidden="true" />
                         <span className="font-medium">{item.label}</span>
-                        {canInstall && <span className="ml-auto text-xs bg-health-200 text-health-800 px-2 py-1 rounded-full font-semibold">Disponible</span>}
+                        {canInstall && <span className="ml-auto text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full font-semibold">Disponible</span>}
                       </button>
                     </li>
                   );
@@ -162,7 +162,7 @@ export default function OptimizedSidebar() {
                       role="menuitem"
                       aria-current={active ? 'page' : undefined}
                       aria-label={`Ir a ${item.label}`}
-                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-medical-500 focus:ring-offset-2 ${
+                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                         active
                           ? 'text-white bg-gray-600 shadow-lg border-l-4 border-white'  // PLOMO COMO PEDISTE
                           : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700'
@@ -183,7 +183,7 @@ export default function OptimizedSidebar() {
             <div className="space-y-3 px-4">
               <Link 
                 href="/dashboard/clients/new"
-                className="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-health-500 to-health-600 text-white rounded-xl hover:from-health-600 hover:to-health-700 transition-all duration-200 text-sm font-semibold shadow-health"
+                className="flex items-center justify-center w-full py-3 px-4 bg-gradient-secondary text-white rounded-xl hover:opacity-90 transition-all duration-200 text-sm font-semibold shadow-secondary"
               >
                 + Nuevo Cliente
               </Link>
@@ -199,7 +199,7 @@ export default function OptimizedSidebar() {
                   router.push('/login');
                 }}
                 aria-label="Cerrar sesión y salir de la aplicación"
-                className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 text-sm text-emergency-600 hover:bg-emergency-50 hover:text-emergency-700 focus:outline-none focus:ring-2 focus:ring-emergency-500 focus:ring-offset-2"
+                className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 <span className="text-base mr-3" aria-hidden="true">🚪</span>
                 <span className="font-medium">Cerrar Sesión</span>
