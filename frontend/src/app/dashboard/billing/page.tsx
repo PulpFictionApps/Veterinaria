@@ -96,17 +96,17 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
               <div className="flex items-center gap-4">
-                <div className="p-3 gradient-medical-health rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-r from-gray-500 to-gray-500 rounded-xl shadow-lg">
                   <CreditCard className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
                     Suscripción y Facturación
                   </h1>
                   <p className="text-neutral-600 mt-1 font-medium">
@@ -122,7 +122,7 @@ export default function BillingPage() {
           {subscription ? (
             <AnimateOnView>
               <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
-                <div className="gradient-medical-health px-6 py-4">
+                <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Award className="h-6 w-6 text-white" />

@@ -228,15 +228,15 @@ export default function SettingsPage() {
               <h4 className="font-semibold text-gray-800 mb-2">🎯 Funciones Activas</h4>
               <ul className="text-sm text-gray-700 space-y-2">
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
                   <strong>Confirmaciones inmediatas:</strong> Se envían automáticamente al crear citas
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
                   <strong>Recordatorios 24h:</strong> Enviados automáticamente un día antes
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
                   <strong>Recordatorios 1h:</strong> Enviados automáticamente una hora antes
                 </li>
               </ul>

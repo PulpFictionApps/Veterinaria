@@ -127,14 +127,14 @@ export default function ConsultationsPage() {
   if (loading) {
     return (
       <FadeIn>
-        <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 p-6">
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-center items-center py-20">
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-medical-100">
+              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
                 <div className="flex flex-col items-center">
                   <div className="relative">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-medical-100 border-t-medical-500"></div>
-                    <Pill className="h-6 w-6 text-medical-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-100 border-t-gray-500"></div>
+                    <Pill className="h-6 w-6 text-gray-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </div>
                   <p className="mt-6 text-neutral-600 font-medium">Cargando tipos de consulta...</p>
                   <p className="mt-2 text-sm text-neutral-400">Preparando configuración médica</p>
@@ -148,18 +148,18 @@ export default function ConsultationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gradient-to-r from-medical-500 to-health-500 rounded-xl shadow-lg">
+                  <div className="p-3 bg-gradient-to-r from-gray-500 to-gray-500 rounded-xl shadow-lg">
                     <Pill className="h-8 w-8 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
                       Tipos de Consulta Veterinaria
                     </h1>
                     <p className="text-neutral-600 mt-1 font-medium">
@@ -185,7 +185,7 @@ export default function ConsultationsPage() {
         {/* Create/Edit Form */}
         {showCreateForm && (
           <ThemedCard variant="medical" className="mb-8">
-            <div className="px-8 py-6 border-b border-medical-100 bg-gradient-to-r from-medical-50 to-health-50">
+            <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-50">
               <h2 className="text-xl font-bold text-neutral-800">
                 {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
               </h2>
@@ -239,7 +239,7 @@ export default function ConsultationsPage() {
                       step="1000"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) || 0 })}
-                      className="w-full pl-8 pr-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full pl-8 pr-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                       placeholder="25000"
                       required
                     />
