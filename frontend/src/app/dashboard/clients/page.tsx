@@ -144,13 +144,13 @@ export default function ClientsPage() {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <div className="w-full min-h-full bg-gradient-to-br from-primary-50 via-primary-50 to-secondary-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
           
           {/* Header */}
           <FadeIn>
-            <ThemedCard variant="medical" padding="lg" shadow="xl">
-              <div className="bg-gradient-mixed p-6 sm:p-8 text-white rounded-2xl shadow-xl">
+            <div className="bg-white rounded-3xl shadow-soft border border-primary-200">
+              <div className="bg-gradient-mixed p-6 sm:p-8 text-white rounded-3xl shadow-medium">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                   <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
                     <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
@@ -170,12 +170,12 @@ export default function ClientsPage() {
                   </Link>
                 </div>
               </div>
-            </ThemedCard>
+            </div>
           </FadeIn>
 
           {/* Barra de búsqueda y filtros */}
           <AnimateOnView animation="slide">
-            <ThemedCard variant="default" padding="lg">
+            <div className="bg-white rounded-2xl shadow-soft border border-primary-200 p-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 
                 {/* Búsqueda */}
@@ -191,65 +191,68 @@ export default function ClientsPage() {
 
                 {/* Controles de vista */}
                 <div className="flex items-center justify-center sm:justify-start">
-                  <div className="bg-neutral-100 rounded-xl p-1 flex touch-manipulation">
-                    <ThemedButton
-                      variant={viewMode === 'grid' ? 'primary' : 'ghost'}
-                      size="sm"
-                      icon={Grid3x3}
+                  <div className="bg-primary-200 rounded-xl p-1 flex touch-manipulation">
+                    <button
                       onClick={() => setViewMode('grid')}
-                      className="text-xs sm:text-sm px-2 sm:px-3"
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
+                        viewMode === 'grid' 
+                          ? 'bg-white text-primary-800 shadow-subtle' 
+                          : 'text-primary-600 hover:text-primary-800 hover:bg-primary-100'
+                      }`}
                     >
+                      <Grid3x3 className="w-4 h-4" />
                       <span className="hidden sm:inline">Grid</span>
-                    </ThemedButton>
-                    <ThemedButton
-                      variant={viewMode === 'list' ? 'primary' : 'ghost'}
-                      size="sm"
-                      icon={List}
+                    </button>
+                    <button
                       onClick={() => setViewMode('list')}
-                      className="text-xs sm:text-sm px-2 sm:px-3"
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
+                        viewMode === 'list' 
+                          ? 'bg-white text-primary-800 shadow-subtle' 
+                          : 'text-primary-600 hover:text-primary-800 hover:bg-primary-100'
+                      }`}
                     >
+                      <List className="w-4 h-4" />
                       <span className="hidden sm:inline">Lista</span>
-                    </ThemedButton>
+                    </button>
                   </div>
                 </div>
 
               </div>
-            </ThemedCard>
+            </div>
           </AnimateOnView>
 
           {/* Contenido */}
           {loading ? (
             <div className="flex items-center justify-center min-h-[40vh]">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
-                <p className="text-lg font-bold text-neutral-700">🔄 Cargando clientes</p>
-                <p className="text-sm text-neutral-500">Obteniendo información de la base de datos...</p>
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-300 border-t-primary-700 mx-auto mb-6"></div>
+                <p className="text-lg font-bold text-primary-800">🔄 Cargando clientes</p>
+                <p className="text-sm text-primary-600">Obteniendo información de la base de datos...</p>
               </div>
             </div>
           ) : error ? (
-            <ThemedCard variant="emergency" padding="lg" className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-red-600" />
+            <div className="bg-white rounded-3xl shadow-soft border border-danger-200 p-8 text-center">
+              <div className="w-16 h-16 bg-danger-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-danger-500" />
               </div>
-              <h3 className="text-xl font-bold text-red-800 mb-2">Error al cargar</h3>
-              <p className="text-red-600 mb-4">{error}</p>
-              <ThemedButton
-                variant="danger"
+              <h3 className="text-xl font-bold text-primary-800 mb-2">Error al cargar</h3>
+              <p className="text-primary-600 mb-4">{error}</p>
+              <button
                 onClick={loadClientsWithPets}
-                size="lg"
+                className="bg-primary-800 hover:bg-primary-900 text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 Reintentar
-              </ThemedButton>
-            </ThemedCard>
+              </button>
+            </div>
           ) : filteredClients.length === 0 ? (
-            <ThemedCard variant="medical" padding="lg" className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-green-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <UserPlus className="w-12 h-12 text-blue-600" />
+            <div className="bg-white rounded-3xl shadow-soft border border-primary-200 p-8 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-subtle">
+                <UserPlus className="w-12 h-12 text-primary-700" />
               </div>
-              <h3 className="text-3xl font-black text-neutral-800 mb-4">
+              <h3 className="text-3xl font-black text-primary-800 mb-4">
                 {searchTerm ? '🔍 No se encontraron clientes' : '👥 No hay clientes registrados'}
               </h3>
-              <p className="text-neutral-600 mb-6 max-w-md mx-auto">
+              <p className="text-primary-600 mb-6 max-w-md mx-auto">
                 {searchTerm 
                   ? `No hay clientes que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
                   : 'Comienza agregando tu primer cliente para gestionar sus mascotas y citas médicas.'
@@ -257,16 +260,13 @@ export default function ClientsPage() {
               </p>
               {!searchTerm && (
                 <Link href="/dashboard/clients/new">
-                  <ThemedButton
-                    variant="secondary"
-                    icon={Plus}
-                    size="lg"
-                  >
+                  <button className="bg-primary-800 hover:bg-primary-900 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto">
+                    <Plus className="w-5 h-5" />
                     Crear Primer Cliente
-                  </ThemedButton>
+                  </button>
                 </Link>
               )}
-            </ThemedCard>
+            </div>
           ) : (
             <div className={viewMode === 'grid' 
               ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8" 
@@ -278,8 +278,8 @@ export default function ClientsPage() {
                     key={client.id}
                     href={`/dashboard/clients/${client.id}`}
                     className={`group touch-manipulation ${viewMode === 'grid' 
-                      ? 'bg-white rounded-3xl shadow-lg border border-blue-100/50 p-6 sm:p-8 hover:shadow-2xl hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02]'
-                      : 'bg-white rounded-2xl shadow-md border border-blue-100/50 p-4 sm:p-6 hover:shadow-xl hover:border-blue-200 transition-all duration-300 flex items-center space-x-4 sm:space-x-8'
+                      ? 'bg-white rounded-3xl shadow-soft border border-primary-200 p-6 sm:p-8 hover:shadow-medium hover:border-primary-300 transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01]'
+                      : 'bg-white rounded-2xl shadow-soft border border-primary-200 p-4 sm:p-6 hover:shadow-medium hover:border-primary-300 transition-all duration-300 flex items-center space-x-4 sm:space-x-8'
                     }`}
                   >
                     
@@ -287,8 +287,8 @@ export default function ClientsPage() {
                       // Vista de cards
                       <>
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-green-200 transition-all duration-300 flex-shrink-0 shadow-md">
-                            <User className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 group-hover:scale-110 transition-transform" />
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-2xl flex items-center justify-center group-hover:from-primary-300 group-hover:to-secondary-300 transition-all duration-300 flex-shrink-0 shadow-subtle">
+                            <User className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700 group-hover:scale-110 transition-transform" />
                           </div>
                           <div className="flex space-x-1 sm:space-x-2">
                             {client.pets && client.pets.length > 0 && (
@@ -309,26 +309,26 @@ export default function ClientsPage() {
                         </div>
                         
                         <div className="space-y-2 sm:space-y-3">
-                          <h3 className="text-lg sm:text-xl font-black text-neutral-800 group-hover:text-blue-700 transition-colors leading-tight mb-2">
+                          <h3 className="text-lg sm:text-xl font-black text-primary-800 group-hover:text-primary-900 transition-colors leading-tight mb-2">
                             👤 {client.name}
                           </h3>
                           
                           <div className="space-y-2 sm:space-y-3">
                             {client.email && (
-                              <div className="flex items-center text-sm sm:text-base text-neutral-700 bg-gray-50 rounded-lg p-2">
-                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-blue-500 flex-shrink-0" />
+                              <div className="flex items-center text-sm sm:text-base text-primary-700 bg-primary-100 rounded-lg p-2">
+                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-primary-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.email}</span>
                               </div>
                             )}
                             {client.phone && (
-                              <div className="flex items-center text-sm sm:text-base text-neutral-700 bg-gray-50 rounded-lg p-2">
-                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-green-500 flex-shrink-0" />
+                              <div className="flex items-center text-sm sm:text-base text-primary-700 bg-primary-100 rounded-lg p-2">
+                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-secondary-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.phone}</span>
                               </div>
                             )}
                             {client.address && (
-                              <div className="flex items-center text-sm sm:text-base text-neutral-700 bg-gray-50 rounded-lg p-2">
-                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-purple-500 flex-shrink-0" />
+                              <div className="flex items-center text-sm sm:text-base text-primary-700 bg-primary-100 rounded-lg p-2">
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-accent-600 flex-shrink-0" />
                                 <span className="truncate font-medium">{client.address}</span>
                               </div>
                             )}
@@ -356,12 +356,12 @@ export default function ClientsPage() {
                     ) : (
                       // Vista de lista
                       <>
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-lg font-bold text-neutral-800 group-hover:text-blue-700 transition-colors truncate">
+                          <h3 className="text-base sm:text-lg font-bold text-primary-800 group-hover:text-primary-900 transition-colors truncate">
                             {client.name}
                           </h3>
                           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mt-1 text-xs sm:text-sm text-neutral-600 space-y-1 sm:space-y-0">
