@@ -426,7 +426,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
                 placeholder="Nombre completo" 
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" 
                 required 
                 disabled={!!existingTutor}
               />
@@ -522,13 +522,13 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     value={petName} 
                     onChange={e => setPetName(e.target.value)} 
                     placeholder="Nombre de la mascota *" 
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" 
                     required={isNewPet}
                   />
                   <select 
                     value={petType} 
                     onChange={e => setPetType(e.target.value)} 
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" 
                     required={isNewPet}
                   >
                     <option value="">Seleccionar especie *</option>
@@ -547,7 +547,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
                     value={petBreed} 
                     onChange={e => setPetBreed(e.target.value)} 
                     placeholder="Raza *" 
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base touch-manipulation" 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" 
                     required={isNewPet}
                   />
                   <input 

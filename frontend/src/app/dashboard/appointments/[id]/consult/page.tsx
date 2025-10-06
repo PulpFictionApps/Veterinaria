@@ -413,7 +413,7 @@ export default function ConsultationPage() {
                 step="0.1"
                 value={petForm.weight}
                 onChange={(e) => setPetForm({ ...petForm, weight: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
                 placeholder="Ej: 5.2"
               />
             </div>
@@ -424,7 +424,7 @@ export default function ConsultationPage() {
                 type="number"
                 value={petForm.age}
                 onChange={(e) => setPetForm({ ...petForm, age: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
                 placeholder="Ej: 3"
               />
             </div>
@@ -434,7 +434,7 @@ export default function ConsultationPage() {
               <select
                 value={petForm.sex}
                 onChange={(e) => setPetForm({ ...petForm, sex: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
               >
                 <option value="">Seleccionar</option>
                 <option value="Macho">Macho</option>

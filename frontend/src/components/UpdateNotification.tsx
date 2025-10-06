@@ -59,26 +59,26 @@ export default function UpdateNotification() {
   if (!showUpdate) return null;
 
   return (
-    <div className="fixed top-4 left-4 right-4 bg-blue-600 text-white rounded-lg shadow-lg p-4 z-50 mx-auto max-w-md">
+    <div className="fixed top-4 left-4 right-4 bg-gray-600 text-white rounded-lg shadow-lg p-4 z-50 mx-auto max-w-md">
       <div className="flex items-start gap-3">
         <div className="text-xl">🔄</div>
         <div className="flex-1">
           <h3 className="font-semibold text-sm mb-1">
             Actualización Disponible
           </h3>
-          <p className="text-xs text-blue-100 mb-3">
+          <p className="text-xs text-gray-100 mb-3">
             Una nueva versión de Vetrium está lista. ¡Actualiza para obtener las últimas mejoras!
           </p>
           <div className="flex gap-2">
             <button
               onClick={handleUpdate}
-              className="bg-white text-blue-600 text-xs font-medium px-3 py-1.5 rounded-md hover:bg-blue-50 transition-colors"
+              className="bg-white text-gray-600 text-xs font-medium px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors"
             >
               Actualizar Ahora
             </button>
             <button
               onClick={dismissUpdate}
-              className="text-xs text-blue-100 hover:text-white px-3 py-1.5"
+              className="text-xs text-gray-100 hover:text-white px-3 py-1.5"
             >
               Más tarde
             </button>
@@ -86,7 +86,7 @@ export default function UpdateNotification() {
         </div>
         <button
           onClick={dismissUpdate}
-          className="text-blue-200 hover:text-white text-lg font-bold"
+          className="text-gray-200 hover:text-white text-lg font-bold"
           aria-label="Cerrar"
         >
           ×
