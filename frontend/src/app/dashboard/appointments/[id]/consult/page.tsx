@@ -476,7 +476,7 @@ export default function ConsultationPage() {
               rows={4}
               value={recordForm.content}
               onChange={(e) => setRecordForm({ ...recordForm, content: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
               placeholder="Describe los hallazgos, observaciones y procedimientos realizados"
             />
           </div>

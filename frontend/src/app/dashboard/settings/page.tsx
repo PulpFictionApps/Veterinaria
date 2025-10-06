@@ -3,14 +3,10 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '@/lib/api';
 import { useAuthContext } from '@/lib/auth-context';
-import { useTheme } from '@/lib/theme-context';
-import { COLOR_PALETTES } from '@/lib/color-palettes';
 import { 
   Settings, 
-  Palette, 
   Mail, 
   Building, 
-  CheckCircle,
   User,
   Phone,
   FileText,
@@ -33,13 +29,11 @@ interface UserSettings {
 
 export default function SettingsPage() {
   const { userId } = useAuthContext();
-  const { currentPalette, setPalette } = useTheme();
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [isChangingPalette, setIsChangingPalette] = useState(false);
 
   // Form states
   const [clinicData, setClinicData] = useState({
@@ -91,19 +85,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handlePaletteChange = async (paletteId: string) => {
-    if (paletteId === currentPalette.id) return;
-    
-    setIsChangingPalette(true);
-    try {
-      setPalette(paletteId);
-      await new Promise(resolve => setTimeout(resolve, 300));
-    } catch (error) {
-      console.error('Error al cambiar paleta:', error);
-    } finally {
-      setIsChangingPalette(false);
-    }
-  };
+
 
   const handleClinicSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -252,59 +234,7 @@ export default function SettingsPage() {
           </div>
         </SlideIn>
 
-        {/* Color Palettes */}
-        <SlideIn direction="up" delay={200}>
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                <Palette className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">Paletas de Colores</h2>
-                <p className="text-gray-600">Selecciona los colores de tu aplicación</p>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {COLOR_PALETTES.map((palette) => {
-                const isActive = currentPalette.id === palette.id;
-                
-                return (
-                  <div
-                    key={palette.id}
-                    className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
-                      isActive 
-                        ? 'border-gray-500 bg-gray-50 shadow-lg' 
-                        : 'border-gray-200 bg-white hover:border-gray-300'
-                    }`}
-                    onClick={() => handlePaletteChange(palette.id)}
-                  >
-                    {isActive && (
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center shadow-lg">
-                        <CheckCircle className="w-5 h-5 text-white" />
-                      </div>
-                    )}
-
-                    <div className="flex space-x-2 mb-4">
-                      <div className="w-8 h-8 rounded-lg shadow-md bg-gradient-primary"></div>
-                      <div className="w-8 h-8 rounded-lg shadow-md bg-gradient-secondary"></div>
-                      <div className="w-8 h-8 rounded-lg shadow-md bg-primary"></div>
-                    </div>
-
-                    <h3 className="font-bold text-lg text-gray-800 mb-2">{palette.name}</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">{palette.description}</p>
-
-                    {isChangingPalette && isActive && (
-                      <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-2xl">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500"></div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </SlideIn>
 
         {/* Clinic Information */}
         <SlideIn direction="up" delay={300}>

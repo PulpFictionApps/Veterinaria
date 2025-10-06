@@ -2,7 +2,6 @@ import './globals.css';
 import '../styles/gradient-fixes.css';
 import { Metadata } from 'next';
 import { AuthProvider } from '../lib/auth-context';
-import { ThemeProvider } from '../lib/theme-context';
 import SWRProvider from '../components/SWRProvider';
 import ConditionalHeader from '../components/ConditionalHeader';
 import ConditionalFooter from '../components/ConditionalFooter';
@@ -63,7 +62,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SWRProvider>
           <AuthProvider>
-            <ThemeProvider>
               <ClientLayoutWrapper>
                 <div className="flex-1 flex flex-col min-h-0">
                   {/* header only shown on public pages, not dashboard */}
@@ -83,7 +81,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <UpdateNotification />
                 </div>
               </ClientLayoutWrapper>
-            </ThemeProvider>
           </AuthProvider>
         </SWRProvider>
       </body>
