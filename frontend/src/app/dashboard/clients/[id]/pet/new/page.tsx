@@ -93,7 +93,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
         {/* Header */}
         <FadeIn>
           <ThemedCard variant="medical" className="overflow-hidden">
-            <div className="bg-gradient-to-r from-medical-600 to-health-600 p-4 sm:p-8 text-white">
+            <div className="bg-gradient-mixed p-4 sm:p-8 text-white">
               <div className="flex items-center space-x-3 sm:space-x-4">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
                   <PawPrint className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -115,7 +115,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               {/* Información Básica */}
               <div>
                 <h2 className="text-lg sm:text-xl font-bold text-neutral-800 mb-4 sm:mb-6 flex items-center">
-                  <Heart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-medical-600" />
+                  <Heart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
                   Información Básica
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -193,7 +193,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               {/* Características Físicas */}
               <div className="border-t border-neutral-200 pt-6 sm:pt-8">
                 <h2 className="text-lg sm:text-xl font-bold text-neutral-800 mb-4 sm:mb-6 flex items-center">
-                  <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-health-600" />
+                  <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-600" />
                   Características Físicas
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -302,7 +302,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                   className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center ${
                     loading
                       ? 'bg-neutral-400 text-white cursor-not-allowed'
-                      : 'bg-gradient-to-r from-health-600 to-health-700 text-white hover:from-health-700 hover:to-health-800 shadow-health hover:shadow-lg'
+                      : 'bg-gradient-secondary text-white hover:opacity-90 shadow-lg hover:shadow-xl'
                   }`}
                 >
                   {loading ? (

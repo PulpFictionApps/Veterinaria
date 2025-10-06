@@ -93,18 +93,18 @@ export default function LoginPage() {
             <button
               type="submit"
               aria-label="Iniciar sesión"
-              className={`w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-pink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 transition-all shadow-lg shadow-pink-200/50 ${loading ? 'opacity-70 cursor-wait' : ''}`}
+              className={`w-full bg-gradient-primary text-white py-3 px-4 rounded-xl font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-all shadow-lg ${loading ? 'opacity-70 cursor-wait' : ''}`}
               disabled={loading}
               aria-busy={loading}
             >
-              {loading ? 'Iniciando...' : 'Iniciar sesión'}
+              {loading ? '⏳ Iniciando...' : '🚀 Iniciar sesión'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               ¿No tienes cuenta?{' '}
-              <a href="/register" className="text-pink-600 hover:text-pink-700 font-medium transition-colors">
+              <a href="/register" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
                 Regístrate aquí
               </a>
             </p>
