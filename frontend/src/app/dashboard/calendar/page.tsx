@@ -48,22 +48,22 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Medical Calendar Header */}
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 p-8 sm:p-10">
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8 sm:p-10">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="flex items-center gap-6">
-                  <div className="p-4 bg-gradient-mixed rounded-2xl shadow-xl border border-white/20">
+                  <div className="p-4 bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl shadow-xl border border-white/20">
                     <Calendar className="h-10 w-10 text-white drop-shadow-sm" />
                   </div>
                   <div>
-                    <h1 className="text-4xl font-black bg-gradient-mixed bg-clip-text text-transparent leading-tight">
+                    <h1 className="text-4xl font-black text-gray-800 leading-tight">
                       📅 Calendario Médico
                     </h1>
-                    <p className="text-neutral-600 mt-2 font-semibold text-lg">
+                    <p className="text-gray-600 mt-2 font-semibold text-lg">
                       Centro de control para agenda y disponibilidad veterinaria
                     </p>
                   </div>
@@ -77,11 +77,11 @@ export default function CalendarPage() {
                         onClick={() => setCurrentView('unified')}
                         className={`group px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-3 ${
                           currentView === 'unified'
-                            ? 'bg-gradient-primary text-white shadow-xl transform scale-105'
-                            : 'text-neutral-600 hover:text-blue-600 hover:bg-white/80 hover:scale-105'
+                            ? 'bg-gray-700 text-white shadow-xl transform scale-105'
+                            : 'text-neutral-600 hover:text-gray-600 hover:bg-white/80 hover:scale-105'
                         }`}
                       >
-                        <Grid3X3 className={`h-5 w-5 ${currentView === 'unified' ? 'text-white' : 'text-blue-500'} group-hover:scale-110 transition-transform duration-300`} />
+                        <Grid3X3 className={`h-5 w-5 ${currentView === 'unified' ? 'text-white' : 'text-gray-500'} group-hover:scale-110 transition-transform duration-300`} />
                         📋 Completa
                       </button>
                     </Tooltip>
@@ -91,11 +91,11 @@ export default function CalendarPage() {
                         onClick={() => setCurrentView('appointments')}
                         className={`group px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-3 ${
                           currentView === 'appointments'
-                            ? 'bg-gradient-primary text-white shadow-xl transform scale-105'
-                            : 'text-neutral-600 hover:text-blue-600 hover:bg-white/80 hover:scale-105'
+                            ? 'bg-gray-700 text-white shadow-xl transform scale-105'
+                            : 'text-neutral-600 hover:text-gray-600 hover:bg-white/80 hover:scale-105'
                         }`}
                       >
-                        <CalendarDays className={`h-5 w-5 ${currentView === 'appointments' ? 'text-white' : 'text-blue-500'} group-hover:scale-110 transition-transform duration-300`} />
+                        <CalendarDays className={`h-5 w-5 ${currentView === 'appointments' ? 'text-white' : 'text-gray-500'} group-hover:scale-110 transition-transform duration-300`} />
                         📊 Citas
                       </button>
                     </Tooltip>
@@ -128,12 +128,12 @@ export default function CalendarPage() {
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <div className="xl:col-span-2">
                   <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden">
-                    <div className="bg-gradient-primary px-6 py-4">
+                    <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
                       <div className="flex items-center gap-3">
                         <CalendarDays className="h-6 w-6 text-white" />
                         <div>
                           <h2 className="text-xl font-bold text-white">Agenda de Consultas</h2>
-                          <p className="text-blue-100 text-sm">Vista mensual de citas programadas</p>
+                          <p className="text-gray-100 text-sm">Vista mensual de citas programadas</p>
                         </div>
                       </div>
                     </div>
@@ -145,12 +145,12 @@ export default function CalendarPage() {
                 
                 <div className="xl:col-span-1">
                   <div className="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
-                    <div className="bg-gradient-secondary px-6 py-4">
+                    <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
                       <div className="flex items-center gap-3">
                         <Clock className="h-6 w-6 text-white" />
                         <div>
                           <h2 className="text-xl font-bold text-white">Horarios Médicos</h2>
-                          <p className="text-green-100 text-sm">Gestión de disponibilidad</p>
+                          <p className="text-gray-100 text-sm">Gestión de disponibilidad</p>
                         </div>
                       </div>
                     </div>
@@ -167,14 +167,14 @@ export default function CalendarPage() {
           {currentView === 'appointments' && (
             <SlideIn direction="up">
               <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden">
-                <div className="bg-gradient-primary px-8 py-6">
+                <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-8 py-6">
                   <div className="flex items-center gap-4">
                     <div className="p-2 bg-white/20 rounded-xl">
                       <CalendarDays className="h-8 w-8 text-white" />
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-white">Calendario de Consultas Médicas</h2>
-                      <p className="text-blue-100 mt-1">
+                      <p className="text-gray-100 mt-1">
                         Vista detallada de todas las citas veterinarias programadas
                       </p>
                     </div>
@@ -191,14 +191,14 @@ export default function CalendarPage() {
           {currentView === 'availability' && (
             <SlideIn direction="up">
               <div className="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
-                <div className="bg-gradient-secondary px-8 py-6">
+                <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-8 py-6">
                   <div className="flex items-center gap-4">
                     <div className="p-2 bg-white/20 rounded-xl">
                       <Settings className="h-8 w-8 text-white" />
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-white">Gestión de Horarios Médicos</h2>
-                      <p className="text-green-100 mt-1">
+                      <p className="text-gray-100 mt-1">
                         Configura tus horarios de atención y disponibilidad profesional
                       </p>
                     </div>

@@ -199,7 +199,7 @@ export default function AvailabilityManager() {
         <h3 className="text-base sm:text-lg font-semibold text-gray-900">Disponibilidad</h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="w-full sm:w-auto bg-gradient-primary text-white px-4 py-2.5 rounded-xl hover:opacity-90 transition-all shadow-lg text-sm sm:text-base font-semibold touch-manipulation"
+          className="w-full sm:w-auto bg-gray-700 text-white px-4 py-2.5 rounded-xl hover:bg-gray-800 transition-all shadow-lg text-sm sm:text-base font-semibold touch-manipulation"
         >
           {showForm ? 'Cancelar' : '+ Agregar Horario'}
         </button>
@@ -244,7 +244,7 @@ export default function AvailabilityManager() {
                   type="date"
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -256,7 +256,7 @@ export default function AvailabilityManager() {
                   type="time"
                   value={startTime}
                   onChange={e => setStartTime(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -268,7 +268,7 @@ export default function AvailabilityManager() {
                   type="date"
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -280,7 +280,7 @@ export default function AvailabilityManager() {
                   type="time"
                   value={endTime}
                   onChange={e => setEndTime(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-primary transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white text-base touch-manipulation"
                   required
                 />
               </div>
@@ -299,7 +299,7 @@ export default function AvailabilityManager() {
                         type="checkbox"
                         checked={recurringDays.includes(day.id)}
                         onChange={() => toggleRecurringDay(day.id)}
-                        className="rounded border-blue-300 text-primary focus:ring-blue-500"
+                        className="rounded border-gray-300 text-gray-700 focus:ring-gray-500"
                       />
                       <span className="text-sm font-medium text-blue-700">{day.label}</span>
                     </label>

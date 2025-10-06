@@ -5,7 +5,7 @@ import InstallButton from '../components/InstallButton';
 
 export default function HomePage() {
   return (
-    <div className="flex-1 min-h-0 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="flex-1 min-h-0 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6 py-12 min-h-0 flex flex-col">
         <div className="bg-white rounded-2xl shadow-lg p-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
@@ -13,7 +13,7 @@ export default function HomePage() {
             <p className="text-gray-600 mb-6 text-lg">Gestiona pacientes, profesionales y reservas desde una interfaz simple. Ideal para clínicas pequeñas y medianas.</p>
 
             <div className="flex gap-3">
-              <Link href="/register" className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Comenzar gratis</Link>
+              <Link href="/register" className="inline-block px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition">Comenzar gratis</Link>
               <Link href="/login" className="inline-block px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Iniciar sesión</Link>
             </div>
 
@@ -51,7 +51,7 @@ export default function HomePage() {
         </section>
 
         <section className="mt-8 text-center text-sm text-gray-600">
-          <p>¿Necesitas ayuda? Revisa <a href="/test-connection" className="text-pink-600 underline hover:text-pink-700 transition-colors">la página de diagnóstico</a> o contáctanos.</p>
+          <p>¿Necesitas ayuda? Revisa <a href="/test-connection" className="text-gray-600 underline hover:text-gray-800 transition-colors">la página de diagnóstico</a> o contáctanos.</p>
         </section>
       </div>
     </div>

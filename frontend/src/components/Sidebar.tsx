@@ -49,7 +49,7 @@ export default function Sidebar() {
       <div className="p-4 top-0 h-full overflow-auto">
         {/* Logo */}
         <div className="flex items-center mb-6">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-lg bg-gradient-primary">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-lg bg-gray-700">
             <span className="text-white text-sm font-bold">{brand.shortName}</span>
           </div>
           <h2 className="text-lg font-semibold text-white">{brand.name}</h2>

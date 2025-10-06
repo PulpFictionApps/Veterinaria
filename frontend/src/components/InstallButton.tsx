@@ -17,7 +17,7 @@ export default function InstallButton({ showDesktopButton = false, inline = fals
     return (
       <button
         onClick={installApp}
-        className="inline-flex items-center px-4 py-2 bg-gradient-primary text-white rounded-xl hover:opacity-90 transition-all duration-300 text-sm font-semibold shadow-lg"
+        className="inline-flex items-center px-4 py-2 bg-gray-700 text-white rounded-xl hover:bg-gray-800 transition-all duration-300 text-sm font-semibold shadow-lg"
       >
         <span className="text-lg mr-2">📱</span>
         Descargar App
@@ -29,7 +29,7 @@ export default function InstallButton({ showDesktopButton = false, inline = fals
     <div className="fixed bottom-20 right-4 z-40 lg:hidden">
       <button
         onClick={installApp}
-        className="bg-gradient-primary text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 animate-bounce"
+        className="bg-gray-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 animate-bounce"
         title="Instalar Vetrium"
       >
         <div className="flex items-center justify-center w-12 h-12">

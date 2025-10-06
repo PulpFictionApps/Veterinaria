@@ -243,7 +243,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               aria-label="Crear cuenta"
-              className={`w-full bg-gradient-secondary text-white py-3 px-4 rounded-xl font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 transition-all shadow-lg ${loading ? 'opacity-70 cursor-wait' : ''}`}
+              className={`w-full bg-gray-700 text-white py-3 px-4 rounded-lg font-semibold hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-all ${loading ? 'opacity-70 cursor-wait' : ''}`}
               disabled={loading}
               aria-busy={loading}
             >
@@ -254,7 +254,7 @@ export default function RegisterPage() {
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           ¿Ya tienes cuenta?{' '}
-          <a href="/login" className="text-green-600 hover:text-green-700 font-semibold">
+          <a href="/login" className="text-gray-600 hover:text-gray-800 font-semibold">
             Inicia sesión aquí
           </a>
         </p>

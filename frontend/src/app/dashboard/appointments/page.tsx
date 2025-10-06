@@ -217,17 +217,17 @@ export default function AppointmentsPage() {
   if (loading) {
     return (
       <FadeIn>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-6">
+        <div className="min-h-screen bg-gray-50 p-6">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-center items-center py-20">
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
+              <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
                 <div className="flex flex-col items-center">
                   <div className="relative">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-100 border-t-primary"></div>
-                    <Stethoscope className="h-6 w-6 text-primary absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-gray-600"></div>
+                    <Stethoscope className="h-6 w-6 text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </div>
-                  <p className="mt-6 text-neutral-600 font-medium">Cargando agenda médica...</p>
-                  <p className="mt-2 text-sm text-neutral-400">Preparando vista de citas</p>
+                  <p className="mt-6 text-gray-600 font-medium">Cargando agenda médica...</p>
+                  <p className="mt-2 text-sm text-gray-400">Preparando vista de citas</p>
                 </div>
               </div>
             </div>
@@ -238,22 +238,22 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gray-50">
       <div className="p-6 max-w-7xl mx-auto">
         {/* Medical Header */}
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-8">
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gradient-mixed rounded-xl shadow-lg">
+                  <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg">
                     <CalendarDays className="h-8 w-8 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold bg-gradient-mixed bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold text-gray-800">
                       Agenda Médica
                     </h1>
-                    <p className="text-neutral-600 mt-1 font-medium">
+                    <p className="text-gray-600 mt-1 font-medium">
                       Gestiona las consultas veterinarias programadas
                     </p>
                   </div>
@@ -263,7 +263,7 @@ export default function AppointmentsPage() {
                   <Tooltip content="Configurar disponibilidad">
                     <Link
                       href="/dashboard/calendar"
-                      className="group bg-gradient-mixed text-white px-6 py-3 rounded-xl hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
+                      className="group bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-2"
                     >
                       <Settings className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
                       Disponibilidad
@@ -272,7 +272,7 @@ export default function AppointmentsPage() {
                   
                   <Link
                     href="/dashboard/appointments/new"
-                    className="group bg-gradient-mixed text-white px-6 py-3 rounded-xl hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
+                    className="group bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-2"
                   >
                     <PlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     Nueva Cita
@@ -286,18 +286,18 @@ export default function AppointmentsPage() {
         {/* Advanced Search and Filters */}
         <SlideIn direction="up" delay={0.1}>
           <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-lg border border-medical-100 p-6">
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
               <div className="flex flex-col lg:flex-row gap-6">
                 {/* Search Bar */}
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <input
                       type="text"
                       placeholder="Buscar por mascota, tutor o motivo de consulta..."
                       value={searchTerm}
                       onChange={e => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border-2 border-medical-100 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-300 font-medium placeholder-neutral-400"
+                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium placeholder-gray-400"
                     />
                   </div>
                 </div>
@@ -314,13 +314,13 @@ export default function AppointmentsPage() {
                       <Tooltip key={filterOption.key} content={`Ver citas ${filterOption.label.toLowerCase()}`}>
                         <button
                           onClick={() => setFilter(filterOption.key as any)}
-                          className={`group px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                          className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                             filter === filterOption.key
-                              ? 'bg-gradient-primary text-white shadow-lg'
-                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 hover:border-blue-300'
+                              ? 'bg-gray-700 text-white'
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300'
                           }`}
                         >
-                          <Icon className={`h-4 w-4 ${filter === filterOption.key ? 'text-white' : 'text-blue-500'} group-hover:scale-110 transition-transform duration-300`} />
+                          <Icon className={`h-4 w-4 ${filter === filterOption.key ? 'text-white' : 'text-gray-500'} group-hover:scale-110 transition-transform duration-300`} />
                           {filterOption.label}
                         </button>
                       </Tooltip>
@@ -335,14 +335,14 @@ export default function AppointmentsPage() {
         {/* Appointments Display */}
         {filteredAppointments.length === 0 ? (
           <AnimateOnView>
-            <div className="bg-white rounded-2xl shadow-lg border border-medical-100 p-12 text-center">
-              <div className="p-6 bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl inline-block mb-6">
-                <CalendarDays className="h-16 w-16 text-medical-400 mx-auto" />
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-12 text-center">
+              <div className="p-6 bg-gray-100 rounded-lg inline-block mb-6">
+                <CalendarDays className="h-16 w-16 text-gray-400 mx-auto" />
               </div>
-              <h3 className="text-2xl font-bold text-neutral-800 mb-3">
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">
                 {searchTerm ? 'No se encontraron citas' : 'Agenda sin citas'}
               </h3>
-              <p className="text-neutral-600 mb-8 max-w-md mx-auto">
+              <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 {searchTerm 
                   ? 'Intenta con otros términos de búsqueda para encontrar las citas que buscas'
                   : 'Comienza programando tu primera consulta veterinaria o configura tu disponibilidad'
@@ -352,14 +352,14 @@ export default function AppointmentsPage() {
                 <div className="flex gap-4 justify-center">
                   <Link
                     href="/dashboard/appointments/new"
-                    className="group bg-gradient-to-r from-medical-500 to-health-500 text-white px-8 py-4 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-3"
+                    className="group bg-gray-700 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-3"
                   >
                     <PlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     Programar Primera Cita
                   </Link>
                   <Link
                     href="/dashboard/calendar"
-                    className="group bg-gradient-to-r from-health-500 to-medical-500 text-white px-8 py-4 rounded-xl hover:from-health-600 hover:to-medical-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-3"
+                    className="group bg-gray-600 text-white px-8 py-4 rounded-lg hover:bg-gray-700 transition-all duration-300 font-medium flex items-center gap-3"
                   >
                     <Settings className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
                     Configurar Disponibilidad
@@ -376,26 +376,26 @@ export default function AppointmentsPage() {
               const isPast = status.status === 'past';
               
               return (
-                <div key={appointment.id} className="bg-white rounded-2xl shadow-lg border border-medical-100 p-6 hover:shadow-xl transition-all duration-300 group">
+                <div key={appointment.id} className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-all duration-300 group">
                   {/* Appointment Header */}
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-xl ${isPast ? 'bg-neutral-100' : 'bg-gradient-to-r from-medical-100 to-health-100'}`}>
-                        <Heart className={`h-6 w-6 ${isPast ? 'text-neutral-400' : 'text-medical-500'}`} />
+                      <div className={`p-3 rounded-lg ${isPast ? 'bg-gray-100' : 'bg-gray-100'}`}>
+                        <Heart className={`h-6 w-6 ${isPast ? 'text-gray-400' : 'text-gray-600'}`} />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-neutral-800 mb-1">{appointment.pet.name}</h3>
-                        <p className="text-sm text-neutral-600 font-medium">
+                        <h3 className="text-xl font-bold text-gray-800 mb-1">{appointment.pet.name}</h3>
+                        <p className="text-sm text-gray-600 font-medium">
                           {appointment.pet.type} {appointment.pet.breed && `• ${appointment.pet.breed}`}
                         </p>
                       </div>
                     </div>
                     
                     <div className="flex gap-2 flex-wrap">
-                      <span className={`px-4 py-2 rounded-xl text-sm font-medium ${
+                      <span className={`px-4 py-2 rounded-lg text-sm font-medium ${
                         isPast 
-                          ? 'bg-neutral-100 text-neutral-600' 
-                          : 'bg-gradient-to-r from-health-100 to-medical-100 text-health-700'
+                          ? 'bg-gray-100 text-gray-600' 
+                          : 'bg-gray-100 text-gray-700'
                       }`}>
                         {isPast ? 'Completada' : 'Programada'}
                       </span>
@@ -404,7 +404,7 @@ export default function AppointmentsPage() {
                         <Tooltip content="Iniciar consulta médica">
                           <Link 
                             href={`/dashboard/appointments/${appointment.id}/consult`} 
-                            className="group bg-gradient-to-r from-health-500 to-medical-500 hover:from-health-600 hover:to-medical-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+                            className="group bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2"
                           >
                             <Stethoscope className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                             Consultar
@@ -415,7 +415,7 @@ export default function AppointmentsPage() {
                       <Tooltip content="Editar cita">
                         <Link 
                           href={`/dashboard/appointments/${appointment.id}/edit`} 
-                          className="group p-2 text-neutral-600 hover:text-medical-600 hover:bg-medical-50 rounded-xl transition-all duration-300"
+                          className="group p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-300"
                         >
                           <Edit3 className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                         </Link>
@@ -434,49 +434,49 @@ export default function AppointmentsPage() {
 
                   {/* Appointment Details Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-xl p-4">
+                    <div className="bg-gray-50 rounded-lg p-4">
                       <div className="flex items-center gap-3 mb-2">
-                        <Calendar className="h-5 w-5 text-medical-500" />
-                        <h4 className="font-semibold text-neutral-700">Fecha y Hora</h4>
+                        <Calendar className="h-5 w-5 text-gray-600" />
+                        <h4 className="font-semibold text-gray-700">Fecha y Hora</h4>
                       </div>
-                      <p className="text-neutral-800 font-medium mb-1">{date}</p>
-                      <p className="text-neutral-600 text-sm font-medium">{time}</p>
+                      <p className="text-gray-800 font-medium mb-1">{date}</p>
+                      <p className="text-gray-600 text-sm font-medium">{time}</p>
                     </div>
                     
-                    <div className="bg-gradient-to-r from-health-50 to-medical-50 rounded-xl p-4">
+                    <div className="bg-gray-50 rounded-lg p-4">
                       <div className="flex items-center gap-3 mb-2">
-                        <User className="h-5 w-5 text-health-500" />
-                        <h4 className="font-semibold text-neutral-700">Tutor</h4>
+                        <User className="h-5 w-5 text-gray-600" />
+                        <h4 className="font-semibold text-gray-700">Tutor</h4>
                       </div>
-                      <p className="text-neutral-800 font-medium mb-1">{appointment.tutor.name}</p>
+                      <p className="text-gray-800 font-medium mb-1">{appointment.tutor.name}</p>
                       {appointment.tutor.phone && (
-                        <div className="flex items-center gap-2 text-neutral-600 text-sm">
+                        <div className="flex items-center gap-2 text-gray-600 text-sm">
                           <Phone className="h-3 w-3" />
                           {appointment.tutor.phone}
                         </div>
                       )}
                     </div>
                     
-                    <div className="bg-gradient-to-r from-neutral-50 to-medical-50 rounded-xl p-4">
+                    <div className="bg-gray-50 rounded-lg p-4">
                       <div className="flex items-center gap-3 mb-2">
-                        <FileText className="h-5 w-5 text-neutral-500" />
-                        <h4 className="font-semibold text-neutral-700">Motivo</h4>
+                        <FileText className="h-5 w-5 text-gray-500" />
+                        <h4 className="font-semibold text-gray-700">Motivo</h4>
                       </div>
-                      <p className="text-neutral-800 font-medium text-sm leading-relaxed">{appointment.reason}</p>
+                      <p className="text-gray-800 font-medium text-sm leading-relaxed">{appointment.reason}</p>
                     </div>
                   </div>
 
                   {/* Consultation Type */}
                   {appointment.consultationType && (
-                    <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-xl p-4 mb-6">
+                    <div className="bg-gray-50 rounded-lg p-4 mb-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Stethoscope className="h-5 w-5 text-medical-500" />
                           <div>
-                            <h4 className="font-semibold text-neutral-700">Tipo de Consulta</h4>
-                            <p className="text-neutral-800 font-medium">{appointment.consultationType.name}</p>
+                            <h4 className="font-semibold text-gray-700">Tipo de Consulta</h4>
+                            <p className="text-gray-800 font-medium">{appointment.consultationType.name}</p>
                             {appointment.consultationType.description && (
-                              <p className="text-sm text-neutral-600 mt-1">{appointment.consultationType.description}</p>
+                              <p className="text-sm text-gray-600 mt-1">{appointment.consultationType.description}</p>
                             )}
                           </div>
                         </div>

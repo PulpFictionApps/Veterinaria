@@ -59,7 +59,7 @@ export default function LoginPage() {
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus:border-transparent transition-colors"
                 aria-describedby="email-help"
                 required
               />
@@ -76,7 +76,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus:border-transparent transition-colors"
                 aria-describedby="password-help"
                 required
               />
@@ -93,7 +93,7 @@ export default function LoginPage() {
             <button
               type="submit"
               aria-label="Iniciar sesión"
-              className={`w-full bg-gradient-primary text-white py-3 px-4 rounded-xl font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-all shadow-lg ${loading ? 'opacity-70 cursor-wait' : ''}`}
+              className={`w-full bg-gray-700 text-white py-3 px-4 rounded-lg font-semibold hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-all ${loading ? 'opacity-70 cursor-wait' : ''}`}
               disabled={loading}
               aria-busy={loading}
             >
@@ -104,7 +104,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               ¿No tienes cuenta?{' '}
-              <a href="/register" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+              <a href="/register" className="text-gray-600 hover:text-gray-800 font-semibold transition-colors">
                 Regístrate aquí
               </a>
             </p>

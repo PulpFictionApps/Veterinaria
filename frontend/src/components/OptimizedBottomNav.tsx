@@ -28,10 +28,10 @@ export default function OptimizedBottomNav() {
               href={item.href}
               aria-label={`Ir a ${item.label}`}
               aria-current={active ? 'page' : undefined}
-              className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              className={`flex flex-col items-center py-2.5 px-3 rounded-xl transition-all duration-200 text-xs min-w-0 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ${
                 active 
-                  ? 'text-white bg-gradient-primary shadow-lg shadow-blue-200/50 scale-105' 
-                  : 'text-neutral-600 hover:text-primary hover:bg-blue-50/70'
+                  ? 'text-white bg-gray-700 shadow-lg shadow-gray-200/50 scale-105' 
+                  : 'text-neutral-600 hover:text-gray-600 hover:bg-gray-50/70'
               }`}
             >
               <span className={`mb-1 ${active ? 'drop-shadow-sm' : ''}`}>

@@ -87,13 +87,13 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
   }
 
   return (
-    <div className="w-full min-h-full bg-gradient-to-br from-neutral-50 to-medical-50">
+    <div className="w-full min-h-full bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-6 sm:space-y-8">
         
         {/* Header */}
         <FadeIn>
-          <ThemedCard variant="medical" className="overflow-hidden">
-            <div className="bg-gradient-mixed p-4 sm:p-8 text-white">
+          <div className="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 sm:p-8 text-white">
               <div className="flex items-center space-x-3 sm:space-x-4">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
                   <PawPrint className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -104,18 +104,18 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
                 </div>
               </div>
             </div>
-          </ThemedCard>
+          </div>
         </FadeIn>
 
         {/* Formulario */}
         <SlideIn direction="up" delay={200}>
-          <ThemedCard variant="medical" className="p-4 sm:p-8">
+          <div className="bg-white border border-gray-200 rounded-lg shadow p-4 sm:p-8">
             <form onSubmit={submit} className="space-y-6 sm:space-y-8">
               
               {/* Información Básica */}
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-neutral-800 mb-4 sm:mb-6 flex items-center">
-                  <Heart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center">
+                  <Heart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-600" />
                   Información Básica
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -320,7 +320,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
               </div>
 
             </form>
-          </ThemedCard>
+          </div>
         </SlideIn>
 
       </div>

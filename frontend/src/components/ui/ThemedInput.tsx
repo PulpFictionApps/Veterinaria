@@ -37,15 +37,15 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
 
     const variantClasses = {
       default: `
-        border-gray-300 focus:border-primary focus:ring-blue-500/20
+        border-gray-300 focus:border-gray-500 focus:ring-gray-500/20
         bg-white hover:border-gray-400
       `,
       medical: `
-        border-blue-200 focus:border-primary focus:ring-blue-500/20
-        bg-gradient-to-r from-blue-50/30 to-white hover:border-blue-300
+        border-gray-200 focus:border-gray-500 focus:ring-gray-500/20
+        bg-gradient-to-r from-gray-50/30 to-white hover:border-gray-300
       `,
       search: `
-        border-gray-200 focus:border-secondary focus:ring-green-500/20
+        border-gray-200 focus:border-gray-500 focus:ring-gray-500/20
         bg-gray-50 hover:bg-white hover:border-gray-300
       `
     };

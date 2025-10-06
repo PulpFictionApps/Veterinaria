@@ -73,11 +73,11 @@ export default function NewClientPage() {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gradient-to-br from-blue-50 via-white to-green-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="w-full min-h-full bg-gradient-to-br from-gray-50 via-white to-gray-100">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
           <FadeIn>
-            <ThemedCard variant="medical" padding="lg" shadow="xl" className="mb-8">
-              <div className="bg-gradient-mixed p-6 sm:p-8 text-white rounded-2xl shadow-xl">
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-200 mb-8">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-3xl shadow-xl">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                   <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
                     <Link href="/dashboard/clients" className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 hover:bg-white/30 transition-all group">
@@ -97,19 +97,17 @@ export default function NewClientPage() {
                   </div>
                 </div>
               </div>
-            </ThemedCard>
+            </div>
           </FadeIn>
 
           <AnimateOnView>
-            <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden">
-              <div className="bg-gradient-primary px-8 py-6">
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-8 py-6">
                 <div className="flex items-center gap-3">
                   <Users className="h-6 w-6 text-white" />
                   <h2 className="text-xl font-bold text-white">Información del Cliente</h2>
                 </div>
-              </div>
-
-            <form onSubmit={submit} className="p-8">
+              </div>            <form onSubmit={submit} className="p-8">
               {error && (
                 <SlideIn direction="down" delay={0.1}>
                   <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-xl flex items-center gap-3">
@@ -122,7 +120,7 @@ export default function NewClientPage() {
               <Stagger className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="flex items-center gap-2 text-sm font-bold text-blue-700 mb-3">
+                    <label htmlFor="name" className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                       <UserPlus className="h-4 w-4" />
                       Nombre completo *
                     </label>
@@ -138,7 +136,7 @@ export default function NewClientPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="rut" className="flex items-center gap-2 text-sm font-bold text-green-700 mb-3">
+                    <label htmlFor="rut" className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                       <CreditCard className="h-4 w-4" />
                       RUT
                     </label>
@@ -153,7 +151,7 @@ export default function NewClientPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="flex items-center gap-2 text-sm font-bold text-blue-700 mb-3">
+                    <label htmlFor="email" className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                       <Mail className="h-4 w-4" />
                       Email
                     </label>
@@ -168,7 +166,7 @@ export default function NewClientPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="phone" className="flex items-center gap-2 text-sm font-bold text-green-700 mb-3">
+                    <label htmlFor="phone" className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                       <Phone className="h-4 w-4" />
                       Teléfono
                     </label>
@@ -184,7 +182,7 @@ export default function NewClientPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="flex items-center gap-2 text-sm font-bold text-blue-700 mb-3">
+                  <label htmlFor="address" className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                     <MapPin className="h-4 w-4" />
                     Dirección Completa
                   </label>
@@ -193,7 +191,7 @@ export default function NewClientPage() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 resize-none font-medium bg-white"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-gray-100 focus:border-gray-500 transition-all duration-300 resize-none font-medium bg-white"
                     placeholder="Ej: Av. Providencia 1234, Departamento 501, Providencia, Santiago"
                   />
                 </div>

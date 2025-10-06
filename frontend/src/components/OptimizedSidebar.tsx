@@ -79,7 +79,7 @@ export default function OptimizedSidebar() {
         {/* Logo */}
         <div className="flex items-center mb-8">
           <div 
-            className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 bg-gradient-primary shadow-lg border-2 border-white/20"
+            className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 bg-gray-700 shadow-lg border-2 border-white/20"
           >
             <span className="text-white text-lg font-black tracking-tight">🏥</span>
           </div>
@@ -103,7 +103,7 @@ export default function OptimizedSidebar() {
                     className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                       active
                         ? 'text-white bg-gray-600 shadow-lg border-l-4 border-white'  // PLOMO COMO PEDISTE
-                        : 'text-neutral-700 hover:bg-blue-50 hover:text-primary'
+                        : 'text-neutral-700 hover:bg-gray-50 hover:text-gray-600'
                     }`}
                   >
                     <item.icon className="w-5 h-5 mr-4" aria-hidden="true" />

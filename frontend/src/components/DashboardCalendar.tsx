@@ -141,7 +141,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         <h3 className="text-base sm:text-lg font-semibold text-gray-900">Calendario</h3>
         <div className="flex gap-2 w-full sm:w-auto bg-gray-100 p-1 rounded-xl">
           <button 
-            className="flex-1 sm:flex-initial px-3 py-2 bg-gradient-primary text-white rounded-lg text-xs sm:text-sm font-semibold hover:opacity-90 transition-all shadow-lg touch-manipulation" 
+            className="flex-1 sm:flex-initial px-3 py-2 bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-800 transition-all shadow-lg touch-manipulation" 
             onClick={() => changeView("timeGridDay")}
           >
             📅 Día

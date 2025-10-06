@@ -284,8 +284,8 @@ export default function BillingPage() {
                           <td className="p-4">
                             <span className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 w-fit ${
                               inv.status === 'paid' 
-                                ? 'bg-health-100 text-health-800' 
-                                : 'bg-yellow-100 text-yellow-800'
+                                ? 'bg-gray-100 text-gray-800' 
+                                : 'bg-gray-100 text-gray-800'
                             }`}>
                               {inv.status === 'paid' ? (
                                 <>
