@@ -144,22 +144,22 @@ export default function ClientsPage() {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gradient-to-br from-neutral-50 to-medical-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-6 sm:space-y-8">
+      <div className="w-full min-h-full bg-gradient-to-br from-blue-50 via-white to-green-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
           
           {/* Header */}
           <FadeIn>
             <ThemedCard variant="medical" padding="lg" shadow="xl">
-              <div className="bg-gradient-to-r from-medical-600 to-health-600 p-4 sm:p-8 text-white rounded-xl">
+              <div className="bg-gradient-mixed p-6 sm:p-8 text-white rounded-2xl shadow-xl">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-                  <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                  <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
+                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
+                      <Users className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-sm" />
                     </div>
                     <div className="min-w-0 flex-1 sm:flex-initial">
-                      <h1 className="text-2xl sm:text-3xl font-bold mb-2 leading-tight">Gestión de Clientes</h1>
-                      <p className="text-white/90 text-sm sm:text-base">
-                        {filteredClients.length} cliente{filteredClients.length !== 1 && 's'} registrado{filteredClients.length !== 1 && 's'}
+                      <h1 className="text-2xl sm:text-4xl font-black mb-2 leading-tight tracking-tight">Gestión de Clientes</h1>
+                      <p className="text-white/90 text-sm sm:text-lg font-medium">
+                        👥 {filteredClients.length} cliente{filteredClients.length !== 1 && 's'} registrado{filteredClients.length !== 1 && 's'}
                       </p>
                     </div>
                   </div>
@@ -221,9 +221,9 @@ export default function ClientsPage() {
           {loading ? (
             <div className="flex items-center justify-center min-h-[40vh]">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-medical-200 border-t-medical-600 mx-auto mb-6"></div>
-                <p className="text-lg font-semibold text-neutral-700">Cargando clientes</p>
-                <p className="text-sm text-neutral-500">Obteniendo información...</p>
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
+                <p className="text-lg font-bold text-neutral-700">🔄 Cargando clientes</p>
+                <p className="text-sm text-neutral-500">Obteniendo información de la base de datos...</p>
               </div>
             </div>
           ) : error ? (
@@ -243,11 +243,11 @@ export default function ClientsPage() {
             </ThemedCard>
           ) : filteredClients.length === 0 ? (
             <ThemedCard variant="medical" padding="lg" className="text-center">
-              <div className="w-20 h-20 bg-medical-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <UserPlus className="w-10 h-10 text-medical-600" />
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-green-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <UserPlus className="w-12 h-12 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-neutral-800 mb-3">
-                {searchTerm ? 'No se encontraron clientes' : 'No hay clientes registrados'}
+              <h3 className="text-3xl font-black text-neutral-800 mb-4">
+                {searchTerm ? '🔍 No se encontraron clientes' : '👥 No hay clientes registrados'}
               </h3>
               <p className="text-neutral-600 mb-6 max-w-md mx-auto">
                 {searchTerm 
@@ -269,8 +269,8 @@ export default function ClientsPage() {
             </ThemedCard>
           ) : (
             <div className={viewMode === 'grid' 
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" 
-              : "space-y-3 sm:space-y-4"
+              ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8" 
+              : "space-y-4 sm:space-y-6"
             }>
               <Stagger staggerDelay={100}>
                 {filteredClients.map(client => (
@@ -278,58 +278,58 @@ export default function ClientsPage() {
                     key={client.id}
                     href={`/dashboard/clients/${client.id}`}
                     className={`group touch-manipulation ${viewMode === 'grid' 
-                      ? 'bg-white rounded-2xl shadow-card border border-medical-100 p-4 sm:p-6 hover:shadow-card-hover transition-all duration-200 transform hover:-translate-y-1'
-                      : 'bg-white rounded-xl shadow-sm border border-medical-100 p-3 sm:p-4 hover:shadow-md transition-all duration-200 flex items-center space-x-3 sm:space-x-6'
+                      ? 'bg-white rounded-3xl shadow-lg border border-blue-100/50 p-6 sm:p-8 hover:shadow-2xl hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02]'
+                      : 'bg-white rounded-2xl shadow-md border border-blue-100/50 p-4 sm:p-6 hover:shadow-xl hover:border-blue-200 transition-all duration-300 flex items-center space-x-4 sm:space-x-8'
                     }`}
                   >
                     
                     {viewMode === 'grid' ? (
                       // Vista de cards
                       <>
-                        <div className="flex items-center justify-between mb-3 sm:mb-4">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-medical-100 to-health-100 rounded-xl flex items-center justify-center group-hover:from-medical-200 group-hover:to-health-200 transition-colors flex-shrink-0">
-                            <User className="w-5 h-5 sm:w-6 sm:h-6 text-medical-600" />
+                        <div className="flex items-center justify-between mb-4 sm:mb-6">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-green-200 transition-all duration-300 flex-shrink-0 shadow-md">
+                            <User className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 group-hover:scale-110 transition-transform" />
                           </div>
                           <div className="flex space-x-1 sm:space-x-2">
                             {client.pets && client.pets.length > 0 && (
                               <Tooltip content={`${client.pets.length} mascota${client.pets.length !== 1 ? 's' : ''}`}>
-                                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-health-100 rounded-lg flex items-center justify-center">
-                                  <PawPrint className="w-3 h-3 sm:w-4 sm:h-4 text-health-600" />
-                                </div>
+                                <ThemedBadge variant="secondary" size="sm" icon={PawPrint} count={client.pets.length}>
+                                  Mascotas
+                                </ThemedBadge>
                               </Tooltip>
                             )}
                             {client.appointments && client.appointments.length > 0 && (
                               <Tooltip content="Tiene citas programadas">
-                                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-medical-100 rounded-lg flex items-center justify-center">
-                                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-medical-600" />
-                                </div>
+                                <ThemedBadge variant="primary" size="sm" icon={Calendar} count={client.appointments.length}>
+                                  Citas
+                                </ThemedBadge>
                               </Tooltip>
                             )}
                           </div>
                         </div>
                         
                         <div className="space-y-2 sm:space-y-3">
-                          <h3 className="text-base sm:text-lg font-bold text-neutral-800 group-hover:text-medical-700 transition-colors leading-tight">
-                            {client.name}
+                          <h3 className="text-lg sm:text-xl font-black text-neutral-800 group-hover:text-blue-700 transition-colors leading-tight mb-2">
+                            👤 {client.name}
                           </h3>
                           
-                          <div className="space-y-1.5 sm:space-y-2">
+                          <div className="space-y-2 sm:space-y-3">
                             {client.email && (
-                              <div className="flex items-center text-xs sm:text-sm text-neutral-600">
-                                <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-neutral-400 flex-shrink-0" />
-                                <span className="truncate">{client.email}</span>
+                              <div className="flex items-center text-sm sm:text-base text-neutral-700 bg-gray-50 rounded-lg p-2">
+                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-blue-500 flex-shrink-0" />
+                                <span className="truncate font-medium">{client.email}</span>
                               </div>
                             )}
                             {client.phone && (
-                              <div className="flex items-center text-xs sm:text-sm text-neutral-600">
-                                <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-neutral-400 flex-shrink-0" />
-                                <span className="truncate">{client.phone}</span>
+                              <div className="flex items-center text-sm sm:text-base text-neutral-700 bg-gray-50 rounded-lg p-2">
+                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-green-500 flex-shrink-0" />
+                                <span className="truncate font-medium">{client.phone}</span>
                               </div>
                             )}
                             {client.address && (
-                              <div className="flex items-center text-xs sm:text-sm text-neutral-600">
-                                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-neutral-400 flex-shrink-0" />
-                                <span className="truncate">{client.address}</span>
+                              <div className="flex items-center text-sm sm:text-base text-neutral-700 bg-gray-50 rounded-lg p-2">
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-purple-500 flex-shrink-0" />
+                                <span className="truncate font-medium">{client.address}</span>
                               </div>
                             )}
                           </div>
