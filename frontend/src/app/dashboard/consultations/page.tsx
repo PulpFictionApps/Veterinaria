@@ -169,7 +169,7 @@ export default function ConsultationsPage() {
                 </div>
                 <Tooltip content="Crear nuevo tipo de consulta médica">
                   <ThemedButton
-                    variant="medical"
+                    variant="primary"
                     icon={Plus}
                     onClick={() => setShowCreateForm(true)}
                     size="lg"
@@ -304,7 +304,7 @@ export default function ConsultationsPage() {
                     Cancelar
                   </ThemedButton>
                   <ThemedButton
-                    variant="medical"
+                    variant="primary"
                     type="submit"
                     size="lg"
                   >

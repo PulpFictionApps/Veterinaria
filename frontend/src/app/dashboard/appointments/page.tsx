@@ -314,13 +314,13 @@ export default function AppointmentsPage() {
                       <Tooltip key={filterOption.key} content={`Ver citas ${filterOption.label.toLowerCase()}`}>
                         <button
                           onClick={() => setFilter(filterOption.key as any)}
-                          className={`group px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                          className={`group px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                             filter === filterOption.key
-                              ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'  // PLOMO CONSISTENTE
-                              : 'bg-medical-50 text-medical-600 hover:bg-medical-100 border border-medical-100'
+                              ? 'bg-gradient-primary text-white shadow-lg'
+                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 hover:border-blue-300'
                           }`}
                         >
-                          <Icon className={`h-4 w-4 ${filter === filterOption.key ? 'text-white' : 'text-medical-500'} group-hover:scale-110 transition-transform duration-300`} />
+                          <Icon className={`h-4 w-4 ${filter === filterOption.key ? 'text-white' : 'text-blue-500'} group-hover:scale-110 transition-transform duration-300`} />
                           {filterOption.label}
                         </button>
                       </Tooltip>
@@ -424,7 +424,7 @@ export default function AppointmentsPage() {
                       <Tooltip content="Eliminar cita">
                         <button 
                           onClick={() => deleteAppointment(appointment.id)} 
-                          className="group p-2 text-neutral-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-300"
+                          className="group p-2 text-red-600 hover:text-red-700 hover:bg-red-100 rounded-xl transition-all duration-300 border border-red-200 hover:border-red-300"
                         >
                           <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                         </button>

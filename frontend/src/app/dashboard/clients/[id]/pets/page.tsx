@@ -66,7 +66,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
             <PawPrint className="w-16 h-16 text-medical-400 mx-auto mb-4" />
             <p className="text-gray-600 mb-6 text-lg font-medium">No se encontraron mascotas para este cliente.</p>
             <Link href={`/dashboard/clients/${clientId}/pet/new`}>
-              <ThemedButton variant="medical" icon={Plus} size="lg">
+              <ThemedButton variant="primary" icon={Plus} size="lg">
                 Agregar Primera Mascota
               </ThemedButton>
             </Link>

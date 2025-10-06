@@ -5,7 +5,7 @@ import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 
 interface ThemedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'medical' | 'health' | 'emergency' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
@@ -33,11 +33,11 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
       font-semibold rounded-xl transition-all duration-200 
       focus:outline-none focus:ring-2 focus:ring-offset-2 
       disabled:opacity-50 disabled:cursor-not-allowed
-      transform hover:scale-105 active:scale-95 active:transition-none
-      shadow-md hover:shadow-lg
+      transform hover:scale-[1.02] active:scale-[0.98] active:transition-none
+      shadow-lg hover:shadow-xl
       select-none touch-manipulation
+      border-0
       ${fullWidth ? 'w-full' : ''}
-      sm:hover:scale-105 hover:scale-100
       ${variant !== 'outline' && variant !== 'ghost' ? '!text-white' : ''}
     `;
     
@@ -53,28 +53,16 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
         primary: {
           background: 'var(--gradient-primary)',
           color: 'white',
-          fallbackClasses: 'bg-primary text-white hover:opacity-90',
+          fallbackClasses: 'bg-blue-600 hover:bg-blue-700 text-white',
           focusRingColor: 'focus:ring-blue-500'
         },
         secondary: {
           background: 'var(--gradient-secondary)',
           color: 'white',
-          fallbackClasses: 'bg-secondary text-white hover:opacity-90',
+          fallbackClasses: 'bg-green-600 hover:bg-green-700 text-white',
           focusRingColor: 'focus:ring-green-500'
         },
-        medical: {
-          background: 'var(--gradient-primary)',
-          color: 'white',
-          fallbackClasses: 'bg-primary text-white hover:opacity-90',
-          focusRingColor: 'focus:ring-blue-500'
-        },
-        health: {
-          background: 'var(--gradient-secondary)',
-          color: 'white',
-          fallbackClasses: 'bg-secondary text-white hover:opacity-90',
-          focusRingColor: 'focus:ring-green-500'
-        },
-        emergency: {
+        danger: {
           background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
           color: 'white',
           fallbackClasses: 'bg-red-600 hover:bg-red-700 text-white',
@@ -84,7 +72,7 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
           background: 'transparent',
           color: 'var(--primary-500)',
           border: '2px solid var(--primary-500)',
-          fallbackClasses: 'border-2 border-primary text-primary hover:bg-blue-50',
+          fallbackClasses: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50',
           focusRingColor: 'focus:ring-blue-500'
         },
         ghost: {

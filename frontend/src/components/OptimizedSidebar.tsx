@@ -79,11 +79,14 @@ export default function OptimizedSidebar() {
         {/* Logo */}
         <div className="flex items-center mb-8">
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gradient-primary shadow-primary"
+            className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 bg-gradient-primary shadow-lg border-2 border-white/20"
           >
-            <span className="text-white text-base font-bold">{brand.shortName}</span>
+            <span className="text-white text-lg font-black tracking-tight">🏥</span>
           </div>
-          <h2 className="text-xl font-bold text-neutral-800 tracking-tight">{brand.name}</h2>
+          <div className="flex flex-col">
+            <h2 className="text-xl font-black text-neutral-800 tracking-tight leading-tight">{brand.name}</h2>
+            <span className="text-xs text-blue-600 font-semibold">Sistema Veterinario</span>
+          </div>
         </div>
 
         {/* Main Navigation */}
@@ -140,15 +143,15 @@ export default function OptimizedSidebar() {
                         onClick={handleInstallClick}
                         disabled={!canInstall}
                         aria-label={canInstall ? 'Instalar aplicación móvil' : 'Aplicación ya instalada'}
-                        className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                        className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 font-semibold ${
                           canInstall 
-                            ? 'animate-pulse bg-green-50 text-secondary hover:bg-green-100 border border-green-200' 
-                            : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50'
+                            ? 'animate-pulse bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-lg' 
+                            : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50 border border-neutral-200'
                         }`}
                       >
                         <item.icon className="w-4 h-4 mr-3" aria-hidden="true" />
-                        <span className="font-medium">{item.label}</span>
-                        {canInstall && <span className="ml-auto text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full font-semibold">Disponible</span>}
+                        <span className="font-semibold">{item.label}</span>
+                        {canInstall && <span className="ml-auto text-xs bg-white/20 text-white px-2 py-1 rounded-full font-bold">📱</span>}
                       </button>
                     </li>
                   );
@@ -199,7 +202,7 @@ export default function OptimizedSidebar() {
                   router.push('/login');
                 }}
                 aria-label="Cerrar sesión y salir de la aplicación"
-                className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="flex items-center w-full px-4 py-3 rounded-xl transition-all duration-200 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-semibold border border-red-200 hover:border-red-300"
               >
                 <span className="text-base mr-3" aria-hidden="true">🚪</span>
                 <span className="font-medium">Cerrar Sesión</span>

@@ -200,7 +200,7 @@ export default function NewClientPage() {
                   </ThemedButton>
                   <Tooltip content="Crear nuevo cliente veterinario">
                     <ThemedButton
-                      variant="medical"
+                      variant="primary"
                       type="submit"
                       disabled={loading}
                       loading={loading}

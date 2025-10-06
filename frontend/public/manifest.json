@@ -5,7 +5,7 @@
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#ec4899",
+  "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "categories": ["medical", "business", "productivity"],
   "lang": "es",

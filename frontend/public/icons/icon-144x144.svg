@@ -1,16 +1,20 @@
 <svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#EC4899;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#BE185D;stop-opacity:1" />
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="secondaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <rect width="144" height="144" fill="url(#grad)" rx="21.599999999999998"/>
-  <g transform="translate(28.8, 28.8)">
-    <path d="M43.199999999999996 21.599999999999998L64.8 36L43.199999999999996 50.4Z" fill="white" opacity="0.9"/>
-    <rect x="14.4" y="57.6" width="72" height="4.32" fill="white" opacity="0.9" rx="2.16"/>
-    <rect x="14.4" y="64.8" width="57.6" height="4.32" fill="white" opacity="0.7" rx="2.16"/>
-    <rect x="14.4" y="72" width="43.199999999999996" height="4.32" fill="white" opacity="0.5" rx="2.16"/>
+  <rect width="144" height="144" fill="url(#primaryGrad)" rx="21.6"/>
+  
+  <g transform="translate(72, 72)">
+    <rect x="-6" y="-24" width="12" height="48" fill="white" rx="2"/>
+    <rect x="-24" y="-6" width="48" height="12" fill="white" rx="2"/>
+    <path d="M-4,-3 C-4,-6 -1,-7 0,-4 C1,-7 4,-6 4,-3 C4,0 0,4 0,4 C0,4 -4,0 -4,-3 Z" fill="url(#secondaryGrad)"/>
   </g>
-  <text x="72" y="122.39999999999999" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11.52" font-weight="bold">Vetrium</text>
-</svg>
+  
+  <text x="72" y="125" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Vetrium</text>

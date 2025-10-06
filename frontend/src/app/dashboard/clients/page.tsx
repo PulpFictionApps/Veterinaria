@@ -193,7 +193,7 @@ export default function ClientsPage() {
                 <div className="flex items-center justify-center sm:justify-start">
                   <div className="bg-neutral-100 rounded-xl p-1 flex touch-manipulation">
                     <ThemedButton
-                      variant={viewMode === 'grid' ? 'medical' : 'ghost'}
+                      variant={viewMode === 'grid' ? 'primary' : 'ghost'}
                       size="sm"
                       icon={Grid3x3}
                       onClick={() => setViewMode('grid')}
@@ -202,7 +202,7 @@ export default function ClientsPage() {
                       <span className="hidden sm:inline">Grid</span>
                     </ThemedButton>
                     <ThemedButton
-                      variant={viewMode === 'list' ? 'medical' : 'ghost'}
+                      variant={viewMode === 'list' ? 'primary' : 'ghost'}
                       size="sm"
                       icon={List}
                       onClick={() => setViewMode('list')}
@@ -234,7 +234,7 @@ export default function ClientsPage() {
               <h3 className="text-xl font-bold text-red-800 mb-2">Error al cargar</h3>
               <p className="text-red-600 mb-4">{error}</p>
               <ThemedButton
-                variant="emergency"
+                variant="danger"
                 onClick={loadClientsWithPets}
                 size="lg"
               >
@@ -258,7 +258,7 @@ export default function ClientsPage() {
               {!searchTerm && (
                 <Link href="/dashboard/clients/new">
                   <ThemedButton
-                    variant="health"
+                    variant="secondary"
                     icon={Plus}
                     size="lg"
                   >

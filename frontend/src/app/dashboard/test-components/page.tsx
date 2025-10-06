@@ -91,17 +91,17 @@ export default function ComponentsTestPage() {
 
               <div className="space-y-3">
                 <h4 className="font-semibold text-gray-800">Medical Styles</h4>
-                <ThemedButton variant="medical" icon={Stethoscope} fullWidth>
+                <ThemedButton variant="primary" icon={Stethoscope} fullWidth>
                   Medical Action
                 </ThemedButton>
-                <ThemedButton variant="health" icon={Heart} fullWidth>
+                <ThemedButton variant="secondary" icon={Heart} fullWidth>
                   Health Action
                 </ThemedButton>
               </div>
 
               <div className="space-y-3">
                 <h4 className="font-semibold text-gray-800">Emergency & Outline</h4>
-                <ThemedButton variant="emergency" icon={AlertTriangle} fullWidth>
+                <ThemedButton variant="danger" icon={AlertTriangle} fullWidth>
                   Emergency
                 </ThemedButton>
                 <ThemedButton variant="outline" icon={User} fullWidth>
@@ -219,7 +219,7 @@ export default function ComponentsTestPage() {
             </div>
 
             <div className="flex gap-4 mt-8">
-              <ThemedButton variant="medical" icon={Save} size="lg">
+              <ThemedButton variant="primary" icon={Save} size="lg">
                 Guardar Cita
               </ThemedButton>
               <ThemedButton variant="outline" size="lg">

@@ -199,7 +199,7 @@ export default function AvailabilityManager() {
         <h3 className="text-base sm:text-lg font-semibold text-gray-900">Disponibilidad</h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-pink-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-200/50 text-sm sm:text-base touch-manipulation"
+          className="w-full sm:w-auto bg-gradient-primary text-white px-4 py-2.5 rounded-xl hover:opacity-90 transition-all shadow-lg text-sm sm:text-base font-semibold touch-manipulation"
         >
           {showForm ? 'Cancelar' : '+ Agregar Horario'}
         </button>
@@ -319,14 +319,14 @@ export default function AvailabilityManager() {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="w-full sm:flex-1 px-6 py-3 border border-neutral-300 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 font-medium"
+                className="w-full sm:flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 bg-gradient-secondary text-white px-6 py-3 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-secondary"
+                className="w-full sm:flex-1 bg-gradient-secondary text-white px-6 py-3 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg"
               >
                 {loading ? '⏳ Creando...' : '+ Crear Disponibilidad'}
               </button>
@@ -362,9 +362,9 @@ export default function AvailabilityManager() {
                 </div>
                 <button
                   onClick={() => deleteSlot(slot.id)}
-                  className="text-red-600 hover:text-red-700 text-sm font-medium"
+                  className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 hover:text-red-800 text-sm font-semibold transition-all duration-200 border border-red-200"
                 >
-                  Eliminar
+                  🗑️ Eliminar
                 </button>
               </div>
             </div>
