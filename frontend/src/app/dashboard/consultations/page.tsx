@@ -203,7 +203,7 @@ export default function ConsultationsPage() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                     placeholder="Ej: Consulta General, Vacunación, Cirugía"
                     required
                   />
@@ -216,7 +216,7 @@ export default function ConsultationsPage() {
                   <select
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
                   >
                     <option value={15}>15 minutos</option>
                     <option value={30}>30 minutos</option>
@@ -274,23 +274,23 @@ export default function ConsultationsPage() {
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-200 bg-neutral-50 focus:bg-white resize-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white resize-none"
                     rows={4}
                     placeholder="Descripción detallada del tipo de consulta (opcional)"
                   />
                 </div>
                 
                 <div className="md:col-span-2">
-                  <label className="flex items-center p-4 bg-health-50 border border-health-200 rounded-xl cursor-pointer hover:bg-health-100 transition-colors">
+                  <label className="flex items-center p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
                     <input
                       type="checkbox"
                       checked={formData.active}
                       onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                      className="rounded border-health-300 text-health-600 focus:ring-health-500 mr-3"
+                      className="rounded border-gray-300 text-gray-600 focus:ring-gray-500 mr-3"
                     />
                     <div>
-                      <span className="text-sm font-semibold text-health-800">Tipo de consulta activo</span>
-                      <p className="text-xs text-health-600">Los tipos inactivos no aparecerán en el sistema de reservas</p>
+                      <span className="text-sm font-semibold text-gray-800">Tipo de consulta activo</span>
+                      <p className="text-xs text-gray-600">Los tipos inactivos no aparecerán en el sistema de reservas</p>
                     </div>
                   </label>
                 </div>
@@ -320,11 +320,11 @@ export default function ConsultationsPage() {
           {/* Empty State */}
           {consultationTypes.length === 0 && (
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-12 text-center">
-                <div className="p-6 bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl mb-6 inline-block">
-                  <Stethoscope className="h-16 w-16 text-medical-500 mx-auto" />
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-12 text-center">
+                <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl mb-6 inline-block">
+                  <Stethoscope className="h-16 w-16 text-gray-500 mx-auto" />
                 </div>
-                <h3 className="text-2xl font-bold text-medical-800 mb-3">
+                <h3 className="text-2xl font-bold text-gray-800 mb-3">
                   No hay tipos de consulta configurados
                 </h3>
                 <p className="text-neutral-600 mb-8 max-w-md mx-auto">
@@ -333,7 +333,7 @@ export default function ConsultationsPage() {
                 <Tooltip content="Crear primer tipo de consulta médica">
                   <button
                     onClick={() => setShowCreateForm(true)}
-                    className="group inline-flex items-center gap-3 bg-gradient-to-r from-medical-500 to-health-500 text-white px-8 py-4 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-xl hover:shadow-2xl font-bold text-lg"
+                    className="group inline-flex items-center gap-3 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-8 py-4 rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow-xl hover:shadow-2xl font-bold text-lg"
                   >
                     <Heart className="h-6 w-6 group-hover:scale-110 transition-transform duration-300" />
                     Crear Primer Tipo
@@ -353,7 +353,7 @@ export default function ConsultationsPage() {
                     key={type.id}
                     className={`group bg-white rounded-2xl shadow-lg border transition-all duration-300 hover:shadow-xl ${
                       type.active 
-                        ? 'border-medical-200 hover:border-medical-300' 
+                        ? 'border-gray-200 hover:border-gray-300' 
                         : 'border-neutral-200 opacity-70'
                     }`}
                   >
@@ -365,7 +365,7 @@ export default function ConsultationsPage() {
                             style={{ backgroundColor: type.color || '#3B82F6' }}
                           />
                           <div className="flex-1">
-                            <h3 className="font-bold text-medical-800 text-lg group-hover:text-medical-600 transition-colors">
+                            <h3 className="font-bold text-gray-800 text-lg group-hover:text-gray-600 transition-colors">
                               {type.name}
                             </h3>
                             {type.description && (
@@ -380,7 +380,7 @@ export default function ConsultationsPage() {
                             onClick={() => toggleActive(type.id, type.active)}
                             className={`text-xs px-3 py-2 rounded-full font-medium transition-all duration-200 flex items-center gap-2 ${
                               type.active
-                                ? 'bg-health-100 text-health-800 hover:bg-health-200'
+                                ? 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                                 : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                             }`}
                           >
@@ -400,21 +400,21 @@ export default function ConsultationsPage() {
                       </div>
                       
                       <div className="space-y-3 mb-6">
-                        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-medical-50 to-health-50 rounded-lg">
-                          <span className="text-medical-700 font-medium flex items-center gap-2">
+                        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg">
+                          <span className="text-gray-700 font-medium flex items-center gap-2">
                             <Clock className="h-4 w-4" />
                             Duración:
                           </span>
-                          <span className="font-bold text-medical-800">
+                          <span className="font-bold text-gray-800">
                             {type.duration || 30} min
                           </span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-health-50 to-medical-50 rounded-lg">
-                          <span className="text-health-700 font-medium flex items-center gap-2">
+                        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg">
+                          <span className="text-gray-700 font-medium flex items-center gap-2">
                             <DollarSign className="h-4 w-4" />
                             Precio:
                           </span>
-                          <span className="font-bold text-xl text-health-800">
+                          <span className="font-bold text-xl text-gray-800">
                             ${type.price.toLocaleString()}
                           </span>
                         </div>
@@ -423,7 +423,7 @@ export default function ConsultationsPage() {
                       <Tooltip content="Editar tipo de consulta">
                         <button
                           onClick={() => editType(type)}
-                          className="group/edit w-full py-3 bg-gradient-to-r from-medical-500 to-health-500 text-white hover:from-medical-600 hover:to-health-600 rounded-xl transition-all duration-300 font-medium flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                          className="group/edit w-full py-3 bg-gradient-to-r from-gray-500 to-gray-500 text-white hover:from-gray-600 hover:to-gray-600 rounded-xl transition-all duration-300 font-medium flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                         >
                           <Edit className="h-4 w-4 group-hover/edit:scale-110 transition-transform duration-300" />
                           Editar Consulta

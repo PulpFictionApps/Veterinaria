@@ -471,7 +471,7 @@ export default function AppointmentsPage() {
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <Stethoscope className="h-5 w-5 text-medical-500" />
+                          <Stethoscope className="h-5 w-5 text-gray-500" />
                           <div>
                             <h4 className="font-semibold text-gray-700">Tipo de Consulta</h4>
                             <p className="text-gray-800 font-medium">{appointment.consultationType.name}</p>
@@ -481,8 +481,8 @@ export default function AppointmentsPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 shadow-sm">
-                          <DollarSign className="h-4 w-4 text-health-500" />
-                          <span className="text-health-600 font-bold">
+                          <DollarSign className="h-4 w-4 text-gray-500" />
+                          <span className="text-gray-600 font-bold">
                             {formatPrice(appointment.consultationType.price)}
                           </span>
                         </div>
@@ -491,10 +491,10 @@ export default function AppointmentsPage() {
                   )}
 
                   {/* Action Footer */}
-                  <div className="pt-4 border-t border-medical-100">
+                  <div className="pt-4 border-t border-gray-100">
                     <Link
                       href={`/dashboard/clients/${appointment.tutor.id}/pets/${appointment.pet.id}`}
-                      className="group inline-flex items-center gap-2 text-medical-600 hover:text-medical-700 font-medium transition-all duration-300"
+                      className="group inline-flex items-center gap-2 text-gray-600 hover:text-gray-700 font-medium transition-all duration-300"
                     >
                       <Eye className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                       Ver Ficha Médica Completa

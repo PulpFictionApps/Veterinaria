@@ -194,9 +194,9 @@ export default function ProfessionalProfilePage() {
         {/* Professional Notice */}
         <SlideIn direction="up" delay={0.1}>
           <div className="mb-8">
-            <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl border border-medical-200 p-6">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl border border-gray-200 p-6">
               <div className="flex items-start gap-4">
-                <div className="p-2 bg-medical-500 rounded-xl">
+                <div className="p-2 bg-gray-500 rounded-xl">
                   <FileText className="h-6 w-6 text-white" />
                 </div>
                 <div>
@@ -215,8 +215,8 @@ export default function ProfessionalProfilePage() {
         {error && (
           <SlideIn direction="up" delay={0.2}>
             <div className="mb-6">
-              <div className="bg-gradient-to-r from-emergency-50 to-emergency-100 border border-emergency-200 text-emergency-800 px-6 py-4 rounded-2xl flex items-center gap-3">
-                <AlertCircle className="h-6 w-6 text-emergency-500" />
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 text-gray-800 px-6 py-4 rounded-2xl flex items-center gap-3">
+                <AlertCircle className="h-6 w-6 text-gray-500" />
                 <span className="font-medium">{error}</span>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function ProfessionalProfilePage() {
           <SlideIn direction="up" delay={0.2}>
             <div className="mb-6">
               <div className="bg-gradient-to-r from-gray-50 to-gray-50 border border-gray-200 text-gray-800 px-6 py-4 rounded-2xl flex items-center gap-3">
-                <CheckCircle className="h-6 w-6 text-health-500" />
+                <CheckCircle className="h-6 w-6 text-gray-500" />
                 <span className="font-medium">Perfil profesional actualizado correctamente</span>
               </div>
             </div>
@@ -265,7 +265,7 @@ export default function ProfessionalProfilePage() {
 
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-medical-500" />
+                        <Shield className="h-4 w-4 text-gray-500" />
                         RUT Profesional *
                       </label>
                       <input
@@ -273,20 +273,20 @@ export default function ProfessionalProfilePage() {
                         required
                         value={formData.professionalRut}
                         onChange={(e) => handleInputChange('professionalRut', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-medical-100 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-medical-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="12.345.678-9"
                       />
                     </div>
 
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Award className="h-4 w-4 text-medical-500" />
+                        <Award className="h-4 w-4 text-gray-500" />
                         Título Profesional
                       </label>
                       <select
                         value={formData.professionalTitle}
                         onChange={(e) => handleInputChange('professionalTitle', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-medical-100 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-medical-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                       >
                         <option value="MÉDICO VETERINARIO">MÉDICO VETERINARIO</option>
                         <option value="VETERINARIO">VETERINARIO</option>
@@ -297,14 +297,14 @@ export default function ProfessionalProfilePage() {
 
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Stethoscope className="h-4 w-4 text-medical-500" />
+                        <Stethoscope className="h-4 w-4 text-gray-500" />
                         Número de Colegiatura
                       </label>
                       <input
                         type="text"
                         value={formData.licenseNumber}
                         onChange={(e) => handleInputChange('licenseNumber', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-medical-100 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-medical-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="Ej: 12345"
                       />
                     </div>
@@ -315,8 +315,8 @@ export default function ProfessionalProfilePage() {
 
             {/* Professional Contact Data */}
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-health-500 to-medical-500 px-6 py-4">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Phone className="h-6 w-6 text-white" />
                     <h3 className="text-xl font-bold text-white">Información de Contacto Profesional</h3>
@@ -327,28 +327,28 @@ export default function ProfessionalProfilePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-health-500" />
+                        <Phone className="h-4 w-4 text-gray-500" />
                         Teléfono Personal
                       </label>
                       <input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-health-100 rounded-xl focus:ring-2 focus:ring-health-500 focus:border-health-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-health-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="+56 9 1234 5678"
                       />
                     </div>
 
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Building className="h-4 w-4 text-health-500" />
+                        <Building className="h-4 w-4 text-gray-500" />
                         Teléfono Profesional/Clínica
                       </label>
                       <input
                         type="tel"
                         value={formData.professionalPhone}
                         onChange={(e) => handleInputChange('professionalPhone', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-health-100 rounded-xl focus:ring-2 focus:ring-health-500 focus:border-health-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-health-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="+56 2 1234 5678"
                       />
                     </div>
@@ -359,8 +359,8 @@ export default function ProfessionalProfilePage() {
 
             {/* Clinic Information */}
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-medical-600 to-health-600 px-6 py-4">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-600 to-gray-600 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Building className="h-6 w-6 text-white" />
                     <h3 className="text-xl font-bold text-white">Información de la Clínica Veterinaria</h3>
@@ -371,27 +371,27 @@ export default function ProfessionalProfilePage() {
                   <div className="space-y-6">
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Heart className="h-4 w-4 text-medical-500" />
+                        <Heart className="h-4 w-4 text-gray-500" />
                         Nombre de la Clínica
                       </label>
                       <input
                         type="text"
                         value={formData.clinicName}
                         onChange={(e) => handleInputChange('clinicName', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-medical-100 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-medical-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="Clínica Veterinaria Los Andes"
                       />
                     </div>
 
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-medical-500" />
+                        <MapPin className="h-4 w-4 text-gray-500" />
                         Dirección de la Clínica
                       </label>
                       <textarea
                         value={formData.clinicAddress}
                         onChange={(e) => handleInputChange('clinicAddress', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-medical-100 rounded-xl focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-medical-50 resize-none"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50 resize-none"
                         rows={3}
                         placeholder="Av. Providencia 1234, Providencia, Santiago"
                       />
@@ -403,8 +403,8 @@ export default function ProfessionalProfilePage() {
 
             {/* Visual Resources */}
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-health-600 to-medical-600 px-6 py-4">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-600 to-gray-600 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Camera className="h-6 w-6 text-white" />
                     <h3 className="text-xl font-bold text-white">Recursos Visuales (Opcional)</h3>
@@ -415,34 +415,34 @@ export default function ProfessionalProfilePage() {
                   <div className="space-y-6">
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Upload className="h-4 w-4 text-health-500" />
+                        <Upload className="h-4 w-4 text-gray-500" />
                         URL de la Firma Digital
                       </label>
                       <input
                         type="url"
                         value={formData.signatureUrl}
                         onChange={(e) => handleInputChange('signatureUrl', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-health-100 rounded-xl focus:ring-2 focus:ring-health-500 focus:border-health-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-health-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="https://ejemplo.com/mi-firma.png"
                       />
-                      <p className="text-xs text-neutral-500 mt-2 bg-health-50 rounded-lg p-2">
+                      <p className="text-xs text-neutral-500 mt-2 bg-gray-50 rounded-lg p-2">
                         URL de una imagen de su firma profesional para incluir en las recetas médicas
                       </p>
                     </div>
 
                     <div>
                       <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
-                        <Heart className="h-4 w-4 text-health-500" />
+                        <Heart className="h-4 w-4 text-gray-500" />
                         URL del Logo de la Clínica
                       </label>
                       <input
                         type="url"
                         value={formData.logoUrl}
                         onChange={(e) => handleInputChange('logoUrl', e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-health-100 rounded-xl focus:ring-2 focus:ring-health-500 focus:border-health-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-health-50"
+                        className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="https://ejemplo.com/logo-clinica.png"
                       />
-                      <p className="text-xs text-neutral-500 mt-2 bg-health-50 rounded-lg p-2">
+                      <p className="text-xs text-neutral-500 mt-2 bg-gray-50 rounded-lg p-2">
                         URL del logo oficial de su clínica veterinaria para el encabezado de las recetas
                       </p>
                     </div>
@@ -453,20 +453,20 @@ export default function ProfessionalProfilePage() {
 
             {/* Additional Settings */}
             <AnimateOnView>
-              <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-2xl border border-medical-200 p-6">
+              <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl border border-gray-200 p-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 bg-medical-500 rounded-xl">
+                  <div className="p-2 bg-gray-500 rounded-xl">
                     <Settings className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-medical-800 mb-2 text-lg">Configuración Avanzada del Sistema</h3>
-                    <p className="text-medical-700 leading-relaxed mb-4">
+                    <h3 className="font-bold text-gray-800 mb-2 text-lg">Configuración Avanzada del Sistema</h3>
+                    <p className="text-gray-700 leading-relaxed mb-4">
                       Para configurar automatización de recordatorios, personalización de colores, integración con sistemas externos y otras preferencias avanzadas del sistema, visite la sección de Ajustes.
                     </p>
                     <Tooltip content="Acceder a configuración avanzada">
                       <a
                         href="/dashboard/settings"
-                        className="group inline-flex items-center gap-2 bg-gradient-to-r from-medical-500 to-health-500 text-white px-6 py-3 rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+                        className="group inline-flex items-center gap-2 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-3 rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
                       >
                         <Settings className="h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
                         Ir a Ajustes Avanzados
@@ -479,7 +479,7 @@ export default function ProfessionalProfilePage() {
 
             {/* Action Buttons */}
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-6">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
                 <div className="flex gap-4">
                   <Tooltip content="Cancelar y volver">
                     <button
@@ -496,7 +496,7 @@ export default function ProfessionalProfilePage() {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="group flex-1 px-6 py-4 bg-gradient-to-r from-medical-500 to-health-500 text-white rounded-xl hover:from-medical-600 hover:to-health-600 disabled:from-neutral-400 disabled:to-neutral-500 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2"
+                      className="group flex-1 px-6 py-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl hover:from-gray-600 hover:to-gray-600 disabled:from-neutral-400 disabled:to-neutral-500 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2"
                     >
                       {saving ? (
                         <>

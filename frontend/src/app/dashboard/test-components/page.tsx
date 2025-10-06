@@ -20,12 +20,12 @@ export default function ComponentsTestPage() {
   const [errorInput, setErrorInput] = useState('');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-50/30 via-white to-health-50/30 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50/30 via-white to-gray-50/30 p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-black bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-black bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent mb-4">
             Componentes Temáticos Vetrium
           </h1>
           <p className="text-lg text-gray-600 font-medium">
@@ -48,25 +48,25 @@ export default function ComponentsTestPage() {
 
             <ThemedCard variant="medical" padding="lg">
               <div className="text-center">
-                <Stethoscope className="w-8 h-8 text-medical-600 mx-auto mb-3" />
-                <h3 className="font-bold text-medical-800 mb-2">Medical Card</h3>
-                <p className="text-sm text-medical-600">Diseño médico profesional</p>
+                <Stethoscope className="w-8 h-8 text-gray-600 mx-auto mb-3" />
+                <h3 className="font-bold text-gray-800 mb-2">Medical Card</h3>
+                <p className="text-sm text-gray-600">Diseño médico profesional</p>
               </div>
             </ThemedCard>
 
             <ThemedCard variant="health" padding="lg">
               <div className="text-center">
-                <Heart className="w-8 h-8 text-health-600 mx-auto mb-3" />
-                <h3 className="font-bold text-health-800 mb-2">Health Card</h3>
-                <p className="text-sm text-health-600">Enfoque en bienestar</p>
+                <Heart className="w-8 h-8 text-gray-600 mx-auto mb-3" />
+                <h3 className="font-bold text-gray-800 mb-2">Health Card</h3>
+                <p className="text-sm text-gray-600">Enfoque en bienestar</p>
               </div>
             </ThemedCard>
 
             <ThemedCard variant="emergency" padding="lg">
               <div className="text-center">
-                <AlertTriangle className="w-8 h-8 text-emergency-600 mx-auto mb-3" />
-                <h3 className="font-bold text-emergency-800 mb-2">Emergency Card</h3>
-                <p className="text-sm text-emergency-600">Para situaciones críticas</p>
+                <AlertTriangle className="w-8 h-8 text-gray-600 mx-auto mb-3" />
+                <h3 className="font-bold text-gray-800 mb-2">Emergency Card</h3>
+                <p className="text-sm text-gray-600">Para situaciones críticas</p>
               </div>
             </ThemedCard>
 
@@ -192,12 +192,12 @@ export default function ComponentsTestPage() {
           <ThemedCard variant="medical" padding="lg">
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-r from-medical-600 to-medical-700 rounded-xl">
+                <div className="p-2 bg-gradient-to-r from-gray-600 to-gray-700 rounded-xl">
                   <Calendar className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-medical-800">Agendar Nueva Cita</h3>
-                  <p className="text-sm text-medical-600 font-medium">Formulario de ejemplo con componentes temáticos</p>
+                  <h3 className="text-xl font-bold text-gray-800">Agendar Nueva Cita</h3>
+                  <p className="text-sm text-gray-600 font-medium">Formulario de ejemplo con componentes temáticos</p>
                 </div>
               </div>
             </div>
