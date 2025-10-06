@@ -19,6 +19,9 @@ import Tooltip from '../../../../components/ui/Tooltip';
 import ThemedCard from '../../../../components/ui/ThemedCard';
 import ThemedButton from '../../../../components/ui/ThemedButton';
 import ThemedInput from '../../../../components/ui/ThemedInput';
+import SubscriptionGuard from '../../../../components/SubscriptionGuard';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 export default function NewClientPage() {
   const router = useRouter();
@@ -69,36 +72,42 @@ export default function NewClientPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-50 via-white to-health-50">
-      <div className="max-w-4xl mx-auto p-6">
-        <FadeIn>
-          <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl border border-medical-100 p-8">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-medical-500 to-health-500 rounded-xl shadow-lg">
-                  <UserPlus className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-medical-700 to-health-600 bg-clip-text text-transparent">
-                    Nuevo Cliente Veterinario
-                  </h1>
-                  <p className="text-neutral-600 mt-1 font-medium">
-                    Registra la información completa del tutor de la mascota
-                  </p>
+    <SubscriptionGuard>
+      <div className="w-full min-h-full bg-gradient-to-br from-blue-50 via-white to-green-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <FadeIn>
+            <ThemedCard variant="medical" padding="lg" shadow="xl" className="mb-8">
+              <div className="bg-gradient-mixed p-6 sm:p-8 text-white rounded-2xl shadow-xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+                  <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
+                    <Link href="/dashboard/clients" className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 hover:bg-white/30 transition-all group">
+                      <ArrowLeft className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    </Link>
+                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
+                      <UserPlus className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-sm" />
+                    </div>
+                    <div className="min-w-0 flex-1 sm:flex-initial">
+                      <h1 className="text-2xl sm:text-4xl font-black mb-2 leading-tight tracking-tight">
+                        Nuevo Cliente Veterinario
+                      </h1>
+                      <p className="text-white/90 text-sm sm:text-lg font-medium">
+                        👥 Registra la información completa del tutor de la mascota
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </FadeIn>
+            </ThemedCard>
+          </FadeIn>
 
-        <AnimateOnView>
-          <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-medical-500 to-health-500 px-8 py-6">
-              <div className="flex items-center gap-3">
-                <Users className="h-6 w-6 text-white" />
-                <h2 className="text-xl font-bold text-white">Información del Cliente</h2>
+          <AnimateOnView>
+            <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden">
+              <div className="bg-gradient-primary px-8 py-6">
+                <div className="flex items-center gap-3">
+                  <Users className="h-6 w-6 text-white" />
+                  <h2 className="text-xl font-bold text-white">Información del Cliente</h2>
+                </div>
               </div>
-            </div>
 
             <form onSubmit={submit} className="p-8">
               {error && (
@@ -113,69 +122,69 @@ export default function NewClientPage() {
               <Stagger className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="flex items-center gap-2 text-sm font-bold text-medical-700 mb-3">
+                    <label htmlFor="name" className="flex items-center gap-2 text-sm font-bold text-blue-700 mb-3">
                       <UserPlus className="h-4 w-4" />
                       Nombre completo *
                     </label>
-                    <input
+                    <ThemedInput
                       type="text"
                       id="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-medical-200 rounded-xl focus:ring-4 focus:ring-medical-100 focus:border-medical-500 transition-all duration-300 font-medium"
                       placeholder="Ej: Juan Pérez González"
                       required
+                      variant="default"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="rut" className="flex items-center gap-2 text-sm font-bold text-health-700 mb-3">
+                    <label htmlFor="rut" className="flex items-center gap-2 text-sm font-bold text-green-700 mb-3">
                       <CreditCard className="h-4 w-4" />
                       RUT
                     </label>
-                    <input
+                    <ThemedInput
                       type="text"
                       id="rut"
                       value={rut}
                       onChange={(e) => setRut(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-health-200 rounded-xl focus:ring-4 focus:ring-health-100 focus:border-health-500 transition-all duration-300 font-medium"
                       placeholder="Ej: 12.345.678-9"
+                      variant="default"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="flex items-center gap-2 text-sm font-bold text-medical-700 mb-3">
+                    <label htmlFor="email" className="flex items-center gap-2 text-sm font-bold text-blue-700 mb-3">
                       <Mail className="h-4 w-4" />
                       Email
                     </label>
-                    <input
+                    <ThemedInput
                       type="email"
                       id="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-medical-200 rounded-xl focus:ring-4 focus:ring-medical-100 focus:border-medical-500 transition-all duration-300 font-medium"
                       placeholder="Ej: juan.perez@email.com"
+                      variant="default"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="phone" className="flex items-center gap-2 text-sm font-bold text-health-700 mb-3">
+                    <label htmlFor="phone" className="flex items-center gap-2 text-sm font-bold text-green-700 mb-3">
                       <Phone className="h-4 w-4" />
                       Teléfono
                     </label>
-                    <input
+                    <ThemedInput
                       type="tel"
                       id="phone"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-health-200 rounded-xl focus:ring-4 focus:ring-health-100 focus:border-health-500 transition-all duration-300 font-medium"
                       placeholder="Ej: +56 9 1234 5678"
+                      variant="default"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="flex items-center gap-2 text-sm font-bold text-medical-700 mb-3">
+                  <label htmlFor="address" className="flex items-center gap-2 text-sm font-bold text-blue-700 mb-3">
                     <MapPin className="h-4 w-4" />
                     Dirección Completa
                   </label>
@@ -184,7 +193,7 @@ export default function NewClientPage() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-3 border-2 border-medical-200 rounded-xl focus:ring-4 focus:ring-medical-100 focus:border-medical-500 transition-all duration-300 resize-none font-medium"
+                    className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 resize-none font-medium bg-white"
                     placeholder="Ej: Av. Providencia 1234, Departamento 501, Providencia, Santiago"
                   />
                 </div>
@@ -215,9 +224,10 @@ export default function NewClientPage() {
                 </div>
               </Stagger>
             </form>
-          </div>
-        </AnimateOnView>
+            </div>
+          </AnimateOnView>
+        </div>
       </div>
-    </div>
+    </SubscriptionGuard>
   );
 }

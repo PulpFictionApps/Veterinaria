@@ -356,12 +356,12 @@ export default function ClientsPage() {
                     ) : (
                       // Vista de lista
                       <>
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-medical-100 to-health-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-medical-600" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-lg font-bold text-neutral-800 group-hover:text-medical-700 transition-colors truncate">
+                          <h3 className="text-base sm:text-lg font-bold text-neutral-800 group-hover:text-blue-700 transition-colors truncate">
                             {client.name}
                           </h3>
                           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mt-1 text-xs sm:text-sm text-neutral-600 space-y-1 sm:space-y-0">
