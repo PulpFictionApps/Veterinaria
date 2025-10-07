@@ -140,10 +140,11 @@ export default function ConsultationsPage() {
 
   return (
     <div className="vet-page">
-      <PageHeader
-        title="Tipos de Consulta Veterinaria"
-        subtitle="Configura servicios médicos, precios y duraciones de consultas"
-        icon={Pill}
+      <div className="vet-container">
+        <PageHeader
+          title="Tipos de Consulta Veterinaria"
+          subtitle="Configura servicios médicos, precios y duraciones de consultas"
+          icon={Pill}
         actions={
           <Tooltip content="Crear nuevo tipo de consulta médica">
             <ThemedButton
@@ -158,7 +159,7 @@ export default function ConsultationsPage() {
         }
       />
 
-      <div className="vet-container space-y-8">
+        <div className="vet-container space-y-8">
 
         {/* Create/Edit Form */}
         {showCreateForm && (
@@ -414,6 +415,7 @@ export default function ConsultationsPage() {
             </AnimateOnView>
           )}
         </Stagger>
+        </div>
       </div>
     </div>
   );

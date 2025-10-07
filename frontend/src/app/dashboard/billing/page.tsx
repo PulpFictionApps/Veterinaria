@@ -99,13 +99,14 @@ export default function BillingPage() {
 
   return (
     <div className="vet-page">
-      <PageHeader
-        title="Suscripción y Facturación"
-        subtitle="Gestiona tu plan veterinario premium y revisa tu historial de pagos"
-        icon={CreditCard}
-      />
+      <div className="vet-container">
+        <PageHeader
+          title="Suscripción y Facturación"
+          subtitle="Gestiona tu plan veterinario premium y revisa tu historial de pagos"
+          icon={CreditCard}
+        />
 
-      <div className="vet-container space-y-8">
+        <div className="space-y-8">
 
         <Stagger className="space-y-8">
           {subscription ? (
