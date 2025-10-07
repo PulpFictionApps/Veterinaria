@@ -398,7 +398,8 @@ export default function ConsultationPage() {
         }
       />
 
-      {/* Appointment Details */}
+      <div className="vet-container space-y-6">
+        {/* Appointment Details */}
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">Información de la Cita</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -781,6 +782,7 @@ export default function ConsultationPage() {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );

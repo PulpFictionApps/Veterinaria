@@ -21,6 +21,7 @@ import { FadeIn, Stagger, AnimateOnView } from '../../../../components/ui/Transi
 import ThemedCard from '../../../../components/ui/ThemedCard';
 import ThemedButton from '../../../../components/ui/ThemedButton';
 import ThemedBadge from '../../../../components/ui/ThemedBadge';
+import PageHeader from '../../../../components/ui/PageHeader';
 import SubscriptionGuard from '../../../../components/SubscriptionGuard';
 
 interface Client {
@@ -176,37 +177,28 @@ export default function ClientDetail({ params }: PageProps) {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
-          
-          {/* Header */}
-          <FadeIn>
-            <div className="bg-white border border-gray-200 rounded-lg shadow">
-              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-t-lg">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-                  <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
-                    <Link href="/dashboard/clients" className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 hover:bg-white/30 transition-all group">
-                      <ArrowLeft className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
-                    </Link>
-                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
-                      <User className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-sm" />
-                    </div>
-                    <div className="min-w-0 flex-1 sm:flex-initial">
-                      <h1 className="text-2xl sm:text-4xl font-black mb-2 leading-tight tracking-tight">{client?.name || 'Cliente'}</h1>
-                      <p className="text-white/90 text-sm sm:text-lg font-medium">
-                        👥 Información completa y historial de mascotas
-                      </p>
-                    </div>
-                  </div>
-                  <Link href={`/dashboard/clients/${id}/pet/new`} className="w-full sm:w-auto">
-                    <ThemedButton variant="secondary" icon={Plus} size="lg" className="w-full sm:w-auto touch-manipulation">
-                      Nueva Mascota
-                    </ThemedButton>
-                  </Link>
-                </div>
-              </div>
+      <div className="vet-page">
+        <PageHeader
+          title={client?.name || 'Cliente'}
+          subtitle="Información completa y historial de mascotas"
+          icon={User}
+          actions={
+            <div className="flex gap-3">
+              <Link href="/dashboard/clients">
+                <button className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1">
+                  <ArrowLeft className="w-4 h-4" /> Volver
+                </button>
+              </Link>
+              <Link href={`/dashboard/clients/${id}/pet/new`}>
+                <ThemedButton variant="primary" icon={Plus} size="sm">
+                  Nueva Mascota
+                </ThemedButton>
+              </Link>
             </div>
-          </FadeIn>
+          }
+        />
+
+        <div className="vet-container space-y-8">
 
           {/* Client Information */}
           <AnimateOnView>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ThemedCard from '../../../components/ui/ThemedCard';
 import ThemedButton from '../../../components/ui/ThemedButton';
 import ThemedInput from '../../../components/ui/ThemedInput';
+import PageHeader from '../../../components/ui/PageHeader';
 import { 
   Stethoscope, 
   Heart, 
@@ -20,18 +21,14 @@ export default function ComponentsTestPage() {
   const [errorInput, setErrorInput] = useState('');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50/30 via-white to-gray-50/30 p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
-        
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-black bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent mb-4">
-            Componentes Temáticos Vetrium
-          </h1>
-          <p className="text-lg text-gray-600 font-medium">
-            Prueba de los nuevos componentes profesionales quirúrgicamente perfectos
-          </p>
-        </div>
+    <div className="vet-page">
+      <PageHeader
+        title="Componentes Temáticos Vetrium"
+        subtitle="Prueba de los nuevos componentes profesionales quirúrgicamente perfectos"
+        icon={Stethoscope}
+      />
+
+      <div className="vet-container space-y-8">
 
         {/* Cards Section */}
         <section>

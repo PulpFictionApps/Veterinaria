@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import PageHeader from '../../../components/ui/PageHeader';
 import '../../../styles/billing-fixes.css';
 
 export default function BillingPage() {
@@ -97,27 +98,14 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="billing-page min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
-        <FadeIn>
-          <div className="mb-8">
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow">
-                  <CreditCard className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-800">
-                    Suscripción y Facturación
-                  </h1>
-                  <p className="text-gray-700 mt-1 font-medium">
-                    Gestiona tu plan veterinario premium y revisa tu historial de pagos
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </FadeIn>
+    <div className="vet-page">
+      <PageHeader
+        title="Suscripción y Facturación"
+        subtitle="Gestiona tu plan veterinario premium y revisa tu historial de pagos"
+        icon={CreditCard}
+      />
+
+      <div className="vet-container space-y-8">
 
         <Stagger className="space-y-8">
           {subscription ? (

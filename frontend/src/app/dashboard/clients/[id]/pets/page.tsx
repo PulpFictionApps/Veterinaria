@@ -6,7 +6,8 @@ import { use } from 'react';
 import { authFetch } from '@/lib/api';
 import ThemedCard from '../../../../../components/ui/ThemedCard';
 import ThemedButton from '../../../../../components/ui/ThemedButton';
-import { Plus, PawPrint } from 'lucide-react';
+import PageHeader from '../../../../../components/ui/PageHeader';
+import { Plus, PawPrint, ArrowLeft } from 'lucide-react';
 
 interface Pet {
   id: number;
@@ -46,16 +47,28 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
   }, [clientId]);
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Mascotas</h2>
-        <Link
-          href={`/dashboard/clients/${clientId}/pet/new`}
-          className="bg-gray-700 text-white px-3 py-1 rounded"
-        >
-          Nueva mascota
-        </Link>
-      </div>
+    <div className="vet-page">
+      <PageHeader
+        title="Mascotas"
+        subtitle="Gestión de mascotas del cliente"
+        icon={PawPrint}
+        actions={
+          <div className="flex gap-3">
+            <Link href={`/dashboard/clients/${clientId}`}>
+              <button className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1">
+                <ArrowLeft className="w-4 h-4" /> Volver
+              </button>
+            </Link>
+            <Link href={`/dashboard/clients/${clientId}/pet/new`}>
+              <ThemedButton variant="primary" icon={Plus} size="sm">
+                Nueva Mascota
+              </ThemedButton>
+            </Link>
+          </div>
+        }
+      />
+
+      <div className="vet-container space-y-8">
       {loading ? (
         <div className="text-gray-500">Cargando mascotas...</div>
       ) : error ? (
@@ -86,6 +99,7 @@ export default function PetsPage({ params }: { params: Promise<{ id: string }> }
           ))}
         </ul>
       )}
+      </div>
     </div>
   );
 }

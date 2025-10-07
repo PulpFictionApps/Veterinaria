@@ -46,7 +46,7 @@
 }
 
 .vet-container {
-  max-width: 56rem; /* 4xl - más compacto y consistente */
+  max-width: 80rem; /* 5xl - ancho amplio y cómodo para trabajar */
   margin: 0 auto;
   padding: 1.5rem;
 }

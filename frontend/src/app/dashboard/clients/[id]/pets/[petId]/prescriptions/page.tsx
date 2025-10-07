@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { use } from 'react';
 import { authFetch } from '@/lib/api';
+import PageHeader from '@/components/ui/PageHeader';
+import ThemedButton from '@/components/ui/ThemedButton';
+import { Pill, ArrowLeft, Plus } from 'lucide-react';
 
 interface Prescription {
   id: number;
@@ -47,16 +50,28 @@ export default function PrescriptionsPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Recetas Veterinarias</h1>
-        <Link 
-          href={`./new`} 
-          className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-        >
-          + Nueva Receta
-        </Link>
-      </div>
+    <div className="vet-page">
+      <PageHeader
+        title="Recetas Veterinarias"
+        subtitle="Gestión de recetas y medicamentos"
+        icon={Pill}
+        actions={
+          <div className="flex gap-3">
+            <Link href={`/dashboard/clients/${resolvedParams.id}/pets/${petId}`}>
+              <button className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1">
+                <ArrowLeft className="w-4 h-4" /> Volver
+              </button>
+            </Link>
+            <Link href="./new">
+              <ThemedButton variant="primary" icon={Plus} size="sm">
+                Nueva Receta
+              </ThemedButton>
+            </Link>
+          </div>
+        }
+      />
+
+      <div className="vet-container space-y-6">
 
       {prescriptions.length === 0 ? (
         <div className="text-center py-12">
@@ -129,6 +144,7 @@ export default function PrescriptionsPage({ params }: { params: Promise<{ id: st
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

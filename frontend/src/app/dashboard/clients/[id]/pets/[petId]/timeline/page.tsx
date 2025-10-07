@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { authFetch } from '@/lib/api';
+import PageHeader from '@/components/ui/PageHeader';
+import { Clock, ArrowLeft } from 'lucide-react';
 
 export default function PetTimeline(props: any) {
   const params = props?.params;
@@ -64,8 +67,21 @@ export default function PetTimeline(props: any) {
   if (error) return <div className="text-gray-600">{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Bitácora de la mascota</h2>
+    <div className="vet-page">
+      <PageHeader
+        title="Bitácora de la Mascota"
+        subtitle="Cronología de eventos y actividad médica"
+        icon={Clock}
+        actions={
+          <Link href={`/dashboard/clients/${ownerId}/pets/${petId}`}>
+            <button className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1">
+              <ArrowLeft className="w-4 h-4" /> Volver
+            </button>
+          </Link>
+        }
+      />
+
+      <div className="vet-container">
       <div className="space-y-4">
         {items.length === 0 && <div className="text-gray-600">No hay eventos registrados para esta mascota.</div>}
         {items.map((it, idx) => (
@@ -87,6 +103,7 @@ export default function PetTimeline(props: any) {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
