@@ -96,19 +96,64 @@ export default function EditAppointmentPage() {
     return `${startTime} - ${endTime}`;
   }
 
-  if (loading) return <div className="flex justify-center items-center h-32"><div className="text-gray-500">Cargando...</div></div>;
-  if (error) return <div className="max-w-lg mx-auto bg-white p-6 rounded shadow"><p className="text-gray-600">{error}</p></div>;
-  if (!appointment) return <div className="max-w-lg mx-auto bg-white p-6 rounded shadow"><p>No encontrado</p></div>;
+  if (loading) {
+    return (
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="animate-pulse space-y-8">
+            <div className="h-32 bg-gray-200 rounded-xl"></div>
+            <div className="h-64 bg-gray-200 rounded-xl"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="vet-card-unified">
+            <div className="p-6">
+              <p className="text-gray-600">{error}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!appointment) {
+    return (
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="vet-card-unified">
+            <div className="p-6">
+              <p className="text-gray-600">No encontrado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200">
-      {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900">Reprogramar Cita</h2>
-        <p className="text-sm text-gray-600 mt-1">
-          Cita actual: {appointment.pet.name} - {new Date(appointment.date).toLocaleString('es-CL')}
-        </p>
-      </div>
+    <div className="vet-page">
+      <div className="vet-container space-y-8">
+        <div className="vet-card-unified overflow-hidden">
+          {/* Header */}
+          <div className="vet-section-header-unified">
+            <div className="vet-section-title-unified">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Reprogramar Cita
+            </div>
+          </div>
+          <div className="p-6 sm:p-8">
+            <p className="text-gray-600 font-medium mb-6">
+              Cita actual: {appointment.pet.name} - {new Date(appointment.date).toLocaleString('es-CL')}
+            </p>
 
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* Información de la cita actual */}
@@ -236,6 +281,9 @@ export default function EditAppointmentPage() {
           </button>
         </div>
       </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

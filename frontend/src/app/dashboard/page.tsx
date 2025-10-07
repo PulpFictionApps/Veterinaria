@@ -21,6 +21,7 @@ import {
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../components/ui/Transitions';
 import ThemedCard from '../../components/ui/ThemedCard';
 import ThemedButton from '../../components/ui/ThemedButton';
+import PageHeader from '../../components/ui/PageHeader';
 
 interface AppointmentSummary {
   id: number;
@@ -229,36 +230,26 @@ export default function Dashboard() {
       <div className="vet-container space-y-8">
         
         {/* Header con saludo animado */}
-        <FadeIn>
-          <div className="vet-card-unified overflow-hidden">
-            <div className="vet-section-header-unified">
-              <div className="vet-section-title-unified">
-                <Activity className="w-8 h-8 sm:w-10 sm:h-10" />
-                Panel de Control Veterinario
-              </div>
-            </div>
-            <div className="p-6 lg:p-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-                <div className="min-w-0 flex-1">
-                  <p className="text-gray-600 text-base sm:text-lg font-medium">Centro de gestión médica profesional</p>
+        <PageHeader 
+          title="Panel de Control Veterinario"
+          subtitle="Centro de gestión médica profesional"
+          icon={Activity}
+          actions={
+            <SlideIn direction="right" delay={200}>
+              <div className="text-center bg-gray-100 rounded-xl p-3 sm:p-4 flex-shrink-0">
+                <div className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
+                  {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
                 </div>
-                <SlideIn direction="right" delay={200}>
-                  <div className="text-center bg-gray-100 rounded-xl p-3 sm:p-4 flex-shrink-0 w-full sm:w-auto">
-                    <div className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
-                      {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
-                    </div>
-                    <div className="text-xl sm:text-2xl font-black text-gray-800">
-                      {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
-                    </div>
-                    <div className="text-xs text-gray-500 font-medium">
-                      {new Date().getFullYear()}
-                    </div>
-                  </div>
-                </SlideIn>
+                <div className="text-xl sm:text-2xl font-black text-gray-800">
+                  {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
+                </div>
+                <div className="text-xs text-gray-500 font-medium">
+                  {new Date().getFullYear()}
+                </div>
               </div>
-            </div>
-          </div>
-        </FadeIn>
+            </SlideIn>
+          }
+        />
 
         {/* Alerta de suscripción */}
         {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (

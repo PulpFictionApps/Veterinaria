@@ -181,27 +181,42 @@ export default function NewAppointmentPage() {
 
   if (loading || typesLoading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <div className="text-gray-600">Cargando...</div>
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="animate-pulse space-y-8">
+            <div className="h-32 bg-gray-200 rounded-xl"></div>
+            <div className="h-64 bg-gray-200 rounded-xl"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Nueva Cita</h1>
-          <p className="text-gray-600 mt-1">Crear una nueva cita para un cliente</p>
+    <div className="vet-page">
+      <div className="vet-container space-y-8">
+        {/* Header */}
+        <div className="vet-card-unified overflow-hidden">
+          <div className="vet-section-header-unified">
+            <div className="vet-section-title-unified">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
+              </svg>
+              Nueva Cita
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard/appointments"
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
+              >
+                ← Volver a Citas
+              </Link>
+            </div>
+          </div>
+          <div className="p-6 sm:p-8">
+            <p className="text-gray-600 font-medium">Crear una nueva cita para un cliente</p>
+          </div>
         </div>
-        <Link
-          href="/dashboard/appointments"
-          className="text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          ← Volver a Citas
-        </Link>
-      </div>
 
       {/* Mensajes */}
       {error && (
@@ -389,6 +404,7 @@ export default function NewAppointmentPage() {
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 }

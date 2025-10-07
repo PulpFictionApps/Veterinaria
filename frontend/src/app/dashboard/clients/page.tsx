@@ -27,6 +27,7 @@ import ThemedCard from '../../../components/ui/ThemedCard';
 import ThemedButton from '../../../components/ui/ThemedButton';
 import ThemedInput from '../../../components/ui/ThemedInput';
 import ThemedBadge from '../../../components/ui/ThemedBadge';
+import PageHeader from '../../../components/ui/PageHeader';
 
 interface Client {
   id: number;
@@ -148,27 +149,21 @@ export default function ClientsPage() {
         <div className="vet-container space-y-8">
           
           {/* Header */}
-          <FadeIn>
-            <div className="vet-card-unified overflow-hidden">
-              <div className="vet-section-header-unified">
-                <div className="vet-section-title-unified">
-                  <Users className="w-8 h-8" />
-                  Gestión de Clientes
-                </div>
-                <Link href="/dashboard/clients/new" className="w-full sm:w-auto">
-                  <button className="vet-btn-unified vet-btn-outline-unified text-white border-white hover:bg-white hover:text-gray-800">
-                    <Plus className="w-5 h-5" />
-                    Nuevo Cliente
-                  </button>
-                </Link>
-              </div>
-              <div className="p-6 sm:p-8">
-                <p className="text-gray-600 font-medium">
-                  👥 {filteredClients.length} cliente{filteredClients.length !== 1 && 's'} registrado{filteredClients.length !== 1 && 's'}
-                </p>
-              </div>
-            </div>
-          </FadeIn>
+          <PageHeader 
+            title="Gestión de Clientes"
+            subtitle={`👥 ${filteredClients.length} cliente${filteredClients.length !== 1 ? 's' : ''} registrado${filteredClients.length !== 1 ? 's' : ''}`}
+            icon={Users}
+            actions={
+              <Link href="/dashboard/clients/new">
+                <ThemedButton
+                  variant="primary"
+                  icon={Plus}
+                >
+                  Nuevo Cliente
+                </ThemedButton>
+              </Link>
+            }
+          />
 
           {/* Barra de búsqueda y filtros */}
           <AnimateOnView animation="slide">

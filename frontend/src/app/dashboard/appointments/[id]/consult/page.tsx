@@ -335,41 +335,73 @@ export default function ConsultationPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Cargando consulta...</div>
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="animate-pulse space-y-8">
+            <div className="h-32 bg-gray-200 rounded-xl"></div>
+            <div className="h-64 bg-gray-200 rounded-xl"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-gray-600 text-center">
-        <p>Error: {error}</p>
-        <button
-          onClick={() => router.back()}
-          className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          Volver
-        </button>
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="vet-card-unified">
+            <div className="p-6 text-center">
+              <p className="text-gray-600 mb-4">Error: {error}</p>
+              <button
+                onClick={() => router.back()}
+                className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
+                Volver
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!appointment) {
-    return <div>Cita no encontrada</div>;
+    return (
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="vet-card-unified">
+            <div className="p-6">
+              <p className="text-gray-600">Cita no encontrada</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Consulta Veterinaria</h1>
-        <button
-          onClick={() => router.back()}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          ← Volver
-        </button>
-      </div>
+    <div className="vet-page">
+      <div className="vet-container space-y-8">
+        {/* Header */}
+        <div className="vet-card-unified overflow-hidden">
+          <div className="vet-section-header-unified">
+            <div className="vet-section-title-unified">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Consulta Veterinaria
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.back()}
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
+              >
+                ← Volver
+              </button>
+            </div>
+          </div>
+        </div>
 
       {/* Appointment Details */}
       <div className="bg-white p-6 rounded-lg shadow">

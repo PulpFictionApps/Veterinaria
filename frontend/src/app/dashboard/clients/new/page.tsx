@@ -73,29 +73,23 @@ export default function NewClientPage() {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gradient-to-br from-gray-50 via-white to-gray-100">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <div className="vet-page">
+        <div className="vet-container space-y-8">
           <FadeIn>
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-200 mb-8">
-              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-3xl shadow-xl">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-                  <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
-                    <Link href="/dashboard/clients" className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 hover:bg-white/30 transition-all group">
-                      <ArrowLeft className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
-                    </Link>
-                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
-                      <UserPlus className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-sm" />
-                    </div>
-                    <div className="min-w-0 flex-1 sm:flex-initial">
-                      <h1 className="text-2xl sm:text-4xl font-black mb-2 leading-tight tracking-tight">
-                        Nuevo Cliente Veterinario
-                      </h1>
-                      <p className="text-white/90 text-sm sm:text-lg font-medium">
-                        👥 Registra la información completa del tutor de la mascota
-                      </p>
-                    </div>
-                  </div>
+            <div className="vet-card-unified overflow-hidden">
+              <div className="vet-section-header-unified">
+                <div className="vet-section-title-unified">
+                  <UserPlus className="w-8 h-8" />
+                  Nuevo Cliente Veterinario
                 </div>
+                <div className="flex items-center gap-3">
+                  <Link href="/dashboard/clients" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+                    ← Volver a Clientes
+                  </Link>
+                </div>
+              </div>
+              <div className="p-6 sm:p-8">
+                <p className="text-gray-600 font-medium">👥 Registra la información completa del tutor de la mascota</p>
               </div>
             </div>
           </FadeIn>
