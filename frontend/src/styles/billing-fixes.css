@@ -1,0 +1,88 @@
+/* ========================================
+   BILLING PAGE SPECIFIC FIXES
+   ======================================== */
+
+/* Asegurar visibilidad de todos los textos en la página de facturación */
+.billing-page {
+  color: #374151;
+}
+
+/* Headers con fondos oscuros - forzar texto blanco */
+.billing-page .bg-gradient-to-r.from-gray-800.to-gray-900 * {
+  color: white !important;
+}
+
+/* Tarjetas blancas - forzar texto oscuro legible */
+.billing-page .bg-white * {
+  color: #1f2937 !important;
+}
+
+/* Precios y títulos importantes */
+.billing-page .text-2xl.font-bold,
+.billing-page .text-xl.font-bold {
+  color: #111827 !important;
+  font-weight: 700 !important;
+}
+
+/* Descripciones y párrafos */
+.billing-page p {
+  color: #374151 !important;
+}
+
+/* Estados de suscripción */
+.billing-page .font-semibold {
+  color: #1f2937 !important;
+}
+
+/* Iconos con colores apropiados */
+.billing-page .text-blue-600 {
+  color: #2563eb !important;
+}
+
+.billing-page .text-green-600 {
+  color: #16a34a !important;
+}
+
+/* Botones con mejor contraste */
+.billing-page button {
+  font-weight: 600 !important;
+}
+
+/* Tablas con mejor legibilidad */
+.billing-page table th {
+  color: #111827 !important;
+  font-weight: 700 !important;
+}
+
+.billing-page table td {
+  color: #374151 !important;
+}
+
+/* Gradientes de fondo específicos */
+.billing-page .from-blue-50.to-indigo-50 {
+  background: linear-gradient(to right, #eff6ff, #eef2ff) !important;
+  border: 1px solid #dbeafe !important;
+}
+
+.billing-page .border-blue-200 {
+  border-color: #bfdbfe !important;
+}
+
+/* Asegurar que los spans hereden el color correcto */
+.billing-page span {
+  color: inherit !important;
+}
+
+/* Corrección para elementos con gradientes fallidos */
+.billing-page [class*="bg-gradient"] {
+  background-color: #f9fafb !important;
+}
+
+.billing-page .bg-gradient-to-r.from-gray-800.to-gray-900 {
+  background: #1f2937 !important;
+  color: white !important;
+}
+
+.billing-page .bg-gradient-to-r.from-gray-800.to-gray-900 * {
+  color: white !important;
+}

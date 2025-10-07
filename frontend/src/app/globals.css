@@ -364,3 +364,78 @@ p, div, span, h1, h2, h3, h4, h5, h6 {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ========================================
+   BILLING PAGE VISIBILITY FIXES
+   ======================================== */
+
+/* Asegurar que los textos en la página de facturación sean visibles */
+[class*="billing"] h1,
+[class*="billing"] h2,
+[class*="billing"] h3,
+[class*="billing"] p,
+[class*="billing"] span,
+[class*="billing"] div {
+  color: inherit !important;
+}
+
+/* Headers con fondos oscuros necesitan texto blanco */
+.bg-gradient-to-r.from-gray-800.to-gray-900 h1,
+.bg-gradient-to-r.from-gray-800.to-gray-900 h2,
+.bg-gradient-to-r.from-gray-800.to-gray-900 h3,
+.bg-gradient-to-r.from-gray-800.to-gray-900 p,
+.bg-gradient-to-r.from-gray-800.to-gray-900 span {
+  color: white !important;
+}
+
+/* Asegurar contraste en tarjetas blancas */
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white p,
+.bg-white span,
+.bg-white div {
+  color: #374151 !important;
+}
+
+/* Texto de precio destacado */
+.text-2xl.font-bold {
+  color: #1f2937 !important;
+}
+
+/* Estados de suscripción con mejor contraste */
+.text-lg.font-semibold {
+  color: #1f2937 !important;
+}
+
+/* Fix para gradientes que no se renderizan */
+.from-gray-800.to-gray-900:not(.bg-gradient-to-r) {
+  background: linear-gradient(to right, #1f2937, #111827) !important;
+}
+
+/* Correcciones específicas para gradientes de Tailwind */
+.bg-gradient-to-r.from-gray-800.to-gray-900 {
+  background: linear-gradient(to right, #1f2937, #111827) !important;
+  color: white !important;
+}
+
+.bg-gradient-to-r.from-gray-50.to-gray-50 {
+  background: linear-gradient(to right, #f9fafb, #f9fafb) !important;
+  color: #374151 !important;
+}
+
+.bg-gradient-to-r.from-blue-50.to-indigo-50 {
+  background: linear-gradient(to right, #eff6ff, #eef2ff) !important;
+  color: #1e40af !important;
+}
+
+/* Asegurar que los iconos sean visibles */
+.h-5.w-5,
+.h-6.w-6 {
+  flex-shrink: 0 !important;
+}
+
+/* Botones con mejor contraste */
+.bg-gradient-to-r.from-gray-800.to-gray-900.hover\:from-gray-600.hover\:to-gray-600:hover {
+  background: linear-gradient(to right, #4b5563, #4b5563) !important;
+}

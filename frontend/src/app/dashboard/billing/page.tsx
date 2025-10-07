@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import '../../../styles/billing-fixes.css';
 
 export default function BillingPage() {
   const { showNotification, NotificationComponent } = useNotification();
@@ -96,7 +97,7 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="billing-page min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         <FadeIn>
           <div className="mb-8">
@@ -126,7 +127,7 @@ export default function BillingPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Award className="h-6 w-6 text-white" />
-                      <h2 className="text-xl font-bold text-gray-700">{PLAN_INFO.display}</h2>
+                      <h2 className="text-xl font-bold text-white">{PLAN_INFO.display}</h2>
                     </div>
                     {subscription.status === 'trial' && (
                       <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
@@ -147,9 +148,9 @@ export default function BillingPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2">
                       <div className="mb-4">
-                        <p className="text-2xl font-bold text-gray-800 mb-2">{PLAN_INFO.price}</p>
-                        <div className="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                          <CheckCircle className="h-5 w-5 text-gray-700" />
+                        <p className="text-2xl font-bold text-gray-900 mb-2">{PLAN_INFO.price}</p>
+                        <div className="font-semibold text-lg text-gray-800 flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-green-600" />
                           {subscription.status === 'trial' ? 'Prueba Gratuita Activa' : 
                            subscription.status === 'active' ? 'Suscripción Activa' : 
                            subscription.status === 'expired' ? 'Suscripción Expirada' : subscription.status}
@@ -157,13 +158,13 @@ export default function BillingPage() {
                       </div>
 
                       {subscription.expiresAt && (
-                        <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg p-4 mb-6">
-                          <div className="flex items-center gap-2 text-gray-700">
-                            <Calendar className="h-5 w-5" />
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-6 border border-blue-200">
+                          <div className="flex items-center gap-2 text-gray-800">
+                            <Calendar className="h-5 w-5 text-blue-600" />
                             <span className="font-medium">
                               {subscription.status === 'trial' ? 'Prueba termina:' : 'Expira:'} 
                             </span>
-                            <span className="font-bold">
+                            <span className="font-bold text-blue-800">
                               {new Date(subscription.expiresAt).toLocaleDateString()} 
                               ({getDaysRemaining()} días restantes)
                             </span>
@@ -171,13 +172,13 @@ export default function BillingPage() {
                         </div>
                       )}
 
-                      <div className="grid grid-cols-2 gap-3 text-gray-700">
+                      <div className="grid grid-cols-2 gap-3 text-gray-800">
                         {PLAN_INFO.features.map((feature, idx) => {
                           const IconComponent = feature.icon;
                           return (
-                            <div key={idx} className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg">
-                              <IconComponent className="h-5 w-5 text-gray-700" />
-                              <span className="text-sm font-medium text-gray-700">{feature.text}</span>
+                            <div key={idx} className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200">
+                              <IconComponent className="h-5 w-5 text-blue-600" />
+                              <span className="text-sm font-medium text-gray-800">{feature.text}</span>
                             </div>
                           );
                         })}
@@ -215,24 +216,24 @@ export default function BillingPage() {
                   <div className="mb-6">
                     <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg mb-4">
                       <Stethoscope className="h-16 w-16 text-gray-700 mx-auto mb-4" />
-                      <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3">
                         ¡7 Días de Prueba Gratuita!
                       </h3>
-                      <p className="text-gray-700 text-lg mb-4">
+                      <p className="text-gray-800 text-lg mb-4">
                         Experimenta todas las funciones del Plan Veterinario Premium
                       </p>
-                      <p className="text-gray-700 font-medium">
-                        Luego solo <span className="text-gray-800 font-bold text-xl">$15.000 CLP mensuales</span>
+                      <p className="text-gray-800 font-medium">
+                        Luego solo <span className="text-blue-800 font-bold text-xl">$15.000 CLP mensuales</span>
                       </p>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-3 mb-6 text-gray-700">
+                    <div className="grid grid-cols-2 gap-3 mb-6 text-gray-800">
                       {PLAN_INFO.features.map((feature, idx) => {
                         const IconComponent = feature.icon;
                         return (
-                          <div key={idx} className="flex items-center gap-2 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg text-left">
-                            <IconComponent className="h-4 w-4 text-gray-700" />
-                            <span className="text-sm font-medium text-gray-700">{feature.text}</span>
+                          <div key={idx} className="flex items-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg text-left border border-blue-200">
+                            <IconComponent className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm font-medium text-gray-800">{feature.text}</span>
                           </div>
                         );
                       })}
