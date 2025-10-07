@@ -31,6 +31,7 @@ import Tooltip from '../../../components/ui/Tooltip';
 import ThemedCard from '../../../components/ui/ThemedCard';
 import ThemedButton from '../../../components/ui/ThemedButton';
 import ThemedInput from '../../../components/ui/ThemedInput';
+import PageHeader from '../../../components/ui/PageHeader';
 
 interface Appointment {
   id: number;
@@ -241,45 +242,38 @@ export default function AppointmentsPage() {
     <div className="vet-page">
       <div className="vet-container">
         {/* Medical Header */}
-        <FadeIn>
-          <div className="mb-8">
-            <div className="vet-card-unified overflow-hidden">
-              <div className="vet-section-header-unified">
-                <div className="vet-section-title-unified">
-                  <CalendarDays className="h-8 w-8" />
-                  Agenda de Citas Médicas
-                </div>
-              </div>
-              <div className="p-8">
-                <div>
-                  <p className="text-gray-600 font-medium">
-                    Gestiona las consultas veterinarias programadas
-                  </p>
-                </div>
-                
-                <div className="flex gap-3">
-                  <Tooltip content="Configurar disponibilidad">
-                    <Link
-                      href="/dashboard/calendar"
-                      className="vet-btn-unified vet-btn-outline-unified group"
-                    >
-                      <Settings className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-                      Disponibilidad
-                    </Link>
-                  </Tooltip>
-                  
-                  <Link
-                    href="/dashboard/appointments/new"
-                    className="vet-btn-unified vet-btn-primary-unified group"
+        <PageHeader 
+          title="Agenda de Citas Médicas"
+          subtitle="Gestiona las consultas veterinarias programadas"
+          icon={CalendarDays}
+          actions={
+            <div className="flex gap-3">
+              <Tooltip content="Configurar disponibilidad">
+                <Link href="/dashboard/calendar">
+                  <ThemedButton
+                    variant="outline"
+                    icon={Settings}
+                    className="group"
                   >
-                    <PlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    Disponibilidad
+                  </ThemedButton>
+                </Link>
+              </Tooltip>
+              
+              <Tooltip content="Nueva cita médica">
+                <Link href="/dashboard/appointments/new">
+                  <ThemedButton
+                    variant="primary"
+                    icon={PlusCircle}
+                    className="group"
+                  >
                     Nueva Cita
-                  </Link>
-                </div>
-              </div>
+                  </ThemedButton>
+                </Link>
+              </Tooltip>
             </div>
-          </div>
-        </FadeIn>
+          }
+        />
 
         {/* Advanced Search and Filters */}
         <SlideIn direction="up" delay={0.1}>

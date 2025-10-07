@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import PageHeader from '../../../components/ui/PageHeader';
 
 // Usar componentes Lazy pre-creados para consistencia
 import LazyDashboardCalendar from '../../../components/LazyDashboardCalendar';
@@ -53,74 +54,58 @@ export default function CalendarPage() {
     <div className="vet-page">
       <div className="vet-container">
         {/* Medical Calendar Header */}
-        <FadeIn>
-          <div className="mb-8">
-            <div className="vet-card-unified overflow-hidden">
-              <div className="vet-section-header-unified">
-                <div className="vet-section-title-unified">
-                  <Calendar className="h-8 w-8" />
-                  📅 Calendario Médico
-                </div>
-              </div>
-              <div className="p-8 sm:p-10">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                  <div>
-                    <p className="text-gray-600 font-semibold text-lg">
-                      Centro de control para agenda y disponibilidad veterinaria
-                    </p>
-                  </div>
-                  
-                  {/* Professional View Toggle */}
-                  <div className="bg-gray-100 rounded-lg p-2">
-                    <div className="flex gap-2">
-                      <Tooltip content="Vista completa con agenda y horarios">
-                        <button
-                          onClick={() => setCurrentView('unified')}
-                          className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
-                            currentView === 'unified'
-                              ? 'bg-gray-700 text-white'
-                              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                          }`}
-                        >
-                          <Grid3X3 className="h-4 w-4" />
-                          📋 Completa
-                        </button>
-                      </Tooltip>
-                      
-                      <Tooltip content="Solo calendario de citas médicas">
-                        <button
-                          onClick={() => setCurrentView('appointments')}
-                          className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
-                            currentView === 'appointments'
-                              ? 'bg-gray-700 text-white'
-                              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                          }`}
-                        >
-                          <CalendarDays className="h-4 w-4" />
-                          📊 Citas
-                        </button>
-                      </Tooltip>
-                      
-                      <Tooltip content="Solo gestión de horarios disponibles">
-                        <button
-                          onClick={() => setCurrentView('availability')}
-                          className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
-                            currentView === 'availability'
-                              ? 'bg-gray-700 text-white'
-                              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                          }`}
-                        >
-                          <Clock className="h-4 w-4" />
-                          ⏰ Horarios
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-                </div>
+        <PageHeader 
+          title="📅 Calendario Médico"
+          subtitle="Centro de control para agenda y disponibilidad veterinaria"
+          icon={Calendar}
+          actions={
+            <div className="bg-gray-100 rounded-lg p-2">
+              <div className="flex gap-2">
+                <Tooltip content="Vista completa con agenda y horarios">
+                  <button
+                    onClick={() => setCurrentView('unified')}
+                    className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                      currentView === 'unified'
+                        ? 'bg-gray-700 text-white'
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Grid3X3 className="h-4 w-4" />
+                    📋 Completa
+                  </button>
+                </Tooltip>
+                
+                <Tooltip content="Solo calendario de citas médicas">
+                  <button
+                    onClick={() => setCurrentView('appointments')}
+                    className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                      currentView === 'appointments'
+                        ? 'bg-gray-700 text-white'
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    }`}
+                  >
+                    <CalendarDays className="h-4 w-4" />
+                    📊 Citas
+                  </button>
+                </Tooltip>
+                
+                <Tooltip content="Solo gestión de horarios disponibles">
+                  <button
+                    onClick={() => setCurrentView('availability')}
+                    className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                      currentView === 'availability'
+                        ? 'bg-gray-700 text-white'
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Clock className="h-4 w-4" />
+                    ⏰ Horarios
+                  </button>
+                </Tooltip>
               </div>
             </div>
-          </div>
-        </FadeIn>
+          }
+        />
 
         {/* Professional Calendar Content */}
         <div className="space-y-8">
