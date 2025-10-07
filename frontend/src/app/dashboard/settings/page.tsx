@@ -13,6 +13,7 @@ import {
   Activity
 } from 'lucide-react';
 import { FadeIn, SlideIn } from '../../../components/ui/Transitions';
+import PageHeader from '../../../components/ui/PageHeader';
 
 interface UserSettings {
   id: number;
@@ -161,22 +162,13 @@ export default function SettingsPage() {
 
   return (
     <div className="vet-page">
+      <PageHeader
+        title="Configuración"
+        subtitle="Personaliza tu experiencia y sistema de emails"
+        icon={Settings}
+      />
+
       <div className="vet-container space-y-8">
-        
-        {/* Header */}
-        <FadeIn>
-          <div className="vet-card-unified overflow-hidden">
-            <div className="vet-section-header-unified">
-              <div className="vet-section-title-unified">
-                <Settings className="w-8 h-8" />
-                Configuración
-              </div>
-            </div>
-            <div className="p-6 sm:p-8">
-              <p className="text-gray-600 font-medium">Personaliza tu experiencia y sistema de emails</p>
-            </div>
-          </div>
-        </FadeIn>
 
         {/* Messages */}
         {error && (

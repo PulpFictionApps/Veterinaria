@@ -23,6 +23,7 @@ import Tooltip from '../../../components/ui/Tooltip';
 import ThemedCard from '../../../components/ui/ThemedCard';
 import ThemedButton from '../../../components/ui/ThemedButton';
 import ThemedInput from '../../../components/ui/ThemedInput';
+import PageHeader from '../../../components/ui/PageHeader';
 
 interface ConsultationType {
   id: number;
@@ -139,32 +140,25 @@ export default function ConsultationsPage() {
 
   return (
     <div className="vet-page">
+      <PageHeader
+        title="Tipos de Consulta Veterinaria"
+        subtitle="Configura servicios médicos, precios y duraciones de consultas"
+        icon={Pill}
+        actions={
+          <Tooltip content="Crear nuevo tipo de consulta médica">
+            <ThemedButton
+              variant="primary"
+              icon={Plus}
+              onClick={() => setShowCreateForm(true)}
+              size="lg"
+            >
+              Nuevo Tipo
+            </ThemedButton>
+          </Tooltip>
+        }
+      />
+
       <div className="vet-container space-y-8">
-        <FadeIn>
-          <div className="vet-card-unified overflow-hidden">
-            <div className="vet-section-header-unified">
-              <div className="vet-section-title-unified">
-                <Pill className="h-8 w-8" />
-                Tipos de Consulta Veterinaria
-              </div>
-              <div className="flex items-center gap-3">
-                <Tooltip content="Crear nuevo tipo de consulta mÃ©dica">
-                  <ThemedButton
-                    variant="primary"
-                    icon={Plus}
-                    onClick={() => setShowCreateForm(true)}
-                    size="lg"
-                  >
-                    Nuevo Tipo
-                  </ThemedButton>
-                </Tooltip>
-              </div>
-            </div>
-            <div className="p-6 sm:p-8">
-              <p className="text-gray-600 font-medium">Configura servicios médicos, precios y duraciones de consultas</p>
-            </div>
-          </div>
-        </FadeIn>
 
         {/* Create/Edit Form */}
         {showCreateForm && (
