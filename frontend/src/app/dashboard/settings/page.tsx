@@ -162,13 +162,14 @@ export default function SettingsPage() {
 
   return (
     <div className="vet-page">
-      <PageHeader
-        title="Configuración"
-        subtitle="Personaliza tu experiencia y sistema de emails"
-        icon={Settings}
-      />
+      <div className="vet-container">
+        <PageHeader
+          title="Configuración"
+          subtitle="Personaliza tu experiencia y sistema de emails"
+          icon={Settings}
+        />
 
-      <div className="vet-container space-y-8">
+        <div className="vet-container space-y-8">
 
         {/* Messages */}
         {error && (
@@ -429,6 +430,7 @@ export default function SettingsPage() {
           </div>
         </SlideIn>
 
+        </div>
       </div>
     </div>
   );
