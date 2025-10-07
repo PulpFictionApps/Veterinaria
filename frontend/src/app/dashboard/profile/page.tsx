@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn, Stagger, AnimateOnView } from '../../../components/ui/Transitions';
 import Tooltip from '../../../components/ui/Tooltip';
+import '../../../styles/profile-fixes.css';
 
 interface ProfessionalProfile {
   id: number;
@@ -156,7 +157,7 @@ export default function ProfessionalProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="profile-page min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         {/* Professional Header */}
         <FadeIn>

@@ -439,3 +439,44 @@ p, div, span, h1, h2, h3, h4, h5, h6 {
 .bg-gradient-to-r.from-gray-800.to-gray-900.hover\:from-gray-600.hover\:to-gray-600:hover {
   background: linear-gradient(to right, #4b5563, #4b5563) !important;
 }
+
+/* ========================================
+   PROFILE PAGE VISIBILITY FIXES
+   ======================================== */
+
+/* Asegurar que los textos en la página de perfil sean visibles */
+.profile-page h1,
+.profile-page h2,
+.profile-page h3,
+.profile-page p,
+.profile-page span,
+.profile-page div,
+.profile-page label {
+  color: inherit !important;
+}
+
+/* Headers con fondos oscuros necesitan texto blanco */
+.profile-page .bg-gradient-to-r.from-gray-800.to-gray-900 h1,
+.profile-page .bg-gradient-to-r.from-gray-800.to-gray-900 h2,
+.profile-page .bg-gradient-to-r.from-gray-800.to-gray-900 h3,
+.profile-page .bg-gradient-to-r.from-gray-800.to-gray-900 p,
+.profile-page .bg-gradient-to-r.from-gray-800.to-gray-900 span {
+  color: white !important;
+}
+
+/* Asegurar contraste en formularios */
+.profile-page input,
+.profile-page select,
+.profile-page textarea,
+.profile-page label {
+  color: #1f2937 !important;
+}
+
+/* Cajas de información con mejor contraste */
+.profile-page .bg-gradient-to-r.from-gray-50.to-gray-50 {
+  color: #1f2937 !important;
+}
+
+.profile-page .bg-gradient-to-r.from-gray-50.to-gray-50 * {
+  color: #1f2937 !important;
+}
