@@ -269,122 +269,207 @@ export default function ClientsPage() {
                   <Link
                     key={client.id}
                     href={`/dashboard/clients/${client.id}`}
-                    className={`group ${viewMode === 'grid' 
-                      ? 'vet-card-unified p-6 sm:p-8'
-                      : 'vet-card-unified p-4 sm:p-6 flex items-center space-x-4 sm:space-x-8'
-                    }`}
+                    className="group block transition-transform hover:scale-105 duration-300"
                   >
                     
                     {viewMode === 'grid' ? (
-                      // Vista de cards
-                      <>
-                        <div className="flex items-center justify-between mb-4 sm:mb-6">
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center group-hover:from-gray-200 group-hover:to-gray-300 transition-all duration-300 flex-shrink-0 shadow-sm">
-                            <User className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 group-hover:scale-110 transition-transform" />
-                          </div>
-                          <div className="flex space-x-1 sm:space-x-2">
-                            {client.pets && client.pets.length > 0 && (
-                              <Tooltip content={`${client.pets.length} mascota${client.pets.length !== 1 ? 's' : ''}`}>
-                                <ThemedBadge variant="secondary" size="sm" icon={PawPrint} count={client.pets.length}>
-                                  Mascotas
-                                </ThemedBadge>
-                              </Tooltip>
-                            )}
-                            {client.appointments && client.appointments.length > 0 && (
-                              <Tooltip content="Tiene citas programadas">
-                                <ThemedBadge variant="primary" size="sm" icon={Calendar} count={client.appointments.length}>
-                                  Citas
-                                </ThemedBadge>
-                              </Tooltip>
-                            )}
+                      // Vista de cards mejorada
+                      <div className="relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-gray-300">
+                        {/* Header con avatar y estado */}
+                        <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-6 border-b border-gray-100">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="relative">
+                                <div className="w-16 h-16 bg-gradient-to-br from-gray-600 to-gray-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                                  <User className="w-8 h-8 text-white" />
+                                </div>
+                                {/* Indicador de estado activo */}
+                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></div>
+                              </div>
+                              <div>
+                                <h3 className="text-xl font-bold text-gray-800 group-hover:text-gray-900 transition-colors">
+                                  {client.name}
+                                </h3>
+                                <p className="text-sm text-gray-600 font-medium">Cliente Veterinario</p>
+                              </div>
+                            </div>
+                            
+                            {/* Badges de resumen */}
+                            <div className="flex flex-col gap-2">
+                              {client.pets && client.pets.length > 0 && (
+                                <Tooltip content={`${client.pets.length} mascota${client.pets.length !== 1 ? 's' : ''} registrada${client.pets.length !== 1 ? 's' : ''}`}>
+                                  <div className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-xs font-semibold">
+                                    <PawPrint className="w-3 h-3" />
+                                    {client.pets.length}
+                                  </div>
+                                </Tooltip>
+                              )}
+                              {client.appointments && client.appointments.length > 0 && (
+                                <Tooltip content={`${client.appointments.length} cita${client.appointments.length !== 1 ? 's' : ''} programada${client.appointments.length !== 1 ? 's' : ''}`}>
+                                  <div className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs font-semibold">
+                                    <Calendar className="w-3 h-3" />
+                                    {client.appointments.length}
+                                  </div>
+                                </Tooltip>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        
-                        <div className="space-y-2 sm:space-y-3">
-                          <h3 className="text-lg sm:text-xl font-black text-gray-800 group-hover:text-gray-900 transition-colors leading-tight mb-2">
-                            👤 {client.name}
-                          </h3>
-                          
-                          <div className="space-y-2 sm:space-y-3">
+
+                        {/* Contenido principal */}
+                        <div className="p-6 space-y-4">
+                          {/* Información de contacto */}
+                          <div className="space-y-3">
                             {client.email && (
-                              <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
-                                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-gray-600 flex-shrink-0" />
-                                <span className="truncate font-medium">{client.email}</span>
+                              <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
+                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <Mail className="w-4 h-4 text-blue-600" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Email</p>
+                                  <p className="text-sm font-semibold text-gray-800 truncate">{client.email}</p>
+                                </div>
                               </div>
                             )}
+                            
                             {client.phone && (
-                              <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
-                                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-gray-600 flex-shrink-0" />
-                                <span className="truncate font-medium">{client.phone}</span>
+                              <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
+                                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <Phone className="w-4 h-4 text-green-600" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Teléfono</p>
+                                  <p className="text-sm font-semibold text-gray-800">{client.phone}</p>
+                                </div>
                               </div>
                             )}
+                            
                             {client.address && (
-                              <div className="flex items-center text-sm sm:text-base text-gray-700 bg-gray-50 rounded-lg p-2">
-                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-3 text-gray-600 flex-shrink-0" />
-                                <span className="truncate font-medium">{client.address}</span>
+                              <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
+                                <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <MapPin className="w-4 h-4 text-orange-600" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Dirección</p>
+                                  <p className="text-sm font-semibold text-gray-800 truncate">{client.address}</p>
+                                </div>
                               </div>
                             )}
                           </div>
 
+                          {/* Sección de mascotas */}
                           {client.pets && client.pets.length > 0 && (
-                            <div className="mt-4 pt-3 border-t border-neutral-100">
-                              <p className="text-xs text-neutral-500 mb-2">Mascotas:</p>
-                              <div className="flex flex-wrap gap-1 sm:gap-2">
-                                {client.pets.slice(0, 3).map(pet => (
-                                  <ThemedBadge key={pet.id} variant="secondary" size="xs">
-                                    {pet.name}
-                                  </ThemedBadge>
+                            <div className="border-t border-gray-100 pt-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                  <PawPrint className="w-4 h-4 text-blue-600" />
+                                  Mascotas Registradas
+                                </h4>
+                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-semibold">
+                                  {client.pets.length}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-1 gap-2">
+                                {client.pets.slice(0, 2).map(pet => (
+                                  <div key={pet.id} className="flex items-center gap-3 p-2 bg-white border border-gray-150 rounded-lg">
+                                    <div className="w-6 h-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                      <PawPrint className="w-3 h-3 text-blue-600" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <p className="text-sm font-semibold text-gray-800 truncate">{pet.name}</p>
+                                      <p className="text-xs text-gray-500">{pet.type}</p>
+                                    </div>
+                                  </div>
                                 ))}
-                                {client.pets.length > 3 && (
-                                  <ThemedBadge variant="neutral" size="xs">
-                                    +{client.pets.length - 3} más
-                                  </ThemedBadge>
+                                {client.pets.length > 2 && (
+                                  <div className="text-center py-2">
+                                    <span className="text-xs text-gray-500 font-medium">
+                                      y {client.pets.length - 2} mascota{client.pets.length - 2 !== 1 ? 's' : ''} más...
+                                    </span>
+                                  </div>
                                 )}
                               </div>
                             </div>
                           )}
                         </div>
-                      </>
-                    ) : (
-                      // Vista de lista
-                      <>
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
-                        </div>
-                        
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-lg font-bold text-gray-800 group-hover:text-gray-900 transition-colors truncate">
-                            {client.name}
-                          </h3>
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mt-1 text-xs sm:text-sm text-neutral-600 space-y-1 sm:space-y-0">
-                            {client.email && (
-                              <span className="flex items-center truncate">
-                                <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
-                                <span className="truncate">{client.email}</span>
-                              </span>
-                            )}
-                            {client.phone && (
-                              <span className="flex items-center">
-                                <Phone className="w-3 h-3 mr-1 flex-shrink-0" />
-                                {client.phone}
-                              </span>
-                            )}
+
+                        {/* Footer con acción */}
+                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-gray-500 font-medium">Ver detalles completos</span>
+                            <div className="w-6 h-6 bg-gray-200 group-hover:bg-gray-800 rounded-full flex items-center justify-center transition-all duration-300">
+                              <svg className="w-3 h-3 text-gray-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
                           </div>
                         </div>
+                      </div>
+                    ) : (
+                      // Vista de lista mejorada
+                      <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-300 transition-all duration-300 w-full">
+                        <div className="flex items-center gap-4">
+                          {/* Avatar mejorado */}
+                          <div className="relative flex-shrink-0">
+                            <div className="w-12 h-12 bg-gradient-to-br from-gray-600 to-gray-800 rounded-xl flex items-center justify-center shadow-md">
+                              <User className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                          </div>
+                          
+                          {/* Información principal */}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-bold text-gray-800 group-hover:text-gray-900 transition-colors truncate">
+                              {client.name}
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-4 mt-1">
+                              {client.email && (
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                  <div className="w-5 h-5 bg-blue-100 rounded-md flex items-center justify-center">
+                                    <Mail className="w-3 h-3 text-blue-600" />
+                                  </div>
+                                  <span className="truncate font-medium max-w-48">{client.email}</span>
+                                </div>
+                              )}
+                              {client.phone && (
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                  <div className="w-5 h-5 bg-green-100 rounded-md flex items-center justify-center">
+                                    <Phone className="w-3 h-3 text-green-600" />
+                                  </div>
+                                  <span className="font-medium">{client.phone}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
 
-                        <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 flex-shrink-0">
-                          {client.pets && client.pets.length > 0 && (
-                            <ThemedBadge variant="secondary" size="sm" icon={PawPrint} count={client.pets.length}>
-                              Mascotas
-                            </ThemedBadge>
-                          )}
-                          {client.appointments && client.appointments.length > 0 && (
-                            <ThemedBadge variant="primary" size="sm" icon={Calendar} count={client.appointments.length}>
-                              Citas
-                            </ThemedBadge>
-                          )}
+                          {/* Estadísticas y badges */}
+                          <div className="flex items-center gap-3 flex-shrink-0">
+                            {client.pets && client.pets.length > 0 && (
+                              <Tooltip content={`${client.pets.length} mascota${client.pets.length !== 1 ? 's' : ''}`}>
+                                <div className="flex items-center gap-1 bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg">
+                                  <PawPrint className="w-4 h-4" />
+                                  <span className="text-sm font-semibold">{client.pets.length}</span>
+                                </div>
+                              </Tooltip>
+                            )}
+                            {client.appointments && client.appointments.length > 0 && (
+                              <Tooltip content={`${client.appointments.length} cita${client.appointments.length !== 1 ? 's' : ''}`}>
+                                <div className="flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1.5 rounded-lg">
+                                  <Calendar className="w-4 h-4" />
+                                  <span className="text-sm font-semibold">{client.appointments.length}</span>
+                                </div>
+                              </Tooltip>
+                            )}
+                            
+                            {/* Flecha indicadora */}
+                            <div className="w-8 h-8 bg-gray-100 group-hover:bg-gray-800 rounded-lg flex items-center justify-center transition-all duration-300 ml-2">
+                              <svg className="w-4 h-4 text-gray-500 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </div>
                         </div>
-                      </>
+                      </div>
                     )}
 
                   </Link>

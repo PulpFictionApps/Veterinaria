@@ -75,21 +75,22 @@ export default function NewClientPage() {
   return (
     <SubscriptionGuard>
       <div className="vet-page">
-        <PageHeader
-          title="Nuevo Cliente Veterinario"
-          subtitle="👥 Registra la información completa del tutor de la mascota"
-          icon={UserPlus}
-          actions={
-            <Link 
-              href="/dashboard/clients" 
-              className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
-            >
-              <ArrowLeft className="w-4 h-4" /> Volver a Clientes
-            </Link>
-          }
-        />
+        <div className="vet-container">
+          <PageHeader
+            title="Nuevo Cliente Veterinario"
+            subtitle="👥 Registra la información completa del tutor de la mascota"
+            icon={UserPlus}
+            actions={
+              <Link 
+                href="/dashboard/clients" 
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+              >
+                <ArrowLeft className="w-4 h-4" /> Volver a Clientes
+              </Link>
+            }
+          />
 
-        <div className="vet-container space-y-8">
+          <div className="vet-container space-y-8">
 
           <AnimateOnView>
             <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
@@ -215,6 +216,7 @@ export default function NewClientPage() {
             </form>
             </div>
           </AnimateOnView>
+          </div>
         </div>
       </div>
     </SubscriptionGuard>

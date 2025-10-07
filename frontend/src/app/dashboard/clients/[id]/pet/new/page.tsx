@@ -89,13 +89,14 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="vet-page">
-      <PageHeader
-        title="Nueva Mascota"
-        subtitle="Registra una nueva mascota en el sistema"
-        icon={PawPrint}
-      />
+      <div className="vet-container">
+        <PageHeader
+          title="Nueva Mascota"
+          subtitle="Registra una nueva mascota en el sistema"
+          icon={PawPrint}
+        />
 
-      <div className="vet-container space-y-8">
+        <div className="vet-container space-y-8">
 
         {/* Formulario */}
         <SlideIn direction="up" delay={200}>
@@ -313,6 +314,7 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
           </div>
         </SlideIn>
 
+        </div>
       </div>
     </div>
   );

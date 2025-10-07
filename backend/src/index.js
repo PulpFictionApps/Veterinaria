@@ -11,6 +11,8 @@ import petRoutes from "./routes/pets.js";
 import availabilityRoutes from "./routes/availability.js";
 import appointmentRoutes from "./routes/appointments.js";
 import prescriptionRoutes from "./routes/prescriptions.js";
+import prescriptionOptimizedRoutes from "./routes/prescriptions-optimized-es6.js";
+import prescriptionHybridRoutes from "./routes/prescriptions-hybrid-optimized.js";
 import medicalRecordsRoutes from "./routes/medicalRecords.js";
 import accountRoutes from "./routes/account.js";
 import billingRoutes from "./routes/billing.js";
@@ -93,6 +95,8 @@ app.use("/pets", petRoutes);
 app.use("/availability", availabilityRoutes);
 app.use("/appointments", appointmentRoutes);
 app.use("/prescriptions", prescriptionRoutes);
+app.use("/prescriptions", prescriptionOptimizedRoutes); // Sistema optimizado con acceso perpetuo
+app.use("/prescriptions", prescriptionHybridRoutes); // Sistema híbrido: Supabase + Cache + Metadatos
 app.use("/medical-records", medicalRecordsRoutes);
 app.use("/account", accountRoutes);
 app.use("/billing", billingRoutes);

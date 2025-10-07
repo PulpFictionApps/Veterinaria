@@ -196,21 +196,22 @@ export default function NewAppointmentPage() {
 
   return (
     <div className="vet-page">
-      <PageHeader
-        title="Nueva Cita"
-        subtitle="Crear una nueva cita para un cliente"
-        icon={CalendarPlus}
-        actions={
-          <Link
-            href="/dashboard/appointments"
-            className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
-          >
-            <ArrowLeft className="w-4 h-4" /> Volver a Citas
-          </Link>
-        }
-      />
+      <div className="vet-container">
+        <PageHeader
+          title="Nueva Cita"
+          subtitle="Crear una nueva cita para un cliente"
+          icon={CalendarPlus}
+          actions={
+            <Link
+              href="/dashboard/appointments"
+              className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+            >
+              <ArrowLeft className="w-4 h-4" /> Volver a Citas
+            </Link>
+          }
+        />
 
-      <div className="vet-container space-y-8">
+        <div className="vet-container space-y-8">
 
       {/* Mensajes */}
       {error && (
@@ -398,6 +399,7 @@ export default function NewAppointmentPage() {
           </button>
         </div>
       </form>
+        </div>
       </div>
     </div>
   );
