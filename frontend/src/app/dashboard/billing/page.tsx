@@ -307,6 +307,7 @@ export default function BillingPage() {
             </div>
           </AnimateOnView>
         </Stagger>
+        </div>
 
         {NotificationComponent}
       </div>
