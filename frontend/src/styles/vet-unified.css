@@ -169,8 +169,17 @@
   gap: 1.5rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .vet-grid-responsive {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  
+  .vet-grid-responsive .xl\\:col-span-2 {
+    grid-column: span 2;
+  }
+  
+  .vet-grid-responsive .xl\\:col-span-1 {
+    grid-column: span 1;
   }
 }

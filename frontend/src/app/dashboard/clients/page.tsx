@@ -144,54 +144,51 @@ export default function ClientsPage() {
 
   return (
     <SubscriptionGuard>
-      <div className="w-full min-h-full bg-gradient-to-br from-gray-50 via-white to-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <div className="vet-page">
+        <div className="vet-container space-y-8">
           
           {/* Header */}
           <FadeIn>
-            <div className="bg-white rounded-lg shadow border border-gray-200">
-              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-lg shadow">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-                  <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
-                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
-                      <Users className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-sm" />
-                    </div>
-                    <div className="min-w-0 flex-1 sm:flex-initial">
-                      <h1 className="text-2xl sm:text-4xl font-black mb-2 leading-tight tracking-tight">Gestión de Clientes</h1>
-                      <p className="text-white/90 text-sm sm:text-lg font-medium">
-                        👥 {filteredClients.length} cliente{filteredClients.length !== 1 && 's'} registrado{filteredClients.length !== 1 && 's'}
-                      </p>
-                    </div>
-                  </div>
-                  <Link href="/dashboard/clients/new" className="w-full sm:w-auto">
-                    <ThemedButton variant="secondary" icon={Plus} size="lg" className="w-full sm:w-auto touch-manipulation">
-                      Nuevo Cliente
-                    </ThemedButton>
-                  </Link>
+            <div className="vet-card-unified overflow-hidden">
+              <div className="vet-section-header-unified">
+                <div className="vet-section-title-unified">
+                  <Users className="w-8 h-8" />
+                  Gestión de Clientes
                 </div>
+                <Link href="/dashboard/clients/new" className="w-full sm:w-auto">
+                  <button className="vet-btn-unified vet-btn-outline-unified text-white border-white hover:bg-white hover:text-gray-800">
+                    <Plus className="w-5 h-5" />
+                    Nuevo Cliente
+                  </button>
+                </Link>
+              </div>
+              <div className="p-6 sm:p-8">
+                <p className="text-gray-600 font-medium">
+                  👥 {filteredClients.length} cliente{filteredClients.length !== 1 && 's'} registrado{filteredClients.length !== 1 && 's'}
+                </p>
               </div>
             </div>
           </FadeIn>
 
           {/* Barra de búsqueda y filtros */}
           <AnimateOnView animation="slide">
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="vet-card-unified p-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 
                 {/* Búsqueda */}
                 <div className="flex-1">
-                  <ThemedInput
-                    variant="search"
-                    icon={Search}
+                  <input
+                    type="text"
                     placeholder="Buscar por nombre, email, teléfono o RUT..."
                     value={searchTerm}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                    className="vet-input-unified"
                   />
                 </div>
 
                 {/* Controles de vista */}
                 <div className="flex items-center justify-center sm:justify-start">
-                  <div className="bg-gray-100 rounded-lg p-1 flex touch-manipulation">
+                  <div className="bg-gray-100 rounded-lg p-1 flex">
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
@@ -231,7 +228,7 @@ export default function ClientsPage() {
               </div>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-3xl shadow-md border border-gray-200 p-8 text-center">
+            <div className="vet-card-unified p-8 text-center">
               <div className="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-gray-500" />
               </div>
@@ -239,13 +236,13 @@ export default function ClientsPage() {
               <p className="text-gray-600 mb-4">{error}</p>
               <button
                 onClick={loadClientsWithPets}
-                className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="vet-btn-unified vet-btn-primary-unified"
               >
                 Reintentar
               </button>
             </div>
           ) : filteredClients.length === 0 ? (
-            <div className="bg-white rounded-3xl shadow-md border border-gray-200 p-8 text-center">
+            <div className="vet-card-unified p-8 text-center">
               <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center mx-auto mb-6 shadow">
                 <UserPlus className="w-12 h-12 text-gray-700" />
               </div>
@@ -260,7 +257,7 @@ export default function ClientsPage() {
               </p>
               {!searchTerm && (
                 <Link href="/dashboard/clients/new">
-                  <button className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto">
+                  <button className="vet-btn-unified vet-btn-primary-unified flex items-center gap-2 mx-auto">
                     <Plus className="w-5 h-5" />
                     Crear Primer Cliente
                   </button>
@@ -277,9 +274,9 @@ export default function ClientsPage() {
                   <Link
                     key={client.id}
                     href={`/dashboard/clients/${client.id}`}
-                    className={`group touch-manipulation ${viewMode === 'grid' 
-                      ? 'bg-white rounded-3xl shadow-md border border-gray-200 p-6 sm:p-8 hover:shadow-lg hover:border-gray-300 transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01]'
-                      : 'bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex items-center space-x-4 sm:space-x-8'
+                    className={`group ${viewMode === 'grid' 
+                      ? 'vet-card-unified p-6 sm:p-8'
+                      : 'vet-card-unified p-4 sm:p-6 flex items-center space-x-4 sm:space-x-8'
                     }`}
                   >
                     

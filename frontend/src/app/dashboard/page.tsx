@@ -167,7 +167,7 @@ export default function Dashboard() {
     }[changeType];
 
     return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow p-4 sm:p-6 group cursor-pointer">
+      <div className="vet-card-unified p-4 sm:p-6 group cursor-pointer">
         <div className="flex items-center justify-between gap-3 sm:gap-4">
           <div className="flex-1 min-w-0">
             <p className="text-xs sm:text-sm font-bold text-gray-600 mb-2 uppercase tracking-wide truncate">{title}</p>
@@ -192,28 +192,32 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="w-full h-full min-h-[60vh] flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="relative">
-            {/* Spinner principal */}
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-gray-600 mx-auto mb-6"></div>
-            {/* Puntos animados alrededor */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <p className="text-lg font-semibold text-gray-700">Cargando panel de control</p>
-            <p className="text-sm text-gray-500">Preparando la información de tu clínica...</p>
-          </div>
-          {/* Skeleton cards */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="bg-white rounded-lg p-4 shadow animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="text-center">
+              <div className="relative">
+                {/* Spinner principal */}
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-gray-600 mx-auto mb-6"></div>
+                {/* Puntos animados alrededor */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+                </div>
               </div>
-            ))}
+              <div className="space-y-2">
+                <p className="text-lg font-semibold text-gray-700">Cargando panel de control</p>
+                <p className="text-sm text-gray-500">Preparando la información de tu clínica...</p>
+              </div>
+              {/* Skeleton cards */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="vet-card-unified p-4 animate-pulse">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -221,47 +225,47 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="w-full min-h-full bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-10">
+    <div className="vet-page">
+      <div className="vet-container space-y-8">
         
         {/* Header con saludo animado */}
         <FadeIn>
-          <div className="bg-white border border-gray-200 rounded-lg shadow p-6 lg:p-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-              <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
-                <div className="p-3 sm:p-4 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg flex-shrink-0">
-                  <Activity className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                </div>
-                <div className="min-w-0 flex-1 sm:flex-initial">
-                  <h1 className="text-2xl sm:text-4xl font-black text-gray-800 mb-2 leading-tight">
-                    Panel de Control Veterinario
-                  </h1>
+          <div className="vet-card-unified overflow-hidden">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <Activity className="w-8 h-8 sm:w-10 sm:h-10" />
+                Panel de Control Veterinario
+              </div>
+            </div>
+            <div className="p-6 lg:p-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-gray-600 text-base sm:text-lg font-medium">Centro de gestión médica profesional</p>
                 </div>
+                <SlideIn direction="right" delay={200}>
+                  <div className="text-center bg-gray-100 rounded-xl p-3 sm:p-4 flex-shrink-0 w-full sm:w-auto">
+                    <div className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
+                      {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
+                    </div>
+                    <div className="text-xl sm:text-2xl font-black text-gray-800">
+                      {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
+                    </div>
+                    <div className="text-xs text-gray-500 font-medium">
+                      {new Date().getFullYear()}
+                    </div>
+                  </div>
+                </SlideIn>
               </div>
-              <SlideIn direction="right" delay={200}>
-                <div className="text-center bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm flex-shrink-0 w-full sm:w-auto">
-                  <div className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
-                    {new Date().toLocaleDateString('es-CL', { weekday: 'long' }).toUpperCase()}
-                  </div>
-                  <div className="text-xl sm:text-2xl font-black text-gray-800">
-                    {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
-                  </div>
-                  <div className="text-xs text-gray-500 font-medium">
-                    {new Date().getFullYear()}
-                  </div>
-                </div>
-              </SlideIn>
             </div>
           </div>
         </FadeIn>
 
         {/* Alerta de suscripción */}
         {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="vet-info-unified vet-info-blue">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                <Activity className="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+                <Activity className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5 sm:mt-0" />
                 <div className="min-w-0">
                   <strong className="font-semibold text-gray-900 block">Período de prueba activo</strong>
                   <span className="text-sm text-gray-700 block sm:inline sm:ml-2">
@@ -271,7 +275,7 @@ export default function Dashboard() {
               </div>
               <a 
                 href="/dashboard/billing" 
-                className="inline-flex items-center justify-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium w-full sm:w-auto"
+                className="vet-btn-unified vet-btn-primary-unified text-sm w-full sm:w-auto"
               >
                 Actualizar Plan
               </a>
@@ -352,25 +356,23 @@ export default function Dashboard() {
 
         {/* Gestión de enlaces públicos */}
         <AnimateOnView>
-          <div className="bg-white border border-gray-200 rounded-lg shadow p-6 lg:p-8">
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-gray-700 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-800">Sistema de Reservas Online</h2>
-                  <p className="text-sm text-gray-600 font-medium">Enlace público para que tus clientes reserven citas</p>
-                </div>
+          <div className="vet-card-unified overflow-hidden">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <TrendingUp className="w-6 h-6" />
+                Sistema de Reservas Online
               </div>
             </div>
-            <PublicLinkManager />
+            <div className="p-6 lg:p-8">
+              <p className="text-gray-600 font-medium mb-6">Enlace público para que tus clientes reserven citas</p>
+              <PublicLinkManager />
+            </div>
           </div>
         </AnimateOnView>
 
         {/* Layout principal con consultas y calendario */}
         <AnimateOnView>
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="vet-grid-responsive">
             {/* Panel de consultas - 2/3 del espacio */}
             <div className="xl:col-span-2">
               <ConsultationsPanel />
@@ -378,19 +380,17 @@ export default function Dashboard() {
 
             {/* Calendario - 1/3 del espacio */}
             <div className="xl:col-span-1">
-              <div className="bg-white border border-gray-200 rounded-lg shadow p-6 lg:p-8">
-                <div className="mb-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 bg-gray-700 rounded-lg">
-                      <Calendar className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-bold text-gray-800">Agenda Médica</h2>
-                      <p className="text-sm text-gray-600 font-medium">Vista general de citas programadas</p>
-                    </div>
+              <div className="vet-card-unified overflow-hidden">
+                <div className="vet-section-header-unified">
+                  <div className="vet-section-title-unified">
+                    <Calendar className="w-6 h-6" />
+                    Agenda Médica
                   </div>
                 </div>
-                {uid && <LazyDashboardCalendar userId={uid} />}
+                <div className="p-6 lg:p-8">
+                  <p className="text-gray-600 font-medium mb-6">Vista general de citas programadas</p>
+                  {uid && <LazyDashboardCalendar userId={uid} />}
+                </div>
               </div>
             </div>
           </div>

@@ -217,10 +217,10 @@ export default function AppointmentsPage() {
   if (loading) {
     return (
       <FadeIn>
-        <div className="min-h-screen bg-gray-50 p-6">
-          <div className="max-w-7xl mx-auto">
+        <div className="vet-page">
+          <div className="vet-container">
             <div className="flex justify-center items-center py-20">
-              <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
+              <div className="vet-card-unified p-8">
                 <div className="flex flex-col items-center">
                   <div className="relative">
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-gray-600"></div>
@@ -238,32 +238,30 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="p-6 max-w-7xl mx-auto">
+    <div className="vet-page">
+      <div className="vet-container">
         {/* Medical Header */}
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg">
-                    <CalendarDays className="h-8 w-8 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-800">
-                      Agenda Médica
-                    </h1>
-                    <p className="text-gray-600 mt-1 font-medium">
-                      Gestiona las consultas veterinarias programadas
-                    </p>
-                  </div>
+            <div className="vet-card-unified overflow-hidden">
+              <div className="vet-section-header-unified">
+                <div className="vet-section-title-unified">
+                  <CalendarDays className="h-8 w-8" />
+                  Agenda de Citas Médicas
+                </div>
+              </div>
+              <div className="p-8">
+                <div>
+                  <p className="text-gray-600 font-medium">
+                    Gestiona las consultas veterinarias programadas
+                  </p>
                 </div>
                 
                 <div className="flex gap-3">
                   <Tooltip content="Configurar disponibilidad">
                     <Link
                       href="/dashboard/calendar"
-                      className="group bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-2"
+                      className="vet-btn-unified vet-btn-outline-unified group"
                     >
                       <Settings className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
                       Disponibilidad
@@ -272,7 +270,7 @@ export default function AppointmentsPage() {
                   
                   <Link
                     href="/dashboard/appointments/new"
-                    className="group bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-2"
+                    className="vet-btn-unified vet-btn-primary-unified group"
                   >
                     <PlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     Nueva Cita
@@ -286,20 +284,18 @@ export default function AppointmentsPage() {
         {/* Advanced Search and Filters */}
         <SlideIn direction="up" delay={0.1}>
           <div className="mb-8">
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="vet-card-unified p-6">
               <div className="flex flex-col lg:flex-row gap-6">
                 {/* Search Bar */}
                 <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <input
-                      type="text"
-                      placeholder="Buscar por mascota, tutor o motivo de consulta..."
-                      value={searchTerm}
-                      onChange={e => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium placeholder-gray-400"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Buscar por mascota, tutor o motivo de consulta..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="vet-input-unified pl-12"
+                  />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" style={{position: 'absolute'}} />
                 </div>
                 
                 {/* Filter Buttons */}
@@ -335,7 +331,7 @@ export default function AppointmentsPage() {
         {/* Appointments Display */}
         {filteredAppointments.length === 0 ? (
           <AnimateOnView>
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-12 text-center">
+            <div className="vet-card-unified p-12 text-center">
               <div className="p-6 bg-gray-100 rounded-lg inline-block mb-6">
                 <CalendarDays className="h-16 w-16 text-gray-400 mx-auto" />
               </div>
@@ -352,14 +348,14 @@ export default function AppointmentsPage() {
                 <div className="flex gap-4 justify-center">
                   <Link
                     href="/dashboard/appointments/new"
-                    className="group bg-gray-700 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-3"
+                    className="vet-btn-unified vet-btn-primary-unified group"
                   >
                     <PlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     Programar Primera Cita
                   </Link>
                   <Link
                     href="/dashboard/calendar"
-                    className="group bg-gray-600 text-white px-8 py-4 rounded-lg hover:bg-gray-700 transition-all duration-300 font-medium flex items-center gap-3"
+                    className="vet-btn-unified vet-btn-outline-unified group"
                   >
                     <Settings className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
                     Configurar Disponibilidad
@@ -376,7 +372,7 @@ export default function AppointmentsPage() {
               const isPast = status.status === 'past';
               
               return (
-                <div key={appointment.id} className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-all duration-300 group">
+                <div key={appointment.id} className="vet-card-unified p-6 group">
                   {/* Appointment Header */}
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-4">
@@ -404,7 +400,7 @@ export default function AppointmentsPage() {
                         <Tooltip content="Iniciar consulta médica">
                           <Link 
                             href={`/dashboard/appointments/${appointment.id}/consult`} 
-                            className="group bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2"
+                            className="vet-btn-unified vet-btn-primary-unified text-sm group"
                           >
                             <Stethoscope className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                             Consultar
@@ -424,7 +420,7 @@ export default function AppointmentsPage() {
                       <Tooltip content="Eliminar cita">
                         <button 
                           onClick={() => deleteAppointment(appointment.id)} 
-                          className="group p-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-all duration-300 border border-gray-200 hover:border-gray-300"
+                          className="group p-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-300"
                         >
                           <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                         </button>
