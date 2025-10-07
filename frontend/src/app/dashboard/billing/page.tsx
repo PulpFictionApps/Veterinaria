@@ -100,13 +100,13 @@ export default function BillingPage() {
       <div className="max-w-6xl mx-auto p-6">
         <FadeIn>
           <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-gray-500 to-gray-500 rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow-lg">
                   <CreditCard className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold text-gray-800">
                     Suscripción y Facturación
                   </h1>
                   <p className="text-gray-700 mt-1 font-medium">
@@ -121,8 +121,8 @@ export default function BillingPage() {
         <Stagger className="space-y-8">
           {subscription ? (
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
+              <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Award className="h-6 w-6 text-white" />
@@ -147,9 +147,9 @@ export default function BillingPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2">
                       <div className="mb-4">
-                        <p className="text-2xl font-bold text-gray-600 mb-2">{PLAN_INFO.price}</p>
+                        <p className="text-2xl font-bold text-gray-800 mb-2">{PLAN_INFO.price}</p>
                         <div className="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                          <CheckCircle className="h-5 w-5 text-gray-500" />
+                          <CheckCircle className="h-5 w-5 text-gray-700" />
                           {subscription.status === 'trial' ? 'Prueba Gratuita Activa' : 
                            subscription.status === 'active' ? 'Suscripción Activa' : 
                            subscription.status === 'expired' ? 'Suscripción Expirada' : subscription.status}
@@ -157,7 +157,7 @@ export default function BillingPage() {
                       </div>
 
                       {subscription.expiresAt && (
-                        <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl p-4 mb-6">
+                        <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg p-4 mb-6">
                           <div className="flex items-center gap-2 text-gray-700">
                             <Calendar className="h-5 w-5" />
                             <span className="font-medium">
@@ -176,7 +176,7 @@ export default function BillingPage() {
                           const IconComponent = feature.icon;
                           return (
                             <div key={idx} className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg">
-                              <IconComponent className="h-5 w-5 text-gray-500" />
+                              <IconComponent className="h-5 w-5 text-gray-700" />
                               <span className="text-sm font-medium text-gray-700">{feature.text}</span>
                             </div>
                           );
@@ -189,7 +189,7 @@ export default function BillingPage() {
                         <button 
                           onClick={startCheckout}
                           disabled={loading}
-                          className="group w-full px-6 py-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          className="group w-full px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <Zap className={`h-5 w-5 ${loading ? 'animate-spin' : 'group-hover:scale-110 transition-transform duration-300'}`} />
                           {subscription.status === 'trial' ? 'Activar Plan Premium' :
@@ -203,8 +203,8 @@ export default function BillingPage() {
             </AnimateOnView>
           ) : (
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
+              <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Star className="h-6 w-6 text-white" />
                     <h2 className="text-xl font-bold text-white">Comienza tu Práctica Veterinaria Premium</h2>
@@ -214,7 +214,7 @@ export default function BillingPage() {
                 <div className="p-8 text-center">
                   <div className="mb-6">
                     <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl mb-4">
-                      <Stethoscope className="h-16 w-16 text-gray-500 mx-auto mb-4" />
+                      <Stethoscope className="h-16 w-16 text-gray-700 mx-auto mb-4" />
                       <h3 className="text-2xl font-bold text-gray-800 mb-3">
                         ¡7 Días de Prueba Gratuita!
                       </h3>
@@ -222,7 +222,7 @@ export default function BillingPage() {
                         Experimenta todas las funciones del Plan Veterinario Premium
                       </p>
                       <p className="text-gray-700 font-medium">
-                        Luego solo <span className="text-gray-600 font-bold text-xl">$15.000 CLP mensuales</span>
+                        Luego solo <span className="text-gray-800 font-bold text-xl">$15.000 CLP mensuales</span>
                       </p>
                     </div>
                     
@@ -231,7 +231,7 @@ export default function BillingPage() {
                         const IconComponent = feature.icon;
                         return (
                           <div key={idx} className="flex items-center gap-2 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg text-left">
-                            <IconComponent className="h-4 w-4 text-gray-500" />
+                            <IconComponent className="h-4 w-4 text-gray-700" />
                             <span className="text-sm font-medium text-gray-700">{feature.text}</span>
                           </div>
                         );
@@ -243,7 +243,7 @@ export default function BillingPage() {
                     <button 
                       onClick={startCheckout}
                       disabled={loading}
-                      className="group px-8 py-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
+                      className="group px-8 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
                     >
                       <Heart className={`h-5 w-5 ${loading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform duration-300'}`} />
                       Comenzar Prueba Gratuita
@@ -256,8 +256,8 @@ export default function BillingPage() {
           )}
 
           <AnimateOnView>
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="gradient-gray-medical px-6 py-4">
+            <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-6 py-4">
                 <div className="flex items-center gap-3">
                   <FileText className="h-6 w-6 text-white" />
                   <h2 className="text-xl font-bold text-white">Historial de Pagos</h2>
@@ -265,7 +265,7 @@ export default function BillingPage() {
               </div>
               
               <div className="p-6">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg overflow-hidden">
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-gray-100 to-gray-100">
                       <tr>
@@ -277,8 +277,8 @@ export default function BillingPage() {
                     </thead>
                     <tbody className="bg-white">
                       {invoices.map((inv, idx) => (
-                        <tr key={inv.id} className={`hover:bg-gray-50 transition-colors duration-200 ${idx < invoices.length - 1 ? 'border-b border-gray-100' : ''}`}>
-                          <td className="p-4 font-mono text-sm text-gray-600 font-medium">{inv.id}</td>
+                        <tr key={inv.id} className={`hover:bg-gray-50 transition-colors duration-200 ${idx < invoices.length - 1 ? 'border-b border-gray-200' : ''}`}>
+                          <td className="p-4 font-mono text-sm text-gray-800 font-medium">{inv.id}</td>
                           <td className="p-4 text-gray-800">{inv.date}</td>
                           <td className="p-4 font-bold text-gray-700">{inv.amount}</td>
                           <td className="p-4">
@@ -308,9 +308,9 @@ export default function BillingPage() {
                 
                 {invoices.length === 0 && (
                   <div className="text-center py-12">
-                    <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <FileText className="h-16 w-16 text-gray-700 mx-auto mb-4" />
                     <p className="text-gray-700 font-medium">No hay facturas disponibles</p>
-                    <p className="text-sm text-gray-600 mt-1">Los pagos aparecerán aquí cuando se procesen</p>
+                    <p className="text-sm text-gray-700 mt-1">Los pagos aparecerán aquí cuando se procesen</p>
                   </div>
                 )}
               </div>
