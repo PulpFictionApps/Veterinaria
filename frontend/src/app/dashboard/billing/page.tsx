@@ -226,7 +226,7 @@ export default function BillingPage() {
                       </p>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="grid grid-cols-2 gap-3 mb-6 text-gray-700">
                       {PLAN_INFO.features.map((feature, idx) => {
                         const IconComponent = feature.icon;
                         return (
