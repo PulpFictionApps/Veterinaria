@@ -1,5 +1,6 @@
 import './globals.css';
 import '../styles/gradient-fixes.css';
+import '../styles/vet-unified.css';
 import { Metadata } from 'next';
 import { AuthProvider } from '../lib/auth-context';
 import SWRProvider from '../components/SWRProvider';

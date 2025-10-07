@@ -1,0 +1,176 @@
+/* ===========================================
+   SISTEMA DE ESTILO UNIFORME VETERINARIO
+   =========================================== */
+
+/* Variables de diseño unificado */
+:root {
+  /* Espaciado consistente */
+  --vet-spacing-xs: 0.5rem;   /* 8px */
+  --vet-spacing-sm: 0.75rem;  /* 12px */
+  --vet-spacing-md: 1rem;     /* 16px */
+  --vet-spacing-lg: 1.5rem;   /* 24px */
+  --vet-spacing-xl: 2rem;     /* 32px */
+  --vet-spacing-2xl: 3rem;    /* 48px */
+
+  /* Colores consistentes */
+  --vet-gray-50: #f9fafb;
+  --vet-gray-100: #f3f4f6;
+  --vet-gray-200: #e5e7eb;
+  --vet-gray-700: #374151;
+  --vet-gray-800: #1f2937;
+  --vet-gray-900: #111827;
+
+  --vet-blue-50: #eff6ff;
+  --vet-blue-600: #2563eb;
+  --vet-blue-800: #1e40af;
+
+  --vet-green-600: #16a34a;
+
+  /* Sombras consistentes */
+  --vet-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --vet-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Bordes consistentes */
+  --vet-border-radius: 0.75rem; /* 12px */
+  --vet-border-radius-lg: 1rem; /* 16px */
+}
+
+/* ===========================================
+   CLASES HELPER PARA CONSISTENCIA VISUAL
+   =========================================== */
+
+/* Página completa estándar */
+.vet-page {
+  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 50%, #f9fafb 100%);
+  min-height: 100vh;
+}
+
+.vet-container {
+  max-width: 72rem; /* 6xl */
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Cards uniformes */
+.vet-card-unified {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.vet-card-unified:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transform: translateY(-2px);
+}
+
+/* Headers de sección unificados */
+.vet-section-header-unified {
+  background: linear-gradient(90deg, #1f2937, #111827);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vet-section-title-unified {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Botones unificados */
+.vet-btn-unified {
+  font-weight: 600;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vet-btn-primary-unified {
+  background: linear-gradient(90deg, #1f2937, #111827);
+  color: white;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.vet-btn-primary-unified:hover {
+  background: linear-gradient(90deg, #4b5563, #4b5563);
+  transform: translateY(-1px);
+}
+
+.vet-btn-outline-unified {
+  background: white;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+}
+
+.vet-btn-outline-unified:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+/* Inputs unificados */
+.vet-input-unified {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: linear-gradient(90deg, #ffffff, #f9fafb);
+}
+
+.vet-input-unified:focus {
+  outline: none;
+  border-color: #1f2937;
+  box-shadow: 0 0 0 3px rgb(31 41 55 / 0.1);
+}
+
+/* Labels unificados */
+.vet-label-unified {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Info boxes */
+.vet-info-unified {
+  border-radius: 1rem;
+  border: 1px solid;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.vet-info-blue {
+  background: linear-gradient(90deg, #eff6ff, #eef2ff);
+  border-color: #bfdbfe;
+}
+
+/* Layout grids */
+.vet-grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .vet-grid-responsive {
+    grid-template-columns: 2fr 1fr;
+  }
+}
