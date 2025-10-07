@@ -14,7 +14,13 @@ export default function OptimizedBottomNav() {
     if (href === '/dashboard') {
       return pathname === '/dashboard';
     }
-    return pathname?.startsWith(href);
+    // Para evitar conflictos, hacemos matching exacto o con path específico
+    if (pathname?.startsWith(href)) {
+      // Si es el path exacto o sigue la jerarquía correcta
+      const remainingPath = pathname.slice(href.length);
+      return remainingPath === '' || remainingPath.startsWith('/');
+    }
+    return false;
   };
 
   return (
