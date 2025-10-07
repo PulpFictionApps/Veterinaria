@@ -77,7 +77,7 @@ export default function ConsultationsPanel() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded mb-4 w-48"></div>
           <div className="space-y-3">
@@ -91,7 +91,7 @@ export default function ConsultationsPanel() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">
           🩺 Consultas Realizadas

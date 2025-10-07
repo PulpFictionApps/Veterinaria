@@ -354,7 +354,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const selectedType = consultationTypes.find((t: ConsultationType) => t.id === Number(selectedConsultationType));
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-lg">
+    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow">
       <h3 
         className="text-lg sm:text-xl font-bold mb-4 sm:mb-6"
         style={{
@@ -697,7 +697,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           
           <button 
             type="submit"
-            className="w-full sm:w-auto px-3 py-2 rounded text-sm text-white font-medium transition-all duration-200 hover:opacity-90 shadow-lg"
+            className="w-full sm:w-auto px-3 py-2 rounded-lg text-sm text-white font-medium transition-all duration-200 hover:opacity-90 shadow"
             style={{
               background: colors.primaryColor ? 
                 `linear-gradient(135deg, ${colors.primaryColor}, ${colors.secondaryColor || colors.primaryColor})` : 

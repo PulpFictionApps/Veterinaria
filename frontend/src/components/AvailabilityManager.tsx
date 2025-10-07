@@ -199,14 +199,14 @@ export default function AvailabilityManager() {
         <h3 className="text-base sm:text-lg font-semibold text-gray-900">Disponibilidad</h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="w-full sm:w-auto bg-gray-700 text-white px-4 py-2.5 rounded-xl hover:bg-gray-800 transition-all shadow-lg text-sm sm:text-base font-semibold touch-manipulation"
+          className="w-full sm:w-auto bg-gray-700 text-white px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-all shadow text-sm sm:text-base font-semibold touch-manipulation"
         >
           {showForm ? 'Cancelar' : '+ Agregar Horario'}
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-card p-4 sm:p-8">
+        <div className="bg-white rounded-lg border border-gray-100 shadow p-4 sm:p-8">
           <div className="mb-4 sm:mb-6">
             <h4 className="text-lg sm:text-xl font-bold text-neutral-800">Nueva Disponibilidad</h4>
             <p className="text-sm text-neutral-600 mt-1">Configure sus horarios de atención</p>
@@ -319,14 +319,14 @@ export default function AvailabilityManager() {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="w-full sm:flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
+                className="w-full sm:flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 bg-gradient-secondary text-white px-6 py-3 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg"
+                className="w-full sm:flex-1 bg-gradient-secondary text-white px-6 py-3 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow"
               >
                 {loading ? '⏳ Creando...' : '+ Crear Disponibilidad'}
               </button>

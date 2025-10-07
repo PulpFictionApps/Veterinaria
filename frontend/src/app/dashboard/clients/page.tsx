@@ -149,11 +149,11 @@ export default function ClientsPage() {
           
           {/* Header */}
           <FadeIn>
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-200">
-              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-3xl shadow-xl">
+            <div className="bg-white rounded-lg shadow border border-gray-200">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 sm:p-8 text-white rounded-lg shadow">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                   <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
-                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-3xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
+                    <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10">
                       <Users className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-sm" />
                     </div>
                     <div className="min-w-0 flex-1 sm:flex-initial">
@@ -175,7 +175,7 @@ export default function ClientsPage() {
 
           {/* Barra de búsqueda y filtros */}
           <AnimateOnView animation="slide">
-            <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 
                 {/* Búsqueda */}
@@ -191,7 +191,7 @@ export default function ClientsPage() {
 
                 {/* Controles de vista */}
                 <div className="flex items-center justify-center sm:justify-start">
-                  <div className="bg-gray-100 rounded-xl p-1 flex touch-manipulation">
+                  <div className="bg-gray-100 rounded-lg p-1 flex touch-manipulation">
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
@@ -232,21 +232,21 @@ export default function ClientsPage() {
             </div>
           ) : error ? (
             <div className="bg-white rounded-3xl shadow-md border border-gray-200 p-8 text-center">
-              <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-gray-500" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">Error al cargar</h3>
               <p className="text-gray-600 mb-4">{error}</p>
               <button
                 onClick={loadClientsWithPets}
-                className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 Reintentar
               </button>
             </div>
           ) : filteredClients.length === 0 ? (
             <div className="bg-white rounded-3xl shadow-md border border-gray-200 p-8 text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+              <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center mx-auto mb-6 shadow">
                 <UserPlus className="w-12 h-12 text-gray-700" />
               </div>
               <h3 className="text-3xl font-black text-gray-800 mb-4">

@@ -139,21 +139,21 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       {/* View Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <h3 className="text-base sm:text-lg font-semibold text-gray-900">Calendario</h3>
-        <div className="flex gap-2 w-full sm:w-auto bg-gray-100 p-1 rounded-xl">
+        <div className="flex gap-2 w-full sm:w-auto bg-gray-100 p-1 rounded-lg">
           <button 
-            className="flex-1 sm:flex-initial px-3 py-2 bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-800 transition-all shadow-lg touch-manipulation" 
+            className="flex-1 sm:flex-initial px-3 py-2 bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-800 transition-all shadow touch-manipulation" 
             onClick={() => changeView("timeGridDay")}
           >
             📅 Día
           </button>
           <button 
-            className="flex-1 sm:flex-initial px-3 py-2 bg-white text-gray-700 rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-all shadow-sm touch-manipulation" 
+            className="flex-1 sm:flex-initial px-3 py-2 bg-white text-gray-700 rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-all shadow touch-manipulation" 
             onClick={() => changeView("timeGridWeek")}
           >
             📊 Semana
           </button>
           <button 
-            className="flex-1 sm:flex-initial px-3 py-2 bg-white text-gray-700 rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-all shadow-sm touch-manipulation" 
+            className="flex-1 sm:flex-initial px-3 py-2 bg-white text-gray-700 rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-all shadow touch-manipulation" 
             onClick={() => changeView("dayGridMonth")}
           >
             🗓️ Mes

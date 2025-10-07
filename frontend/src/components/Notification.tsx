@@ -31,7 +31,7 @@ export function Notification({
 
   if (!visible) return null;
 
-  const baseStyles = "fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md animate-in slide-in-from-right-2";
+  const baseStyles = "fixed top-4 right-4 z-50 p-4 rounded-lg shadow max-w-md animate-in slide-in-from-right-2";
   const typeStyles = {
     success: "bg-gray-50 text-gray-800 border border-gray-200",
     error: "bg-gray-50 text-gray-800 border border-gray-200",

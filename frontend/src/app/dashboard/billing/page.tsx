@@ -102,7 +102,7 @@ export default function BillingPage() {
           <div className="mb-8">
             <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow-lg">
+                <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow">
                   <CreditCard className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -189,7 +189,7 @@ export default function BillingPage() {
                         <button 
                           onClick={startCheckout}
                           disabled={loading}
-                          className="group w-full px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          className="group w-full px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow hover:shadow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <Zap className={`h-5 w-5 ${loading ? 'animate-spin' : 'group-hover:scale-110 transition-transform duration-300'}`} />
                           {subscription.status === 'trial' ? 'Activar Plan Premium' :
@@ -213,7 +213,7 @@ export default function BillingPage() {
                 
                 <div className="p-8 text-center">
                   <div className="mb-6">
-                    <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl mb-4">
+                    <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg mb-4">
                       <Stethoscope className="h-16 w-16 text-gray-700 mx-auto mb-4" />
                       <h3 className="text-2xl font-bold text-gray-800 mb-3">
                         ¡7 Días de Prueba Gratuita!
@@ -243,7 +243,7 @@ export default function BillingPage() {
                     <button 
                       onClick={startCheckout}
                       disabled={loading}
-                      className="group px-8 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
+                      className="group px-8 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow hover:shadow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
                     >
                       <Heart className={`h-5 w-5 ${loading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform duration-300'}`} />
                       Comenzar Prueba Gratuita

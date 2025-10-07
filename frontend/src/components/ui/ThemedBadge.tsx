@@ -26,7 +26,7 @@ export default function ThemedBadge({
   onClick
 }: ThemedBadgeProps) {
   
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-full touch-manipulation transition-all duration-200';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg touch-manipulation transition-all duration-200';
   
   const sizeClasses = {
     xs: 'px-1.5 py-0.5 text-xs gap-1',
