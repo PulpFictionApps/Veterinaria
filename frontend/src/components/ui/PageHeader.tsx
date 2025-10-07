@@ -14,17 +14,17 @@ interface PageHeaderProps {
 export default function PageHeader({ title, subtitle, icon: Icon, actions }: PageHeaderProps) {
   return (
     <FadeIn>
-      <ThemedCard className="mb-8" padding="lg">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow">
-              <Icon className="h-8 w-8 text-white" />
+      <ThemedCard className="mb-6" padding="md">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg">
+              <Icon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">
+              <h1 className="text-2xl font-bold text-gray-800">
                 {title}
               </h1>
-              <p className="text-gray-700 mt-1 font-medium">
+              <p className="text-gray-600 text-sm font-medium">
                 {subtitle}
               </p>
             </div>

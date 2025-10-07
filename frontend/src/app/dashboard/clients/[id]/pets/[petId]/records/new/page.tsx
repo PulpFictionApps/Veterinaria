@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { authFetch } from '@/lib/api';
+import PageHeader from '@/components/ui/PageHeader';
+import { FileText, ArrowLeft, Save } from 'lucide-react';
 
 export default function NewRecord({ params }: { params: Promise<{ id: string; petId: string }> }) {
   const router = useRouter();
@@ -55,11 +57,25 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Nueva Ficha Clínica</h1>
+    <div className="vet-page">
+      <PageHeader
+        title="Nueva Ficha Clínica"
+        subtitle="Crear registro médico para la mascota"
+        icon={FileText}
+        actions={
+          <button
+            onClick={() => router.back()}
+            className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" /> Volver
+          </button>
+        }
+      />
 
-        <form onSubmit={submit} className="space-y-6">
+      <div className="vet-container">
+        <div className="vet-card-unified">
+          <div className="p-6">
+            <form onSubmit={submit} className="space-y-6">
           {/* Título */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -162,23 +178,25 @@ export default function NewRecord({ params }: { params: Promise<{ id: string; pe
             </div>
           )}
 
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Creando...' : 'Crear Ficha Clínica'}
-            </button>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-medical-600 text-white px-6 py-3 rounded-lg hover:bg-medical-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                >
+                  <Save className="w-4 h-4" /> {loading ? 'Creando...' : 'Crear Ficha Clínica'}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

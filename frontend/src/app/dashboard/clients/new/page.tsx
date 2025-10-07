@@ -21,6 +21,7 @@ import ThemedButton from '../../../../components/ui/ThemedButton';
 import ThemedInput from '../../../../components/ui/ThemedInput';
 import SubscriptionGuard from '../../../../components/SubscriptionGuard';
 import Link from 'next/link';
+import PageHeader from '../../../../components/ui/PageHeader';
 import { ArrowLeft } from 'lucide-react';
 
 export default function NewClientPage() {
@@ -74,25 +75,21 @@ export default function NewClientPage() {
   return (
     <SubscriptionGuard>
       <div className="vet-page">
+        <PageHeader
+          title="Nuevo Cliente Veterinario"
+          subtitle="👥 Registra la información completa del tutor de la mascota"
+          icon={UserPlus}
+          actions={
+            <Link 
+              href="/dashboard/clients" 
+              className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+            >
+              <ArrowLeft className="w-4 h-4" /> Volver a Clientes
+            </Link>
+          }
+        />
+
         <div className="vet-container space-y-8">
-          <FadeIn>
-            <div className="vet-card-unified overflow-hidden">
-              <div className="vet-section-header-unified">
-                <div className="vet-section-title-unified">
-                  <UserPlus className="w-8 h-8" />
-                  Nuevo Cliente Veterinario
-                </div>
-                <div className="flex items-center gap-3">
-                  <Link href="/dashboard/clients" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-                    ← Volver a Clientes
-                  </Link>
-                </div>
-              </div>
-              <div className="p-6 sm:p-8">
-                <p className="text-gray-600 font-medium">👥 Registra la información completa del tutor de la mascota</p>
-              </div>
-            </div>
-          </FadeIn>
 
           <AnimateOnView>
             <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden">

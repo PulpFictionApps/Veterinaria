@@ -6,6 +6,8 @@ import { useAuthContext } from '../../../../lib/auth-context';
 import { useConsultationTypes } from '../../../../hooks/useData';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import PageHeader from '../../../../components/ui/PageHeader';
+import { CalendarPlus, ArrowLeft } from 'lucide-react';
 
 interface Tutor {
   id: number;
@@ -194,29 +196,21 @@ export default function NewAppointmentPage() {
 
   return (
     <div className="vet-page">
+      <PageHeader
+        title="Nueva Cita"
+        subtitle="Crear una nueva cita para un cliente"
+        icon={CalendarPlus}
+        actions={
+          <Link
+            href="/dashboard/appointments"
+            className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" /> Volver a Citas
+          </Link>
+        }
+      />
+
       <div className="vet-container space-y-8">
-        {/* Header */}
-        <div className="vet-card-unified overflow-hidden">
-          <div className="vet-section-header-unified">
-            <div className="vet-section-title-unified">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
-              </svg>
-              Nueva Cita
-            </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/dashboard/appointments"
-                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
-              >
-                ← Volver a Citas
-              </Link>
-            </div>
-          </div>
-          <div className="p-6 sm:p-8">
-            <p className="text-gray-600 font-medium">Crear una nueva cita para un cliente</p>
-          </div>
-        </div>
 
       {/* Mensajes */}
       {error && (

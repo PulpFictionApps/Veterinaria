@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { authFetch } from '@/lib/api';
+import PageHeader from '@/components/ui/PageHeader';
+import { FileText, ArrowLeft, Send } from 'lucide-react';
 
 interface Pet {
   id: number;
@@ -91,11 +93,25 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Nueva Receta Veterinaria</h1>
-        
-        {/* Pet Info */}
+    <div className="vet-page">
+      <PageHeader
+        title="Nueva Receta Veterinaria"
+        subtitle={`Crear prescripción para ${pet.name}`}
+        icon={FileText}
+        actions={
+          <button
+            onClick={() => router.back()}
+            className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" /> Volver
+          </button>
+        }
+      />
+
+      <div className="vet-container">
+        <div className="vet-card-unified">
+          <div className="p-6">
+            {/* Pet Info */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <h3 className="font-semibold text-gray-900 mb-2">Información del Paciente</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -181,23 +197,25 @@ export default function NewPrescription({ params }: { params: Promise<{ id: stri
             </div>
           )}
 
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={loading || (!pet.tutor.phone && sendWhatsApp)}
-              className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Creando...' : 'Crear Receta'}
-            </button>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={loading || (!pet.tutor.phone && sendWhatsApp)}
+                className="flex-1 bg-medical-600 text-white px-6 py-3 rounded-lg hover:bg-medical-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" /> {loading ? 'Creando...' : 'Crear Receta'}
+              </button>
+            </div>
+          </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
