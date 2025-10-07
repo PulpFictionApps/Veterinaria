@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { authFetch } from '@/lib/api';
+import PageHeader from '@/components/ui/PageHeader';
+import { Edit, ArrowLeft, Save } from 'lucide-react';
 
 export default function EditRecord(props: any) {
   const { params } = props;
@@ -62,11 +64,25 @@ export default function EditRecord(props: any) {
   if (!data) return <div className="text-gray-600">No se encontró la ficha.</div>;
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Editar Ficha Clínica</h1>
+    <div className="vet-page">
+      <PageHeader
+        title="Editar Ficha Clínica"
+        subtitle="Actualizar información médica"
+        icon={Edit}
+        actions={
+          <button
+            onClick={() => router.back()}
+            className="text-gray-600 hover:text-gray-900 transition-colors font-medium flex items-center gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" /> Volver
+          </button>
+        }
+      />
 
-        <form onSubmit={save} className="space-y-6">
+      <div className="vet-container">
+        <div className="vet-card-unified">
+          <div className="p-6">
+            <form onSubmit={save} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Título</label>
             <input value={data.title || ''} onChange={e => setData({ ...data, title: e.target.value })} className="w-full px-4 py-3 border rounded-lg" />
@@ -95,11 +111,25 @@ export default function EditRecord(props: any) {
 
           {error && <div className="text-gray-600">{error}</div>}
 
-          <div className="flex gap-4">
-            <button type="button" onClick={() => router.back()} className="flex-1 px-6 py-3 border rounded-lg">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800">{saving ? 'Guardando...' : 'Guardar'}</button>
+              <div className="flex gap-4">
+                <button 
+                  type="button" 
+                  onClick={() => router.back()} 
+                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={saving} 
+                  className="flex-1 bg-medical-600 text-white px-6 py-3 rounded-lg hover:bg-medical-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <Save className="w-4 h-4" /> {saving ? 'Guardando...' : 'Guardar'}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

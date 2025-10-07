@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { authFetch } from '../../../../../lib/api';
 import { formatChileDate, formatChileTime } from '../../../../../lib/timezone';
+import PageHeader from '../../../../../components/ui/PageHeader';
+import { CalendarClock } from 'lucide-react';
 
 export default function EditAppointmentPage() {
   const params = useParams();
@@ -139,21 +141,15 @@ export default function EditAppointmentPage() {
 
   return (
     <div className="vet-page">
+      <PageHeader
+        title="Reprogramar Cita"
+        subtitle={`Cita actual: ${appointment.pet.name} - ${new Date(appointment.date).toLocaleString('es-CL')}`}
+        icon={CalendarClock}
+      />
+
       <div className="vet-container space-y-8">
-        <div className="vet-card-unified overflow-hidden">
-          {/* Header */}
-          <div className="vet-section-header-unified">
-            <div className="vet-section-title-unified">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              Reprogramar Cita
-            </div>
-          </div>
+        <div className="vet-card-unified">
           <div className="p-6 sm:p-8">
-            <p className="text-gray-600 font-medium mb-6">
-              Cita actual: {appointment.pet.name} - {new Date(appointment.date).toLocaleString('es-CL')}
-            </p>
 
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* Información de la cita actual */}

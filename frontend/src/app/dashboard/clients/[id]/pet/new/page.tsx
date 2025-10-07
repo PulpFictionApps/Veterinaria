@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { FadeIn, SlideIn } from '@/components/ui/Transitions';
 import ThemedCard from '@/components/ui/ThemedCard';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function NewPetPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -88,22 +89,13 @@ export default function NewPetPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="vet-page">
+      <PageHeader
+        title="Nueva Mascota"
+        subtitle="Registra una nueva mascota en el sistema"
+        icon={PawPrint}
+      />
+
       <div className="vet-container space-y-8">
-        
-        {/* Header */}
-        <FadeIn>
-          <div className="vet-card-unified overflow-hidden">
-            <div className="vet-section-header-unified">
-              <div className="vet-section-title-unified">
-                <PawPrint className="w-8 h-8" />
-                Nueva Mascota
-              </div>
-            </div>
-            <div className="p-6 sm:p-8">
-              <p className="text-gray-600 font-medium">Registra una nueva mascota en el sistema</p>
-            </div>
-          </div>
-        </FadeIn>
 
         {/* Formulario */}
         <SlideIn direction="up" delay={200}>
