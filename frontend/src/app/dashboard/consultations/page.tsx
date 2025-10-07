@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from 'react';
 import { authFetch } from '../../../lib/api';
@@ -136,8 +136,8 @@ export default function ConsultationsPage() {
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-100 border-t-gray-500"></div>
                     <Pill className="h-6 w-6 text-gray-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </div>
-                  <p className="mt-6 text-neutral-600 font-medium">Cargando tipos de consulta...</p>
-                  <p className="mt-2 text-sm text-neutral-400">Preparando configuración médica</p>
+                  <p className="mt-6 text-gray-700 font-medium">Cargando tipos de consulta...</p>
+                  <p className="mt-2 text-sm text-gray-600">Preparando configuraciÃ³n mÃ©dica</p>
                 </div>
               </div>
             </div>
@@ -162,12 +162,12 @@ export default function ConsultationsPage() {
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
                       Tipos de Consulta Veterinaria
                     </h1>
-                    <p className="text-neutral-600 mt-1 font-medium">
-                      Configura servicios médicos, precios y duraciones de consultas
+                    <p className="text-gray-700 mt-1 font-medium">
+                      Configura servicios mÃ©dicos, precios y duraciones de consultas
                     </p>
                   </div>
                 </div>
-                <Tooltip content="Crear nuevo tipo de consulta médica">
+                <Tooltip content="Crear nuevo tipo de consulta mÃ©dica">
                   <ThemedButton
                     variant="primary"
                     icon={Plus}
@@ -186,37 +186,37 @@ export default function ConsultationsPage() {
         {showCreateForm && (
           <ThemedCard variant="medical" className="mb-8">
             <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-50">
-              <h2 className="text-xl font-bold text-neutral-800">
+              <h2 className="text-xl font-bold text-gray-800">
                 {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
               </h2>
-              <p className="text-sm text-neutral-600 mt-1">
+              <p className="text-sm text-gray-700 mt-1">
                 Configure los detalles del tipo de consulta veterinaria
               </p>
             </div>
             <div className="p-8">
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-neutral-700">
+                  <label className="block text-sm font-semibold text-gray-800">
                     Nombre del Tipo de Consulta *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
-                    placeholder="Ej: Consulta General, Vacunación, Cirugía"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                    placeholder="Ej: Consulta General, VacunaciÃ³n, CirugÃ­a"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-neutral-700">
-                    Duración de la Consulta *
+                  <label className="block text-sm font-semibold text-gray-800">
+                    DuraciÃ³n de la Consulta *
                   </label>
                   <select
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                   >
                     <option value={15}>15 minutos</option>
                     <option value={30}>30 minutos</option>
@@ -228,18 +228,18 @@ export default function ConsultationsPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-neutral-700">
+                  <label className="block text-sm font-semibold text-gray-800">
                     Precio (CLP) *
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-500 font-medium">$</span>
+                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 font-medium">$</span>
                     <input
                       type="number"
                       min="0"
                       step="1000"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) || 0 })}
-                      className="w-full pl-8 pr-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white"
+                      className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                       placeholder="25000"
                       required
                     />
@@ -247,36 +247,36 @@ export default function ConsultationsPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-neutral-700">
-                    Color de Identificación
+                  <label className="block text-sm font-semibold text-gray-800">
+                    Color de IdentificaciÃ³n
                   </label>
                   <div className="flex items-center gap-4">
                     <input
                       type="color"
                       value={formData.color}
                       onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      className="w-16 h-12 border-2 border-neutral-300 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+                      className="w-16 h-12 border-2 border-gray-300 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-shadow"
                     />
                     <div className="flex items-center gap-2">
                       <div 
                         className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
                         style={{ backgroundColor: formData.color }}
                       />
-                      <span className="text-sm font-medium text-neutral-600">{formData.color}</span>
+                      <span className="text-sm font-medium text-gray-700">{formData.color}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="md:col-span-2 space-y-2">
-                  <label className="block text-sm font-semibold text-neutral-700">
-                    Descripción
+                  <label className="block text-sm font-semibold text-gray-800">
+                    DescripciÃ³n
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-neutral-50 focus:bg-white resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white resize-none"
                     rows={4}
-                    placeholder="Descripción detallada del tipo de consulta (opcional)"
+                    placeholder="DescripciÃ³n detallada del tipo de consulta (opcional)"
                   />
                 </div>
                 
@@ -290,7 +290,7 @@ export default function ConsultationsPage() {
                     />
                     <div>
                       <span className="text-sm font-semibold text-gray-800">Tipo de consulta activo</span>
-                      <p className="text-xs text-gray-600">Los tipos inactivos no aparecerán en el sistema de reservas</p>
+                      <p className="text-xs text-gray-600">Los tipos inactivos no aparecerÃ¡n en el sistema de reservas</p>
                     </div>
                   </label>
                 </div>
@@ -308,7 +308,7 @@ export default function ConsultationsPage() {
                     type="submit"
                     size="lg"
                   >
-                    {editingType ? '✓ Guardar Cambios' : '+ Crear Tipo'}
+                    {editingType ? 'âœ“ Guardar Cambios' : '+ Crear Tipo'}
                   </ThemedButton>
                 </div>
               </form>
@@ -327,10 +327,10 @@ export default function ConsultationsPage() {
                 <h3 className="text-2xl font-bold text-gray-800 mb-3">
                   No hay tipos de consulta configurados
                 </h3>
-                <p className="text-neutral-600 mb-8 max-w-md mx-auto">
-                  Crea tu primer tipo de consulta veterinaria para comenzar a ofrecer servicios médicos especializados
+                <p className="text-gray-700 mb-8 max-w-md mx-auto">
+                  Crea tu primer tipo de consulta veterinaria para comenzar a ofrecer servicios mÃ©dicos especializados
                 </p>
-                <Tooltip content="Crear primer tipo de consulta médica">
+                <Tooltip content="Crear primer tipo de consulta mÃ©dica">
                   <button
                     onClick={() => setShowCreateForm(true)}
                     className="group inline-flex items-center gap-3 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-8 py-4 rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow-xl hover:shadow-2xl font-bold text-lg"
@@ -354,7 +354,7 @@ export default function ConsultationsPage() {
                     className={`group bg-white rounded-2xl shadow-lg border transition-all duration-300 hover:shadow-xl ${
                       type.active 
                         ? 'border-gray-200 hover:border-gray-300' 
-                        : 'border-neutral-200 opacity-70'
+                        : 'border-gray-200 opacity-70'
                     }`}
                   >
                     <div className="p-6">
@@ -369,7 +369,7 @@ export default function ConsultationsPage() {
                               {type.name}
                             </h3>
                             {type.description && (
-                              <p className="text-sm text-neutral-600 mt-1">
+                              <p className="text-sm text-gray-700 mt-1">
                                 {type.description}
                               </p>
                             )}
@@ -381,7 +381,7 @@ export default function ConsultationsPage() {
                             className={`text-xs px-3 py-2 rounded-full font-medium transition-all duration-200 flex items-center gap-2 ${
                               type.active
                                 ? 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                                : 'bg-gray-100 text-gray-700 hover:bg-neutral-200'
                             }`}
                           >
                             {type.active ? (
@@ -403,7 +403,7 @@ export default function ConsultationsPage() {
                         <div className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg">
                           <span className="text-gray-700 font-medium flex items-center gap-2">
                             <Clock className="h-4 w-4" />
-                            Duración:
+                            DuraciÃ³n:
                           </span>
                           <span className="font-bold text-gray-800">
                             {type.duration || 30} min

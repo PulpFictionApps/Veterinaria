@@ -109,7 +109,7 @@ export default function BillingPage() {
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
                     Suscripción y Facturación
                   </h1>
-                  <p className="text-neutral-600 mt-1 font-medium">
+                  <p className="text-gray-700 mt-1 font-medium">
                     Gestiona tu plan veterinario premium y revisa tu historial de pagos
                   </p>
                 </div>
@@ -121,7 +121,7 @@ export default function BillingPage() {
         <Stagger className="space-y-8">
           {subscription ? (
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -203,7 +203,7 @@ export default function BillingPage() {
             </AnimateOnView>
           ) : (
             <AnimateOnView>
-              <div className="bg-white rounded-2xl shadow-xl border border-medical-100 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Star className="h-6 w-6 text-white" />
@@ -221,7 +221,7 @@ export default function BillingPage() {
                       <p className="text-gray-700 text-lg mb-4">
                         Experimenta todas las funciones del Plan Veterinario Premium
                       </p>
-                      <p className="text-neutral-600 font-medium">
+                      <p className="text-gray-700 font-medium">
                         Luego solo <span className="text-gray-600 font-bold text-xl">$15.000 CLP mensuales</span>
                       </p>
                     </div>
@@ -243,7 +243,7 @@ export default function BillingPage() {
                     <button 
                       onClick={startCheckout}
                       disabled={loading}
-                      className="group px-8 py-4 bg-gradient-to-r from-medical-500 to-health-500 text-white rounded-xl hover:from-medical-600 hover:to-health-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
+                      className="group px-8 py-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto"
                     >
                       <Heart className={`h-5 w-5 ${loading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform duration-300'}`} />
                       Comenzar Prueba Gratuita
@@ -256,8 +256,8 @@ export default function BillingPage() {
           )}
 
           <AnimateOnView>
-            <div className="bg-white rounded-2xl shadow-xl border border-health-100 overflow-hidden">
-              <div className="gradient-health-medical px-6 py-4">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+              <div className="gradient-gray-medical px-6 py-4">
                 <div className="flex items-center gap-3">
                   <FileText className="h-6 w-6 text-white" />
                   <h2 className="text-xl font-bold text-white">Historial de Pagos</h2>
@@ -265,22 +265,22 @@ export default function BillingPage() {
               </div>
               
               <div className="p-6">
-                <div className="bg-gradient-to-r from-medical-50 to-health-50 rounded-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gradient-to-r from-medical-100 to-health-100">
+                    <thead className="bg-gradient-to-r from-gray-100 to-gray-100">
                       <tr>
-                        <th className="p-4 text-left font-bold text-medical-800">ID Factura</th>
-                        <th className="p-4 text-left font-bold text-medical-800">Fecha</th>
-                        <th className="p-4 text-left font-bold text-medical-800">Monto</th>
-                        <th className="p-4 text-left font-bold text-medical-800">Estado</th>
+                        <th className="p-4 text-left font-bold text-gray-800">ID Factura</th>
+                        <th className="p-4 text-left font-bold text-gray-800">Fecha</th>
+                        <th className="p-4 text-left font-bold text-gray-800">Monto</th>
+                        <th className="p-4 text-left font-bold text-gray-800">Estado</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white">
                       {invoices.map((inv, idx) => (
-                        <tr key={inv.id} className={`hover:bg-medical-50 transition-colors duration-200 ${idx < invoices.length - 1 ? 'border-b border-medical-100' : ''}`}>
-                          <td className="p-4 font-mono text-sm text-medical-600 font-medium">{inv.id}</td>
-                          <td className="p-4 text-neutral-700">{inv.date}</td>
-                          <td className="p-4 font-bold text-medical-700">{inv.amount}</td>
+                        <tr key={inv.id} className={`hover:bg-gray-50 transition-colors duration-200 ${idx < invoices.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                          <td className="p-4 font-mono text-sm text-gray-600 font-medium">{inv.id}</td>
+                          <td className="p-4 text-gray-800">{inv.date}</td>
+                          <td className="p-4 font-bold text-gray-700">{inv.amount}</td>
                           <td className="p-4">
                             <span className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 w-fit ${
                               inv.status === 'paid' 
@@ -308,9 +308,9 @@ export default function BillingPage() {
                 
                 {invoices.length === 0 && (
                   <div className="text-center py-12">
-                    <FileText className="h-16 w-16 text-neutral-300 mx-auto mb-4" />
-                    <p className="text-neutral-500 font-medium">No hay facturas disponibles</p>
-                    <p className="text-sm text-neutral-400 mt-1">Los pagos aparecerán aquí cuando se procesen</p>
+                    <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-700 font-medium">No hay facturas disponibles</p>
+                    <p className="text-sm text-gray-600 mt-1">Los pagos aparecerán aquí cuando se procesen</p>
                   </div>
                 )}
               </div>

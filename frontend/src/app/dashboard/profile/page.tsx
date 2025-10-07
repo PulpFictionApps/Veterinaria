@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -57,7 +57,7 @@ export default function ProfessionalProfilePage() {
     phone: '',
     clinicName: '',
     professionalRut: '',
-    professionalTitle: 'MÉDICO VETERINARIO',
+    professionalTitle: 'MÃ‰DICO VETERINARIO',
     clinicAddress: '',
     professionalPhone: '',
     licenseNumber: '',
@@ -85,7 +85,7 @@ export default function ProfessionalProfilePage() {
         phone: data.phone || '',
         clinicName: data.clinicName || '',
         professionalRut: data.professionalRut || '',
-        professionalTitle: data.professionalTitle || 'MÉDICO VETERINARIO',
+        professionalTitle: data.professionalTitle || 'MÃ‰DICO VETERINARIO',
         clinicAddress: data.clinicAddress || '',
         professionalPhone: data.professionalPhone || '',
         licenseNumber: data.licenseNumber || '',
@@ -144,8 +144,8 @@ export default function ProfessionalProfilePage() {
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-100 border-t-gray-500"></div>
                     <User className="h-6 w-6 text-gray-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </div>
-                  <p className="mt-6 text-neutral-600 font-medium">Cargando perfil profesional...</p>
-                  <p className="mt-2 text-sm text-neutral-400">Preparando datos médicos</p>
+                  <p className="mt-6 text-gray-700 font-medium">Cargando perfil profesional...</p>
+                  <p className="mt-2 text-sm text-gray-600">Preparando datos mÃ©dicos</p>
                 </div>
               </div>
             </div>
@@ -171,8 +171,8 @@ export default function ProfessionalProfilePage() {
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
                       Perfil Profesional
                     </h1>
-                    <p className="text-neutral-600 mt-1 font-medium">
-                      Configuración de datos médicos veterinarios
+                    <p className="text-gray-700 mt-1 font-medium">
+                      ConfiguraciÃ³n de datos mÃ©dicos veterinarios
                     </p>
                   </div>
                 </div>
@@ -200,10 +200,10 @@ export default function ProfessionalProfilePage() {
                   <FileText className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-gray-800 mb-2 text-lg">Configuración para Documentos Médicos</h2>
+                  <h2 className="font-bold text-gray-800 mb-2 text-lg">ConfiguraciÃ³n para Documentos MÃ©dicos</h2>
                   <p className="text-gray-700 leading-relaxed">
-                    Complete sus datos profesionales para que aparezcan automáticamente en las recetas médicas y documentos veterinarios que genere.
-                    Esta información se utilizará como plantilla predeterminada en todos sus PDFs de prescripciones y certificados médicos.
+                    Complete sus datos profesionales para que aparezcan automÃ¡ticamente en las recetas mÃ©dicas y documentos veterinarios que genere.
+                    Esta informaciÃ³n se utilizarÃ¡ como plantilla predeterminada en todos sus PDFs de prescripciones y certificados mÃ©dicos.
                   </p>
                 </div>
               </div>
@@ -242,14 +242,14 @@ export default function ProfessionalProfilePage() {
                 <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <User className="h-6 w-6 text-white" />
-                    <h3 className="text-xl font-bold text-white">Datos Profesionales Básicos</h3>
+                    <h3 className="text-xl font-bold text-white">Datos Profesionales BÃ¡sicos</h3>
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <User className="h-4 w-4 text-gray-500" />
                         Nombre Completo *
                       </label>
@@ -259,12 +259,12 @@ export default function ProfessionalProfilePage() {
                         value={formData.fullName}
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
-                        placeholder="Dr. Juan Pérez González"
+                        placeholder="Dr. Juan PÃ©rez GonzÃ¡lez"
                       />
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Shield className="h-4 w-4 text-gray-500" />
                         RUT Profesional *
                       </label>
@@ -279,16 +279,16 @@ export default function ProfessionalProfilePage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Award className="h-4 w-4 text-gray-500" />
-                        Título Profesional
+                        TÃ­tulo Profesional
                       </label>
                       <select
                         value={formData.professionalTitle}
                         onChange={(e) => handleInputChange('professionalTitle', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                       >
-                        <option value="MÉDICO VETERINARIO">MÉDICO VETERINARIO</option>
+                        <option value="MÃ‰DICO VETERINARIO">MÃ‰DICO VETERINARIO</option>
                         <option value="VETERINARIO">VETERINARIO</option>
                         <option value="DRA. VETERINARIA">DRA. VETERINARIA</option>
                         <option value="DR. VETERINARIO">DR. VETERINARIO</option>
@@ -296,9 +296,9 @@ export default function ProfessionalProfilePage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Stethoscope className="h-4 w-4 text-gray-500" />
-                        Número de Colegiatura
+                        NÃºmero de Colegiatura
                       </label>
                       <input
                         type="text"
@@ -319,16 +319,16 @@ export default function ProfessionalProfilePage() {
                 <div className="bg-gradient-to-r from-gray-500 to-gray-500 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Phone className="h-6 w-6 text-white" />
-                    <h3 className="text-xl font-bold text-white">Información de Contacto Profesional</h3>
+                    <h3 className="text-xl font-bold text-white">InformaciÃ³n de Contacto Profesional</h3>
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Phone className="h-4 w-4 text-gray-500" />
-                        Teléfono Personal
+                        TelÃ©fono Personal
                       </label>
                       <input
                         type="tel"
@@ -340,9 +340,9 @@ export default function ProfessionalProfilePage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Building className="h-4 w-4 text-gray-500" />
-                        Teléfono Profesional/Clínica
+                        TelÃ©fono Profesional/ClÃ­nica
                       </label>
                       <input
                         type="tel"
@@ -363,30 +363,30 @@ export default function ProfessionalProfilePage() {
                 <div className="bg-gradient-to-r from-gray-600 to-gray-600 px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Building className="h-6 w-6 text-white" />
-                    <h3 className="text-xl font-bold text-white">Información de la Clínica Veterinaria</h3>
+                    <h3 className="text-xl font-bold text-white">InformaciÃ³n de la ClÃ­nica Veterinaria</h3>
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="space-y-6">
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Heart className="h-4 w-4 text-gray-500" />
-                        Nombre de la Clínica
+                        Nombre de la ClÃ­nica
                       </label>
                       <input
                         type="text"
                         value={formData.clinicName}
                         onChange={(e) => handleInputChange('clinicName', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
-                        placeholder="Clínica Veterinaria Los Andes"
+                        placeholder="ClÃ­nica Veterinaria Los Andes"
                       />
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-gray-500" />
-                        Dirección de la Clínica
+                        DirecciÃ³n de la ClÃ­nica
                       </label>
                       <textarea
                         value={formData.clinicAddress}
@@ -414,7 +414,7 @@ export default function ProfessionalProfilePage() {
                 <div className="p-6">
                   <div className="space-y-6">
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Upload className="h-4 w-4 text-gray-500" />
                         URL de la Firma Digital
                       </label>
@@ -425,15 +425,15 @@ export default function ProfessionalProfilePage() {
                         className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="https://ejemplo.com/mi-firma.png"
                       />
-                      <p className="text-xs text-neutral-500 mt-2 bg-gray-50 rounded-lg p-2">
-                        URL de una imagen de su firma profesional para incluir en las recetas médicas
+                      <p className="text-xs text-gray-700 mt-2 bg-gray-50 rounded-lg p-2">
+                        URL de una imagen de su firma profesional para incluir en las recetas mÃ©dicas
                       </p>
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+                      <label className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Heart className="h-4 w-4 text-gray-500" />
-                        URL del Logo de la Clínica
+                        URL del Logo de la ClÃ­nica
                       </label>
                       <input
                         type="url"
@@ -442,8 +442,8 @@ export default function ProfessionalProfilePage() {
                         className="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 font-medium bg-gradient-to-r from-white to-gray-50"
                         placeholder="https://ejemplo.com/logo-clinica.png"
                       />
-                      <p className="text-xs text-neutral-500 mt-2 bg-gray-50 rounded-lg p-2">
-                        URL del logo oficial de su clínica veterinaria para el encabezado de las recetas
+                      <p className="text-xs text-gray-700 mt-2 bg-gray-50 rounded-lg p-2">
+                        URL del logo oficial de su clÃ­nica veterinaria para el encabezado de las recetas
                       </p>
                     </div>
                   </div>
@@ -459,11 +459,11 @@ export default function ProfessionalProfilePage() {
                     <Settings className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-gray-800 mb-2 text-lg">Configuración Avanzada del Sistema</h3>
+                    <h3 className="font-bold text-gray-800 mb-2 text-lg">ConfiguraciÃ³n Avanzada del Sistema</h3>
                     <p className="text-gray-700 leading-relaxed mb-4">
-                      Para configurar automatización de recordatorios, personalización de colores, integración con sistemas externos y otras preferencias avanzadas del sistema, visite la sección de Ajustes.
+                      Para configurar automatizaciÃ³n de recordatorios, personalizaciÃ³n de colores, integraciÃ³n con sistemas externos y otras preferencias avanzadas del sistema, visite la secciÃ³n de Ajustes.
                     </p>
-                    <Tooltip content="Acceder a configuración avanzada">
+                    <Tooltip content="Acceder a configuraciÃ³n avanzada">
                       <a
                         href="/dashboard/settings"
                         className="group inline-flex items-center gap-2 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-3 rounded-xl hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
@@ -485,7 +485,7 @@ export default function ProfessionalProfilePage() {
                     <button
                       type="button"
                       onClick={() => router.back()}
-                      className="group flex-1 px-6 py-4 border-2 border-neutral-200 text-neutral-700 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-300 font-medium flex items-center justify-center gap-2"
+                      className="group flex-1 px-6 py-4 border-2 border-gray-200 text-gray-800 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 font-medium flex items-center justify-center gap-2"
                     >
                       <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
                       Cancelar Cambios
@@ -496,7 +496,7 @@ export default function ProfessionalProfilePage() {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="group flex-1 px-6 py-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl hover:from-gray-600 hover:to-gray-600 disabled:from-neutral-400 disabled:to-neutral-500 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2"
+                      className="group flex-1 px-6 py-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl hover:from-gray-600 hover:to-gray-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2"
                     >
                       {saving ? (
                         <>
