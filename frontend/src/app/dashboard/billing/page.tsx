@@ -126,7 +126,7 @@ export default function BillingPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Award className="h-6 w-6 text-white" />
-                      <h2 className="text-xl font-bold text-white">{PLAN_INFO.display}</h2>
+                      <h2 className="text-xl font-bold text-gray-700">{PLAN_INFO.display}</h2>
                     </div>
                     {subscription.status === 'trial' && (
                       <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function BillingPage() {
                         </div>
                       )}
 
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-2 gap-3 text-gray-700">
                         {PLAN_INFO.features.map((feature, idx) => {
                           const IconComponent = feature.icon;
                           return (
