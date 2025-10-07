@@ -28,9 +28,9 @@ export default function ThemedCard({
 
   const shadowClasses = {
     sm: 'shadow-sm',
-    md: 'shadow-lg',
-    lg: 'shadow-xl',
-    xl: 'shadow-2xl'
+    md: 'shadow',
+    lg: 'shadow',
+    xl: 'shadow'
   };
 
   const variantClasses = {
@@ -43,7 +43,7 @@ export default function ThemedCard({
   return (
     <div 
       className={`
-        rounded-2xl 
+        rounded-lg 
         ${paddingClasses[padding]} 
         ${shadowClasses[shadow]} 
         ${variantClasses[variant]}

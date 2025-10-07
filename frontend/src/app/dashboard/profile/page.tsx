@@ -180,7 +180,7 @@ export default function ProfessionalProfilePage() {
                 <Tooltip content="Volver al dashboard">
                   <button
                     onClick={() => router.back()}
-                    className="group bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium flex items-center gap-2"
+                    className="group bg-gray-100 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-200 border border-gray-200 transition-all duration-300 font-medium flex items-center gap-2"
                   >
                     <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
                     Volver
@@ -466,7 +466,7 @@ export default function ProfessionalProfilePage() {
                     <Tooltip content="Acceder a configuraciÃ³n avanzada">
                       <a
                         href="/dashboard/settings"
-                        className="group inline-flex items-center gap-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 py-3 rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+                        className="group inline-flex items-center gap-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 py-3 rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow font-medium"
                       >
                         <Settings className="h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
                         Ir a Ajustes Avanzados
@@ -496,7 +496,7 @@ export default function ProfessionalProfilePage() {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="group flex-1 px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2"
+                      className="group flex-1 px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 shadow font-medium flex items-center justify-center gap-2"
                     >
                       {saving ? (
                         <>

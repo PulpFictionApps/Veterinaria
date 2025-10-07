@@ -30,11 +30,11 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     const { getPrimaryButtonStyle } = useThemeColors();
 
     const baseClasses = `
-      font-semibold rounded-xl transition-all duration-200 
+      font-semibold rounded-lg transition-all duration-200 
       focus:outline-none focus:ring-2 focus:ring-offset-2 
       disabled:opacity-50 disabled:cursor-not-allowed
       transform hover:scale-[1.02] active:scale-[0.98] active:transition-none
-      shadow-lg hover:shadow-xl
+      shadow
       select-none touch-manipulation
       border-0
       ${fullWidth ? 'w-full' : ''}

@@ -27,7 +27,7 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
     // Los colores ahora se manejan con CSS variables
 
     const baseInputClasses = `
-      w-full px-4 py-3 rounded-xl border transition-all duration-300
+      w-full px-4 py-3 rounded-lg border transition-all duration-300
       focus:outline-none focus:ring-2 focus:ring-offset-1
       disabled:opacity-50 disabled:cursor-not-allowed
       placeholder:text-gray-400
@@ -37,7 +37,7 @@ const ThemedInput = forwardRef<HTMLInputElement, ThemedInputProps>(
 
     const variantClasses = {
       default: `
-        border-gray-300 focus:border-gray-500 focus:ring-gray-500/20
+        border-gray-200 focus:border-gray-500 focus:ring-gray-500/20
         bg-white hover:border-gray-400
       `,
       medical: `
