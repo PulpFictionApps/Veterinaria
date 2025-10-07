@@ -401,7 +401,7 @@ export default function ConsultationPage() {
       <div className="vet-container space-y-6">
         {/* Appointment Details */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Información de la Cita</h2>
+        <h3 className="text-lg font-semibold mb-4">Información de la Cita</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-semibold text-lg mb-2">Información de la Mascota</h3>
@@ -431,7 +431,7 @@ export default function ConsultationPage() {
 
       {/* Update Pet Information */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Actualizar Información de la Mascota</h2>
+        <h3 className="text-lg font-semibold mb-4">Actualizar Información de la Mascota</h3>
         <form onSubmit={handleUpdatePet} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -483,7 +483,7 @@ export default function ConsultationPage() {
 
       {/* Create Medical Record */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Crear Registro Médico</h2>
+        <h3 className="text-lg font-semibold mb-4">Crear Registro Médico</h3>
         <form onSubmit={handleCreateRecord} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Título *</label>
@@ -571,7 +571,7 @@ export default function ConsultationPage() {
 
       {/* Create Prescription */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Crear Receta Médica</h2>
+        <h3 className="text-lg font-semibold mb-4">Crear Receta Médica</h3>
         <form onSubmit={handleCreatePrescription} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -671,7 +671,7 @@ export default function ConsultationPage() {
 
       {/* Medical Records History */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Historial Médico</h2>
+        <h3 className="text-lg font-semibold mb-4">Historial Médico</h3>
         
         {medicalRecords.length === 0 ? (
           <p className="text-gray-500">No hay registros médicos para esta mascota.</p>
@@ -720,7 +720,7 @@ export default function ConsultationPage() {
 
       {/* Prescriptions History */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Recetas Médicas</h2>
+        <h3 className="text-lg font-semibold mb-4">Recetas Médicas</h3>
         
         {prescriptions.length === 0 ? (
           <p className="text-gray-500">No hay recetas médicas para esta mascota.</p>

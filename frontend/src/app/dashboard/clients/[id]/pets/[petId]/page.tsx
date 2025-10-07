@@ -26,6 +26,7 @@ import {
 import { FadeIn, SlideIn, AnimateOnView } from '@/components/ui/Transitions';
 import Tooltip from '@/components/ui/Tooltip';
 import ThemedCard from '@/components/ui/ThemedCard';
+import PageHeader from '@/components/ui/PageHeader';
 
 interface Pet {
   id: number;
@@ -218,57 +219,63 @@ export default function PetDetail({ params }: PageProps) {
   }
 
   return (
-    <div className="w-full min-h-full bg-gradient-to-br from-neutral-50 to-medical-50">
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
+    <div className="vet-container">
+      {/* Header unificado */}
+      <PageHeader
+        title={pet.name}
+        subtitle={`${pet.type} ${pet.breed ? `• ${pet.breed}` : ''}`}
+        icon={PawPrint}
+        actions={
+          <>
+            <Tooltip content="Editar mascota">
+              <button 
+                onClick={() => router.push(`/dashboard/clients/${tutorId}/pets/${petId}/edit`)}
+                className="p-2 text-neutral-600 hover:text-medical-600 hover:bg-medical-50 rounded-lg transition-colors"
+              >
+                <Edit className="w-5 h-5" />
+              </button>
+            </Tooltip>
+            <Tooltip content="Eliminar mascota">
+              <button 
+                onClick={handleDelete}
+                className="p-2 text-neutral-600 hover:text-emergency-600 hover:bg-emergency-50 rounded-lg transition-colors"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </Tooltip>
+          </>
+        }
+      />
+
+      <div className="space-y-8">
         
-        {/* Header con información básica */}
+        {/* Información básica de la mascota */}
         <FadeIn>
           <ThemedCard variant="medical" className="overflow-hidden">
-            <div className="bg-gradient-to-r from-medical-600 to-health-600 p-8 text-white">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-6">
-                  <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <PawPrint className="w-10 h-10 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold mb-2">{pet.name}</h1>
-                    <div className="flex items-center space-x-6 text-white/90">
-                      <span className="flex items-center">
-                        <Heart className="w-4 h-4 mr-2" />
-                        {pet.type} {pet.breed && `• ${pet.breed}`}
-                      </span>
-                      {pet.age && (
-                        <span className="flex items-center">
-                          <Cake className="w-4 h-4 mr-2" />
-                          {pet.age} años
-                        </span>
-                      )}
-                      {pet.weight && (
-                        <span className="flex items-center">
-                          <Scale className="w-4 h-4 mr-2" />
-                          {pet.weight} kg
-                        </span>
-                      )}
-                    </div>
-                  </div>
+            <div className="bg-gradient-to-r from-medical-600 to-health-600 p-6 text-white">
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <PawPrint className="w-8 h-8 text-white" />
                 </div>
-                <div className="flex space-x-3">
-                  <Tooltip content="Editar mascota">
-                    <button 
-                      onClick={() => router.push(`/dashboard/clients/${tutorId}/pets/${petId}/edit`)}
-                      className="p-3 bg-white/20 rounded-xl hover:bg-white/30 transition-colors"
-                    >
-                      <Edit className="w-5 h-5" />
-                    </button>
-                  </Tooltip>
-                  <Tooltip content="Eliminar mascota">
-                    <button 
-                      onClick={handleDelete}
-                      className="p-3 bg-emergency-500/20 rounded-xl hover:bg-emergency-500/30 transition-colors"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </Tooltip>
+                <div>
+                  <div className="flex items-center space-x-6 text-white/90">
+                    <span className="flex items-center">
+                      <Heart className="w-4 h-4 mr-2" />
+                      {pet.type} {pet.breed && `• ${pet.breed}`}
+                    </span>
+                    {pet.age && (
+                      <span className="flex items-center">
+                        <Cake className="w-4 h-4 mr-2" />
+                        {pet.age} años
+                      </span>
+                    )}
+                    {pet.weight && (
+                      <span className="flex items-center">
+                        <Scale className="w-4 h-4 mr-2" />
+                        {pet.weight} kg
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
