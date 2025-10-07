@@ -126,47 +126,28 @@ export default function ConsultationsPage() {
 
   if (loading) {
     return (
-      <FadeIn>
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 p-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex justify-center items-center py-20">
-              <div className="bg-white rounded-lg shadow p-8 border border-gray-200">
-                <div className="flex flex-col items-center">
-                  <div className="relative">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-gray-500"></div>
-                    <Pill className="h-6 w-6 text-gray-700 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                  </div>
-                  <p className="mt-6 text-gray-700 font-medium">Cargando tipos de consulta...</p>
-                  <p className="mt-2 text-sm text-gray-700">Preparando configuraciÃ³n mÃ©dica</p>
-                </div>
-              </div>
-            </div>
+      <div className="vet-page">
+        <div className="vet-container">
+          <div className="animate-pulse space-y-8">
+            <div className="h-32 bg-gray-200 rounded-xl"></div>
+            <div className="h-64 bg-gray-200 rounded-xl"></div>
           </div>
         </div>
-      </FadeIn>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
+    <div className="vet-page">
+      <div className="vet-container space-y-8">
         <FadeIn>
-          <div className="mb-8">
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow-lg">
-                    <Pill className="h-8 w-8 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-800">
-                      Tipos de Consulta Veterinaria
-                    </h1>
-                    <p className="text-gray-700 mt-1 font-medium">
-                      Configura servicios mÃ©dicos, precios y duraciones de consultas
-                    </p>
-                  </div>
-                </div>
+          <div className="vet-card-unified overflow-hidden">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <Pill className="h-8 w-8" />
+                Tipos de Consulta Veterinaria
+              </div>
+              <div className="flex items-center gap-3">
                 <Tooltip content="Crear nuevo tipo de consulta mÃ©dica">
                   <ThemedButton
                     variant="primary"
@@ -178,6 +159,9 @@ export default function ConsultationsPage() {
                   </ThemedButton>
                 </Tooltip>
               </div>
+            </div>
+            <div className="p-6 sm:p-8">
+              <p className="text-gray-600 font-medium">Configura servicios médicos, precios y duraciones de consultas</p>
             </div>
           </div>
         </FadeIn>

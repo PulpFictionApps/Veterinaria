@@ -147,12 +147,12 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="vet-page">
+        <div className="vet-container">
           <div className="animate-pulse space-y-8">
-            <div className="h-32 bg-gray-200 rounded-2xl"></div>
-            <div className="h-64 bg-gray-200 rounded-2xl"></div>
-            <div className="h-64 bg-gray-200 rounded-2xl"></div>
+            <div className="h-32 bg-gray-200 rounded-xl"></div>
+            <div className="h-64 bg-gray-200 rounded-xl"></div>
+            <div className="h-64 bg-gray-200 rounded-xl"></div>
           </div>
         </div>
       </div>
@@ -160,22 +160,20 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="vet-page">
+      <div className="vet-container space-y-8">
         
         {/* Header */}
         <FadeIn>
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-            <div className="bg-gradient-primary p-6 text-white rounded-xl">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                  <Settings className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold">Configuración</h1>
-                  <p className="text-white/90">Personaliza tu experiencia y sistema de emails</p>
-                </div>
+          <div className="vet-card-unified overflow-hidden">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <Settings className="w-8 h-8" />
+                Configuración
               </div>
+            </div>
+            <div className="p-6 sm:p-8">
+              <p className="text-gray-600 font-medium">Personaliza tu experiencia y sistema de emails</p>
             </div>
           </div>
         </FadeIn>
@@ -195,16 +193,15 @@ export default function SettingsPage() {
 
         {/* Sistema Automático Status */}
         <SlideIn direction="up" delay={100}>
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                <Activity className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">Sistema Automático Activo</h2>
-                <p className="text-gray-600">Tu sistema de emails está funcionando automáticamente</p>
+          <div className="vet-card-unified">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <Activity className="w-6 h-6" />
+                Sistema Automático Activo
               </div>
             </div>
+            <div className="p-6 sm:p-8">
+              <p className="text-gray-600 mb-6">Tu sistema de emails está funcionando automáticamente</p>
 
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4">
               <h4 className="font-semibold text-gray-800 mb-2">🎯 Funciones Activas</h4>
@@ -224,11 +221,12 @@ export default function SettingsPage() {
               </ul>
             </div>
 
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-              <h4 className="font-semibold text-gray-800 mb-2">📧 Configuración de Email</h4>
-              <div className="text-sm text-gray-700 space-y-1">
-                <p><strong>Servidor:</strong> Gmail SMTP (myvetagenda@gmail.com)</p>
-                <p><strong>Estado:</strong> <span className="text-gray-600 font-semibold">✅ Operativo</span></p>
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">📧 Configuración de Email</h4>
+                <div className="text-sm text-gray-700 space-y-1">
+                  <p><strong>Servidor:</strong> Gmail SMTP (myvetagenda@gmail.com)</p>
+                  <p><strong>Estado:</strong> <span className="text-gray-600 font-semibold">✅ Operativo</span></p>
+                </div>
               </div>
             </div>
           </div>
@@ -238,16 +236,15 @@ export default function SettingsPage() {
 
         {/* Clinic Information */}
         <SlideIn direction="up" delay={300}>
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                <Building className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">Información de tu Clínica</h2>
-                <p className="text-gray-600">Esta información aparece en los emails enviados a tus clientes</p>
+          <div className="vet-card-unified">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <Building className="w-6 h-6" />
+                Información de tu Clínica
               </div>
             </div>
+            <div className="p-6 sm:p-8">
+              <p className="text-gray-600 mb-6">Esta información aparece en los emails enviados a tus clientes</p>
 
             <form onSubmit={handleClinicSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -332,21 +329,21 @@ export default function SettingsPage() {
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </SlideIn>
 
         {/* Email Customization */}
         <SlideIn direction="up" delay={400}>
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                <Mail className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">Personalización de Emails</h2>
-                <p className="text-gray-600">Configure las instrucciones que aparecerán en los emails de confirmación</p>
+          <div className="vet-card-unified">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <Mail className="w-6 h-6" />
+                Personalización de Emails
               </div>
             </div>
+            <div className="p-6 sm:p-8">
+              <p className="text-gray-600 mb-6">Configure las instrucciones que aparecerán en los emails de confirmación</p>
 
             <form onSubmit={handleEmailSubmit} className="space-y-6">
               <div>
@@ -436,6 +433,7 @@ export default function SettingsPage() {
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </SlideIn>
 
