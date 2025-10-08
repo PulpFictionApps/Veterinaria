@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { authFetch } from '../../../lib/api';
 import { useAuthContext } from '../../../lib/auth-context';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   CalendarDays, 
   Search, 
@@ -60,6 +61,7 @@ interface Appointment {
 }
 
 export default function AppointmentsPage() {
+  const router = useRouter();
   const { userId } = useAuthContext();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -482,14 +484,15 @@ export default function AppointmentsPage() {
 
                   {/* Action Footer */}
                   <div className="pt-4 border-t border-gray-100">
-                    <Link
-                      href={`/dashboard/clients/${appointment.tutor.id}/pets/${appointment.pet.id}`}
+                    <button
+                      type="button"
+                      onClick={() => router.push(`/dashboard/clients/${appointment.tutor.id}/pets/${appointment.pet.id}`)}
                       className="group inline-flex items-center gap-2 text-gray-600 hover:text-gray-700 font-medium transition-all duration-300"
                     >
                       <Eye className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                       Ver Ficha Médica Completa
                       <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               );

@@ -275,38 +275,35 @@ export default function Dashboard() {
         )}
 
         {/* Grid de métricas con animaciones */}
-        <Stagger 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6"
+        <Stagger
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           staggerDelay={150}
         >
           {[
-            <div key="appointments" className="xl:col-span-2">
-              <MetricCard
-                title="Citas de Hoy"
-                value={metrics.todayAppointments}
-                icon={Calendar}
-                change={metrics.todayAppointments > 0 ? `${metrics.todayAppointments} programadas` : "Sin citas hoy"}
-                changeType={metrics.todayAppointments > 0 ? "positive" : "neutral"}
-              />
-            </div>,
-            <div key="clients" className="xl:col-span-2">
-              <MetricCard
-                title="Total Clientes"
-                value={metrics.totalClients}
-                icon={Users}
-                change={metrics.totalClients > 0 ? "Total registrados" : "Sin clientes aún"}
-                changeType="neutral"
-              />
-            </div>,
-            <div key="slots" className="xl:col-span-2">
-              <MetricCard
-                title="Horarios Disponibles"
-                value={metrics.availableSlots}
-                icon={Clock}
-                change={metrics.availableSlots < 5 ? "Pocos horarios" : "Bien cubierto"}
-                changeType={metrics.availableSlots < 5 ? "negative" : "positive"}
-              />
-            </div>
+            <MetricCard
+              key="appointments"
+              title="Citas de Hoy"
+              value={metrics.todayAppointments}
+              icon={Calendar}
+              change={metrics.todayAppointments > 0 ? `${metrics.todayAppointments} programadas` : "Sin citas hoy"}
+              changeType={metrics.todayAppointments > 0 ? "positive" : "neutral"}
+            />,
+            <MetricCard
+              key="clients"
+              title="Total Clientes"
+              value={metrics.totalClients}
+              icon={Users}
+              change={metrics.totalClients > 0 ? "Total registrados" : "Sin clientes aún"}
+              changeType="neutral"
+            />,
+            <MetricCard
+              key="slots"
+              title="Horarios Disponibles"
+              value={metrics.availableSlots}
+              icon={Clock}
+              change={metrics.availableSlots < 5 ? "Pocos horarios" : "Bien cubierto"}
+              changeType={metrics.availableSlots < 5 ? "negative" : "positive"}
+            />
           ]}
         </Stagger>
 
