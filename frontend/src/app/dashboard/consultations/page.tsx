@@ -402,7 +402,7 @@ export default function ConsultationsPage() {
                       <Tooltip content="Editar tipo de consulta">
                         <button
                           onClick={() => editType(type)}
-                          className="group/edit w-full py-3 bg-gradient-to-r from-gray-800 to-gray-900 text-white hover:from-gray-600 hover:to-gray-600 rounded-lg transition-all duration-300 font-medium flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                          className="group/edit w-full px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-900 text-white hover:from-gray-600 hover:to-gray-600 rounded-lg transition-all duration-300 font-medium flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
                         >
                           <Edit className="h-4 w-4 group-hover/edit:scale-110 transition-transform duration-300" />
                           Editar Consulta
