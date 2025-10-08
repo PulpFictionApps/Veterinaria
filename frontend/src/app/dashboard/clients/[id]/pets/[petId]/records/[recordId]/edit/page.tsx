@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { authFetch } from '@/lib/api';
 import PageHeader from '@/components/ui/PageHeader';
 import { Edit, ArrowLeft, Save } from 'lucide-react';
@@ -16,9 +16,9 @@ type RecordShape = {
   [key: string]: unknown;
 };
 
-export default function EditRecord(props: { params?: { id?: string; petId?: string; recordId?: string } }) {
-  const { params } = props;
+export default function EditRecord() {
   const router = useRouter();
+  const params = useParams() as { id?: string; petId?: string; recordId?: string } | null;
   const ownerId = params?.id;
   const petId = Number(params?.petId);
   const recordId = Number(params?.recordId);
