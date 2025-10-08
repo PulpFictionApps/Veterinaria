@@ -5,6 +5,9 @@ import { API_BASE } from '../lib/api';
 import { filterActiveSlots, formatChileDate, formatChileTime } from '../lib/timezone';
 import { formatChileanPhone, validateChileanPhone, formatRutChile, validateRutChile } from '../lib/chilean-validation';
 import { usePublicAvailability, useConsultationTypes, invalidateCache } from '../hooks/useData';
+import ThemedCard from './ui/ThemedCard';
+import ThemedInput from './ui/ThemedInput';
+import ThemedButton from './ui/ThemedButton';
 
 interface ConsultationType {
   id: number;
@@ -354,49 +357,30 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const selectedType = consultationTypes.find((t: ConsultationType) => t.id === Number(selectedConsultationType));
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow">
-      <h3 
-        className="text-lg sm:text-xl font-bold mb-4 sm:mb-6"
-        style={{
-          color: colors.primaryColor || '#1f2937',
-          borderBottom: `2px solid ${colors.accentColor || '#3b82f6'}`,
-          paddingBottom: '8px',
-          marginBottom: '16px'
-        }}
-      >
-        Reservar hora
-      </h3>
-      
-      {/* Email verificación */}
-      <div className="mb-4 sm:mb-6">
-        <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">Verificación de Cliente</h4>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-          <input 
-            value={email} 
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailChecked(false);
-              setExistingTutor(null);
-            }} 
-            placeholder="Email del cliente" 
-            type="email" 
-            className="flex-1 px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base touch-manipulation" 
-            required 
-          />
-          <button 
-            type="button" 
-            onClick={checkEmailExists}
-            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:opacity-90 touch-manipulation"
-            style={{
-              backgroundColor: colors.primaryColor || '#3b82f6',
-              borderColor: colors.primaryColor || '#3b82f6',
-              color: 'white'
-            }}
-          >
-            Verificar
-          </button>
+    <form onSubmit={handleSubmit} className="w-full max-w-full sm:max-w-2xl mx-auto">
+      <ThemedCard className="p-6">
+        <div className="mb-4">
+          <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: colors.primaryColor || '#1f2937' }}>Reservar hora</h3>
+          <div style={{ borderBottom: `2px solid ${colors.accentColor || '#3b82f6'}`, marginTop: 6 }} />
         </div>
-        {existingTutor && (
+
+        {/* Email verificación */}
+        <div className="mb-4 sm:mb-6">
+          <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">Verificación de Cliente</h4>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <ThemedInput
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setEmailChecked(false); setExistingTutor(null); }}
+              placeholder="Email del cliente"
+              type="email"
+              required
+              className="flex-1"
+            />
+            <ThemedButton onClick={checkEmailExists} className="w-full sm:w-auto" style={{ backgroundColor: colors.primaryColor }}>
+              Verificar
+            </ThemedButton>
+          </div>
+          {existingTutor && (
           <div 
             className="mt-2 p-2 border rounded text-sm"
             style={{
@@ -719,7 +703,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         </div>
       )}
 
-      {message && (
+  </ThemedCard>
+
+  {message && (
         <p className={`mt-3 text-sm ${message.includes('correctamente') ? 'text-gray-600' : message.includes('encontrado') ? 'text-gray-600' : 'text-gray-600'}`}>
           {message}
         </p>
