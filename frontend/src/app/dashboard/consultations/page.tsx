@@ -269,7 +269,7 @@ export default function ConsultationsPage() {
                     />
                     <div>
                       <span className="text-sm font-semibold text-gray-800">Tipo de consulta activo</span>
-                      <p className="text-xs text-gray-700">Los tipos inactivos no aparecerÃ¡n en el sistema de reservas</p>
+                      <p className="text-xs text-gray-700">Los tipos inactivos no aparecerán en el sistema de reservas</p>
                     </div>
                   </label>
                 </div>
@@ -287,7 +287,7 @@ export default function ConsultationsPage() {
                     type="submit"
                     size="lg"
                   >
-                    {editingType ? 'âœ“ Guardar Cambios' : '+ Crear Tipo'}
+                    {editingType ? '✓ Guardar Cambios' : '+ Crear Tipo'}
                   </ThemedButton>
                 </div>
               </form>
@@ -307,9 +307,9 @@ export default function ConsultationsPage() {
                   No hay tipos de consulta configurados
                 </h3>
                 <p className="text-gray-700 mb-8 max-w-md mx-auto">
-                  Crea tu primer tipo de consulta veterinaria para comenzar a ofrecer servicios mÃ©dicos especializados
+                  Crea tu primer tipo de consulta veterinaria para comenzar a ofrecer servicios médicos especializados
                 </p>
-                <Tooltip content="Crear primer tipo de consulta mÃ©dica">
+                <Tooltip content="Crear primer tipo de consulta médica">
                   <button
                     onClick={() => setShowCreateForm(true)}
                     className="group inline-flex items-center gap-3 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-8 py-4 rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 shadow-xl hover:shadow-2xl font-bold text-lg"
@@ -382,7 +382,7 @@ export default function ConsultationsPage() {
                         <div className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg">
                           <span className="text-gray-700 font-medium flex items-center gap-2">
                             <Clock className="h-4 w-4" />
-                            DuraciÃ³n:
+                            Duración:
                           </span>
                           <span className="font-bold text-gray-800">
                             {type.duration || 30} min
