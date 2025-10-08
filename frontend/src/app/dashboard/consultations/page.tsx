@@ -166,8 +166,8 @@ export default function ConsultationsPage() {
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
             <div className="px-8 py-6 border-b border-gray-200 bg-white">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-indigo-100 rounded-lg">
-                  <Stethoscope className="h-5 w-5 text-indigo-600" />
+                <div className="p-2 bg-gray-100 rounded-lg">
+                  <Stethoscope className="h-5 w-5 text-gray-600" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">
                   {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
@@ -199,7 +199,7 @@ export default function ConsultationsPage() {
                   <select
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md"
                   >
                     <option value={15}>15 minutos</option>
                     <option value={30}>30 minutos</option>
@@ -253,7 +253,7 @@ export default function ConsultationsPage() {
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md resize-none"
                     rows={4}
                     placeholder="Descripción detallada del tipo de consulta (opcional)"
                   />

@@ -55,7 +55,7 @@ export default function CalendarPage() {
       <div className="vet-container">
         {/* Medical Calendar Header */}
         <PageHeader 
-          title="📅 Calendario Médico"
+          title=" Calendario Médico"
           subtitle="Centro de control para agenda y disponibilidad veterinaria"
           icon={Calendar}
           actions={
@@ -71,7 +71,7 @@ export default function CalendarPage() {
                     }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
-                    📋 Completa
+                     Completa
                   </button>
                 </Tooltip>
                 
@@ -85,7 +85,7 @@ export default function CalendarPage() {
                     }`}
                   >
                     <CalendarDays className="h-4 w-4" />
-                    📊 Citas
+                     Citas
                   </button>
                 </Tooltip>
                 
@@ -99,7 +99,7 @@ export default function CalendarPage() {
                     }`}
                   >
                     <Clock className="h-4 w-4" />
-                    ⏰ Horarios
+                     Horarios
                   </button>
                 </Tooltip>
               </div>
