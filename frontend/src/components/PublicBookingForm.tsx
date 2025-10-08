@@ -445,8 +445,12 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
               className="w-full p-2 border rounded mt-2" 
               rows={2} 
               required
-              disabled={!!existingTutor}
+              // permitir editar la dirección si el tutor existe pero no tiene dirección registrada
+              disabled={!!existingTutor && !!existingTutor.address}
             />
+            {existingTutor && !existingTutor.address && (
+              <p className="text-sm text-yellow-600 mt-2">El cliente no tiene dirección registrada. Por favor completa la dirección para poder reservar la cita.</p>
+            )}
           </div>
 
           {/* Selección de Mascota */}
