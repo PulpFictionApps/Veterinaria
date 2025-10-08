@@ -5,11 +5,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useRef, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Calendar, 
-  Clock, 
   Grid3X3,
   Eye,
   Trash2,
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { authFetch } from "../lib/api";
 import { useAppointments, useAvailability, invalidateCache } from "../hooks/useData";
+import ThemedCard from './ui/ThemedCard';
 
 interface AvailabilitySlot {
   id: number;
@@ -322,62 +322,64 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
       {/* Modal de opciones de evento */}
       {showEventModal && selectedEvent && (
-        <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-2xl max-w-sm w-full mx-4 border border-gray-200/40 ring-1 ring-gray-900/5">
-            <div className="flex items-center justify-between p-5 border-b border-gray-200/80">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">
-                  {selectedEvent.type === 'availability' ? 'Horario Disponible' : 'Cita Agendada'}
-                </h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  {selectedEvent.title}
-                </p>
+        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 p-4">
+          <div className="max-w-sm w-full mx-4">
+            <ThemedCard className="p-0 overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-gray-200/80">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {selectedEvent.type === 'availability' ? 'Horario Disponible' : 'Cita Agendada'}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {selectedEvent.title}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowEventModal(false)}
+                  className="p-2 hover:bg-gray-100/80 rounded-xl transition-all duration-200 touch-manipulation"
+                >
+                  <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                </button>
               </div>
-              <button
-                onClick={() => setShowEventModal(false)}
-                className="p-2 hover:bg-gray-100/80 rounded-xl transition-all duration-200 touch-manipulation"
-              >
-                <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-              </button>
-            </div>
 
-            <div className="p-5">
-              <div className="flex flex-col gap-3">
-                {selectedEvent.type === 'availability' ? (
-                  <button
-                    onClick={() => deleteAvailabilitySlot(selectedEvent.data)}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-red-500/25 touch-manipulation group"
-                  >
-                    <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                    Eliminar Horario
-                  </button>
-                ) : (
-                  <>
+              <div className="p-5">
+                <div className="flex flex-col gap-3">
+                  {selectedEvent.type === 'availability' ? (
                     <button
-                      onClick={() => viewAppointment(selectedEvent.data)}
-                      className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-blue-500/25 touch-manipulation group"
-                    >
-                      <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                      Ver Cita
-                    </button>
-                    <button
-                      onClick={() => deleteAppointment(selectedEvent.data)}
+                      onClick={() => deleteAvailabilitySlot(selectedEvent.data)}
                       className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-red-500/25 touch-manipulation group"
                     >
                       <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                      Eliminar Cita
+                      Eliminar Horario
                     </button>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => viewAppointment(selectedEvent.data)}
+                        className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-blue-500/25 touch-manipulation group"
+                      >
+                        <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                        Ver Cita
+                      </button>
+                      <button
+                        onClick={() => deleteAppointment(selectedEvent.data)}
+                        className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-red-500/25 touch-manipulation group"
+                      >
+                        <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                        Eliminar Cita
+                      </button>
+                    </>
+                  )}
 
-                <button
-                  onClick={() => setShowEventModal(false)}
-                  className="w-full px-4 py-3.5 bg-gray-100/80 hover:bg-gray-200/80 text-gray-700 rounded-xl transition-all duration-200 font-semibold border border-gray-300/50 touch-manipulation"
-                >
-                  Cancelar
-                </button>
+                  <button
+                    onClick={() => setShowEventModal(false)}
+                    className="w-full px-4 py-3.5 bg-gray-100/80 hover:bg-gray-200/80 text-gray-700 rounded-xl transition-all duration-200 font-semibold border border-gray-300/50 touch-manipulation"
+                  >
+                    Cancelar
+                  </button>
+                </div>
               </div>
-            </div>
+            </ThemedCard>
           </div>
         </div>
       )}

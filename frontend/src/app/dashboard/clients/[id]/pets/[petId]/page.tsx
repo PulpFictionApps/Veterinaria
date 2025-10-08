@@ -580,25 +580,7 @@ export default function PetDetail({ params }: PageProps) {
           </div>
         </AnimateOnView>
 
-        {/* Botones de acción flotantes */}
-        <div className="fixed bottom-8 right-8 flex flex-col space-y-3">
-          <Tooltip content="Nueva cita médica" position="left">
-            <button 
-              onClick={() => router.push(`/dashboard/appointments/new?petId=${petId}`)}
-              className="w-14 h-14 bg-gradient-to-r from-health-600 to-health-700 text-white rounded-2xl shadow-health hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center"
-            >
-              <Calendar className="w-6 h-6" />
-            </button>
-          </Tooltip>
-          <Tooltip content="Nuevo registro médico" position="left">
-            <button 
-              onClick={() => router.push(`/dashboard/clients/${tutorId}/pets/${petId}/records/new`)}
-              className="w-14 h-14 bg-gradient-to-r from-medical-600 to-medical-700 text-white rounded-2xl shadow-medical hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center"
-            >
-              <Stethoscope className="w-6 h-6" />
-            </button>
-          </Tooltip>
-        </div>
+        {/* Botones de acción flotantes eliminados (estética consistente) */}
 
       </div>
     </div>
