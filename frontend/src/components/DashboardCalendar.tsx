@@ -10,11 +10,15 @@ import {
   Calendar, 
   Clock, 
   Grid3X3,
+  Eye,
+  Trash2,
+  X,
 } from 'lucide-react';
 import { authFetch } from "../lib/api";
 import { useAppointments, useAvailability, invalidateCache } from "../hooks/useData";
 
 interface AvailabilitySlot {
+  id: number;
   start: string;
   end: string;
 }
@@ -26,12 +30,17 @@ interface Appointment {
 }
 
 interface CalendarEvent {
+  id: string;
   title: string;
   start: string;
   end?: string;
   backgroundColor?: string;
   borderColor?: string;
   textColor?: string;
+  extendedProps?: {
+    type: 'availability' | 'appointment';
+    originalData: any;
+  };
 }
 
 // Función para oscurecer un color hexadecimal
@@ -61,6 +70,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   // Usar hooks SWR para datos en tiempo real
   const { appointments, isLoading: appointmentsLoading } = useAppointments(userId);
   const { availability, isLoading: availabilityLoading } = useAvailability(userId);
+  
+  // Estado para el modal de opciones
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<{
+    type: 'availability' | 'appointment';
+    data: any;
+    title: string;
+  } | null>(null);
 
   // Computar eventos de manera optimizada con useMemo para evitar renders innecesarios
   const events = useMemo(() => {
@@ -69,12 +86,17 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     const limitedAvailability = (availability || []).slice(0, maxSlotsToShow);
     
     const availEvents: CalendarEvent[] = limitedAvailability.map((slot: AvailabilitySlot) => ({
-      title: "Disponible",
+      id: `availability-${slot.id}`,
+      title: "✅ Disponible",
       start: slot.start,
       end: slot.end,
-      backgroundColor: "#F3F4F6",
-      borderColor: "#9CA3AF",
-      textColor: "#6B7280",
+      backgroundColor: "#ECFDF5", // Verde muy suave
+      borderColor: "#22C55E", // Verde más intenso
+      textColor: "#15803D", // Verde oscuro para el texto
+      extendedProps: {
+        type: 'availability' as const,
+        originalData: slot
+      }
     }));
 
     const appointmentEvents: CalendarEvent[] = (appointments || []).map((appt: any) => {
@@ -98,12 +120,17 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
 
       return {
+        id: `appointment-${appt.id}`,
         title: appointmentTitle,
         start: appt.date,
         end: endDate.toISOString(),
         backgroundColor: consultationColor,
         borderColor: borderColor,
         textColor: "white",
+        extendedProps: {
+          type: 'appointment' as const,
+          originalData: appt
+        }
       };
     });
 
@@ -153,6 +180,61 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     }
   }, [authFetch, userId, invalidateCache]);
 
+  // Handler para clicks en eventos
+  const handleEventClick = useCallback((clickInfo: any) => {
+    const event = clickInfo.event;
+    const eventData = event.extendedProps;
+    
+    setSelectedEvent({
+      type: eventData.type,
+      data: eventData.originalData,
+      title: event.title
+    });
+    setShowEventModal(true);
+  }, []);
+
+  // Función para eliminar slot de disponibilidad
+  const deleteAvailabilitySlot = useCallback(async (slot: any) => {
+    try {
+      const res = await authFetch(`/availability/${slot.id}`, {
+        method: "DELETE"
+      });
+      
+      if (res.ok) {
+        invalidateCache.availability(userId);
+        setShowEventModal(false);
+        setSelectedEvent(null);
+      }
+    } catch (error) {
+      console.error('Error deleting availability slot:', error);
+    }
+  }, [authFetch, userId, invalidateCache]);
+
+  // Función para eliminar cita
+  const deleteAppointment = useCallback(async (appointment: any) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta cita?')) {
+      try {
+        const res = await authFetch(`/appointments/${appointment.id}`, {
+          method: "DELETE"
+        });
+        
+        if (res.ok) {
+          invalidateCache.appointments(userId);
+          setShowEventModal(false);
+          setSelectedEvent(null);
+        }
+      } catch (error) {
+        console.error('Error deleting appointment:', error);
+      }
+    }
+  }, [authFetch, userId, invalidateCache]);
+
+  // Función para ver detalles de cita
+  const viewAppointment = useCallback((appointment: any) => {
+    // Redirigir a la página de detalles de la cita
+    window.open(`/dashboard/appointments/${appointment.id}`, '_blank');
+  }, []);
+
   return (
     <div className="space-y-3 sm:space-y-4">
       {/* View Controls */}
@@ -183,17 +265,28 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         </div>
       </div>
 
-      {/* Indicador de slots limitados */}
-      {hasLimitedSlots && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
-          <div className="flex items-center gap-2 text-gray-700">
-            <Clock className="h-4 w-4" />
-            <span className="text-sm font-medium">
-              Mostrando 50 de {availability?.length} horarios disponibles para mejorar rendimiento
-            </span>
+      {/* Leyenda de colores y estado */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#ECFDF5", border: "2px solid #22C55E" }}></div>
+            <span className="text-gray-700 font-medium">Disponible</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-sm bg-blue-500"></div>
+            <span className="text-gray-700 font-medium">Cita agendada</span>
           </div>
         </div>
-      )}
+        
+        {hasLimitedSlots && (
+          <div className="flex items-center gap-2 text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+            <Clock className="h-4 w-4" />
+            <span className="text-xs sm:text-sm font-medium">
+              Vista limitada: {availability?.length} horarios totales
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* Calendar */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden relative">
@@ -224,6 +317,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           allDaySlot={false}
           locale={esLocale}
           select={handleSelect}
+          eventClick={handleEventClick}
           dayHeaderFormat={ window.innerWidth < 768 ? { weekday: 'short' } : { weekday: 'long' }}
           slotLabelFormat={{
             hour: '2-digit',
@@ -236,10 +330,72 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           }}
           snapDuration="00:30:00"
           eventMaxStack={window.innerWidth < 768 ? 2 : 4}
-          eventClassNames="touch-manipulation"
+          eventClassNames="touch-manipulation cursor-pointer"
         />
         </div>
       </div>
+
+      {/* Modal de opciones de evento */}
+      {showEventModal && selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {selectedEvent.type === 'availability' ? 'Horario Disponible' : 'Cita Agendada'}
+              </h3>
+              <button
+                onClick={() => setShowEventModal(false)}
+                className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+            
+            <div className="p-4">
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-2">Título:</p>
+                <p className="font-medium text-gray-900">{selectedEvent.title}</p>
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                {selectedEvent.type === 'availability' ? (
+                  <button
+                    onClick={() => deleteAvailabilitySlot(selectedEvent.data)}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Eliminar Horario
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => viewAppointment(selectedEvent.data)}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    >
+                      <Eye className="h-4 w-4" />
+                      Ver Cita
+                    </button>
+                    <button
+                      onClick={() => deleteAppointment(selectedEvent.data)}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Eliminar Cita
+                    </button>
+                  </>
+                )}
+                
+                <button
+                  onClick={() => setShowEventModal(false)}
+                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

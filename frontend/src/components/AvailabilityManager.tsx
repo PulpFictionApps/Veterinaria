@@ -335,41 +335,26 @@ export default function AvailabilityManager() {
         </div>
       )}
 
-      {/* Slots List */}
-      <div className="space-y-2">
-        {slots.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <div className="text-4xl mb-2">⏰</div>
-            <p>No hay horarios de disponibilidad</p>
-            <p className="text-sm">Agrega tu primer horario para comenzar a recibir citas</p>
-          </div>
-        ) : (
-          slots.map(slot => (
-            <div key={slot.id} className="bg-white rounded-lg border border-gray-200 p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="font-medium text-gray-900">
-                    {formatChileDate(new Date(slot.start), {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {formatChileTime(new Date(slot.start))} - {formatChileTime(new Date(slot.end))}
-                  </div>
-                </div>
-                <button
-                  onClick={() => deleteSlot(slot.id)}
-                  className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-800 text-sm font-semibold transition-all duration-200 border border-gray-200"
-                >
-                  🗑️ Eliminar
-                </button>
-              </div>
+      {/* Availability Summary */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+        <div className="text-center">
+          <div className="text-3xl mb-2">📅</div>
+          {slots.length === 0 ? (
+            <div className="text-gray-600">
+              <p className="font-semibold text-lg text-gray-800">No hay horarios configurados</p>
+              <p className="text-sm mt-1">Agrega tu primer horario para comenzar a recibir citas</p>
             </div>
-          ))
-        )}
+          ) : (
+            <div className="text-gray-700">
+              <p className="font-semibold text-lg text-gray-800">
+                {slots.length} horario{slots.length !== 1 ? 's' : ''} disponible{slots.length !== 1 ? 's' : ''}
+              </p>
+              <p className="text-sm mt-1 text-blue-600">
+                Ver horarios completos en el calendario arriba
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
