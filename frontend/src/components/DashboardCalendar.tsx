@@ -178,8 +178,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         });
         
         if (res.ok) {
-          // SWR se encargará de la actualización automática
-          // Pero podemos forzar una revalidación inmediata
+          // Forzar bypass del cache local y obtener datos frescos del backend
+          try {
+            await authFetch(`/availability/${userId}`, { force: true });
+          } catch (e) {
+            // ignore - we'll still try to refetch calendar events
+          }
+
+          // Invalidar el cache local y pedir al calendario que recargue
           invalidateCache.availability(userId);
           const calendarApi = calendarRef.current?.getApi();
           calendarApi?.refetchEvents?.();
