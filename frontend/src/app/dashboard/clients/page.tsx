@@ -42,12 +42,13 @@ interface Client {
     type: string;
   }>;
   appointments?: Array<{
-    id: number;
-    date: string;
-    status: string;
+    id?: number;
+    date?: string;
+    status?: string;
+    tutorId?: number;
   }>;
   createdAt?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function ClientsPage() {
@@ -82,11 +83,32 @@ export default function ClientsPage() {
             
             // También podemos cargar las citas reales si es necesario
             const appointmentsRes = await authFetch(`/appointments/${userId}`);
-            let appointments = [];
+            let appointments: Array<{ id?: number; date?: string; tutorId?: number; status?: string }> = [];
             if (appointmentsRes.ok) {
-              const allAppointments = await appointmentsRes.json();
-              // Filtrar citas de este cliente específico
-              appointments = allAppointments.filter((apt: any) => apt.tutorId === client.id);
+              try {
+                const allAppointments = await appointmentsRes.json();
+                if (Array.isArray(allAppointments)) {
+                  // Filtrar citas de este cliente especico con guardas de tipo
+                  appointments = allAppointments.reduce<Array<{ id?: number; date?: string; tutorId?: number; status?: string }>>((acc, raw) => {
+                    if (raw && typeof raw === 'object') {
+                      const r = raw as Record<string, unknown>;
+                      const tutorId = r.tutorId !== undefined ? Number(r.tutorId) : undefined;
+                      if (tutorId === client.id) {
+                        acc.push({
+                          id: typeof r.id === 'number' ? r.id : undefined,
+                          date: typeof r.date === 'string' ? r.date : undefined,
+                          tutorId,
+                          status: typeof r.status === 'string' ? r.status : undefined
+                        });
+                      }
+                    }
+                    return acc;
+                  }, []);
+                }
+              } catch (e) {
+                // ignore and keep empty
+                appointments = [];
+              }
             }
             
             return {

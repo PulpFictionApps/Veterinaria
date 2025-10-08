@@ -18,9 +18,11 @@ export function useInstallPWA() {
 
   useEffect(() => {
     // Verificar si ya está instalado
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    const isIOSInstalled = (window.navigator as any).standalone === true;
-    setIsInstalled(isStandalone || isIOSInstalled);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  // Some iOS browsers expose `standalone` on navigator - check safely
+  const nav = window.navigator as unknown as Record<string, unknown>;
+  const isIOSInstalled = nav['standalone'] === true;
+  setIsInstalled(isStandalone || Boolean(isIOSInstalled));
 
     // Listener para el evento beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {

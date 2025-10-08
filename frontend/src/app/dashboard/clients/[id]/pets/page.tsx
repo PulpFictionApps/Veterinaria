@@ -13,7 +13,7 @@ interface Pet {
   id: number;
   name: string;
   type: string;
-  [key: string]: any; // por si hay otras propiedades
+  [key: string]: unknown; // por si hay otras propiedades
 }
 
 export default function PetsPage({ params }: { params: Promise<{ id: string }> }) {

@@ -8,7 +8,7 @@ import { MAIN_MENU_ITEMS, SECONDARY_MENU_ITEMS } from './OptimizedSidebar';
 import { useAuthContext } from '../lib/auth-context';
 
 // Simple focus trap for mobile drawer
-function useFocusTrap(active: boolean, containerRef: React.RefObject<HTMLElement>) {
+function useFocusTrap(active: boolean, containerRef: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     if (!active || !containerRef.current) return;
     const first = containerRef.current.querySelector<HTMLElement>('a,button,input,select,textarea');
@@ -67,7 +67,7 @@ export default function OptimizedNavbar() {
   }, [open]);
 
   // focus trap
-  useFocusTrap(open, containerRef as any);
+  useFocusTrap(open, containerRef);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {

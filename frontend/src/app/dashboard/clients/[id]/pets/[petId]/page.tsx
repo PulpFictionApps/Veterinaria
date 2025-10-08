@@ -322,15 +322,15 @@ export default function PetDetail({ params }: PageProps) {
         <SlideIn direction="up" delay={200}>
           <ThemedCard variant="medical" className="p-2">
             <div className="flex space-x-2">
-              {[
+              {([
                 { id: 'overview', label: 'Información General', icon: FileText },
                 { id: 'medical', label: 'Historial Médico', icon: Stethoscope },
                 { id: 'prescriptions', label: 'Prescripciones', icon: Pill },
                 { id: 'appointments', label: 'Citas', icon: Calendar }
-              ].map((tab) => (
+              ] as const).map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center px-6 py-3 rounded-xl transition-all duration-200 ${
                     activeTab === tab.id
                       ? 'bg-gray-600 text-white shadow-lg border-l-4 border-white'  // PLOMO COMO EL SIDEBAR

@@ -1,17 +1,17 @@
 // Simple cache para API calls
-interface CacheEntry {
-  data: any;
+interface CacheEntry<T> {
+  data: T;
   timestamp: number;
   ttl: number; // time to live in milliseconds
 }
 
 class ApiCache {
-  private cache = new Map<string, CacheEntry>();
+  private cache = new Map<string, CacheEntry<unknown>>();
   
   // TTL por defecto: 5 minutos
   private defaultTTL = 5 * 60 * 1000;
 
-  set(key: string, data: any, ttl?: number): void {
+  set<T>(key: string, data: T, ttl?: number): void {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
@@ -19,8 +19,8 @@ class ApiCache {
     });
   }
 
-  get(key: string): any | null {
-    const entry = this.cache.get(key);
+  get<T>(key: string): T | null {
+    const entry = this.cache.get(key) as CacheEntry<T> | undefined;
     
     if (!entry) return null;
     
@@ -30,7 +30,7 @@ class ApiCache {
       return null;
     }
     
-    return entry.data;
+    return entry.data as T;
   }
 
   delete(key: string): void {
@@ -48,6 +48,18 @@ class ApiCache {
       if (now - entry.timestamp > entry.ttl) {
         this.cache.delete(key);
       }
+    }
+  }
+
+  // Expose keys for safe external inspection without leaking internal map
+  keys(): string[] {
+    return Array.from(this.cache.keys());
+  }
+
+  // Delete entries matching predicate
+  deleteIf(predicate: (key: string) => boolean): void {
+    for (const key of this.keys()) {
+      if (predicate(key)) this.cache.delete(key);
     }
   }
 }

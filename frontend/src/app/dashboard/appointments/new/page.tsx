@@ -141,7 +141,7 @@ export default function NewAppointmentPage() {
       setSubmitting(true);
       setError(null);
 
-      const body: any = {
+      const body: { tutorId: number; petId: number; reason: string; consultationTypeId: number; slotId?: number; date?: string } = {
         tutorId: Number(selectedTutorId),
         petId: Number(selectedPetId),
         reason,
@@ -163,8 +163,9 @@ export default function NewAppointmentPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error creando la cita');
+        const errorData = await response.json().catch(() => ({}));
+        const maybeError = (errorData && typeof errorData === 'object' && 'error' in errorData) ? (errorData as { error?: string }).error : undefined;
+        throw new Error(maybeError || 'Error creando la cita');
       }
 
       setSuccess('Cita creada exitosamente');
@@ -174,8 +175,9 @@ export default function NewAppointmentPage() {
         router.push('/dashboard/appointments');
       }, 2000);
 
-    } catch (err: any) {
-      setError(err.message || 'Error creando la cita');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || 'Error creando la cita');
     } finally {
       setSubmitting(false);
     }

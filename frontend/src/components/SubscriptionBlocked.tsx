@@ -3,11 +3,14 @@ import { authFetch } from '../lib/api';
 import { useNotification } from './Notification';
 
 interface SubscriptionBlockedProps {
-  subscription?: any;
+  subscription?: unknown;
   onRetry?: () => void;
 }
 
+type SubscriptionShape = { status?: string } | null | undefined;
+
 export default function SubscriptionBlocked({ subscription, onRetry }: SubscriptionBlockedProps) {
+  const subs = subscription as SubscriptionShape;
   const [loading, setLoading] = useState(false);
   const { showNotification } = useNotification();
 
@@ -21,14 +24,16 @@ export default function SubscriptionBlocked({ subscription, onRetry }: Subscript
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        showNotification(data.error || 'Error al iniciar el pago', 'error');
+        const data = await res.json().catch(() => ({})) as unknown;
+        const message = (data && typeof data === 'object' && 'error' in data) ? (data as { error?: string }).error : 'Error al iniciar el pago';
+        showNotification(message || 'Error al iniciar el pago', 'error');
         return;
       }
 
-      const data = await res.json();
-      if (data.init_point) {
-        window.location.href = data.init_point;
+      const data = await res.json().catch(() => ({})) as unknown;
+      const initPoint = (data && typeof data === 'object' && 'init_point' in data) ? (data as { init_point?: string }).init_point : undefined;
+      if (initPoint) {
+        window.location.href = initPoint;
       } else {
         showNotification('No se pudo inicializar el pago', 'error');
       }
@@ -39,7 +44,7 @@ export default function SubscriptionBlocked({ subscription, onRetry }: Subscript
     }
   }
 
-  const isExpiredTrial = subscription?.status === 'trial' || subscription?.status === 'expired';
+  const isExpiredTrial = subs?.status === 'trial' || subs?.status === 'expired';
   const title = isExpiredTrial 
     ? '¡Tu prueba gratuita ha terminado!' 
     : '¡Suscripción requerida!';

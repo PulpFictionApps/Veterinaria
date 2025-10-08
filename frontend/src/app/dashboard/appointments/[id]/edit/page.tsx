@@ -7,13 +7,26 @@ import { formatChileDate, formatChileTime } from '../../../../../lib/timezone';
 import PageHeader from '../../../../../components/ui/PageHeader';
 import { CalendarClock } from 'lucide-react';
 
+interface SimpleSlot { id: number; start: string; end: string }
+
+interface AppointmentDetail {
+  id: number;
+  date: string;
+  reason?: string | null;
+  pet?: { id?: number; name?: string; type?: string };
+  tutor?: { id?: number; name?: string; phone?: string };
+  consultationType?: { name?: string } | null;
+  userId?: number;
+  user?: { id?: number } | null;
+}
+
 export default function EditAppointmentPage() {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [appointment, setAppointment] = useState<any>(null);
-  const [availableSlots, setAvailableSlots] = useState<any[]>([]);
+  const [appointment, setAppointment] = useState<AppointmentDetail | null>(null);
+  const [availableSlots, setAvailableSlots] = useState<SimpleSlot[]>([]);
   const [slotId, setSlotId] = useState<number | ''>('');
   const [date, setDate] = useState('');
   const [reason, setReason] = useState('');
@@ -27,42 +40,46 @@ export default function EditAppointmentPage() {
         if (!res.ok) throw new Error('No encontrado');
         const data = await res.json();
         if (!mounted) return;
-        setAppointment(data);
-        setDate(data.date);
-        setReason(data.reason || '');
+        const parsed = data as AppointmentDetail;
+        setAppointment(parsed);
+        setDate(parsed.date);
+        setReason(parsed.reason || '');
 
         // load professional slots
-        const profId = data.userId || data.user?.id || data.tutor?.id;
+        const profId = parsed.userId || parsed.user?.id || parsed.tutor?.id;
         if (profId) {
           const sres = await authFetch(`/availability/${profId}`);
           if (sres.ok) {
-            const slots = await sres.json();
+            const slots = (await sres.json()) as SimpleSlot[];
             setAvailableSlots(slots || []);
           }
         }
-      } catch (err: any) {
-        setError(err.message || 'Error');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        setError(message || 'Error');
       } finally { if (mounted) setLoading(false); }
     }
     load();
     return () => { mounted = false };
   }, [id]);
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const payload: any = { reason };
-      if (slotId) payload.slotId = Number(slotId);
-      else payload.date = date;
+      const payload: Record<string, unknown> = { reason };
+      if (slotId) (payload as Record<string, unknown>).slotId = Number(slotId);
+      else (payload as Record<string, unknown>).date = date;
 
       const res = await authFetch(`/appointments/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: 'Error' }));
-        throw new Error(err.error || 'Error updating');
+        const message = (err && typeof err === 'object' && 'error' in err) ? (err as { error?: string }).error : 'Error updating';
+        throw new Error(message || 'Error updating');
       }
       router.push('/dashboard/appointments');
-    } catch (err: any) {
-      setError(err.message || 'Error');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || 'Error');
     }
   }
 
@@ -143,7 +160,7 @@ export default function EditAppointmentPage() {
     <div className="vet-page">
       <PageHeader
         title="Reprogramar Cita"
-        subtitle={`Cita actual: ${appointment.pet.name} - ${new Date(appointment.date).toLocaleString('es-CL')}`}
+  subtitle={`Cita actual: ${appointment.pet?.name || '—'} - ${new Date(appointment.date).toLocaleString('es-CL')}`}
         icon={CalendarClock}
       />
 
@@ -157,12 +174,12 @@ export default function EditAppointmentPage() {
           <h3 className="font-medium text-gray-900 mb-2">Información de la Cita</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="font-medium">Mascota:</span> {appointment.pet.name} ({appointment.pet.type})
+              <span className="font-medium">Mascota:</span> {appointment.pet?.name || '—'} {appointment.pet?.type ? `(${appointment.pet.type})` : ''}
             </div>
             <div>
-              <span className="font-medium">Tutor:</span> {appointment.tutor.name}
+              <span className="font-medium">Tutor:</span> {appointment.tutor?.name || '—'}
             </div>
-            {appointment.tutor.phone && (
+            {appointment.tutor?.phone && (
               <div>
                 <span className="font-medium">Teléfono:</span> {appointment.tutor.phone}
               </div>

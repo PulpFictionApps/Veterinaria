@@ -7,7 +7,7 @@ export interface SubscriptionStatus {
   isExpired: boolean;
   isTrial: boolean;
   daysRemaining: number;
-  subscription: any;
+  subscription: unknown;
   needsPayment: boolean;
 }
 
@@ -68,11 +68,13 @@ export function useSubscriptionStatus() {
   }
 
   // Función para manejar errores de API relacionados con suscripción
-  function handleSubscriptionError(error: any) {
-    if (error?.error === 'SUBSCRIPTION_EXPIRED' || error?.error === 'SUBSCRIPTION_REQUIRED') {
-      // Redirigir a facturación si la suscripción expiró
-      router.push('/dashboard/billing');
-      return true;
+  function handleSubscriptionError(error: unknown) {
+    if (error && typeof error === 'object' && 'error' in error) {
+      const e = error as { error?: string };
+      if (e.error === 'SUBSCRIPTION_EXPIRED' || e.error === 'SUBSCRIPTION_REQUIRED') {
+        router.push('/dashboard/billing');
+        return true;
+      }
     }
     return false;
   }

@@ -32,11 +32,16 @@ export default function LoginPage() {
         const errorData = await res.json().catch(() => ({ error: 'Error desconocido' }));
         setError(errorData.error || `Error del servidor: ${res.status}`);
       }
-    } catch (err: any) {
-      if (err.name === 'TypeError' && err.message.includes('fetch')) {
-        setError(`No se puede conectar al servidor. Verifica que la URL del backend sea correcta: ${API_BASE}`);
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'name' in err && 'message' in err) {
+        const e = err as { name?: string; message?: string };
+        if (e.name === 'TypeError' && e.message?.includes('fetch')) {
+          setError(`No se puede conectar al servidor. Verifica que la URL del backend sea correcta: ${API_BASE}`);
+        } else {
+          setError(`Error de conexión: ${e.message || 'Error desconocido'}`);
+        }
       } else {
-        setError(`Error de conexión: ${err.message}`);
+        setError('Error de conexión desconocido');
       }
     } finally {
       setLoading(false);

@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
 import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
@@ -39,13 +40,31 @@ interface ClientSummary {
   email?: string;
 }
 
+interface Appointment {
+  id?: number;
+  date?: string;
+  status?: string;
+  consultationType?: { price?: number } | null;
+  confirmed?: boolean;
+}
+
 export default function Dashboard() {
   const { userId: uid } = useAuthContext();
-  const [subscription, setSubscription] = useState<any>(null);
+  const [subscription, setSubscription] = useState<unknown>(null);
+  const getSubscriptionExpiresAt = (sub: unknown): string | null => {
+    if (!sub || typeof sub !== 'object') return null;
+    const s = sub as Record<string, unknown>;
+    if ('expiresAt' in s && typeof s.expiresAt === 'string') return s.expiresAt;
+    if ('subscription' in s && typeof s.subscription === 'object') {
+      const inner = s.subscription as Record<string, unknown>;
+      if ('expiresAt' in inner && typeof inner.expiresAt === 'string') return inner.expiresAt;
+    }
+    return null;
+  };
   const [metrics, setMetrics] = useState({
     todayAppointments: 0,
     totalClients: 0,
-    weeklyRevenue: 0,
+    monthlyRevenue: 0,
     completedAppointments: 0,
     availableSlots: 0,
     pendingTasks: 0
@@ -68,14 +87,17 @@ export default function Dashboard() {
         ]);
 
         // Parse each response exactly once and reuse the parsed JSON
-        let subData: any = null;
-        let appointmentsData: any[] = [];
-        let clientsData: any[] = [];
-        let availabilityData: any[] = [];
+  let subData: unknown = null;
+  let appointmentsData: unknown[] = [];
+  let clientsData: unknown[] = [];
+  let availabilityData: unknown[] = [];
 
         if (subRes && subRes.ok) {
           try { subData = await subRes.json(); } catch (e) { subData = null; }
-          if (mounted) setSubscription(subData?.subscription || null);
+          if (mounted && typeof subData === 'object' && subData !== null) {
+            const subObj = subData as Record<string, unknown>;
+            setSubscription((subObj.subscription as unknown) || null);
+          }
         }
 
         if (appointmentsRes && appointmentsRes.ok) {
@@ -93,29 +115,57 @@ export default function Dashboard() {
         // Calcular métricas
         const newMetrics = { ...metrics };
 
-        const today = new Date().toDateString();
+        // Use Chile timezone to compute 'today' and 'pending' consistently
+        const tz = 'America/Santiago';
+        const todayKey = new Date().toLocaleDateString('en-CA', { timeZone: tz });
         if (appointmentsData && Array.isArray(appointmentsData)) {
-          newMetrics.todayAppointments = appointmentsData.filter((apt: any) => 
-            new Date(apt.date).toDateString() === today
-          ).length;
-          newMetrics.completedAppointments = appointmentsData.filter((apt: any) => 
-            apt.status === 'completed' || new Date(apt.date) < new Date()
-          ).length;
+          // Helper to safely treat unknown as Appointment
+          const asAppointment = (x: unknown): Appointment => (x as Appointment);
 
-          // Ingresos semanales: contar citas completadas con precio
-          const completedWithPrice = appointmentsData.filter((apt: any) => 
-            apt.status === 'completed' && apt.consultationType?.price
-          );
-          newMetrics.weeklyRevenue = completedWithPrice.reduce((sum: number, apt: any) => 
-            sum + (apt.consultationType?.price || 0), 0
-          );
+          // Today appointments (Chile local day)
+          newMetrics.todayAppointments = appointmentsData.filter((apt: unknown) => {
+            const a = asAppointment(apt);
+            if (!a || !a.date) return false;
+            return new Date(String(a.date)).toLocaleDateString('en-CA', { timeZone: tz }) === todayKey;
+          }).length;
 
-          // Tareas pendientes (citas próximas sin confirmar)
-          const tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          newMetrics.pendingTasks = appointmentsData.filter((apt: any) => 
-            new Date(apt.date) <= tomorrow && !apt.confirmed
-          ).length;
+          // Completed appointments: rely on explicit status === 'completed'
+          newMetrics.completedAppointments = appointmentsData.filter((apt: unknown) => {
+            const a = asAppointment(apt);
+            return a && a.status === 'completed';
+          }).length;
+
+          // Ingresos mensuales: sumar precio de consultas completadas dentro del mes actual (Chile timezone)
+          const currentMonthKey = new Date().toLocaleString('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit' });
+          const completedThisMonth = appointmentsData.filter((apt: unknown) => {
+            const a = asAppointment(apt);
+            if (!a || a.status !== 'completed' || !a.consultationType) return false;
+            if (!a.date) return false;
+            return new Date(String(a.date)).toLocaleString('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit' }) === currentMonthKey;
+          }) as Appointment[];
+
+          newMetrics.monthlyRevenue = completedThisMonth.reduce((sum: number, apt: Appointment) => {
+            let priceVal = 0;
+            if (apt.consultationType && typeof apt.consultationType === 'object') {
+              const ct = apt.consultationType as { price?: number };
+              if (ct && 'price' in ct) priceVal = Number(ct.price || 0) || 0;
+            }
+            return sum + priceVal;
+          }, 0);
+
+          // Tareas pendientes: citas no confirmadas dentro de las próximas 24 horas
+          const nowChileStr = new Date().toLocaleString('en-CA', { timeZone: tz });
+          const nowChile = new Date(nowChileStr);
+          const in24hChile = new Date(nowChile.getTime() + 24 * 60 * 60 * 1000);
+          newMetrics.pendingTasks = appointmentsData.filter((apt: unknown) => {
+            const a = asAppointment(apt);
+            if (!a) return false;
+            if (a.confirmed) return false;
+            if (!a.date) return false;
+            const aptChileStr = new Date(String(a.date)).toLocaleString('en-CA', { timeZone: tz });
+            const aptChile = new Date(aptChileStr);
+            return aptChile.getTime() > nowChile.getTime() && aptChile.getTime() <= in24hChile.getTime();
+          }).length;
         }
 
         if (clientsData && Array.isArray(clientsData)) {
@@ -123,9 +173,16 @@ export default function Dashboard() {
         }
 
         if (availabilityData && Array.isArray(availabilityData)) {
-          newMetrics.availableSlots = availabilityData.filter((slot: any) => 
-            new Date(slot.end) > new Date()
-          ).length;
+          const nowChile = new Date().toLocaleString('en-CA', { timeZone: tz });
+          const nowTs = new Date(nowChile).getTime();
+          newMetrics.availableSlots = availabilityData.filter((slot: unknown) => {
+            if (!slot || typeof slot !== 'object') return false;
+            const s = slot as Record<string, unknown>;
+            const end = s.end as string | undefined;
+            if (!end) return false;
+            const endTs = new Date(String(end)).getTime();
+            return endTs > nowTs;
+          }).length;
         }
 
         if (mounted) {
@@ -154,7 +211,7 @@ export default function Dashboard() {
   }: {
     title: string;
     value: number;
-    icon: any;
+  icon: React.FC<{ className?: string }>;
     change?: string;
     changeType?: 'positive' | 'negative' | 'neutral';
     format?: 'number' | 'currency';
@@ -234,6 +291,8 @@ export default function Dashboard() {
     );
   }
 
+  const subscriptionExpiresAt = getSubscriptionExpiresAt(subscription);
+
   return (
     <div className="vet-page">
       <div className="vet-container space-y-8">
@@ -260,8 +319,8 @@ export default function Dashboard() {
           }
         />
 
-        {/* Alerta de suscripción */}
-        {subscription && subscription.expiresAt && new Date(subscription.expiresAt) > new Date() && (
+  {/* Alerta de suscripción */}
+  {subscriptionExpiresAt && new Date(subscriptionExpiresAt) > new Date() && (
           <div className="vet-info-unified vet-info-blue">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
@@ -269,7 +328,7 @@ export default function Dashboard() {
                 <div className="min-w-0">
                   <strong className="font-semibold text-gray-900 block">Período de prueba activo</strong>
                   <span className="text-sm text-gray-700 block sm:inline sm:ml-2">
-                    Te quedan {Math.ceil((new Date(subscription.expiresAt).getTime() - Date.now()) / (1000*60*60*24))} días
+                    Te quedan {Math.ceil((new Date(subscriptionExpiresAt).getTime() - Date.now()) / (1000*60*60*24))} días
                   </span>
                 </div>
               </div>
@@ -326,16 +385,15 @@ export default function Dashboard() {
           staggerDelay={100}
         >
           {[
-            <Link key="revenue" href="/dashboard/billing">
               <MetricCard
-                title="Ingresos Semanales"
-                value={metrics.weeklyRevenue}
+                key="revenue"
+                title="Ingresos Mensuales"
+                value={metrics.monthlyRevenue}
                 icon={DollarSign}
                 format="currency"
-                change={metrics.weeklyRevenue > 0 ? "Ingresos confirmados" : "Sin ingresos registrados"}
-                changeType={metrics.weeklyRevenue > 0 ? "positive" : "neutral"}
-              />
-            </Link>,
+                change={metrics.monthlyRevenue > 0 ? "Ingresos confirmados" : "Sin ingresos registrados"}
+                changeType={metrics.monthlyRevenue > 0 ? "positive" : "neutral"}
+              />,
             <Link key="completed" href="/dashboard/appointments?filter=past">
               <MetricCard
                 title="Consultas Completadas"

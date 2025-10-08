@@ -49,39 +49,47 @@ const ThemedButton = forwardRef<HTMLButtonElement, ThemedButtonProps>(
     };
 
     const getVariantStyle = () => {
-      const styles: Record<string, any> = {
-        primary: {
-          background: 'linear-gradient(135deg, rgb(55 65 81), rgb(75 85 99))',
-          color: 'white',
-          fallbackClasses: 'bg-gray-700 hover:bg-gray-800 text-white',
-          focusRingColor: 'focus:ring-gray-500'
-        },
-        secondary: {
-          background: 'linear-gradient(135deg, rgb(75 85 99), rgb(107 114 128))',
-          color: 'white',
-          fallbackClasses: 'bg-gray-600 hover:bg-gray-700 text-white',
-          focusRingColor: 'focus:ring-gray-500'
-        },
-        danger: {
-          background: 'linear-gradient(135deg, rgb(75 85 99), rgb(55 65 81))',
-          color: 'white',
-          fallbackClasses: 'bg-gray-700 hover:bg-gray-800 text-white',
-          focusRingColor: 'focus:ring-gray-500'
-        },
-        outline: {
-          background: 'transparent',
-          color: 'rgb(75 85 99)',
-          border: '2px solid rgb(75 85 99)',
-          fallbackClasses: 'border-2 border-gray-600 text-gray-600 hover:bg-gray-50',
-          focusRingColor: 'focus:ring-gray-500'
-        },
-        ghost: {
-          background: 'transparent',
-          color: '#374151',
-          fallbackClasses: 'text-gray-700 hover:bg-gray-100',
-          focusRingColor: 'focus:ring-gray-500'
-        }
-      };
+        type VariantStyle = {
+          background?: string;
+          color?: string;
+          fallbackClasses?: string;
+          focusRingColor?: string;
+          border?: string;
+        };
+
+        const styles: Record<string, VariantStyle> = {
+          primary: {
+            background: 'linear-gradient(135deg, rgb(55 65 81), rgb(75 85 99))',
+            color: 'white',
+            fallbackClasses: 'bg-gray-700 hover:bg-gray-800 text-white',
+            focusRingColor: 'focus:ring-gray-500'
+          },
+          secondary: {
+            background: 'linear-gradient(135deg, rgb(75 85 99), rgb(107 114 128))',
+            color: 'white',
+            fallbackClasses: 'bg-gray-600 hover:bg-gray-700 text-white',
+            focusRingColor: 'focus:ring-gray-500'
+          },
+          danger: {
+            background: 'linear-gradient(135deg, rgb(75 85 99), rgb(55 65 81))',
+            color: 'white',
+            fallbackClasses: 'bg-gray-700 hover:bg-gray-800 text-white',
+            focusRingColor: 'focus:ring-gray-500'
+          },
+          outline: {
+            background: 'transparent',
+            color: 'rgb(75 85 99)',
+            border: '2px solid rgb(75 85 99)',
+            fallbackClasses: 'border-2 border-gray-600 text-gray-600 hover:bg-gray-50',
+            focusRingColor: 'focus:ring-gray-500'
+          },
+          ghost: {
+            background: 'transparent',
+            color: '#374151',
+            fallbackClasses: 'text-gray-700 hover:bg-gray-100',
+            focusRingColor: 'focus:ring-gray-500'
+          }
+        };
       return styles[variant] || styles.primary;
     };
 

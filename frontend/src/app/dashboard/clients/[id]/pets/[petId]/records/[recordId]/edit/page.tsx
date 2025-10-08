@@ -6,14 +6,23 @@ import { authFetch } from '@/lib/api';
 import PageHeader from '@/components/ui/PageHeader';
 import { Edit, ArrowLeft, Save } from 'lucide-react';
 
-export default function EditRecord(props: any) {
+type RecordShape = {
+  id?: number;
+  title?: string;
+  diagnosis?: string;
+  treatment?: string;
+  weight?: number | null;
+  temperature?: number | null;
+  [key: string]: unknown;
+};
+
+export default function EditRecord(props: { params?: { id?: string; petId?: string; recordId?: string } }) {
   const { params } = props;
   const router = useRouter();
   const ownerId = params?.id;
   const petId = Number(params?.petId);
   const recordId = Number(params?.recordId);
-
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<RecordShape | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -25,8 +34,8 @@ export default function EditRecord(props: any) {
       try {
         const res = await authFetch(`/medical-records/${recordId}`);
         if (!res.ok) throw new Error('No encontrado');
-        const json = await res.json();
-        if (mounted) setData(json);
+  const json = await res.json();
+  if (mounted && json && typeof json === 'object') setData(json as RecordShape);
       } catch (err) {
         setError('No se pudo cargar la ficha');
       } finally {
@@ -85,27 +94,27 @@ export default function EditRecord(props: any) {
             <form onSubmit={save} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Título</label>
-            <input value={data.title || ''} onChange={e => setData({ ...data, title: e.target.value })} className="w-full px-4 py-3 border rounded-lg" />
+            <input value={(data.title as string) || ''} onChange={e => setData({ ...data, title: e.target.value })} className="w-full px-4 py-3 border rounded-lg" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Diagnóstico</label>
-            <textarea value={data.diagnosis || ''} onChange={e => setData({ ...data, diagnosis: e.target.value })} rows={3} className="w-full px-4 py-3 border rounded-lg" />
+            <textarea value={(data.diagnosis as string) || ''} onChange={e => setData({ ...data, diagnosis: e.target.value })} rows={3} className="w-full px-4 py-3 border rounded-lg" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Tratamiento</label>
-            <textarea value={data.treatment || ''} onChange={e => setData({ ...data, treatment: e.target.value })} rows={3} className="w-full px-4 py-3 border rounded-lg" />
+            <textarea value={(data.treatment as string) || ''} onChange={e => setData({ ...data, treatment: e.target.value })} rows={3} className="w-full px-4 py-3 border rounded-lg" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Peso (kg)</label>
-              <input type="number" step="0.1" value={data.weight ?? ''} onChange={e => setData({ ...data, weight: e.target.value ? Number(e.target.value) : null })} className="w-full px-4 py-3 border rounded-lg" />
+              <input type="number" step="0.1" value={data.weight != null ? String(data.weight) : ''} onChange={e => setData({ ...data, weight: e.target.value ? Number(e.target.value) : null })} className="w-full px-4 py-3 border rounded-lg" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Temperatura (°C)</label>
-              <input type="number" step="0.1" value={data.temperature ?? ''} onChange={e => setData({ ...data, temperature: e.target.value ? Number(e.target.value) : null })} className="w-full px-4 py-3 border rounded-lg" />
+              <input type="number" step="0.1" value={data.temperature != null ? String(data.temperature) : ''} onChange={e => setData({ ...data, temperature: e.target.value ? Number(e.target.value) : null })} className="w-full px-4 py-3 border rounded-lg" />
             </div>
           </div>
 

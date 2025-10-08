@@ -63,12 +63,20 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
     }
     
     return res;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    const name = error instanceof Error ? error.name : 'Unknown error';
+    // Try to extract a status code if present without using `any`
+    let statusValue: string | number = 'No status';
+    if (error && typeof error === 'object' && 'status' in error) {
+      const e = error as { status?: string | number };
+      statusValue = e.status ?? statusValue;
+    }
     console.error('❌ API Error:', {
       url: fullUrl,
-      error: error.message || 'Network error',
-      type: error.name || 'Unknown error',
-      status: error.status || 'No status'
+      error: message || 'Network error',
+      type: name,
+      status: statusValue
     });
     throw error;
   }
@@ -78,29 +86,17 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
 function invalidateRelatedCache(path: string) {
   if (path.includes('/users')) {
     // Invalidar cache de usuarios
-    for (const key of Array.from(apiCache['cache'].keys())) {
-      if (key.includes('/users')) {
-        apiCache.delete(key);
-      }
-    }
+    apiCache.deleteIf(key => key.includes('/users'));
   }
   
   if (path.includes('/appointments')) {
     // Invalidar cache de citas y disponibilidad
-    for (const key of Array.from(apiCache['cache'].keys())) {
-      if (key.includes('/appointments') || key.includes('/availability')) {
-        apiCache.delete(key);
-      }
-    }
+    apiCache.deleteIf(key => key.includes('/appointments') || key.includes('/availability'));
   }
   
   if (path.includes('/pets') || path.includes('/tutors')) {
     // Invalidar cache de mascotas y tutores
-    for (const key of Array.from(apiCache['cache'].keys())) {
-      if (key.includes('/pets') || key.includes('/tutors') || key.includes('/clients')) {
-        apiCache.delete(key);
-      }
-    }
+    apiCache.deleteIf(key => key.includes('/pets') || key.includes('/tutors') || key.includes('/clients'));
   }
 }
 

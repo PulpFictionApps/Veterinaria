@@ -1,6 +1,7 @@
 // Script para generar iconos básicos de PWA
 // Este es un placeholder - en producción usarías herramientas como PWA Asset Generator
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 

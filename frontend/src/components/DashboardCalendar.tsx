@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { DateSelectArg } from "@fullcalendar/core";
+import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
 import { useRef, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -24,10 +24,14 @@ interface AvailabilitySlot {
   end: string;
 }
 
-interface Appointment {
-  petName: string;
-  reason: string;
+
+interface CalendarAppointment {
+  id: number;
   date: string;
+  pet?: { id?: number; name?: string; type?: string; breed?: string };
+  tutor?: { id?: number; name?: string; phone?: string };
+  consultationType?: { color?: string; duration?: number; name?: string };
+  reason?: string;
 }
 
 interface CalendarEvent {
@@ -40,7 +44,7 @@ interface CalendarEvent {
   textColor?: string;
   extendedProps?: {
     type: 'availability' | 'appointment';
-    originalData: any;
+    originalData: AvailabilitySlot | CalendarAppointment;
   };
 }
 
@@ -77,7 +81,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   const [showEventModal, setShowEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<{
     type: 'availability' | 'appointment';
-    data: any;
+    data: AvailabilitySlot | CalendarAppointment;
     title: string;
   } | null>(null);
 
@@ -101,7 +105,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       }
     }));
 
-    const appointmentEvents: CalendarEvent[] = (appointments || []).map((appt: any) => {
+  const appointmentEvents: CalendarEvent[] = (appointments || []).map((appt: CalendarAppointment) => {
       // Usar el color del tipo de consulta si está disponible, sino color por defecto
       const consultationColor = appt.consultationType?.color || '#3B82F6';
       // Crear un color más oscuro para el borde
@@ -117,8 +121,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       }
       
       // Determine end time from consultationType.duration (minutes) or default to 30 minutes
-      const durationMinutes = appt.consultationType?.duration || 30;
-      const startDate = new Date(appt.date);
+  const durationMinutes = appt.consultationType?.duration || 30;
+  const startDate = new Date(appt.date);
       const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
 
       return {
@@ -143,6 +147,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   const hasLimitedSlots = useMemo(() => {
     const maxSlotsToShow = 50;
     if (availability && availability.length > maxSlotsToShow) {
+      // Keep a single console warning to aid debugging, but avoid spamming on every render
       console.warn(`⚠️ Mostrando solo ${maxSlotsToShow} de ${availability.length} slots de disponibilidad para mejorar el rendimiento`);
       return true;
     }
@@ -180,23 +185,23 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         console.error('Error creating availability:', error);
       }
     }
-  }, [authFetch, userId, invalidateCache]);
+  }, [userId]);
 
   // Handler para clicks en eventos
-  const handleEventClick = useCallback((clickInfo: any) => {
+  const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const event = clickInfo.event;
-    const eventData = event.extendedProps;
-    
+    const eventData = event.extendedProps as { type: 'availability' | 'appointment'; originalData: AvailabilitySlot | CalendarAppointment };
+
     setSelectedEvent({
       type: eventData.type,
       data: eventData.originalData,
-      title: event.title
+      title: event.title as string
     });
     setShowEventModal(true);
   }, []);
 
   // Función para eliminar slot de disponibilidad
-  const deleteAvailabilitySlot = useCallback(async (slot: any) => {
+  const deleteAvailabilitySlot = useCallback(async (slot: AvailabilitySlot) => {
     try {
       const res = await authFetch(`/availability/${slot.id}`, {
         method: "DELETE"
@@ -210,10 +215,10 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     } catch (error) {
       console.error('Error deleting availability slot:', error);
     }
-  }, [authFetch, userId, invalidateCache]);
+  }, [userId]);
 
   // Función para eliminar cita
-  const deleteAppointment = useCallback(async (appointment: any) => {
+  const deleteAppointment = useCallback(async (appointment: CalendarAppointment) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta cita?')) {
       try {
         const res = await authFetch(`/appointments/${appointment.id}`, {
@@ -229,10 +234,10 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         console.error('Error deleting appointment:', error);
       }
     }
-  }, [authFetch, userId, invalidateCache]);
+  }, [userId]);
 
   // Función para ver detalles de cita
-  const viewAppointment = useCallback((appointment: any) => {
+  const viewAppointment = useCallback((appointment: CalendarAppointment) => {
     // Usar Next.js router para navegación fluida
     router.push(`/dashboard/appointments/${appointment.id}/consult`);
     // Cerrar modal después de navegar
@@ -320,6 +325,13 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         </div>
       </div>
 
+      {/* Small notice when availability has been truncated for performance */}
+      {hasLimitedSlots && (
+        <div className="text-sm text-gray-500 mt-2">
+          Mostrando los primeros 50 horarios disponibles para mejorar el rendimiento.
+        </div>
+      )}
+
       {/* Modal de opciones de evento */}
       {showEventModal && selectedEvent && (
         <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 p-4">
@@ -346,7 +358,11 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
                 <div className="flex flex-col gap-3">
                   {selectedEvent.type === 'availability' ? (
                     <button
-                      onClick={() => deleteAvailabilitySlot(selectedEvent.data)}
+                      onClick={() => {
+                        if (selectedEvent.data && 'start' in selectedEvent.data) {
+                          deleteAvailabilitySlot(selectedEvent.data as AvailabilitySlot);
+                        }
+                      }}
                       className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-red-500/25 touch-manipulation group"
                     >
                       <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform" />
@@ -355,14 +371,23 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
                   ) : (
                     <>
                       <button
-                        onClick={() => viewAppointment(selectedEvent.data)}
+                        onClick={() => {
+                          if (selectedEvent.data && 'date' in selectedEvent.data) {
+                            viewAppointment(selectedEvent.data as CalendarAppointment);
+                          }
+                        }}
                         className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-blue-500/25 touch-manipulation group"
                       >
                         <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />
                         Ver Cita
                       </button>
+
                       <button
-                        onClick={() => deleteAppointment(selectedEvent.data)}
+                        onClick={() => {
+                          if (selectedEvent.data && 'date' in selectedEvent.data) {
+                            deleteAppointment(selectedEvent.data as CalendarAppointment);
+                          }
+                        }}
                         className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-red-500/25 touch-manipulation group"
                       >
                         <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform" />

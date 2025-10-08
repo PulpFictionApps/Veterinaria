@@ -25,7 +25,7 @@ import '../../../styles/billing-fixes.css';
 export default function BillingPage() {
   const { showNotification, NotificationComponent } = useNotification();
   const [loading, setLoading] = useState(false);
-  const [subscription, setSubscription] = useState<any | null>(null);
+  const [subscription, setSubscription] = useState<unknown | null>(null);
 
   const invoices = [
     { id: 'INV-1001', date: '2025-09-01', amount: '$15.000', status: 'paid' },
@@ -72,15 +72,17 @@ export default function BillingPage() {
       });
       
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({})) as unknown;
+        const msg = (data && typeof data === 'object' && 'error' in data) ? (data as { error?: string }).error : 'Error al crear la preferencia de pago';
         console.error('Server error:', data);
-        showNotification(data.error || 'Error al crear la preferencia de pago', 'error');
+        showNotification(msg || 'Error al crear la preferencia de pago', 'error');
         return;
       }
 
-      const data = await res.json();
-      if (data.init_point) {
-        window.location.href = data.init_point;
+      const data = await res.json().catch(() => ({})) as unknown;
+      const initPoint = (data && typeof data === 'object' && 'init_point' in data) ? (data as { init_point?: string }).init_point : undefined;
+      if (initPoint) {
+        window.location.href = initPoint;
       } else {
         showNotification('No se pudo inicializar el pago', 'error');
       }
@@ -93,9 +95,13 @@ export default function BillingPage() {
   }
 
   function getDaysRemaining() {
-    if (!subscription?.expiresAt) return 0;
-    return Math.ceil((new Date(subscription.expiresAt).getTime() - Date.now()) / (1000*60*60*24));
+    if (!subscription || typeof subscription !== 'object' || !('expiresAt' in subscription)) return 0;
+    const subs = subscription as { expiresAt?: string };
+    if (!subs.expiresAt) return 0;
+    return Math.ceil((new Date(subs.expiresAt).getTime() - Date.now()) / (1000*60*60*24));
   }
+
+  const subs = (subscription && typeof subscription === 'object') ? (subscription as { status?: string; expiresAt?: string }) : {};
 
   return (
     <div className="vet-page">
@@ -118,13 +124,13 @@ export default function BillingPage() {
                       <Award className="h-6 w-6 text-white" />
                       <h2 className="text-xl font-bold text-white">{PLAN_INFO.display}</h2>
                     </div>
-                    {subscription.status === 'trial' && (
+                    {subs.status === 'trial' && (
                       <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
                         <Clock className="h-4 w-4" />
                         Prueba Gratuita
                       </span>
                     )}
-                    {subscription.status === 'expired' && (
+                    {subs.status === 'expired' && (
                       <span className="bg-gray-500 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
                         <AlertCircle className="h-4 w-4" />
                         Expirada
@@ -140,21 +146,21 @@ export default function BillingPage() {
                         <p className="text-2xl font-bold text-gray-900 mb-2">{PLAN_INFO.price}</p>
                         <div className="font-semibold text-lg text-gray-800 flex items-center gap-2">
                           <CheckCircle className="h-5 w-5 text-green-600" />
-                          {subscription.status === 'trial' ? 'Prueba Gratuita Activa' : 
-                           subscription.status === 'active' ? 'Suscripción Activa' : 
-                           subscription.status === 'expired' ? 'Suscripción Expirada' : subscription.status}
+                          {subs.status === 'trial' ? 'Prueba Gratuita Activa' : 
+                           subs.status === 'active' ? 'Suscripción Activa' : 
+                           subs.status === 'expired' ? 'Suscripción Expirada' : subs.status}
                         </div>
                       </div>
 
-                      {subscription.expiresAt && (
+                      {('expiresAt' in subs) && (typeof (subs as Record<string, unknown>).expiresAt === 'string') && (
                         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-6 border border-blue-200">
                           <div className="flex items-center gap-2 text-gray-800">
                             <Calendar className="h-5 w-5 text-blue-600" />
                             <span className="font-medium">
-                              {subscription.status === 'trial' ? 'Prueba termina:' : 'Expira:'} 
+                              {subs.status === 'trial' ? 'Prueba termina:' : 'Expira:'} 
                             </span>
                             <span className="font-bold text-blue-800">
-                              {new Date(subscription.expiresAt).toLocaleDateString()} 
+                              {new Date(((subs as { expiresAt?: string }).expiresAt) || '').toLocaleDateString()} 
                               ({getDaysRemaining()} días restantes)
                             </span>
                           </div>
@@ -182,8 +188,8 @@ export default function BillingPage() {
                           className="group w-full px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-lg hover:from-gray-600 hover:to-gray-600 transition-all duration-300 font-bold text-lg shadow hover:shadow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <Zap className={`h-5 w-5 ${loading ? 'animate-spin' : 'group-hover:scale-110 transition-transform duration-300'}`} />
-                          {subscription.status === 'trial' ? 'Activar Plan Premium' :
-                           subscription.status === 'expired' ? 'Reactivar Suscripción' : 'Renovar Plan'}
+                          {subs.status === 'trial' ? 'Activar Plan Premium' :
+                           subs.status === 'expired' ? 'Reactivar Suscripción' : 'Renovar Plan'}
                         </button>
                       </Tooltip>
                     </div>

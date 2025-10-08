@@ -14,11 +14,7 @@ const AvailabilityManagerComponent = dynamic(() => import('./AvailabilityManager
   ssr: false
 });
 
-interface AvailabilityManagerProps {
-  // Sin props por ahora
-}
-
-export default function LazyAvailabilityManager(props: AvailabilityManagerProps) {
+export default function LazyAvailabilityManager() {
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">

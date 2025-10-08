@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { NextConfig } from "next";
 
+// next-pwa is a CommonJS export; disable the rule here to avoid TypeScript/runtime issues
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,

@@ -155,8 +155,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       }
       
       setEmailChecked(true);
-    } catch (err: any) {
-      setMessage(err.message || 'Error al verificar email');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMessage(message || 'Error al verificar email');
       setEmailChecked(false);
     }
   }
@@ -240,7 +241,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         }
       }
 
-      const body: any = {
+      const body: Record<string, unknown> = {
         tutorName: name,
         tutorEmail: email,
         tutorPhone: phone,
@@ -286,8 +287,9 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
       
       // Limpiar slots locales para forzar actualización
       setSlots([]);
-    } catch (err: any) {
-      setMessage(err.message || 'Error');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMessage(message || 'Error');
     }
   }
 

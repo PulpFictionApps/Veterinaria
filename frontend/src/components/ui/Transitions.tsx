@@ -195,7 +195,8 @@ export function AnimateOnView({ children, animation = 'fade', className = '' }: 
 
   return (
     <div 
-      ref={setRef as any} 
+      // forward element to state setter using a typed callback ref
+      ref={(node: Element | null) => setRef(node)}
       className={`${getAnimationClasses()} ${className}`}
     >
       {children}

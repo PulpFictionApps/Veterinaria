@@ -93,8 +93,8 @@ export default function IOSInstallInstructions() {
               </p>
               <ol className="text-xs text-gray-100 space-y-1">
                 <li>1️⃣ Toca el botón <strong>Compartir</strong> ⬆️ abajo</li>
-                <li>2️⃣ Desplázate y toca <strong>"Agregar a pantalla de inicio"</strong></li>
-                <li>3️⃣ Toca <strong>"Agregar"</strong> para confirmar</li>
+                <li>2️⃣ Desplázate y toca <strong>&quot;Agregar a pantalla de inicio&quot;</strong></li>
+                <li>3️⃣ Toca <strong>&quot;Agregar&quot;</strong> para confirmar</li>
               </ol>
             </div>
           )}

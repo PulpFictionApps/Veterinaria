@@ -80,7 +80,7 @@ export default function AppointmentsPage() {
     const q = searchParams?.get('filter');
     if (!q) return;
     if (q === 'all' || q === 'upcoming' || q === 'past' || q === 'today') {
-      setFilter(q as any);
+      setFilter(q as 'all' | 'upcoming' | 'past' | 'today');
     }
   }, [searchParams]);
 
@@ -143,7 +143,7 @@ export default function AppointmentsPage() {
     async function submitEdit() {
       if (!editing) return;
       try {
-        const payload: any = { reason: editReason };
+  const payload: { reason?: string; slotId?: number; date?: string } = { reason: editReason };
         // prefer slotId when provided to avoid timezone/precision issues
         if (editSlotId) payload.slotId = Number(editSlotId);
         else payload.date = editDate;
@@ -330,7 +330,7 @@ export default function AppointmentsPage() {
                     return (
                       <Tooltip key={filterOption.key} content={`Ver citas ${filterOption.label.toLowerCase()}`}>
                         <button
-                          onClick={() => setFilter(filterOption.key as any)}
+                          onClick={() => setFilter(filterOption.key as 'all' | 'upcoming' | 'past')}
                           className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                             filter === filterOption.key
                               ? 'bg-gray-700 text-white'

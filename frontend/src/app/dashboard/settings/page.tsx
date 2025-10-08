@@ -344,15 +344,15 @@ export default function SettingsPage() {
                   <FileText className="w-4 h-4 inline mr-1" />
                   Instrucciones Importantes (aparecerán en sección naranja)
                 </label>
-                <textarea
-                  value={emailData.appointmentInstructions}
-                  onChange={(e) => setEmailData(prev => ({ ...prev, appointmentInstructions: e.target.value }))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                  rows={6}
-                  placeholder="Llegada: Por favor llega 10-15 minutos antes de tu cita&#10;Documentos: Trae la cartilla de vacunación de tu mascota"
-                />
+                  <textarea
+                    value={emailData.appointmentInstructions}
+                    onChange={(e) => setEmailData(prev => ({ ...prev, appointmentInstructions: e.target.value }))}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                    rows={6}
+                    placeholder="Llegada: Por favor llega 10-15 minutos antes de tu cita\nDocumentos: Trae la cartilla de vacunaci&oacute;n de tu mascota"
+                  />
                 <p className="text-xs text-gray-500 mt-1">
-                  Separa cada instrucción con una nueva línea. Usa el formato "Título: Descripción"
+                  Separa cada instrucción con una nueva línea. Usa el formato &quot;Título: Descripción&quot;
                 </p>
               </div>
 

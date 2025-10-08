@@ -6,13 +6,19 @@ import { authFetch } from '@/lib/api';
 import PageHeader from '@/components/ui/PageHeader';
 import { Clock, ArrowLeft } from 'lucide-react';
 
-export default function PetTimeline(props: any) {
+type TimelineItem = {
+  type: 'appointment' | 'record' | 'prescription';
+  date: string | null;
+  data: Record<string, unknown>;
+};
+
+export default function PetTimeline(props: { params?: { id?: string; petId?: string } }) {
   const params = props?.params;
   const ownerId = params?.id;
   const petId = Number(params?.petId);
 
   const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<TimelineItem[]>([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -27,10 +33,11 @@ export default function PetTimeline(props: any) {
           authFetch(`/prescriptions?petId=${petId}`).catch(() => ({ ok: false }))
         ]);
 
-        const safeJson = async (res: any) => {
-          if (!res || !res.ok) return [];
+        const safeJson = async (res: Response | { ok?: boolean } | undefined): Promise<unknown[]> => {
+          if (!res || !(res as Response).ok) return [];
           try {
-            return await res.json();
+            const parsed = await (res as Response).json();
+            return Array.isArray(parsed) ? parsed : [];
           } catch (err) {
             return [];
           }
@@ -44,13 +51,32 @@ export default function PetTimeline(props: any) {
 
         if (!mounted) return;
 
-        const normalized: any[] = [];
+        const normalized: TimelineItem[] = [];
 
-        (aJson || []).forEach((a: any) => normalized.push({ type: 'appointment', date: a.date, data: a }));
-        (rJson || []).forEach((r: any) => normalized.push({ type: 'record', date: r.createdAt || r.date || null, data: r }));
-        (pJson || []).forEach((p: any) => normalized.push({ type: 'prescription', date: p.createdAt || null, data: p }));
+        (aJson || []).forEach((a) => {
+          if (a && typeof a === 'object') {
+            const record = a as Record<string, unknown>;
+            normalized.push({ type: 'appointment', date: (record.date as string) || null, data: record });
+          }
+        });
+        (rJson || []).forEach((r) => {
+          if (r && typeof r === 'object') {
+            const record = r as Record<string, unknown>;
+            normalized.push({ type: 'record', date: (record.createdAt as string) || (record.date as string) || null, data: record });
+          }
+        });
+        (pJson || []).forEach((p) => {
+          if (p && typeof p === 'object') {
+            const record = p as Record<string, unknown>;
+            normalized.push({ type: 'prescription', date: (record.createdAt as string) || null, data: record });
+          }
+        });
 
-        normalized.sort((x, y) => new Date(y.date).getTime() - new Date(x.date).getTime());
+        normalized.sort((x, y) => {
+          const yd = y.date ? new Date(y.date).getTime() : 0;
+          const xd = x.date ? new Date(x.date).getTime() : 0;
+          return yd - xd;
+        });
 
         setItems(normalized);
       } catch (err) {
@@ -88,16 +114,16 @@ export default function PetTimeline(props: any) {
           <div key={idx} className="p-4 border rounded-lg bg-white shadow-sm">
             <div className="flex justify-between items-start">
               <div>
-                <div className="text-sm text-gray-500">{new Date(it.date).toLocaleString()}</div>
+                <div className="text-sm text-gray-500">{it.date ? new Date(it.date).toLocaleString() : ''}</div>
                 <div className="font-medium mt-1">
-                  {it.type === 'appointment' && `Cita - ${it.data.service || it.data.type || ''}`}
-                  {it.type === 'record' && `Ficha clínica - ${it.data.title || ''}`}
-                  {it.type === 'prescription' && `Receta - ${it.data.title || ''}`}
+                  {it.type === 'appointment' && `Cita - ${((it.data as Record<string, unknown>).service as string) || ((it.data as Record<string, unknown>).type as string) || ''}`}
+                  {it.type === 'record' && `Ficha clínica - ${((it.data as Record<string, unknown>).title as string) || ''}`}
+                  {it.type === 'prescription' && `Receta - ${((it.data as Record<string, unknown>).title as string) || ''}`}
                 </div>
                 <div className="text-sm text-gray-700 mt-2">
-                  {it.type === 'appointment' && it.data.notes}
-                  {it.type === 'record' && it.data.diagnosis}
-                  {it.type === 'prescription' && it.data.medicines && it.data.medicines.join(', ')}
+                  {it.type === 'appointment' && ((it.data as Record<string, unknown>).notes as string)}
+                  {it.type === 'record' && ((it.data as Record<string, unknown>).diagnosis as string)}
+                  {it.type === 'prescription' && Array.isArray((it.data as Record<string, unknown>).medicines) && ((it.data as Record<string, unknown>).medicines as string[]).join(', ')}
                 </div>
               </div>
             </div>

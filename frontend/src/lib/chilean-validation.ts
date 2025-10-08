@@ -68,7 +68,7 @@ export function validateChileanPhone(phone: string): { isValid: boolean; message
 
 export function formatRutChile(value: string): string {
   // Remover todo lo que no sea dígito o K
-  let rut = value.replace(/[^0-9kK]/g, '').toUpperCase();
+  const rut = value.replace(/[^0-9kK]/g, '').toUpperCase();
   
   if (rut.length <= 1) return rut;
   
