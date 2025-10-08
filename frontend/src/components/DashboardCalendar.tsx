@@ -342,31 +342,31 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
       {/* Modal de opciones de evento */}
       {showEventModal && selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 border border-gray-100">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
                 {selectedEvent.type === 'availability' ? 'Horario Disponible' : 'Cita Agendada'}
               </h3>
               <button
                 onClick={() => setShowEventModal(false)}
-                className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200 touch-manipulation"
               >
                 <X className="h-5 w-5 text-gray-500" />
               </button>
             </div>
             
-            <div className="p-4">
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-2">Título:</p>
-                <p className="font-medium text-gray-900">{selectedEvent.title}</p>
+            <div className="p-4 sm:p-6">
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 mb-2 font-medium">Evento:</p>
+                <p className="font-semibold text-gray-900 text-base">{selectedEvent.title}</p>
               </div>
               
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {selectedEvent.type === 'availability' ? (
                   <button
                     onClick={() => deleteAvailabilitySlot(selectedEvent.data)}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                    className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl touch-manipulation"
                   >
                     <Trash2 className="h-4 w-4" />
                     Eliminar Horario
@@ -375,14 +375,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
                   <>
                     <button
                       onClick={() => viewAppointment(selectedEvent.data)}
-                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl touch-manipulation"
                     >
                       <Eye className="h-4 w-4" />
                       Ver Cita
                     </button>
                     <button
                       onClick={() => deleteAppointment(selectedEvent.data)}
-                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                      className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl touch-manipulation"
                     >
                       <Trash2 className="h-4 w-4" />
                       Eliminar Cita
@@ -392,7 +392,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
                 
                 <button
                   onClick={() => setShowEventModal(false)}
-                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 font-semibold border border-gray-200 touch-manipulation"
                 >
                   Cancelar
                 </button>
