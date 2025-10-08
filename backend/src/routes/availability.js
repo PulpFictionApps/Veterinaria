@@ -18,6 +18,18 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
       return res.status(400).json({ error: 'Invalid date format' });
     }
 
+    // Debug logs: show what we received and how the server parsed it
+    console.log('POST /availability received start:', start, 'end:', end);
+    console.log('Parsed start ISO:', startDate.toISOString(), 'Parsed end ISO:', endDate.toISOString());
+
+    // Normalize seconds and milliseconds to zero for exactness
+    startDate.setSeconds(0, 0);
+    endDate.setSeconds(0, 0);
+
+    // Validate that incoming times are aligned to 15-minute boundaries
+    if (startDate.getMinutes() % 15 !== 0 || endDate.getMinutes() % 15 !== 0) {
+      return res.status(400).json({ error: 'Start and end must be aligned to 15-minute increments (e.g., :00, :15, :30, :45).', parsedStart: startDate.toISOString(), parsedEnd: endDate.toISOString() });
+    }
     if (startDate >= endDate) return res.status(400).json({ error: 'start must be before end' });
 
     // Split into 15-minute slots

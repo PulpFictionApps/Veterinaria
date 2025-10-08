@@ -162,15 +162,18 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   }, []);
 
   const handleSelect = useCallback(async (info: DateSelectArg) => {
-    if (window.confirm(`Habilitar hora: ${info.startStr} - ${info.endStr}?`)) {
+    const startIso = info.start?.toISOString();
+    const endIso = info.end?.toISOString();
+    if (window.confirm(`Habilitar hora: ${startIso} - ${endIso}?`)) {
       try {
+        console.log('Creating availability via calendar selection:', { startIso, endIso });
         const res = await authFetch("/availability", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId,
-            start: info.startStr,
-            end: info.endStr,
+            start: startIso,
+            end: endIso,
           }),
         });
         
