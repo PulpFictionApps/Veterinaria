@@ -164,38 +164,42 @@ export default function ConsultationsPage() {
         {/* Create/Edit Form */}
         {showCreateForm && (
           <ThemedCard variant="medical" className="mb-8">
-            <div className="px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-50">
-              <h2 className="text-xl font-bold text-gray-800">
-                {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
-              </h2>
-              <p className="text-sm text-gray-700 mt-1">
+            <div className="px-8 py-6 border-b border-gray-200 bg-white">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-indigo-100 rounded-lg">
+                  <Stethoscope className="h-5 w-5 text-indigo-600" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  {editingType ? 'Editar' : 'Crear'} Tipo de Consulta
+                </h2>
+              </div>
+              <p className="text-sm text-gray-600 ml-10">
                 Configure los detalles del tipo de consulta veterinaria
               </p>
             </div>
             <div className="p-8">
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-800">
-                    Nombre del Tipo de Consulta *
-                  </label>
-                  <input
+                <div>
+                  <ThemedInput
+                    label="Nombre del Tipo de Consulta *"
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                    placeholder="Ej: Consulta General, VacunaciÃ³n, CirugÃ­a"
+                    placeholder="Ej: Consulta General, Vacunación, Cirugía"
                     required
+                    variant="medical"
+                    icon={Stethoscope}
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-800">
-                    DuraciÃ³n de la Consulta *
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Duración de la Consulta *
                   </label>
                   <select
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md"
                   >
                     <option value={15}>15 minutos</option>
                     <option value={30}>30 minutos</option>
@@ -206,35 +210,31 @@ export default function ConsultationsPage() {
                   </select>
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-800">
-                    Precio (CLP) *
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 font-medium">$</span>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1000"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) || 0 })}
-                      className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                      placeholder="25000"
-                      required
-                    />
-                  </div>
+                <div>
+                  <ThemedInput
+                    label="Precio (CLP) *"
+                    type="number"
+                    min="0"
+                    step="1000"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) || 0 })}
+                    placeholder="25000"
+                    required
+                    variant="medical"
+                    icon={DollarSign}
+                  />
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-800">
-                    Color de IdentificaciÃ³n
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Color de Identificación
                   </label>
                   <div className="flex items-center gap-4">
                     <input
                       type="color"
                       value={formData.color}
                       onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      className="w-16 h-12 border-2 border-gray-300 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+                      className="w-16 h-12 border-2 border-gray-300 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-all duration-200"
                     />
                     <div className="flex items-center gap-2">
                       <div 
@@ -246,16 +246,16 @@ export default function ConsultationsPage() {
                   </div>
                 </div>
                 
-                <div className="md:col-span-2 space-y-2">
-                  <label className="block text-sm font-semibold text-gray-800">
-                    DescripciÃ³n
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Descripción
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 bg-gray-50 focus:bg-white resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md resize-none"
                     rows={4}
-                    placeholder="DescripciÃ³n detallada del tipo de consulta (opcional)"
+                    placeholder="Descripción detallada del tipo de consulta (opcional)"
                   />
                 </div>
                 
