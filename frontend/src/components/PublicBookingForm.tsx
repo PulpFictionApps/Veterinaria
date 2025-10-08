@@ -365,6 +365,10 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
           <div style={{ borderBottom: `2px solid ${colors.accentColor || '#3b82f6'}`, marginTop: 6 }} />
         </div>
 
+        {/* Diseño en dos columnas: formulario + resumen */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+
         {/* Email verificación */}
         <div className="mb-4 sm:mb-6">
           <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">Verificación de Cliente</h4>
@@ -684,15 +688,7 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             className="w-full p-2 border mb-2 rounded" 
           />
           
-          <ThemedButton
-            type="submit"
-            variant="primary"
-            size="md"
-            className="w-full sm:w-auto"
-            disabled={!emailChecked}
-          >
-            Reservar
-          </ThemedButton>
+          {/* El botón de enviar principal se muestra en el resumen lateral */}
         </>
       )}
 
@@ -702,7 +698,50 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
         </div>
       )}
 
-  </ThemedCard>
+
+          </div>
+
+          {/* Resumen lateral */}
+          <aside className="lg:col-span-1">
+            <div className="sticky top-6 space-y-4">
+              <ThemedCard className="p-4">
+                <h4 className="text-sm font-semibold mb-2">Resumen de la reserva</h4>
+                <div className="text-sm text-gray-700 space-y-2">
+                  <div>
+                    <div className="text-xs text-gray-500">Profesional</div>
+                    <div className="font-medium">{colors.professionalName || 'Profesional'}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500">Tipo de consulta</div>
+                    <div className="font-medium">{selectedType?.name || '—'}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500">Precio</div>
+                    <div className="font-medium">{selectedType ? formatPrice(selectedType.price) : '—'}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500">Duración</div>
+                    <div className="font-medium">{selectedType?.duration || 30} minutos</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500">Horario</div>
+                    <div className="font-medium">
+                      {selectedSlot ? (slots.find(s => String(s.id) === selectedSlot) ? formatOptionLabel(slots.find(s => String(s.id) === selectedSlot)!) : selectedSlot) : (date ? date : '—')}
+                    </div>
+                  </div>
+                </div>
+              </ThemedCard>
+
+              <div>
+                <ThemedButton type="submit" variant="primary" size="md" className="w-full">
+                  Reservar
+                </ThemedButton>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </ThemedCard>
 
   {message && (
         <p className={`mt-3 text-sm ${message.includes('correctamente') ? 'text-gray-600' : message.includes('encontrado') ? 'text-gray-600' : 'text-gray-600'}`}>
