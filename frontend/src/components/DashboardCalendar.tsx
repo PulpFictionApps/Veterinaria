@@ -65,12 +65,17 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
   // Actualizar eventos cuando cambien los datos
   useEffect(() => {
-    const availEvents: CalendarEvent[] = (availability || []).map((slot: AvailabilitySlot) => ({
+    // Limitar y optimizar slots de disponibilidad para mejorar rendimiento
+    const maxSlotsToShow = 50; // Límite para evitar sobrecarga visual
+    const limitedAvailability = (availability || []).slice(0, maxSlotsToShow);
+    
+    const availEvents: CalendarEvent[] = limitedAvailability.map((slot: AvailabilitySlot) => ({
       title: "Disponible",
       start: slot.start,
       end: slot.end,
-      backgroundColor: "#E0F2FE",
-      borderColor: "#60A5FA",
+      backgroundColor: "#F3F4F6",
+      borderColor: "#9CA3AF",
+      textColor: "#6B7280",
     }));
 
     const appointmentEvents: CalendarEvent[] = (appointments || []).map((appt: any) => {
@@ -104,9 +109,15 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     });
 
     setEvents([...availEvents, ...appointmentEvents]);
+    
+    // Mostrar advertencia si hay muchos slots (más de 50)
+    if (availability && availability.length > maxSlotsToShow) {
+      console.warn(`⚠️ Mostrando solo ${maxSlotsToShow} de ${availability.length} slots de disponibilidad para mejorar el rendimiento`);
+    }
   }, [appointments, availability]);
 
   const isLoading = appointmentsLoading || availabilityLoading;
+  const hasMoreSlots = availability && availability.length > 50;
 
   const changeView = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
     const calendarApi = calendarRef.current?.getApi();
@@ -168,6 +179,18 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           </button>
         </div>
       </div>
+
+      {/* Indicador de slots limitados */}
+      {hasMoreSlots && (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
+          <div className="flex items-center gap-2 text-gray-700">
+            <Clock className="h-4 w-4" />
+            <span className="text-sm font-medium">
+              Mostrando 50 de {availability?.length} horarios disponibles para mejorar rendimiento
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Calendar */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden relative">
