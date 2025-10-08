@@ -81,9 +81,10 @@ export default function Dashboard() {
         // Cargar datos en paralelo
         const [subRes, appointmentsRes, clientsRes, availabilityRes] = await Promise.all([
           authFetch('/account/subscription'),
-          authFetch(`/appointments/${uid}`),
+          // force:true to bypass client cache and get fresh data after updates
+          authFetch(`/appointments/${uid}`, { force: true }),
           authFetch('/tutors'),
-          authFetch(`/availability/${uid}`)
+          authFetch(`/availability/${uid}`, { force: true })
         ]);
 
         // Parse each response exactly once and reuse the parsed JSON

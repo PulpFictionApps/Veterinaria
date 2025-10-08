@@ -13,7 +13,7 @@ const getApiBase = () => {
 
 export const API_BASE = getApiBase();
 
-export async function authFetch(path: string, opts: RequestInit = {}) {
+export async function authFetch(path: string, opts: RequestInit & { force?: boolean } = {}) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const headers = new Headers(opts.headers || {});
   if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -21,8 +21,9 @@ export async function authFetch(path: string, opts: RequestInit = {}) {
   const fullUrl = `${API_BASE}${path}`;
   const cacheKey = `${opts.method || 'GET'}:${fullUrl}:${JSON.stringify(opts.body || '')}`;
   
-  // Para GET requests, intentar usar cache primero
-  if (!opts.method || opts.method === 'GET') {
+  // Para GET requests, intentar usar cache primero (a menos que se pida 'force')
+  const useCache = !opts.force && (!opts.method || opts.method === 'GET');
+  if (useCache) {
     const cached = apiCache.get(cacheKey);
     if (cached) {
       console.log('🚀 Cache hit for:', path);

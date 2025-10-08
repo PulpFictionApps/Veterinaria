@@ -233,14 +233,30 @@ router.delete('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Actualizar cita (date and/or reason)
+// Actualizar cita (date, reason, status)
 router.patch('/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
-  const { date, reason } = req.body;
+  const { date, reason, status } = req.body;
   try {
     const appointment = await prisma.appointment.findUnique({ where: { id: Number(id) } });
     if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
     if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
+
+    // If caller wants to update only the status (e.g., mark as completed), handle it here
+    if (typeof status === 'string') {
+      const allowed = ['pending', 'confirmed', 'completed', 'cancelled'];
+      if (!allowed.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status value' });
+      }
+
+      const updatedStatus = await prisma.appointment.update({
+        where: { id: Number(id) },
+        data: { status },
+        include: { pet: true, tutor: true, consultationType: true }
+      });
+
+      return res.json(updatedStatus);
+    }
 
       if (date || req.body.slotId) {
       const slotId = req.body.slotId;
