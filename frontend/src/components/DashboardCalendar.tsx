@@ -342,8 +342,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
       {/* Modal de opciones de evento */}
       {showEventModal && selectedEvent && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-10 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-sm w-full mx-4 border border-gray-200/50 ring-1 ring-gray-900/5">
+        <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-2xl max-w-sm w-full mx-4 border border-gray-200/40 ring-1 ring-gray-900/5">
             <div className="flex items-center justify-between p-5 border-b border-gray-200/80">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">
@@ -360,7 +360,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
                 <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
               </button>
             </div>
-            
+
             <div className="p-5">
               <div className="flex flex-col gap-3">
                 {selectedEvent.type === 'availability' ? (
@@ -389,7 +389,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
                     </button>
                   </>
                 )}
-                
+
                 <button
                   onClick={() => setShowEventModal(false)}
                   className="w-full px-4 py-3.5 bg-gray-100/80 hover:bg-gray-200/80 text-gray-700 rounded-xl transition-all duration-200 font-semibold border border-gray-300/50 touch-manipulation"
