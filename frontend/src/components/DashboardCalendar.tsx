@@ -6,6 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { 
   Calendar, 
   Clock, 
@@ -66,6 +67,7 @@ function darkenColor(hex: string, percent: number): string {
 
 export default function DashboardCalendar({ userId }: { userId: number }) {
   const calendarRef = useRef<FullCalendar | null>(null);
+  const router = useRouter();
   
   // Usar hooks SWR para datos en tiempo real
   const { appointments, isLoading: appointmentsLoading } = useAppointments(userId);
@@ -231,9 +233,12 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
   // Función para ver detalles de cita
   const viewAppointment = useCallback((appointment: any) => {
-    // Redirigir a la página de detalles de la cita
-    window.open(`/dashboard/appointments/${appointment.id}`, '_blank');
-  }, []);
+    // Usar Next.js router para navegación fluida
+    router.push(`/dashboard/appointments/${appointment.id}/consult`);
+    // Cerrar modal después de navegar
+    setShowEventModal(false);
+    setSelectedEvent(null);
+  }, [router]);
 
   return (
     <div className="space-y-3 sm:space-y-4">
