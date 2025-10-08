@@ -89,7 +89,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     
     const availEvents: CalendarEvent[] = limitedAvailability.map((slot: AvailabilitySlot) => ({
       id: `availability-${slot.id}`,
-      title: "✅ Disponible",
+      title: "Disponible",
       start: slot.start,
       end: slot.end,
       backgroundColor: "#ECFDF5", // Verde muy suave
@@ -270,28 +270,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         </div>
       </div>
 
-      {/* Leyenda de colores y estado */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-4">
-        <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#ECFDF5", border: "2px solid #22C55E" }}></div>
-            <span className="text-gray-700 font-medium">Disponible</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm bg-blue-500"></div>
-            <span className="text-gray-700 font-medium">Cita agendada</span>
-          </div>
-        </div>
-        
-        {hasLimitedSlots && (
-          <div className="flex items-center gap-2 text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-            <Clock className="h-4 w-4" />
-            <span className="text-xs sm:text-sm font-medium">
-              Vista limitada: {availability?.length} horarios totales
-            </span>
-          </div>
-        )}
-      </div>
+      {/* Espacio reservado para leyenda (oculto para limpieza visual) */}
+      <div className="mb-2" aria-hidden />
 
       {/* Calendar */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden relative">
