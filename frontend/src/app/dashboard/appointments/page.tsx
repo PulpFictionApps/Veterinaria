@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { authFetch } from '../../../lib/api';
 import { useAuthContext } from '../../../lib/auth-context';
 import Link from 'next/link';
@@ -70,8 +71,18 @@ export default function AppointmentsPage() {
   const [editSlotId, setEditSlotId] = useState<number | ''>('');
   const [availableSlots, setAvailableSlots] = useState<Array<{ id: number; start: string; end: string }>>([]);
   const [editReason, setEditReason] = useState('');
-  const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all');
+  const [filter, setFilter] = useState<'all' | 'upcoming' | 'past' | 'today'>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const searchParams = useSearchParams();
+
+  // Initialize filter from query param ?filter=all|upcoming|past|today
+  useEffect(() => {
+    const q = searchParams?.get('filter');
+    if (!q) return;
+    if (q === 'all' || q === 'upcoming' || q === 'past' || q === 'today') {
+      setFilter(q as any);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function loadAppointments() {
@@ -156,25 +167,36 @@ export default function AppointmentsPage() {
       }
     }
 
+  // Return a YYYY-MM-DD date string for a given date in a specific IANA timezone
+  function dateKeyInTZ(dateValue: string | Date, tz = 'America/Santiago') {
+    const d = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
+    // Use en-CA to get a ISO-like YYYY-MM-DD format from toLocaleDateString
+    return d.toLocaleDateString('en-CA', { timeZone: tz });
+  }
+
   function filterAppointments(appointments: Appointment[]) {
     const now = new Date();
-    
+    const todayKey = dateKeyInTZ(now, 'America/Santiago');
+
     return appointments.filter(appointment => {
       const appointmentDate = new Date(appointment.date);
-      
+      const appointmentKey = dateKeyInTZ(appointmentDate, 'America/Santiago');
+
       // Search filter
       if (searchTerm && !appointment.pet.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
           !appointment.tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
           !appointment.reason.toLowerCase().includes(searchTerm.toLowerCase())) {
         return false;
       }
-      
-      // Date filter
+
+      // Date filter (today uses Chile timezone)
       switch (filter) {
         case 'upcoming':
-          return appointmentDate >= now;
+          return new Date(appointment.date).getTime() >= now.getTime();
         case 'past':
-          return appointmentDate < now;
+          return new Date(appointment.date).getTime() < now.getTime();
+        case 'today':
+          return appointmentKey === todayKey;
         default:
           return true;
       }
@@ -207,8 +229,11 @@ export default function AppointmentsPage() {
   function getAppointmentStatus(dateString: string) {
     const appointmentDate = new Date(dateString);
     const now = new Date();
-    
-    if (appointmentDate < now) {
+    // Compare using Chile timezone day precision for consistent UI
+    const appointmentKey = dateKeyInTZ(appointmentDate, 'America/Santiago');
+    const todayKey = dateKeyInTZ(now, 'America/Santiago');
+
+    if (appointmentDate.getTime() < now.getTime() && appointmentKey !== todayKey) {
       return { status: 'past', color: 'text-gray-500', bg: 'bg-gray-100' };
     } else {
       return { status: 'upcoming', color: 'text-gray-600', bg: 'bg-gray-50' };

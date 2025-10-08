@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
 import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
 import PublicLinkManager from '../../components/PublicLinkManager';
@@ -288,30 +289,33 @@ export default function Dashboard() {
           staggerDelay={150}
         >
           {[
-            <MetricCard
-              key="appointments"
-              title="Citas de Hoy"
-              value={metrics.todayAppointments}
-              icon={Calendar}
-              change={metrics.todayAppointments > 0 ? `${metrics.todayAppointments} programadas` : "Sin citas hoy"}
-              changeType={metrics.todayAppointments > 0 ? "positive" : "neutral"}
-            />,
-            <MetricCard
-              key="clients"
-              title="Total Clientes"
-              value={metrics.totalClients}
-              icon={Users}
-              change={metrics.totalClients > 0 ? "Total registrados" : "Sin clientes aún"}
-              changeType="neutral"
-            />,
-            <MetricCard
-              key="slots"
-              title="Horarios Disponibles"
-              value={metrics.availableSlots}
-              icon={Clock}
-              change={metrics.availableSlots < 5 ? "Pocos horarios" : "Bien cubierto"}
-              changeType={metrics.availableSlots < 5 ? "negative" : "positive"}
-            />
+            <Link key="appointments" href="/dashboard/appointments?filter=today">
+              <MetricCard
+                title="Citas de Hoy"
+                value={metrics.todayAppointments}
+                icon={Calendar}
+                change={metrics.todayAppointments > 0 ? `${metrics.todayAppointments} programadas` : "Sin citas hoy"}
+                changeType={metrics.todayAppointments > 0 ? "positive" : "neutral"}
+              />
+            </Link>,
+            <Link key="clients" href="/dashboard/clients">
+              <MetricCard
+                title="Total Clientes"
+                value={metrics.totalClients}
+                icon={Users}
+                change={metrics.totalClients > 0 ? "Total registrados" : "Sin clientes aún"}
+                changeType="neutral"
+              />
+            </Link>,
+            <Link key="slots" href="/dashboard/calendar">
+              <MetricCard
+                title="Horarios Disponibles"
+                value={metrics.availableSlots}
+                icon={Clock}
+                change={metrics.availableSlots < 5 ? "Pocos horarios" : "Bien cubierto"}
+                changeType={metrics.availableSlots < 5 ? "negative" : "positive"}
+              />
+            </Link>
           ]}
         </Stagger>
 
@@ -322,31 +326,34 @@ export default function Dashboard() {
           staggerDelay={100}
         >
           {[
-            <MetricCard
-              key="revenue"
-              title="Ingresos Semanales"
-              value={metrics.weeklyRevenue}
-              icon={DollarSign}
-              format="currency"
-              change={metrics.weeklyRevenue > 0 ? "Ingresos confirmados" : "Sin ingresos registrados"}
-              changeType={metrics.weeklyRevenue > 0 ? "positive" : "neutral"}
-            />,
-            <MetricCard
-              key="completed"
-              title="Consultas Completadas"
-              value={metrics.completedAppointments}
-              icon={Stethoscope}
-              change={metrics.completedAppointments > 0 ? "Atenciones realizadas" : "Sin consultas completadas"}
-              changeType={metrics.completedAppointments > 0 ? "positive" : "neutral"}
-            />,
-            <MetricCard
-              key="tasks"
-              title="Tareas Pendientes"
-              value={metrics.pendingTasks}
-              icon={AlertTriangle}
-              change={metrics.pendingTasks > 0 ? "Requiere atención" : "Todo al día"}
-              changeType={metrics.pendingTasks > 0 ? "negative" : "positive"}
-            />
+            <Link key="revenue" href="/dashboard/billing">
+              <MetricCard
+                title="Ingresos Semanales"
+                value={metrics.weeklyRevenue}
+                icon={DollarSign}
+                format="currency"
+                change={metrics.weeklyRevenue > 0 ? "Ingresos confirmados" : "Sin ingresos registrados"}
+                changeType={metrics.weeklyRevenue > 0 ? "positive" : "neutral"}
+              />
+            </Link>,
+            <Link key="completed" href="/dashboard/appointments?filter=past">
+              <MetricCard
+                title="Consultas Completadas"
+                value={metrics.completedAppointments}
+                icon={Stethoscope}
+                change={metrics.completedAppointments > 0 ? "Atenciones realizadas" : "Sin consultas completadas"}
+                changeType={metrics.completedAppointments > 0 ? "positive" : "neutral"}
+              />
+            </Link>,
+            <Link key="tasks" href="/dashboard/appointments?filter=upcoming">
+              <MetricCard
+                title="Tareas Pendientes"
+                value={metrics.pendingTasks}
+                icon={AlertTriangle}
+                change={metrics.pendingTasks > 0 ? "Requiere atención" : "Todo al día"}
+                changeType={metrics.pendingTasks > 0 ? "negative" : "positive"}
+              />
+            </Link>
           ]}
         </Stagger>
 
