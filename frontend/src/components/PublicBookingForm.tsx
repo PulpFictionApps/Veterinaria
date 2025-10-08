@@ -12,7 +12,7 @@ import ThemedButton from './ui/ThemedButton';
 interface ConsultationType {
   id: number;
   name: string;
-  price: number; // in cents
+  price: number; // price in CLP (same unit used in /consultation-types)
   description?: string;
   duration?: number; // in minutes
   color?: string; // hex color code
@@ -348,7 +348,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   }
 
   function formatPrice(priceInCents: number) {
-    return (priceInCents / 100).toLocaleString('es-CL', {
+    // price is stored in CLP (e.g. 25000)
+    return Number(priceInCents).toLocaleString('es-CL', {
       style: 'currency',
       currency: 'CLP'
     });
