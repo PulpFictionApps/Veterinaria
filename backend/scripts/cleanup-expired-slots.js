@@ -11,20 +11,45 @@ const prisma = new PrismaClient();
 // Configurar timezone de Chile
 const CHILE_TIMEZONE = 'America/Santiago';
 
-function getChileTime() {
-  const now = new Date();
-  
-  // Chile tiene cambios de horario estacionales:
-  // - Horario de Verano (UTC-3): Primer sábado de septiembre
-  // - Horario de Invierno (UTC-4): Primer sábado de abril
-  // toLocaleString maneja automáticamente estos cambios
-  const chileTime = new Date(now.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
-  
-  return chileTime;
-}
-
+/**
+ * Devuelve un objeto Date que representa el instante UTC correspondiente
+ * a la hora de muro actual en la zona America/Santiago.
+ *
+ * En otras palabras: toma el year/month/day/hour/minute/second en la zona
+ * America/Santiago para el instante actual y construye la fecha UTC que
+ * corresponde a esos componentes. Esto evita el antipatrón
+ * `new Date(new Date().toLocaleString(...))` que produce una fecha
+ * interpretada en la zona del sistema y provoca desfases.
+ */
 function getChileDate() {
-  return getChileTime();
+  const now = new Date();
+
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: CHILE_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+
+  const parts = fmt.formatToParts(now).reduce((acc, part) => {
+    if (part.type !== 'literal') acc[part.type] = part.value;
+    return acc;
+  }, {});
+
+  const year = Number(parts.year);
+  const month = Number(parts.month);
+  const day = Number(parts.day);
+  const hour = Number(parts.hour);
+  const minute = Number(parts.minute);
+  const second = Number(parts.second);
+
+  // Construir la fecha UTC que corresponde a la hora de muro en Chile
+  const utcMillis = Date.UTC(year, month - 1, day, hour, minute, second);
+  return new Date(utcMillis);
 }
 
 async function cleanupExpiredSlots() {
