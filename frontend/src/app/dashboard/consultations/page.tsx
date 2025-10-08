@@ -163,7 +163,7 @@ export default function ConsultationsPage() {
 
         {/* Create/Edit Form */}
         {showCreateForm && (
-          <ThemedCard variant="medical" className="mb-8">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
             <div className="px-8 py-6 border-b border-gray-200 bg-white">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-indigo-100 rounded-lg">
@@ -292,7 +292,7 @@ export default function ConsultationsPage() {
                 </div>
               </form>
             </div>
-          </ThemedCard>
+          </div>
         )}
 
         <Stagger className="space-y-8">
