@@ -71,6 +71,7 @@ export default function Dashboard() {
   });
   const [loading, setLoading] = useState(true);
 
+  // Expose loader so external events can trigger a refresh (e.g., after marking a consultation completed)
   useEffect(() => {
     let mounted = true;
     async function loadDashboardData() {
@@ -173,16 +174,10 @@ export default function Dashboard() {
         }
 
         if (availabilityData && Array.isArray(availabilityData)) {
-          const nowChile = new Date().toLocaleString('en-CA', { timeZone: tz });
-          const nowTs = new Date(nowChile).getTime();
-          newMetrics.availableSlots = availabilityData.filter((slot: unknown) => {
-            if (!slot || typeof slot !== 'object') return false;
-            const s = slot as Record<string, unknown>;
-            const end = s.end as string | undefined;
-            if (!end) return false;
-            const endTs = new Date(String(end)).getTime();
-            return endTs > nowTs;
-          }).length;
+          // The backend already returns only future (non-expired) slots for the user.
+          // Count the number of slots returned rather than re-parsing dates on the client
+          // (this avoids timezone/parsing mismatches).
+          newMetrics.availableSlots = availabilityData.length;
         }
 
         if (mounted) {
@@ -195,9 +190,20 @@ export default function Dashboard() {
         if (mounted) setLoading(false);
       }
     }
-    
+
+    // Wrap to allow re-loading from outside via event
+    const reload = async () => { await loadDashboardData(); };
+
+    // Initial load
     loadDashboardData();
-    return () => { mounted = false };
+
+    // Listen for appointment updates triggered elsewhere in the app
+    const handler = () => { reload(); };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('appointments:updated', handler);
+    }
+
+    return () => { mounted = false; if (typeof window !== 'undefined') window.removeEventListener('appointments:updated', handler); };
   }, [uid]);
 
   // Componente de tarjeta de métrica

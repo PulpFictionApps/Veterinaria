@@ -58,6 +58,34 @@ export default function ConsultationsPanel() {
     }
   };
 
+  const completeConsultation = async (id: number) => {
+    if (!confirm('¿Marcar esta consulta como completada? Esta acción actualizará las métricas de la clínica.')) return;
+    try {
+      // Mark appointment as completed on the server
+      const res = await authFetch(`/appointments/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'completed' })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Error al marcar consulta' }));
+        throw new Error(err.error || 'Error al marcar consulta');
+      }
+
+      // Refresh local list
+      await loadConsultations();
+
+      // Notify other parts of the app (dashboard metrics) to refresh
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new Event('appointments:updated'));
+      }
+    } catch (err) {
+      console.error('Error completing consultation:', err);
+      alert(err instanceof Error ? err.message : 'Error al marcar consulta');
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-CL', {
@@ -135,12 +163,20 @@ export default function ConsultationsPanel() {
                     </p>
                   </div>
                 </div>
-                <Link
-                  href={`/dashboard/appointments/${consultation.id}/consult`}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium transition-colors"
-                >
-                  Ver Consulta
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/dashboard/appointments/${consultation.id}/consult`}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium transition-colors"
+                  >
+                    Ver Consulta
+                  </Link>
+                  <button
+                    onClick={() => completeConsultation(consultation.id)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                  >
+                    Terminar
+                  </button>
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4 text-sm">
