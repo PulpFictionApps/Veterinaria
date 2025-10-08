@@ -44,7 +44,7 @@ export default function ConsultationsPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    duration: 30,
+    duration: 15,
     price: 0,
     color: '#3B82F6',
     active: true,
@@ -86,7 +86,7 @@ export default function ConsultationsPage() {
     setFormData({
       name: '',
       description: '',
-      duration: 30,
+      duration: 15,
       price: 0,
       color: '#3B82F6',
       active: true,
@@ -98,7 +98,7 @@ export default function ConsultationsPage() {
     setFormData({
       name: type.name,
       description: type.description || '',
-      duration: type.duration || 30,
+        duration: type.duration || 15,
       price: type.price,
       color: type.color || '#3B82F6',
       active: type.active,

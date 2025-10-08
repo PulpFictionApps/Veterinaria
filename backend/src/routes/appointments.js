@@ -9,8 +9,8 @@ const router = Router();
 
 // Función para encontrar y reservar múltiples bloques consecutivos
 async function findAndReserveConsecutiveSlots(tx, userId, startTime, durationMinutes) {
-  const slotDurationMs = 30 * 60 * 1000; // 30 minutos en millisegundos
-  const slotsNeeded = Math.ceil(durationMinutes / 30); // Cuántos bloques de 30 min necesitamos
+  const slotDurationMs = 15 * 60 * 1000; // 15 minutos en millisegundos
+  const slotsNeeded = Math.ceil(durationMinutes / 15); // Cuántos bloques de 15 min necesitamos
   
   const slotsToReserve = [];
   let currentTime = new Date(startTime);
@@ -29,7 +29,7 @@ async function findAndReserveConsecutiveSlots(tx, userId, startTime, durationMin
     });
     
     if (!slot) {
-      throw new Error(`No hay disponibilidad suficiente. Se necesitan ${slotsNeeded} bloques consecutivos de 30 minutos.`);
+      throw new Error(`No hay disponibilidad suficiente. Se necesitan ${slotsNeeded} bloques consecutivos de 15 minutos.`);
     }
     
     slotsToReserve.push(slot);
@@ -63,8 +63,8 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
       }
     }
 
-    // Determinar duración (por defecto 30 minutos si no hay tipo específico)
-    const durationMinutes = consultationType?.duration || 30;
+  // Determinar duración (por defecto 15 minutos si no hay tipo específico)
+  const durationMinutes = consultationType?.duration || 15;
 
     if (slotId) {
       // prefer slotId when provided
@@ -461,8 +461,8 @@ router.post('/public', async (req, res) => {
           });
         }
 
-        // Determinar duración (por defecto 30 minutos si no hay tipo específico)
-        const durationMinutes = consultationType?.duration || 30;
+  // Determinar duración (por defecto 15 minutos si no hay tipo específico)
+  const durationMinutes = consultationType?.duration || 15;
 
         // Verificar que no existe otra cita en ese horario
         const exists = await tx.appointment.findFirst({ where: { userId: profIdNum, date: selectedDate } });

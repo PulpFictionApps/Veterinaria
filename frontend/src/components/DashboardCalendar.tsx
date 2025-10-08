@@ -120,8 +120,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         appointmentTitle += ` - ${appt.reason}`;
       }
       
-      // Determine end time from consultationType.duration (minutes) or default to 30 minutes
-  const durationMinutes = appt.consultationType?.duration || 30;
+    // Determine end time from consultationType.duration (minutes) or default to 15 minutes
+  const durationMinutes = appt.consultationType?.duration || 15;
   const startDate = new Date(appt.date);
       const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
 
@@ -301,7 +301,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           events={events}
           height={window.innerWidth < 768 ? 400 : "auto"}
           selectable={true}
-          slotDuration="00:30:00"
+          slotDuration="00:15:00"
           slotMinTime="08:00:00"
           slotMaxTime="20:00:00"
           allDaySlot={false}
@@ -318,7 +318,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             start: '08:00',
             end: '20:00'
           }}
-          snapDuration="00:30:00"
+          snapDuration="00:15:00"
           eventMaxStack={window.innerWidth < 768 ? 2 : 4}
           eventClassNames="touch-manipulation cursor-pointer"
         />
