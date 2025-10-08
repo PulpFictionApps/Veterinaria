@@ -6,6 +6,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
 import { useEffect, useRef, useState } from "react";
+import { 
+  Calendar, 
+  Clock, 
+  Grid3X3,
+} from 'lucide-react';
 import { authFetch } from "../lib/api";
 import { useAppointments, useAvailability, invalidateCache } from "../hooks/useData";
 
@@ -144,19 +149,22 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             className="flex-1 sm:flex-initial px-3 py-2 bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-800 transition-all shadow touch-manipulation" 
             onClick={() => changeView("timeGridDay")}
           >
-            📅 Día
+            <Grid3X3 className="h-4 w-4" />
+             Día
           </button>
           <button 
             className="flex-1 sm:flex-initial px-3 py-2 bg-white text-gray-700 rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-all shadow touch-manipulation" 
             onClick={() => changeView("timeGridWeek")}
           >
-            📊 Semana
+            <Calendar className="h-4 w-4" />
+             Semana
           </button>
           <button 
             className="flex-1 sm:flex-initial px-3 py-2 bg-white text-gray-700 rounded-lg text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-all shadow touch-manipulation" 
             onClick={() => changeView("dayGridMonth")}
           >
-            🗓️ Mes
+            <Calendar className="h-4 w-4" />
+             Mes
           </button>
         </div>
       </div>
