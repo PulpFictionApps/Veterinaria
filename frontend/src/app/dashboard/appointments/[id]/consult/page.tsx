@@ -49,6 +49,7 @@ interface Appointment {
     clinicName?: string;
   };
   consultationType?: ConsultationType;
+  status?: string;
 }
 
 interface MedicalRecord {
@@ -335,6 +336,35 @@ export default function ConsultationPage() {
     }
   };
 
+  const completeAppointment = async () => {
+    if (!confirm('¿Marcar esta consulta como completada? Esta acción actualizará las métricas de la clínica.')) return;
+    try {
+      const response = await authFetch(`/appointments/${appointmentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'completed' })
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ error: 'Error al marcar consulta' }));
+        throw new Error(err.error || 'Error al marcar consulta');
+      }
+
+      // Update local state to reflect completed status
+      setAppointment((prev) => (prev ? { ...prev, status: 'completed' } : prev));
+
+      // Notify other parts of the app (dashboard metrics) to refresh
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new Event('appointments:updated'));
+      }
+
+      alert('Consulta marcada como completada');
+    } catch (err) {
+      console.error('Error completing appointment:', err);
+      alert(err instanceof Error ? err.message : 'Error al marcar la consulta como completada');
+    }
+  };
+
   if (loading) {
     return (
       <div className="vet-page">
@@ -400,8 +430,18 @@ export default function ConsultationPage() {
 
       <div className="vet-container space-y-6">
         {/* Appointment Details */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-6 rounded-lg shadow relative">
         <h3 className="text-lg font-semibold mb-4">Información de la Cita</h3>
+        {/* Botón terminar: arriba a la derecha */}
+        <div className="absolute top-4 right-4">
+          <button
+            onClick={completeAppointment}
+            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+            title="Marcar consulta como completada"
+          >
+            Terminar Consulta
+          </button>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-semibold text-lg mb-2">Información de la Mascota</h3>

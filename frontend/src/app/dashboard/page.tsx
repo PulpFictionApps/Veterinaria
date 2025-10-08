@@ -7,7 +7,6 @@ import Link from 'next/link';
 import LazyDashboardCalendar from "../../components/LazyDashboardCalendar";
 import LazyAvailabilityManager from '../../components/LazyAvailabilityManager';
 import PublicLinkManager from '../../components/PublicLinkManager';
-import ConsultationsPanel from '../../components/ConsultationsPanel';
 import { useAuthContext } from '../../lib/auth-context';
 import { authFetch } from '../../lib/api';
 import { 
@@ -440,13 +439,8 @@ export default function Dashboard() {
         {/* Layout principal con consultas y calendario */}
         <AnimateOnView>
           <div className="vet-grid-responsive">
-            {/* Panel de consultas - 2/3 del espacio */}
-            <div className="xl:col-span-2">
-              <ConsultationsPanel />
-            </div>
-
-            {/* Calendario - 1/3 del espacio */}
-            <div className="xl:col-span-1">
+            {/* Calendario profesional - ocupar todo el espacio disponible */}
+            <div className="xl:col-span-3">
               <div className="vet-card-unified overflow-hidden">
                 <div className="vet-section-header-unified">
                   <div className="vet-section-title-unified">
@@ -455,7 +449,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="p-6 lg:p-8">
-                  <p className="text-gray-600 font-medium mb-6">Vista general de citas programadas</p>
+                  <p className="text-gray-600 font-medium mb-6">Vista profesional de la agenda</p>
                   {uid && <LazyDashboardCalendar userId={uid} />}
                 </div>
               </div>
