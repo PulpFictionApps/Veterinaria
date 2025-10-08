@@ -34,11 +34,22 @@ async function cleanupExpiredSlots() {
     const now = getChileDate();
     console.log(`⏰ Hora actual de Chile: ${now.toISOString()}`);
 
-    // 1. Eliminar availability slots que hayan pasado (inmediatamente)
+    // Calcular el último corte de 15 minutos (cuartos)
+    const minutes = now.getMinutes();
+    const quarter = Math.floor(minutes / 15) * 15; // 0,15,30,45
+    const lastQuarter = new Date(now);
+    lastQuarter.setMinutes(quarter);
+    lastQuarter.setSeconds(0);
+    lastQuarter.setMilliseconds(0);
+
+    console.log(`⏱️ Último corte de 15 minutos: ${lastQuarter.toISOString()}`);
+
+    // 1. Eliminar availability slots cuya 'end' sea menor o igual al último corte
+    // (nadie puede reservar un slot que terminó en o antes del último cuarto)
     const expiredSlots = await prisma.availability.deleteMany({
       where: {
         end: {
-          lt: now
+          lte: lastQuarter
         }
       }
     });

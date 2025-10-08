@@ -109,28 +109,46 @@ app.get("/health", healthCheck);
 app.get("/", (req, res) => res.send("Backend funcionando"));
 
 // Configurar cleanup automático de horarios expirados
-// Ejecutar cada 30 minutos
-const CLEANUP_INTERVAL = 30 * 60 * 1000; // 30 minutos en millisegundos
+// Ejecutar alineado cada 15 minutos (en :00, :15, :30, :45) usando hora de servidor
+const CLEANUP_INTERVAL = 15 * 60 * 1000; // 15 minutos
 
-// Ejecutar primera limpieza al iniciar el servidor
+// Función helper para calcular ms hasta el próximo cuarto (según hora del servidor)
+function msUntilNextQuarter() {
+  const now = new Date();
+  const minutes = now.getMinutes();
+  const nextQuarter = Math.ceil((minutes + 0.000001) / 15) * 15; // 15,30,45,60
+  const target = new Date(now);
+  if (nextQuarter === 60) {
+    target.setHours(now.getHours() + 1);
+    target.setMinutes(0);
+  } else {
+    target.setMinutes(nextQuarter);
+  }
+  target.setSeconds(0);
+  target.setMilliseconds(0);
+  return target.getTime() - now.getTime();
+}
+
+// Programar la primera ejecución alineada al siguiente cuarto
 setTimeout(async () => {
   try {
-    console.log('🧹 Ejecutando limpieza inicial de horarios expirados...');
+    console.log('🧹 Ejecutando limpieza inicial de horarios expirados (alineada al cuarto)');
     await cleanupExpiredSlots();
   } catch (error) {
     console.error('❌ Error en limpieza inicial:', error);
   }
-}, 5000); // Esperar 5 segundos después del inicio
 
-// Configurar limpieza periódica
-setInterval(async () => {
-  try {
-    console.log('🔄 Ejecutando limpieza periódica de horarios expirados...');
-    await cleanupExpiredSlots();
-  } catch (error) {
-    console.error('❌ Error en limpieza periódica:', error);
-  }
-}, CLEANUP_INTERVAL);
+  // Después de la primera ejecución alineada, ejecutar periódicamente cada 15 minutos
+  setInterval(async () => {
+    try {
+      console.log('🔄 Ejecutando limpieza periódica de horarios expirados...');
+      await cleanupExpiredSlots();
+    } catch (error) {
+      console.error('❌ Error en limpieza periódica:', error);
+    }
+  }, CLEANUP_INTERVAL);
+
+}, msUntilNextQuarter());
 
 // Configurar sistema de recordatorios automáticos
 // Ejecutar cada 10 minutos para verificar recordatorios pendientes
