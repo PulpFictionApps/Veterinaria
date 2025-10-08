@@ -145,13 +145,15 @@ export default function Dashboard() {
             return new Date(String(a.date)).toLocaleString('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit' }) === currentMonthKey;
           }) as Appointment[];
 
+          // consultationType.price is stored in cents -> convert to CLP (pesos) when summing
           newMetrics.monthlyRevenue = completedThisMonth.reduce((sum: number, apt: Appointment) => {
-            let priceVal = 0;
+            let priceCents = 0;
             if (apt.consultationType && typeof apt.consultationType === 'object') {
               const ct = apt.consultationType as { price?: number };
-              if (ct && 'price' in ct) priceVal = Number(ct.price || 0) || 0;
+              if (ct && 'price' in ct) priceCents = Number(ct.price || 0) || 0;
             }
-            return sum + priceVal;
+            const pricePesos = Math.round(priceCents / 100);
+            return sum + pricePesos;
           }, 0);
 
           // Tareas pendientes: citas no confirmadas dentro de las próximas 24 horas
