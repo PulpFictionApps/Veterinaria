@@ -281,33 +281,40 @@ export default function PetDetail({ params }: PageProps) {
             </div>
 
             {/* Información del tutor */}
-            <div className="p-6 bg-neutral-50 border-t border-medical-100">
-              <h3 className="text-sm font-semibold text-neutral-600 mb-3 uppercase tracking-wide">Tutor Responsable</h3>
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center">
-                  <User className="w-4 h-4 text-neutral-500 mr-2" />
-                  <span className="font-medium text-neutral-800">{pet.tutor.name}</span>
+            {pet.tutor ? (
+              <div className="p-6 bg-neutral-50 border-t border-medical-100">
+                <h3 className="text-sm font-semibold text-neutral-600 mb-3 uppercase tracking-wide">Tutor Responsable</h3>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center">
+                    <User className="w-4 h-4 text-neutral-500 mr-2" />
+                    <span className="font-medium text-neutral-800">{pet.tutor.name}</span>
+                  </div>
+                  {pet.tutor.phone && (
+                    <div className="flex items-center">
+                      <Phone className="w-4 h-4 text-neutral-500 mr-2" />
+                      <span className="text-neutral-600">{pet.tutor.phone}</span>
+                    </div>
+                  )}
+                  {pet.tutor.email && (
+                    <div className="flex items-center">
+                      <Mail className="w-4 h-4 text-neutral-500 mr-2" />
+                      <span className="text-neutral-600">{pet.tutor.email}</span>
+                    </div>
+                  )}
+                  {pet.tutor.address && (
+                    <div className="flex items-center">
+                      <MapPin className="w-4 h-4 text-neutral-500 mr-2" />
+                      <span className="text-neutral-600">{pet.tutor.address}</span>
+                    </div>
+                  )}
                 </div>
-                {pet.tutor.phone && (
-                  <div className="flex items-center">
-                    <Phone className="w-4 h-4 text-neutral-500 mr-2" />
-                    <span className="text-neutral-600">{pet.tutor.phone}</span>
-                  </div>
-                )}
-                {pet.tutor.email && (
-                  <div className="flex items-center">
-                    <Mail className="w-4 h-4 text-neutral-500 mr-2" />
-                    <span className="text-neutral-600">{pet.tutor.email}</span>
-                  </div>
-                )}
-                {pet.tutor.address && (
-                  <div className="flex items-center">
-                    <MapPin className="w-4 h-4 text-neutral-500 mr-2" />
-                    <span className="text-neutral-600">{pet.tutor.address}</span>
-                  </div>
-                )}
               </div>
-            </div>
+            ) : (
+              <div className="p-6 bg-neutral-50 border-t border-medical-100">
+                <h3 className="text-sm font-semibold text-neutral-600 mb-3 uppercase tracking-wide">Tutor Responsable</h3>
+                <div className="text-neutral-500">No hay información del tutor disponible.</div>
+              </div>
+            )}
           </ThemedCard>
         </FadeIn>
 

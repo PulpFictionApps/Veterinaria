@@ -66,56 +66,64 @@ export default function Dashboard() {
           authFetch(`/availability/${uid}`)
         ]);
 
-        if (subRes.ok) {
-          const d = await subRes.json();
-          if (mounted) setSubscription(d.subscription || null);
+        // Parse each response exactly once and reuse the parsed JSON
+        let subData: any = null;
+        let appointmentsData: any[] = [];
+        let clientsData: any[] = [];
+        let availabilityData: any[] = [];
+
+        if (subRes && subRes.ok) {
+          try { subData = await subRes.json(); } catch (e) { subData = null; }
+          if (mounted) setSubscription(subData?.subscription || null);
+        }
+
+        if (appointmentsRes && appointmentsRes.ok) {
+          try { appointmentsData = await appointmentsRes.json(); } catch (e) { appointmentsData = []; }
+        }
+
+        if (clientsRes && clientsRes.ok) {
+          try { clientsData = await clientsRes.json(); } catch (e) { clientsData = []; }
+        }
+
+        if (availabilityRes && availabilityRes.ok) {
+          try { availabilityData = await availabilityRes.json(); } catch (e) { availabilityData = []; }
         }
 
         // Calcular métricas
         const newMetrics = { ...metrics };
 
-        if (appointmentsRes.ok) {
-          const appointments = await appointmentsRes.json();
-          const today = new Date().toDateString();
-          newMetrics.todayAppointments = appointments.filter((apt: any) => 
+        const today = new Date().toDateString();
+        if (appointmentsData && Array.isArray(appointmentsData)) {
+          newMetrics.todayAppointments = appointmentsData.filter((apt: any) => 
             new Date(apt.date).toDateString() === today
           ).length;
-          newMetrics.completedAppointments = appointments.filter((apt: any) => 
+          newMetrics.completedAppointments = appointmentsData.filter((apt: any) => 
             apt.status === 'completed' || new Date(apt.date) < new Date()
           ).length;
-        }
 
-        if (clientsRes.ok) {
-          const clients = await clientsRes.json();
-          newMetrics.totalClients = clients.length;
-        }
-
-        if (availabilityRes.ok) {
-          const slots = await availabilityRes.json();
-          newMetrics.availableSlots = slots.filter((slot: any) => 
-            new Date(slot.end) > new Date()
-          ).length;
-        }
-
-        // Calcular ingresos reales de citas completadas (si hay datos disponibles)
-        if (appointmentsRes.ok) {
-          const appointments = await appointmentsRes.json();
-          // Solo contar citas con precio real de consulta
-          const completedWithPrice = appointments.filter((apt: any) => 
+          // Ingresos semanales: contar citas completadas con precio
+          const completedWithPrice = appointmentsData.filter((apt: any) => 
             apt.status === 'completed' && apt.consultationType?.price
           );
           newMetrics.weeklyRevenue = completedWithPrice.reduce((sum: number, apt: any) => 
-            sum + (apt.consultationType.price || 0), 0
+            sum + (apt.consultationType?.price || 0), 0
           );
-        }
-        
-        // Tareas pendientes reales basadas en citas próximas sin confirmar
-        if (appointmentsRes.ok) {
-          const appointments = await appointmentsRes.json();
+
+          // Tareas pendientes (citas próximas sin confirmar)
           const tomorrow = new Date();
           tomorrow.setDate(tomorrow.getDate() + 1);
-          newMetrics.pendingTasks = appointments.filter((apt: any) => 
+          newMetrics.pendingTasks = appointmentsData.filter((apt: any) => 
             new Date(apt.date) <= tomorrow && !apt.confirmed
+          ).length;
+        }
+
+        if (clientsData && Array.isArray(clientsData)) {
+          newMetrics.totalClients = clientsData.length;
+        }
+
+        if (availabilityData && Array.isArray(availabilityData)) {
+          newMetrics.availableSlots = availabilityData.filter((slot: any) => 
+            new Date(slot.end) > new Date()
           ).length;
         }
 
