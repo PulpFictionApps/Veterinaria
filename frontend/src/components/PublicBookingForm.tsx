@@ -55,8 +55,8 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
   const [emailChecked, setEmailChecked] = useState(false);
   const [existingTutor, setExistingTutor] = useState<TutorData | null>(null);
   const [colors, setColors] = useState<ProfessionalColors>({
-    primaryColor: '#ec4899',
-    secondaryColor: '#f97316', 
+    primaryColor: '#1f2937',
+    secondaryColor: '#2563eb', 
     accentColor: '#3b82f6',
     professionalName: 'Profesional'
   });
@@ -679,21 +679,15 @@ export default function PublicBookingForm({ professionalId }: { professionalId: 
             className="w-full p-2 border mb-2 rounded" 
           />
           
-          <button 
+          <ThemedButton
             type="submit"
-            className="w-full sm:w-auto px-3 py-2 rounded-lg text-sm text-white font-medium transition-all duration-200 hover:opacity-90 shadow"
-            style={{
-              background: colors.primaryColor ? 
-                `linear-gradient(135deg, ${colors.primaryColor}, ${colors.secondaryColor || colors.primaryColor})` : 
-                'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-              boxShadow: colors.accentColor ? 
-                `0 4px 15px ${colors.accentColor}40` : 
-                '0 4px 15px rgba(59, 130, 246, 0.25)'
-            }}
+            variant="primary"
+            size="md"
+            className="w-full sm:w-auto"
             disabled={!emailChecked}
           >
             Reservar
-          </button>
+          </ThemedButton>
         </>
       )}
 
