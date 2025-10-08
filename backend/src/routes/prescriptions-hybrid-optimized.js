@@ -5,7 +5,7 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import path from 'path';
 import fs from 'fs/promises';
 import crypto from 'crypto';
-import prisma from '../lib/prisma.js';
+import prisma from '../../lib/prisma.js';
 import { verifyToken } from '../middleware/auth.js';
 import { uploadPDF, deletePDF, getPublicUrl } from '../lib/supabaseStorage.js';
 import { fileURLToPath } from 'url';
