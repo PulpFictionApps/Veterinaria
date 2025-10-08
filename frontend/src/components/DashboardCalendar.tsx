@@ -5,7 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { 
   Calendar, 
   Clock, 
@@ -57,14 +57,13 @@ function darkenColor(hex: string, percent: number): string {
 
 export default function DashboardCalendar({ userId }: { userId: number }) {
   const calendarRef = useRef<FullCalendar | null>(null);
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
   
   // Usar hooks SWR para datos en tiempo real
   const { appointments, isLoading: appointmentsLoading } = useAppointments(userId);
   const { availability, isLoading: availabilityLoading } = useAvailability(userId);
 
-  // Actualizar eventos cuando cambien los datos
-  useEffect(() => {
+  // Computar eventos de manera optimizada con useMemo para evitar renders innecesarios
+  const events = useMemo(() => {
     // Limitar y optimizar slots de disponibilidad para mejorar rendimiento
     const maxSlotsToShow = 50; // Límite para evitar sobrecarga visual
     const limitedAvailability = (availability || []).slice(0, maxSlotsToShow);
@@ -108,23 +107,27 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       };
     });
 
-    setEvents([...availEvents, ...appointmentEvents]);
-    
-    // Mostrar advertencia si hay muchos slots (más de 50)
+    return [...availEvents, ...appointmentEvents];
+  }, [appointments, availability]);
+  
+  // Usar useMemo para evitar repetir el warning en cada render
+  const hasLimitedSlots = useMemo(() => {
+    const maxSlotsToShow = 50;
     if (availability && availability.length > maxSlotsToShow) {
       console.warn(`⚠️ Mostrando solo ${maxSlotsToShow} de ${availability.length} slots de disponibilidad para mejorar el rendimiento`);
+      return true;
     }
-  }, [appointments, availability]);
+    return false;
+  }, [availability?.length]);
 
   const isLoading = appointmentsLoading || availabilityLoading;
-  const hasMoreSlots = availability && availability.length > 50;
 
-  const changeView = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
+  const changeView = useCallback((view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
     const calendarApi = calendarRef.current?.getApi();
     calendarApi?.changeView(view);
-  };
+  }, []);
 
-  const handleSelect = async (info: DateSelectArg) => {
+  const handleSelect = useCallback(async (info: DateSelectArg) => {
     if (window.confirm(`Habilitar hora: ${info.startStr} - ${info.endStr}?`)) {
       try {
         const res = await authFetch("/availability", {
@@ -148,7 +151,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         console.error('Error creating availability:', error);
       }
     }
-  };
+  }, [authFetch, userId, invalidateCache]);
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -181,7 +184,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
       </div>
 
       {/* Indicador de slots limitados */}
-      {hasMoreSlots && (
+      {hasLimitedSlots && (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
           <div className="flex items-center gap-2 text-gray-700">
             <Clock className="h-4 w-4" />

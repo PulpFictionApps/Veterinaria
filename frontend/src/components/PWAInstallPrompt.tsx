@@ -23,6 +23,7 @@ export default function PWAInstallPrompt() {
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+      console.log('🔧 PWA: BeforeInstallPrompt event captured');
       e.preventDefault();
       setDeferredPrompt(e);
 
@@ -32,8 +33,11 @@ export default function PWAInstallPrompt() {
       const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
       
       if (Date.now() - dismissedTime > oneWeekInMs) {
-        // Mostrar después de 3 segundos
-        setTimeout(() => setShowPrompt(true), 3000);
+        console.log('🔧 PWA: Showing install prompt after delay');
+        // Mostrar después de 2 segundos (menos tiempo)
+        setTimeout(() => setShowPrompt(true), 2000);
+      } else {
+        console.log('🔧 PWA: Install prompt was recently dismissed');
       }
     };
 
@@ -45,26 +49,36 @@ export default function PWAInstallPrompt() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      console.log('🔧 PWA: No deferred prompt available');
+      return;
+    }
 
     try {
+      console.log('🔧 PWA: Calling prompt()');
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       
       if (outcome === 'accepted') {
-        console.log('PWA instalada exitosamente');
+        console.log('✅ PWA instalada exitosamente');
+      } else {
+        console.log('❌ PWA installation dismissed by user');
       }
       
       setDeferredPrompt(null);
       setShowPrompt(false);
     } catch (error) {
-      console.error('Error instalando PWA:', error);
+      console.error('❌ Error instalando PWA:', error);
     }
   };
 
   const handleDismiss = () => {
+    console.log('🔧 PWA: User dismissed install prompt');
     setShowPrompt(false);
     localStorage.setItem('pwa-dismissed', Date.now().toString());
+    
+    // Limpiar el deferred prompt para evitar warnings
+    setDeferredPrompt(null);
   };
 
   if (!showPrompt || !deferredPrompt) return null;
