@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { authFetch } from '@/lib/api';
 import PageHeader from '@/components/ui/PageHeader';
 import { Clock, ArrowLeft } from 'lucide-react';
@@ -12,8 +13,8 @@ type TimelineItem = {
   data: Record<string, unknown>;
 };
 
-export default function PetTimeline(props: { params?: { id?: string; petId?: string } }) {
-  const params = props?.params;
+export default function PetTimeline() {
+  const params = useParams() as { id?: string; petId?: string } | null;
   const ownerId = params?.id;
   const petId = Number(params?.petId);
 
