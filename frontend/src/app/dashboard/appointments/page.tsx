@@ -71,7 +71,7 @@ export default function AppointmentsPage() {
   const [editSlotId, setEditSlotId] = useState<number | ''>('');
   const [availableSlots, setAvailableSlots] = useState<Array<{ id: number; start: string; end: string }>>([]);
   const [editReason, setEditReason] = useState('');
-  const [filter, setFilter] = useState<'all' | 'upcoming' | 'past' | 'today'>('all');
+  const [filter, setFilter] = useState<'all' | 'upcoming' | 'completed' | 'today' | 'past'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const searchParams = useSearchParams();
 
@@ -79,8 +79,8 @@ export default function AppointmentsPage() {
   useEffect(() => {
     const q = searchParams?.get('filter');
     if (!q) return;
-    if (q === 'all' || q === 'upcoming' || q === 'past' || q === 'today') {
-      setFilter(q as 'all' | 'upcoming' | 'past' | 'today');
+    if (q === 'all' || q === 'upcoming' || q === 'completed' || q === 'today' || q === 'past') {
+      setFilter(q as 'all' | 'upcoming' | 'completed' | 'today' | 'past');
     }
   }, [searchParams]);
 
@@ -193,8 +193,12 @@ export default function AppointmentsPage() {
       switch (filter) {
         case 'upcoming':
           return new Date(appointment.date).getTime() >= now.getTime();
+        case 'completed':
+          // Show only appointments explicitly marked as completed
+          return appointment.status === 'completed';
         case 'past':
-          return new Date(appointment.date).getTime() < now.getTime();
+          // Pasadas = fecha en el pasado y no marcadas como completadas
+          return new Date(appointment.date).getTime() < now.getTime() && appointment.status !== 'completed';
         case 'today':
           return appointmentKey === todayKey;
         default:
@@ -241,6 +245,51 @@ export default function AppointmentsPage() {
   }
 
   const filteredAppointments = filterAppointments(appointments);
+
+  // Contadores por filtro (respetan searchTerm)
+  const countFor = (f: 'all' | 'upcoming' | 'completed' | 'today' | 'past') => {
+    if (f === 'all') return appointments.filter(a => {
+      // reuse same search logic as filterAppointments without date filter
+      if (searchTerm && !a.pet.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          !a.tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          !a.reason.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+      return true;
+    }).length;
+
+    // For other filters, temporarily apply the requested filter logic
+    const prevFilter = filter;
+    try {
+      // set a temporary filter value and reuse filterAppointments by calling it with a small wrapper
+      // But to avoid changing state, replicate the same logic here
+      const now = new Date();
+      const todayKey = dateKeyInTZ(now, 'America/Santiago');
+      return appointments.filter(a => {
+        const appointmentDate = new Date(a.date);
+        const appointmentKey = dateKeyInTZ(appointmentDate, 'America/Santiago');
+
+        if (searchTerm && !a.pet.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            !a.tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            !a.reason.toLowerCase().includes(searchTerm.toLowerCase())) {
+          return false;
+        }
+
+        switch (f) {
+          case 'upcoming':
+            return new Date(a.date).getTime() >= now.getTime();
+          case 'completed':
+            return a.status === 'completed';
+          case 'past':
+            return new Date(a.date).getTime() < now.getTime() && a.status !== 'completed';
+          case 'today':
+            return appointmentKey === todayKey;
+          default:
+            return true;
+        }
+      }).length;
+    } finally {
+      // nothing to restore because we didn't mutate state
+    }
+  };
 
   if (loading) {
     return (
@@ -324,13 +373,14 @@ export default function AppointmentsPage() {
                   {[
                     { key: 'all', label: 'Todas', icon: CalendarDays },
                     { key: 'upcoming', label: 'Próximas', icon: Clock },
-                    { key: 'past', label: 'Completadas', icon: FileText }
+                    { key: 'completed', label: 'Completadas', icon: FileText },
+                    { key: 'past', label: 'Pasadas', icon: AlertCircle }
                   ].map((filterOption) => {
                     const Icon = filterOption.icon;
                     return (
                       <Tooltip key={filterOption.key} content={`Ver citas ${filterOption.label.toLowerCase()}`}>
                         <button
-                          onClick={() => setFilter(filterOption.key as 'all' | 'upcoming' | 'past')}
+                          onClick={() => setFilter(filterOption.key as 'all' | 'upcoming' | 'completed' | 'past')}
                           className={`group px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                             filter === filterOption.key
                               ? 'bg-gray-700 text-white'
@@ -338,7 +388,12 @@ export default function AppointmentsPage() {
                           }`}
                         >
                           <Icon className={`h-4 w-4 ${filter === filterOption.key ? 'text-white' : 'text-gray-500'} group-hover:scale-110 transition-transform duration-300`} />
-                          {filterOption.label}
+                          <span className="flex items-center gap-2">
+                            <span>{filterOption.label}</span>
+                            <span className={`inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full ${filter === filterOption.key ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                              {countFor(filterOption.key as any)}
+                            </span>
+                          </span>
                         </button>
                       </Tooltip>
                     );
@@ -410,11 +465,12 @@ export default function AppointmentsPage() {
                     
                     <div className="flex gap-2 flex-wrap">
                       <span className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                        isPast 
-                          ? 'bg-gray-100 text-gray-600' 
-                          : 'bg-gray-100 text-gray-700'
+                        // Prefer explicit appointment.status when available
+                        appointment.status === 'completed' ? 'bg-green-100 text-green-700' : (
+                          isPast ? 'bg-yellow-50 text-yellow-800' : 'bg-gray-100 text-gray-700'
+                        )
                       }`}>
-                        {isPast ? 'Completada' : 'Programada'}
+                        {appointment.status === 'completed' ? 'Completada' : (isPast ? 'Pasada' : 'Programada')}
                       </span>
                       
                       {!isPast && (
