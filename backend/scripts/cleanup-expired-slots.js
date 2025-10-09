@@ -67,19 +67,46 @@ async function cleanupExpiredSlots() {
     lastQuarter.setSeconds(0);
     lastQuarter.setMilliseconds(0);
 
-    console.log(`⏱️ Último corte de 15 minutos: ${lastQuarter.toISOString()}`);
+  console.log(`⏱️ Último corte de 15 minutos: ${lastQuarter.toISOString()}`);
+
+  // Tolerancia para pequeños desfases de milisegundos en la DB
+  const cutoff = new Date(lastQuarter.getTime() + 999);
+  console.log(`🔧 Usando cutoff tolerante (lastQuarter + 999ms): ${cutoff.toISOString()}`);
 
     // 1. Eliminar availability slots cuya 'end' sea menor o igual al último corte
     // (nadie puede reservar un slot que terminó en o antes del último cuarto)
-    const expiredSlots = await prisma.availability.deleteMany({
-      where: {
-        end: {
-          lte: lastQuarter
+    // Diagnostic: count and sample records that match the filter before deletion
+    const matching = await prisma.availability.findMany({
+      where: { end: { lte: cutoff } },
+      orderBy: { end: 'asc' },
+      take: 20
+    });
+    const matchingCount = await prisma.availability.count({ where: { end: { lte: cutoff } } });
+    console.log(`🔎 Slots que coinciden con end <= ${lastQuarter.toISOString()}: ${matchingCount}`);
+    if (matching.length > 0) {
+      console.log('Ejemplo de primeros matches (start -> end -> userId):');
+      for (const s of matching) {
+        console.log(`  - ${new Date(s.start).toISOString()} -> ${new Date(s.end).toISOString()}  (userId=${s.userId}, id=${s.id})`);
+      }
+    }
+
+    // Delete by id one-by-one to ensure we can log each deletion and avoid surprises
+    const idsToDelete = matching.map(s => s.id);
+    let deletedCount = 0;
+    if (idsToDelete.length > 0) {
+      console.log(`🚨 Eliminando ${idsToDelete.length} availability entries por ID...`);
+      for (const id of idsToDelete) {
+        try {
+          await prisma.availability.delete({ where: { id } });
+          deletedCount++;
+          console.log(`  - Eliminado availability id=${id}`);
+        } catch (delErr) {
+          console.error(`  - Error eliminando id=${id}:`, delErr.message || delErr);
         }
       }
-    });
+    }
 
-    console.log(`🗑️  Eliminados ${expiredSlots.count} horarios disponibles expirados`);
+    console.log(`🗑️  Eliminados ${deletedCount} horarios disponibles expirados`);
 
     // 2. Eliminar appointments que tengan más de 7 días de antigüedad
     // NOTA: Se mantienen historial médico y recetas de por vida

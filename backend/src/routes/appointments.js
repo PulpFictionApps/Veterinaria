@@ -14,6 +14,8 @@ async function findAndReserveConsecutiveSlots(tx, userId, startTime, durationMin
   
   const slotsToReserve = [];
   let currentTime = new Date(startTime);
+  // normalize seconds/milliseconds to avoid mismatches with stored availability
+  currentTime.setSeconds(0, 0);
   
   // Buscar slots consecutivos
   for (let i = 0; i < slotsNeeded; i++) {
@@ -38,7 +40,7 @@ async function findAndReserveConsecutiveSlots(tx, userId, startTime, durationMin
   
   // Eliminar todos los slots reservados
   for (const slot of slotsToReserve) {
-    await tx.availability.delete({ where: { id: slot.id } });
+  await tx.availability.delete({ where: { id: slot.id } });
   }
   
   return slotsToReserve;
@@ -204,9 +206,11 @@ router.delete('/:id', verifyToken, async (req, res) => {
     if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
 
     // Delete appointment and restore availability blocks of 15 minutes for that appointment time
-    const slotDurationMs = 1000 * 60 * 15; // 15 minutes blocks
-    const apptDate = new Date(appointment.date);
-    const restoreStart = new Date(apptDate);
+  const slotDurationMs = 1000 * 60 * 15; // 15 minutes blocks
+  const apptDate = new Date(appointment.date);
+  // normalize restore start to zero seconds/ms to match availability entries
+  const restoreStart = new Date(apptDate);
+  restoreStart.setSeconds(0, 0);
     // We'll recreate enough 15-minute blocks to cover the original appointment duration
     // If consultationType is present we could use its duration; fallback to 15 minutes
     const consult = await prisma.consultationType.findUnique({ where: { id: appointment.consultationTypeId } }).catch(() => null);
@@ -220,7 +224,9 @@ router.delete('/:id', verifyToken, async (req, res) => {
         // Create blocks starting at restoreStart for `blocks` iterations if they don't already exist
         for (let i = 0; i < blocks; i++) {
           const start = new Date(restoreStart.getTime() + i * slotDurationMs);
+          start.setSeconds(0, 0);
           const end = new Date(start.getTime() + slotDurationMs);
+          end.setSeconds(0, 0);
           const exists = await tx.availability.findFirst({ where: { userId: appointment.userId, start } });
           if (!exists) {
             await tx.availability.create({ data: { userId: appointment.userId, start, end } });
@@ -283,9 +289,10 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
       // transaction: check availability, update appointment date, delete matched availability
       // When recreating the old availability, recreate as 15-minute blocks matching the consultation duration
-      const slotDurationMs = 1000 * 60 * 15; // 15 minutes
-      const oldDate = new Date(appointment.date);
-      const oldStart = oldDate;
+  const slotDurationMs = 1000 * 60 * 15; // 15 minutes
+  const oldDate = new Date(appointment.date);
+  const oldStart = new Date(oldDate);
+  oldStart.setSeconds(0, 0);
 
       // Determine how many 15-minute blocks to recreate based on consultationType duration (fallback 15)
       const oldConsult = await prisma.consultationType.findUnique({ where: { id: appointment.consultationTypeId } }).catch(() => null);
@@ -314,7 +321,9 @@ router.patch('/:id', verifyToken, async (req, res) => {
         if (!collision) {
           for (let i = 0; i < oldBlocks; i++) {
             const s = new Date(oldStart.getTime() + i * slotDurationMs);
+            s.setSeconds(0, 0);
             const e = new Date(s.getTime() + slotDurationMs);
+            e.setSeconds(0, 0);
             const oldExists = await tx.availability.findFirst({ where: { userId: req.user.id, start: s } });
             if (!oldExists) {
               await tx.availability.create({ data: { userId: req.user.id, start: s, end: e } });
