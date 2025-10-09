@@ -11,8 +11,26 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
   const { start, end } = req.body;
   try {
     if (!start || !end) return res.status(400).json({ error: 'start and end are required' });
-    const startDate = new Date(start);
-    const endDate = new Date(end);
+    
+    // Parse dates as local Chilean time instead of UTC
+    // The frontend sends ISO strings but they represent Chilean local time, not UTC
+    const parseChileanDateTime = (isoString) => {
+      // Remove the 'Z' and any timezone suffix, then parse as local time
+      const cleanString = isoString.replace(/Z$/, '').replace(/[+-]\d{2}:\d{2}$/, '');
+      
+      // Parse date components manually to avoid UTC interpretation
+      const [datePart, timePart] = cleanString.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = (timePart || '00:00').split(':').map(Number);
+      
+      // Create a Date object in local timezone, then convert to what it should be in Chilean time
+      // This creates the date as if we're in Chilean timezone
+      return new Date(year, month - 1, day, hours, minutes, 0, 0);
+    };
+
+    const startDate = parseChileanDateTime(start);
+    const endDate = parseChileanDateTime(end);
+    
     if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
       return res.status(400).json({ error: 'Invalid date format' });
     }
