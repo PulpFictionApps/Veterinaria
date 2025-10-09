@@ -4,7 +4,7 @@ import { processReminders, sendEmailReminder } from "../lib/reminderService.js";
 import { PrismaClient } from "@prisma/client";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+import prisma from '../../lib/prisma.js';
 
 // POST /reminders/test - Ejecutar recordatorios manualmente (para testing)
 router.post('/test', verifyToken, async (req, res) => {

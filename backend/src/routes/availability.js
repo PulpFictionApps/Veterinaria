@@ -1,10 +1,9 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from '../../lib/prisma.js';
 import { verifyToken } from "../middleware/auth.js";
 import { verifyActiveSubscription } from "../middleware/subscription.js";
 import { getChileDate } from "../../scripts/cleanup-expired-slots.js";
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
 // Crear disponibilidad

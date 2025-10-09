@@ -5,11 +5,10 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import path from 'path';
 import { promises as fs } from 'fs';
 import crypto from 'crypto';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../lib/prisma.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Configuración de almacenamiento multinivel
 const __dirname = path.resolve();

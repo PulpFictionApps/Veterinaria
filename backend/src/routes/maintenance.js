@@ -1,5 +1,6 @@
 import express from 'express';
 import { cleanupExpiredSlots } from '../../scripts/cleanup-expired-slots.js';
+import prisma from '../../lib/prisma.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -26,12 +27,9 @@ router.post('/cleanup-expired', verifyToken, async (req, res) => {
 // Endpoint de salud del sistema
 router.get('/health', async (req, res) => {
   try {
-    const { PrismaClient } = await import('@prisma/client');
-    const prisma = new PrismaClient();
-    
-    // Verificar conexión a la base de datos
+    // Verificar conexión a la base de datos usando el cliente compartido
     await prisma.$queryRaw`SELECT 1`;
-    
+
     const stats = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
@@ -39,8 +37,7 @@ router.get('/health', async (req, res) => {
       availableSlots: await prisma.availability.count(),
       totalAppointments: await prisma.appointment.count(),
     };
-    
-    await prisma.$disconnect();
+
     res.json(stats);
   } catch (error) {
     res.status(500).json({ 

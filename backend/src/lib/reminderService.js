@@ -1,10 +1,8 @@
-﻿import { PrismaClient } from "@prisma/client";
+﻿import prisma from '../../lib/prisma.js';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-const prisma = new PrismaClient();
 
 // Configuración Gmail SMTP (consistente con appointment-confirmation-service.js)
 const GMAIL_USER = process.env.GMAIL_USER;

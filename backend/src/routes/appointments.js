@@ -4,7 +4,7 @@ import { verifyToken } from '../middleware/auth.js';
 import { verifyActiveSubscription } from '../middleware/subscription.js';
 import { sendAppointmentConfirmation } from '../../appointment-confirmation-service.js';
 
-const prisma = new PrismaClient();
+import prisma from '../../lib/prisma.js';
 const router = Router();
 
 // Función para encontrar y reservar múltiples bloques consecutivos

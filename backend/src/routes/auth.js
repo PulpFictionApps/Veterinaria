@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+import prisma from '../../lib/prisma.js';
 
 // Registro
 router.post("/register", async (req, res) => {

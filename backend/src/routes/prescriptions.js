@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 import { verifyToken } from '../middleware/auth.js';
 import { uploadPDF, deletePDF, getPublicUrl } from '../lib/supabaseStorage.js';
 
-const prisma = new PrismaClient();
+import prisma from '../../lib/prisma.js';
 const router = express.Router();
 
 // Helper function to download and cache image
