@@ -321,6 +321,8 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           scrollTime={isMobile ? '08:00:00' : '00:00:00'}
           allDaySlot={false}
           locale={esLocale}
+          // CRITICAL: Set timezone to Chile to avoid date misinterpretation
+          timeZone="America/Santiago"
           select={handleSelect}
           eventClick={handleEventClick}
           dayHeaderFormat={ window.innerWidth < 768 ? { weekday: 'short' } : { weekday: 'long' }}

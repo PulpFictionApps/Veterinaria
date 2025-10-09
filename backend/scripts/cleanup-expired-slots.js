@@ -144,7 +144,12 @@ async function cleanupExpiredSlots() {
 }
 
 // Ejecutar si es llamado directamente
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Comparación más robusta que funciona en Windows y Linux
+const isMainModule = process.argv[1] && import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}` || 
+                   process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
+
+if (isMainModule) {
+  console.log('🚀 Iniciando script de limpieza...');
   cleanupExpiredSlots()
     .then(() => {
       console.log('🎉 Limpieza completada exitosamente');
