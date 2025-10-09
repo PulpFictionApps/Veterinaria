@@ -254,6 +254,9 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     setSelectedEvent(null);
   }, [router]);
 
+  // Guardar acceso a window para evitar errors en SSR
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <div className="space-y-3 sm:space-y-4">
       {/* View Controls */}
@@ -308,11 +311,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             right: ''
           }}
           events={events}
-          height={window.innerWidth < 768 ? 400 : "auto"}
+          height={isMobile ? 400 : "auto"}
           selectable={true}
           slotDuration="00:15:00"
-          slotMinTime="08:00:00"
-          slotMaxTime="20:00:00"
+          // Show full 24 hours to allow viewing all possible slots
+          slotMinTime="00:00:00"
+          slotMaxTime="24:00:00"
+          // Ensure the day view scrolls to midnight so the user can see early hours
+          scrollTime={isMobile ? '08:00:00' : '00:00:00'}
           allDaySlot={false}
           locale={esLocale}
           select={handleSelect}

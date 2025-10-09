@@ -90,14 +90,33 @@ export function getChileDSTTransitions(year: number): { summerStart: Date; winte
  * @returns {Date} Current date in Chile timezone
  */
 export function getChileTime(): Date {
-  // Use native JavaScript Date with proper timezone handling
-  // This automatically handles DST transitions for America/Santiago
+  // Safer approach: use Intl.DateTimeFormat.formatToParts to build the wall-clock components
   const now = new Date();
-  
-  // Get Chile time using the browser's native timezone support
-  const chileTime = new Date(now.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
-  
-  return chileTime;
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: CHILE_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+
+  const parts = fmt.formatToParts(now).reduce((acc: any, part) => {
+    if (part.type !== 'literal') acc[part.type] = part.value;
+    return acc;
+  }, {});
+
+  const year = Number(parts.year);
+  const month = Number(parts.month);
+  const day = Number(parts.day);
+  const hour = Number(parts.hour);
+  const minute = Number(parts.minute);
+  const second = Number(parts.second);
+
+  const utcMillis = Date.UTC(year, month - 1, day, hour, minute, second);
+  return new Date(utcMillis);
 }
 
 /**
@@ -106,9 +125,32 @@ export function getChileTime(): Date {
  * @returns {Date} Date converted to Chile timezone
  */
 export function toChileTime(utcDate: Date): Date {
-  // Use proper timezone conversion with automatic DST handling
-  const chileTime = new Date(utcDate.toLocaleString("en-US", {timeZone: CHILE_TIMEZONE}));
-  return chileTime;
+  // Convert an UTC date to the corresponding wall-clock in Chile by mapping components
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: CHILE_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+
+  const parts = fmt.formatToParts(utcDate).reduce((acc: any, part) => {
+    if (part.type !== 'literal') acc[part.type] = part.value;
+    return acc;
+  }, {});
+
+  const year = Number(parts.year);
+  const month = Number(parts.month);
+  const day = Number(parts.day);
+  const hour = Number(parts.hour);
+  const minute = Number(parts.minute);
+  const second = Number(parts.second);
+
+  const utcMillis = Date.UTC(year, month - 1, day, hour, minute, second);
+  return new Date(utcMillis);
 }
 
 /**
