@@ -48,17 +48,95 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
       return res.status(400).json({ error: 'The provided range is smaller than 15 minutes' });
     }
 
-    const created = [];
+    // Verificar duplicados antes de crear cualquier slot
+    const duplicateChecks = [];
     for (const s of slotsToCreate) {
-      const exists = await prisma.availability.findFirst({ where: { userId: s.userId, start: s.start } });
-      if (exists) continue; // skip duplicates
-      const c = await prisma.availability.create({ data: s });
-      created.push(c);
+      const exists = await prisma.availability.findFirst({ 
+        where: { 
+          userId: s.userId, 
+          start: s.start,
+          end: s.end
+        } 
+      });
+      if (exists) {
+        duplicateChecks.push({
+          start: s.start.toISOString(),
+          end: s.end.toISOString(),
+          existing: true
+        });
+      } else {
+        duplicateChecks.push({
+          start: s.start.toISOString(),
+          end: s.end.toISOString(),
+          existing: false
+        });
+      }
     }
 
-    res.json(created);
+    // Contar duplicados
+    const duplicateCount = duplicateChecks.filter(check => check.existing).length;
+    const totalSlots = slotsToCreate.length;
+
+    // Si todos son duplicados, devolver error específico
+    if (duplicateCount === totalSlots) {
+      return res.status(409).json({ 
+        error: 'Todos los horarios solicitados ya existen para este período',
+        details: duplicateChecks,
+        duplicateCount,
+        totalSlots
+      });
+    }
+
+    // Usar transacción para crear slots de manera atómica
+    const result = await prisma.$transaction(async (tx) => {
+      const created = [];
+      const skipped = [];
+      
+      for (const s of slotsToCreate) {
+        try {
+          const c = await tx.availability.create({ data: s });
+          created.push(c);
+        } catch (createError) {
+          // Capturar errores de duplicado de la constraint única
+          if (createError.code === 'P2002' && createError.meta?.target?.includes('unique_user_slot')) {
+            skipped.push({
+              start: s.start.toISOString(),
+              end: s.end.toISOString(),
+              reason: 'Horario duplicado - ya existe'
+            });
+          } else {
+            // Re-lanzar otros errores
+            throw createError;
+          }
+        }
+      }
+
+      return { created, skipped };
+    });
+
+    // Respuesta detallada
+    const response = {
+      created: result.created,
+      summary: {
+        totalRequested: totalSlots,
+        created: result.created.length,
+        skipped: result.skipped.length,
+        skippedSlots: result.skipped
+      }
+    };
+
+    res.json(response);
   } catch (err) {
     console.error('Error creating availability:', err);
+    
+    // Manejo específico de errores de duplicado
+    if (err.code === 'P2002' && err.meta?.target?.includes('unique_user_slot')) {
+      return res.status(409).json({ 
+        error: 'No se pueden crear horarios duplicados para la misma fecha y hora',
+        details: 'Ya existe un horario de disponibilidad para este período'
+      });
+    }
+    
     res.status(500).json({ error: err.message });
   }
 });

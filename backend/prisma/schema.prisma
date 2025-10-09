@@ -143,6 +143,9 @@ model Availability {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+
+  // Índice único compuesto para evitar duplicados de horario para el mismo usuario
+  @@unique([userId, start, end], name: "unique_user_slot")
 }
   model MedicalRecord {
     id          Int      @id @default(autoincrement())

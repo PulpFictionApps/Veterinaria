@@ -178,6 +178,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
         });
         
         if (res.ok) {
+          const result = await res.json();
+          
+          // Mostrar mensaje informativo si algunos slots fueron omitidos
+          if (result.summary && result.summary.skipped > 0) {
+            const { created, skipped, totalRequested } = result.summary;
+            alert(`✅ Horarios creados: ${created} de ${totalRequested}\n⚠️ Omitidos (ya existían): ${skipped}`);
+          }
+          
           // Forzar bypass del cache local y obtener datos frescos del backend
           try {
             await authFetch(`/availability/${userId}`, { force: true });
@@ -189,6 +197,14 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
           invalidateCache.availability(userId);
           const calendarApi = calendarRef.current?.getApi();
           calendarApi?.refetchEvents?.();
+        } else if (res.status === 409) {
+          // Error de duplicados
+          const errorData = await res.json();
+          alert(`❌ Error: ${errorData.error}\n\nTodos los horarios seleccionados ya existen.`);
+        } else {
+          // Otros errores
+          const errorData = await res.json();
+          alert(`❌ Error: ${errorData.error || 'No se pudieron crear los horarios'}`);
         }
       } catch (error) {
         console.error('Error creating availability:', error);
