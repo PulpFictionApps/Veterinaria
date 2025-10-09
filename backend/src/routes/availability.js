@@ -65,21 +65,32 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
       return res.status(400).json({ error: 'The provided range is smaller than 15 minutes' });
     }
 
-    // Verificar duplicados antes de crear cualquier slot
+    // Verificar duplicados antes de crear cualquier slot con mayor tolerancia
+    console.log('Checking for duplicates among', slotsToCreate.length, 'slots...');
     const duplicateChecks = [];
     for (const s of slotsToCreate) {
+      // Buscar slots existentes con una ventana de tiempo para evitar problemas de precisión
       const exists = await prisma.availability.findFirst({ 
         where: { 
           userId: s.userId, 
-          start: s.start,
-          end: s.end
+          start: {
+            gte: new Date(s.start.getTime() - 1000), // 1 segundo antes
+            lte: new Date(s.start.getTime() + 1000)  // 1 segundo después
+          },
+          end: {
+            gte: new Date(s.end.getTime() - 1000),
+            lte: new Date(s.end.getTime() + 1000)
+          }
         } 
       });
+      
       if (exists) {
+        console.log(`Duplicate found: ${s.start.toISOString()} - ${s.end.toISOString()}`);
         duplicateChecks.push({
           start: s.start.toISOString(),
           end: s.end.toISOString(),
-          existing: true
+          existing: true,
+          existingId: exists.id
         });
       } else {
         duplicateChecks.push({
@@ -104,18 +115,38 @@ router.post("/", verifyToken, verifyActiveSubscription, async (req, res) => {
       });
     }
 
+    // Filtrar solo los slots que no son duplicados para crear
+    const slotsToActuallyCreate = slotsToCreate.filter((_, index) => !duplicateChecks[index].existing);
+    
+    console.log(`Will create ${slotsToActuallyCreate.length} new slots, skipping ${duplicateCount} duplicates`);
+    
+    // Si no hay slots nuevos para crear, retornar información sobre duplicados
+    if (slotsToActuallyCreate.length === 0) {
+      return res.status(200).json({
+        message: 'Todos los horarios ya existen',
+        created: [],
+        skipped: duplicateChecks.filter(check => check.existing),
+        summary: {
+          totalRequested: totalSlots,
+          duplicatesFound: duplicateCount,
+          newSlotsCreated: 0
+        }
+      });
+    }
+
     // Usar transacción para crear slots de manera atómica
     const result = await prisma.$transaction(async (tx) => {
       const created = [];
-      const skipped = [];
+      const skipped = duplicateChecks.filter(check => check.existing);
       
-      for (const s of slotsToCreate) {
+      for (const s of slotsToActuallyCreate) {
         try {
           const c = await tx.availability.create({ data: s });
           created.push(c);
         } catch (createError) {
+          console.error('Error creating slot:', createError);
           // Capturar errores de duplicado de la constraint única
-          if (createError.code === 'P2002' && createError.meta?.target?.includes('unique_user_slot')) {
+          if (createError.code === 'P2002') {
             skipped.push({
               start: s.start.toISOString(),
               end: s.end.toISOString(),
