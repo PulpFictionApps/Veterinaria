@@ -300,45 +300,53 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
             </div>
           </div>
         )}
-        <div className="w-full overflow-auto touch-auto">
-        <FullCalendar
-          ref={calendarRef}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="timeGridDay"
-          headerToolbar={{
-            left: '',
-            center: '',
-            right: ''
-          }}
-          events={events}
-          height={isMobile ? 400 : "auto"}
-          selectable={true}
-          slotDuration="00:15:00"
-          // Show full 24 hours to allow viewing all possible slots
-          slotMinTime="00:00:00"
-          slotMaxTime="24:00:00"
-          // Ensure the day view scrolls to midnight so the user can see early hours
-          scrollTime={isMobile ? '08:00:00' : '00:00:00'}
-          allDaySlot={false}
-          locale={esLocale}
-          // CRITICAL: Set timezone to Chile to avoid date misinterpretation
-          timeZone="America/Santiago"
-          select={handleSelect}
-          eventClick={handleEventClick}
-          dayHeaderFormat={ window.innerWidth < 768 ? { weekday: 'short' } : { weekday: 'long' }}
-          slotLabelFormat={{
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-          }}
-          selectConstraint={{
-            start: '08:00',
-            end: '20:00'
-          }}
-          snapDuration="00:15:00"
-          eventMaxStack={window.innerWidth < 768 ? 2 : 4}
-          eventClassNames="touch-manipulation cursor-pointer"
-        />
+        
+        {/* Contenedor con altura fija y scroll personalizado */}
+        <div className="relative" style={{ 
+          height: isMobile ? '500px' : '600px',
+          maxHeight: isMobile ? '70vh' : '75vh'
+        }}>
+          <div className="w-full h-full overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
+            <FullCalendar
+              ref={calendarRef}
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView="timeGridDay"
+              headerToolbar={{
+                left: '',
+                center: '',
+                right: ''
+              }}
+              events={events}
+              // Usar altura automática ya que el contenedor padre controla el scroll
+              height="auto"
+              selectable={true}
+              slotDuration="00:15:00"
+              // Show full 24 hours to allow viewing all possible slots
+              slotMinTime="00:00:00"
+              slotMaxTime="24:00:00"
+              // Scroll inicial al horario de trabajo común (8 AM)
+              scrollTime="08:00:00"
+              allDaySlot={false}
+              locale={esLocale}
+              // CRITICAL: Set timezone to Chile to avoid date misinterpretation
+              timeZone="America/Santiago"
+              select={handleSelect}
+              eventClick={handleEventClick}
+              dayHeaderFormat={ window.innerWidth < 768 ? { weekday: 'short' } : { weekday: 'long' }}
+              slotLabelFormat={{
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              }}
+              selectConstraint={{
+                start: '08:00',
+                end: '20:00'
+              }}
+              snapDuration="00:15:00"
+              eventMaxStack={window.innerWidth < 768 ? 2 : 4}
+              eventClassNames="touch-manipulation cursor-pointer"
+            />
+          </div>
         </div>
       </div>
 
