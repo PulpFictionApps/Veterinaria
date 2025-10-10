@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { verifyToken } from '../middleware/auth.js';
 import { verifyActiveSubscription } from '../middleware/subscription.js';
 import { sendAppointmentConfirmation } from '../../appointment-confirmation-service.js';
+import { parseChileanDateTime, logDateTimeDebug } from '../lib/timezone.js';
 
 import prisma from '../../lib/prisma.js';
 const router = Router();
@@ -73,9 +74,10 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
       matching = await prisma.availability.findUnique({ where: { id: Number(slotId) } });
       if (!matching) return res.status(400).json({ error: 'Availability slot not found' });
       if (matching.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed to book this slot' });
-      selectedDate = new Date(matching.start);
+      selectedDate = new Date(matching.start); // This comes from DB so it's already correct
     } else {
-      selectedDate = new Date(date);
+      selectedDate = parseChileanDateTime(date); // Use Chilean timezone parser
+      logDateTimeDebug('Private appointment selectedDate', selectedDate);
       if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
     }
 
@@ -281,9 +283,10 @@ router.patch('/:id', verifyToken, async (req, res) => {
         matching = await prisma.availability.findUnique({ where: { id: Number(slotId) } });
         if (!matching) return res.status(400).json({ error: 'Availability slot not found' });
         if (matching.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed to use this slot' });
-        selectedDate = new Date(matching.start);
+        selectedDate = new Date(matching.start); // From DB, already correct
       } else {
-        selectedDate = new Date(date);
+        selectedDate = parseChileanDateTime(date); // Use Chilean timezone parser
+        logDateTimeDebug('Appointment update selectedDate', selectedDate);
         if (Number.isNaN(selectedDate.getTime())) return res.status(400).json({ error: 'Invalid date' });
       }
 
@@ -374,9 +377,10 @@ router.post('/public', async (req, res) => {
       matching = await prisma.availability.findUnique({ where: { id: Number(slotId) } });
       if (!matching) return res.status(400).json({ error: 'Availability slot not found' });
       if (matching.userId !== profIdNum) return res.status(400).json({ error: 'Slot does not belong to the professional' });
-      selectedDate = new Date(matching.start);
+      selectedDate = new Date(matching.start); // From DB, already correct
     } else {
-      selectedDate = date ? new Date(date) : null;
+      selectedDate = date ? parseChileanDateTime(date) : null; // Use Chilean timezone parser
+      if (selectedDate) logDateTimeDebug('Public appointment selectedDate', selectedDate);
       if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
         return res.status(400).json({ error: 'Invalid date format. Use ISO date string or provide slotId.' });
       }
@@ -465,7 +469,7 @@ router.post('/public', async (req, res) => {
             weight: Number(petWeight),
             sex: petSex,
             reproductiveStatus: petReproductiveStatus,
-            birthDate: new Date(petBirthDate),
+            birthDate: new Date(petBirthDate), // Birth date parsing - this is OK as a simple date
             tutorId: tutor.id, 
             createdAt: now, 
             updatedAt: now 
