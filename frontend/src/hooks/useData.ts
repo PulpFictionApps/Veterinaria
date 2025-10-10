@@ -135,6 +135,33 @@ export function useConsultationTypes() {
   };
 }
 
+export interface GoogleCalendarStatus {
+  connected: boolean;
+  syncEnabled?: boolean;
+  calendarId?: string;
+  connectedAt?: string | null;
+  lastSyncedAt?: string | null;
+  upcomingSyncedCount?: number;
+}
+
+export function useGoogleCalendarStatus(enabled: boolean) {
+  const { data, error, isLoading, mutate: revalidate } = useSWR(
+    enabled ? '/google-calendar/status' : null,
+    fetcher,
+    {
+      ...swrConfig,
+      refreshInterval: 60000,
+    }
+  );
+
+  return {
+    googleStatus: (data as GoogleCalendarStatus | undefined) ?? null,
+    isLoading,
+    error,
+    revalidate,
+  };
+}
+
 // Hook para configuración de usuario (incluyendo colores de tema)
 export function useUserSettings(userId: number | null) {
   const { data, error, isLoading, mutate: revalidate } = useSWR(

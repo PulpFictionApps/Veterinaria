@@ -33,3 +33,20 @@ This file lists the safe steps to fix the production issue with Pet.updatedAt an
 If you want, I can:
 - Create a Prisma migration file to alter the DB to set DEFAULT now() on Pet.updatedAt (requires prisma migrate workflow).
 - Update admin appointment creation UI to prefer slotId as well (if you want full consistency).
+
+8) Google Calendar integration
+    - Generate OAuth 2.0 client credentials (tipo "Aplicación web") en Google Cloud Console. Configura redirect URI a `https://tu-backend.com/google-calendar/callback` y `http://localhost:4000/google-calendar/callback` para desarrollo.
+    - En `backend/.env` añade las variables:
+       - `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET`
+       - `GOOGLE_OAUTH_STATE_SECRET` (opcional, usa `JWT_SECRET` si ya existe)
+       - `GOOGLE_REDIRECT_URI` si necesitas sobreescribir la URL detectada automáticamente
+       - `GOOGLE_CALENDAR_SCOPES` (por defecto `https://www.googleapis.com/auth/calendar.events`)
+    - Instala dependencias nuevas: `cd backend && npm install`. Esto añade el paquete `googleapis`.
+    - Aplica la migración de Prisma para crear el modelo `GoogleCalendarCredential` y el campo `googleCalendarEventId` en `Appointment`:
+       ```bash
+       cd backend
+       npx prisma migrate dev --name add-google-calendar-integration
+       npx prisma generate
+       ```
+    - Reinicia el backend y visita `Configuración > Google Calendar` en el dashboard para vincular la cuenta del profesional.
+    - Al crear, reprogramar o eliminar citas (privadas o públicas) se insertan/actualizan/eliminan eventos en Google Calendar automáticamente. Usa el botón "Re-sincronizar" en la UI para forzar un re-sync manual si hace falta.

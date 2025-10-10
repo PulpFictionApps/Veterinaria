@@ -23,6 +23,7 @@ import reminderRoutes from "./routes/reminders.js";
 import { healthCheck } from "./routes/health.js";
 import { cleanupExpiredSlots } from "../scripts/cleanup-expired-slots.js";
 import { processReminders } from "./lib/reminderService.js";
+import googleCalendarRoutes from "./routes/googleCalendar.js";
 
 const app = express();
 
@@ -104,6 +105,7 @@ app.use("/consultation-types", consultationTypesRoutes);
 app.use("/users", userRoutes);
 app.use("/maintenance", maintenanceRoutes);
 app.use("/reminders", reminderRoutes);
+app.use("/google-calendar", googleCalendarRoutes);
 
 app.get("/health", healthCheck);
 app.get("/", (req, res) => res.send("Backend funcionando"));

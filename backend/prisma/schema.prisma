@@ -49,6 +49,7 @@ model User {
   professionals Professional[]
   // Relación con suscripciones (nuevo modelo)
   subscriptions Subscription[]
+  googleCalendarCredential GoogleCalendarCredential?
 }
 
 model Tutor {
@@ -128,6 +129,7 @@ model Appointment {
   reminder1hSent     Boolean          @default(false)  
   reminder1hSentAt   DateTime?
   createdAt          DateTime         @default(now())
+  googleCalendarEventId String?       @unique
 
   pet                Pet              @relation(fields: [petId], references: [id])
   tutor              Tutor            @relation(fields: [tutorId], references: [id])
@@ -197,4 +199,21 @@ model Availability {
     startedAt  DateTime @default(now())
     expiresAt  DateTime?
     createdAt  DateTime @default(now())
+  }
+
+  model GoogleCalendarCredential {
+    id           Int      @id @default(autoincrement())
+    userId       Int      @unique
+    accessToken  String
+    refreshToken String
+    scope        String?
+    tokenType    String?
+    expiryDate   DateTime?
+    calendarId   String?  @default("primary")
+    syncEnabled  Boolean  @default(true)
+    connectedAt  DateTime @default(now())
+    lastSyncedAt DateTime?
+    updatedAt    DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   }

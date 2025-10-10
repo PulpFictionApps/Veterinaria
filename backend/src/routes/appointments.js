@@ -4,6 +4,7 @@ import { verifyToken } from '../middleware/auth.js';
 import { verifyActiveSubscription } from '../middleware/subscription.js';
 import { sendAppointmentConfirmation } from '../../appointment-confirmation-service.js';
 import { parseChileanDateTime, logDateTimeDebug } from '../lib/timezone.js';
+import { syncAppointmentToGoogle, deleteGoogleEventForAppointment } from '../lib/googleCalendarService.js';
 
 import prisma from '../../lib/prisma.js';
 const router = Router();
@@ -125,6 +126,12 @@ router.post('/', verifyToken, verifyActiveSubscription, async (req, res) => {
       // No fallar la creación de la cita por error de email
     }
 
+    queueMicrotask(() => {
+      syncAppointmentToGoogle(result.id).catch((syncErr) => {
+        console.error(`❌ Google Calendar sync failed for appointment ${result.id}:`, syncErr.message);
+      });
+    });
+
     res.json(result);
   } catch (err) {
     console.error('Error creating appointment:', err);
@@ -207,6 +214,8 @@ router.delete('/:id', verifyToken, async (req, res) => {
     if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
     if (appointment.userId !== req.user.id) return res.status(403).json({ error: 'Not allowed' });
 
+    const googleEventId = appointment.googleCalendarEventId;
+
     // Delete appointment and restore availability blocks of 15 minutes for that appointment time
   const slotDurationMs = 1000 * 60 * 15; // 15 minutes blocks
   const apptDate = new Date(appointment.date);
@@ -237,11 +246,29 @@ router.delete('/:id', verifyToken, async (req, res) => {
       });
 
       res.json({ ok: true });
+
+      queueMicrotask(() => {
+        deleteGoogleEventForAppointment({
+          userId: appointment.userId,
+          googleCalendarEventId: googleEventId
+        }).catch((syncErr) => {
+          console.error(`❌ Failed to delete Google Calendar event for appointment ${appointment.id}:`, syncErr.message);
+        });
+      });
     } catch (txErr) {
       console.error('Error deleting appointment and restoring slots:', txErr);
       // fallback: attempt simple delete (shouldn't normally reach here)
       await prisma.appointment.delete({ where: { id: Number(id) } });
       res.json({ ok: true, warning: 'Could not restore slots atomically' });
+
+      queueMicrotask(() => {
+        deleteGoogleEventForAppointment({
+          userId: appointment.userId,
+          googleCalendarEventId: googleEventId
+        }).catch((syncErr) => {
+          console.error(`❌ Failed to delete Google Calendar event for appointment ${appointment.id}:`, syncErr.message);
+        });
+      });
     }
   } catch (err) {
     console.error('Error deleting appointment:', err);
@@ -339,10 +366,20 @@ router.patch('/:id', verifyToken, async (req, res) => {
       });
 
       res.json(result);
+      queueMicrotask(() => {
+        syncAppointmentToGoogle(result.id).catch((syncErr) => {
+          console.error(`❌ Google Calendar sync failed for appointment ${result.id}:`, syncErr.message);
+        });
+      });
     } else {
       // only update reason
       const updated = await prisma.appointment.update({ where: { id: Number(id) }, data: { reason: reason || appointment.reason }, include: { pet: true, tutor: true } });
       res.json(updated);
+      queueMicrotask(() => {
+        syncAppointmentToGoogle(updated.id).catch((syncErr) => {
+          console.error(`❌ Google Calendar sync failed for appointment ${updated.id}:`, syncErr.message);
+        });
+      });
     }
   } catch (err) {
     console.error('Error updating appointment:', err);
@@ -533,6 +570,12 @@ router.post('/public', async (req, res) => {
         console.error(`Stack trace:`, emailError.stack);
         // No fallar la creación de la cita por error de email
       }
+
+      queueMicrotask(() => {
+        syncAppointmentToGoogle(result.id).catch((syncErr) => {
+          console.error(`❌ Google Calendar sync failed for public appointment ${result.id}:`, syncErr.message);
+        });
+      });
 
       res.json(result);
     } catch (txErr) {

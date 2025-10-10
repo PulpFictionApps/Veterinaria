@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { authFetch } from '@/lib/api';
 import { useAuthContext } from '@/lib/auth-context';
 import { 
@@ -10,9 +11,13 @@ import {
   User,
   Phone,
   FileText,
-  Activity
+  Activity,
+  CalendarDays,
+  RefreshCw,
+  Plug,
+  PlugZap
 } from 'lucide-react';
-import { FadeIn, SlideIn } from '../../../components/ui/Transitions';
+import { SlideIn } from '../../../components/ui/Transitions';
 import PageHeader from '../../../components/ui/PageHeader';
 
 interface UserSettings {
@@ -28,13 +33,28 @@ interface UserSettings {
   professionalPhone?: string;
 }
 
+interface GoogleCalendarStatus {
+  connected: boolean;
+  syncEnabled?: boolean;
+  calendarId?: string;
+  connectedAt?: string;
+  lastSyncedAt?: string;
+  upcomingSyncedCount?: number;
+}
+
 export default function SettingsPage() {
   const { userId } = useAuthContext();
+  const searchParams = useSearchParams();
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [googleStatus, setGoogleStatus] = useState<GoogleCalendarStatus | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(true);
+  const [googleActionLoading, setGoogleActionLoading] = useState(false);
+  const [googleMessage, setGoogleMessage] = useState<string | null>(null);
+  const [googleError, setGoogleError] = useState<string | null>(null);
 
   // Form states
   const [clinicData, setClinicData] = useState({
@@ -51,12 +71,48 @@ export default function SettingsPage() {
     contactPhone: '',
   });
 
+  const formatDateTime = (value?: string | null) => {
+    if (!value) return '—';
+    try {
+      return new Date(value).toLocaleString('es-CL', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        timeZone: 'America/Santiago'
+      });
+    } catch (err) {
+      console.error('Error formatting date:', err);
+      return value;
+    }
+  };
+
+  const fetchGoogleStatus = useCallback(async () => {
+    if (!userId) return;
+    try {
+      setGoogleLoading(true);
+      setGoogleError(null);
+      const response = await authFetch(`/google-calendar/status`, { force: true });
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !payload) {
+        throw new Error(payload?.error || 'No se pudo obtener el estado de Google Calendar');
+      }
+
+      setGoogleStatus(payload as GoogleCalendarStatus);
+    } catch (err) {
+      setGoogleStatus(null);
+      setGoogleError(err instanceof Error ? err.message : 'Error al obtener estado de Google Calendar');
+    } finally {
+      setGoogleLoading(false);
+    }
+  }, [userId]);
+
   useEffect(() => {
     if (!userId) return;
     fetchSettings();
-  }, [userId]);
+    fetchGoogleStatus();
+  }, [userId, fetchGoogleStatus]);
 
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       setLoading(true);
       const response = await authFetch(`/users/${userId}`);
@@ -84,7 +140,99 @@ export default function SettingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+
+    const handleGoogleConnect = async () => {
+      try {
+        setGoogleActionLoading(true);
+        setGoogleError(null);
+        setGoogleMessage(null);
+        const response = await authFetch(`/google-calendar/auth-url?redirectPath=/dashboard/settings?google=connected`, { force: true });
+        const payload = await response.json().catch(() => null);
+
+        if (!response.ok || !payload?.url) {
+          throw new Error(payload?.error || 'No se pudo generar el enlace de autorización');
+        }
+
+        window.location.href = payload.url;
+      } catch (err) {
+        setGoogleError(err instanceof Error ? err.message : 'No se pudo iniciar la conexión con Google Calendar');
+      } finally {
+        setGoogleActionLoading(false);
+      }
+    };
+
+    const handleGoogleDisconnect = async () => {
+      try {
+        setGoogleActionLoading(true);
+        setGoogleError(null);
+        const response = await authFetch(`/google-calendar/disconnect`, { method: 'POST' });
+        const payload = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(payload?.error || 'No se pudo desconectar Google Calendar');
+        }
+
+        setGoogleMessage('Integración con Google Calendar desconectada correctamente.');
+        await fetchGoogleStatus();
+      } catch (err) {
+        setGoogleError(err instanceof Error ? err.message : 'No se pudo desconectar Google Calendar');
+      } finally {
+        setGoogleActionLoading(false);
+      }
+    };
+
+    const handleGoogleResync = async () => {
+      try {
+        setGoogleActionLoading(true);
+        setGoogleError(null);
+        const response = await authFetch(`/google-calendar/resync`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ days: 30 })
+        });
+        const payload = await response.json().catch(() => null);
+
+        if (!response.ok || !payload) {
+          throw new Error(payload?.error || 'No se pudo sincronizar Google Calendar');
+        }
+
+        const total = payload.total ?? 0;
+        const success = payload.success ?? total;
+        setGoogleMessage(`Sincronización completada (${success}/${total})`);
+        await fetchGoogleStatus();
+      } catch (err) {
+        setGoogleError(err instanceof Error ? err.message : 'No se pudo sincronizar Google Calendar');
+      } finally {
+        setGoogleActionLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      const googleParam = searchParams?.get('google');
+      if (!googleParam) return;
+
+      if (googleParam === 'connected') {
+        setGoogleMessage('Google Calendar conectado correctamente.');
+        fetchGoogleStatus();
+      } else if (googleParam === 'error') {
+        setGoogleError('No pudimos conectar con Google Calendar. Inténtalo nuevamente.');
+      }
+
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('google');
+        window.history.replaceState({}, document.title, url.toString());
+      }
+
+      const timer = window.setTimeout(() => {
+        setGoogleMessage(null);
+        setGoogleError(null);
+      }, 6000);
+
+      return () => window.clearTimeout(timer);
+    }, [searchParams, fetchGoogleStatus]);
 
 
 
@@ -101,7 +249,6 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(clinicData),
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Error al actualizar información de clínica');
@@ -183,6 +330,108 @@ export default function SettingsPage() {
             <p className="text-sm text-gray-600">✅ Configuración actualizada correctamente</p>
           </div>
         )}
+
+        <SlideIn direction="up" delay={200}>
+          <div className="vet-card-unified">
+            <div className="vet-section-header-unified">
+              <div className="vet-section-title-unified">
+                <CalendarDays className="w-6 h-6" />
+                Integración con Google Calendar
+              </div>
+              {googleStatus?.connected && (
+                <span className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-600">
+                  <PlugZap className="w-4 h-4 text-primary" />
+                  Sincronización activa
+                </span>
+              )}
+            </div>
+            <div className="p-6 sm:p-8 space-y-6">
+              {googleLoading ? (
+                <div className="h-32 bg-gray-100 rounded-xl animate-pulse" />
+              ) : (
+                <>
+                  {googleError && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-4">
+                      {googleError}
+                    </div>
+                  )}
+                  {googleMessage && (
+                    <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-lg p-4">
+                      {googleMessage}
+                    </div>
+                  )}
+
+                  {googleStatus?.connected ? (
+                    <>
+                      <p className="text-gray-600">
+                        Tus citas se sincronizan automáticamente con tu Google Calendar en tiempo real.
+                      </p>
+
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Calendario enlazado</p>
+                          <p className="text-sm font-medium text-gray-800">
+                            {googleStatus.calendarId === 'primary' ? 'Principal' : googleStatus.calendarId}
+                          </p>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Próximas citas sincronizadas</p>
+                          <p className="text-sm font-medium text-gray-800">{googleStatus.upcomingSyncedCount ?? 0}</p>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Conectado el</p>
+                          <p className="text-sm font-medium text-gray-800">{formatDateTime(googleStatus.connectedAt)}</p>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Última sincronización</p>
+                          <p className="text-sm font-medium text-gray-800">{formatDateTime(googleStatus.lastSyncedAt)}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-3 pt-2">
+                        <button
+                          onClick={handleGoogleResync}
+                          disabled={googleActionLoading}
+                          className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-primary text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          {googleActionLoading ? 'Sincronizando…' : 'Re-sincronizar ahora'}
+                        </button>
+                        <button
+                          onClick={handleGoogleDisconnect}
+                          disabled={googleActionLoading}
+                          className="inline-flex items-center gap-2 px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        >
+                          <Plug className="w-4 h-4" />
+                          Desconectar
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-600">
+                        Conecta Google Calendar para crear, actualizar y cancelar eventos automáticamente con cada cita.
+                      </p>
+                      <ul className="text-sm text-gray-700 space-y-2 bg-gray-50 border border-gray-200 rounded-xl p-4">
+                        <li>✅ Creación automática de eventos con recordatorios nativos</li>
+                        <li>✅ Reprogramación sincronizada sin duplicados</li>
+                        <li>✅ Eliminación automática al cancelar citas</li>
+                      </ul>
+                      <button
+                        onClick={handleGoogleConnect}
+                        disabled={googleActionLoading}
+                        className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-primary text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                      >
+                        <CalendarDays className="w-5 h-5" />
+                        {googleActionLoading ? 'Abriendo Google…' : 'Conectar con Google Calendar'}
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </SlideIn>
 
         {/* Sistema Automático Status */}
         <SlideIn direction="up" delay={100}>

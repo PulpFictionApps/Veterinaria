@@ -111,6 +111,9 @@ async function sendAppointmentConfirmation(appointmentId) {
               <tr><td style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;"><strong>🕒 Hora:</strong></td><td style="border-bottom: 1px solid #f0f0f0;">${formattedTime}</td></tr>
               <tr><td style="padding: 8px 0;"><strong>📝 Motivo:</strong></td><td>${appointment.reason}</td></tr>
             </table>
+            <p style="margin: 18px 0 0 0; color: #1b5e20; font-size: 14px;">
+              📌 Si ya conectaste Google Calendar en tu Dashboard, esta cita se añadió automáticamente y el cliente recibió una invitación para aceptarla.
+            </p>
           </div>
 
           ${pet.age || pet.weight ? `
@@ -165,6 +168,9 @@ async function sendAppointmentConfirmation(appointmentId) {
               <tr><td style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;"><strong>🕒 Hora:</strong></td><td style="border-bottom: 1px solid #f0f0f0;">${formattedTime}</td></tr>
               <tr><td style="padding: 8px 0;"><strong>📝 Motivo:</strong></td><td>${appointment.reason}</td></tr>
             </table>
+            <p style="margin: 18px 0 0 0; color: #1b5e20; font-size: 14px;">
+              📆 Revisa tu bandeja de entrada: también recibirás una invitación de Google Calendar para agregar la cita con un clic.
+            </p>
           </div>
           
           <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin: 20px 0;">

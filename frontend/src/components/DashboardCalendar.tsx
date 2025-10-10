@@ -15,7 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { authFetch } from "../lib/api";
-import { useAppointments, useAvailability, invalidateCache } from "../hooks/useData";
+import { useAppointments, useAvailability, useGoogleCalendarStatus, invalidateCache } from "../hooks/useData";
 import ThemedCard from './ui/ThemedCard';
 
 interface AvailabilitySlot {
@@ -76,6 +76,7 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
   // Usar hooks SWR para datos en tiempo real
   const { appointments, isLoading: appointmentsLoading } = useAppointments(userId);
   const { availability, isLoading: availabilityLoading } = useAvailability(userId);
+  const { googleStatus, isLoading: googleStatusLoading } = useGoogleCalendarStatus(Boolean(userId));
   
   // Estado para el modal de opciones
   const [showEventModal, setShowEventModal] = useState(false);
@@ -160,6 +161,23 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
     const calendarApi = calendarRef.current?.getApi();
     calendarApi?.changeView(view);
   }, []);
+
+  const goToGoogleSettings = useCallback(() => {
+    router.push('/dashboard/settings?google=intro');
+  }, [router]);
+
+  const formattedLastSync = useMemo(() => {
+    if (!googleStatus?.connected || !googleStatus?.lastSyncedAt) return null;
+    try {
+      return new Intl.DateTimeFormat('es-CL', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      }).format(new Date(googleStatus.lastSyncedAt));
+    } catch (err) {
+      console.warn('No se pudo formatear lastSyncedAt:', err);
+      return null;
+    }
+  }, [googleStatus?.connected, googleStatus?.lastSyncedAt]);
 
   const handleSelect = useCallback(async (info: DateSelectArg) => {
     const startIso = info.start?.toISOString();
@@ -275,6 +293,43 @@ export default function DashboardCalendar({ userId }: { userId: number }) {
 
   return (
     <div className="space-y-3 sm:space-y-4">
+      {!googleStatusLoading && googleStatus && !googleStatus.connected && (
+        <ThemedCard className="bg-amber-50 border border-amber-200 text-amber-900">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h4 className="text-sm font-semibold">Sincroniza tu Google Calendar</h4>
+              <p className="text-sm text-amber-800/90">
+                Las citas seguirán visibles aquí y, al conectar tu cuenta, también se crearán invitaciones automáticas para el profesional y los clientes en Google Calendar.
+              </p>
+            </div>
+            <button
+              onClick={goToGoogleSettings}
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-600 text-white text-sm font-semibold shadow hover:bg-amber-700 transition-all touch-manipulation"
+            >
+              Conectar ahora
+            </button>
+          </div>
+        </ThemedCard>
+      )}
+
+      {!googleStatusLoading && googleStatus?.connected && (
+        <ThemedCard className="bg-emerald-50 border border-emerald-200 text-emerald-900">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <h4 className="text-sm font-semibold">Sincronización con Google Calendar activa</h4>
+              <p className="text-sm text-emerald-800/90">
+                Cada vez que agendes, reprogrames o elimines una cita en este calendario se actualiza automáticamente en Google. {formattedLastSync ? `Última sincronización: ${formattedLastSync}.` : ''}
+              </p>
+            </div>
+            {typeof googleStatus?.upcomingSyncedCount === 'number' && (
+              <span className="px-3 py-1 rounded-full bg-white/70 text-emerald-700 text-xs font-semibold">
+                Próximas citas sincronizadas: {googleStatus.upcomingSyncedCount}
+              </span>
+            )}
+          </div>
+        </ThemedCard>
+      )}
+
       {/* View Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <h3 className="text-base sm:text-lg font-semibold text-gray-900">Calendario</h3>
